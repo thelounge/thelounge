@@ -23,6 +23,7 @@ const Helper = {
 	parseHostmask,
 	compareHostmask,
 	compareWithWildcard,
+	catch_to_error,
 
 	password: {
 		hash: passwordHash,
@@ -43,23 +44,23 @@ function getVersionNumber() {
 	return pkg.version;
 }
 
+let _fetchedGitCommit = false;
 let _gitCommit: string | null = null;
 
 function getGitCommit() {
-	if (_gitCommit) {
+	if (_fetchedGitCommit) {
 		return _gitCommit;
 	}
 
-	if (!fs.existsSync(path.resolve(__dirname, "..", ".git"))) {
-		_gitCommit = null;
-		return null;
-	}
+	_fetchedGitCommit = true;
 
+	// --git-dir ".git" makes git only check current directory for `.git`, and not travel upwards
+	// We set cwd to the location of `index.js` as soon as the process is started
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		_gitCommit = require("child_process")
 			.execSync(
-				"git rev-parse --short HEAD", // Returns hash of current commit
+				'git --git-dir ".git" rev-parse --short HEAD', // Returns hash of current commit
 				{stdio: ["ignore", "pipe", "ignore"]}
 			)
 			.toString()
@@ -182,4 +183,18 @@ function compareWithWildcard(a: string, b: string) {
 	const user_regex = wildmany_split.join(".*");
 	const re = new RegExp(`^${user_regex}$`, "i"); // case insensitive
 	return re.test(b);
+}
+
+function catch_to_error(prefix: string, err: any): Error {
+	let msg: string;
+
+	if (err instanceof Error) {
+		msg = err.message;
+	} else if (typeof err === "string") {
+		msg = err;
+	} else {
+		msg = err.toString();
+	}
+
+	return new Error(`${prefix}: ${msg}`);
 }

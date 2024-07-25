@@ -2,7 +2,7 @@ import {expect} from "chai";
 
 import Msg from "../../server/models/msg";
 import User from "../../server/models/user";
-import {LinkPreview} from "../../server/plugins/irc-events/link";
+import {LinkPreview} from "../../shared/types/msg";
 
 describe("Msg", function () {
 	["from", "target"].forEach((prop) => {

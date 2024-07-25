@@ -33,8 +33,7 @@ declare module "irc-framework" {
 		reply: (message: string) => void;
 		tags: {[key: string]: string};
 		target: string;
-		time?: any;
-		type: "privmsg" | "action" | "notice" | "wallops";
+		time?: number;
 	}
 	export interface JoinEventArgs {
 		account: boolean;
@@ -117,7 +116,11 @@ declare module "irc-framework" {
 				isEnabled: (cap: string) => boolean;
 				enabled: string[];
 			};
-			extractTargetGroup: (target: string) => any;
+			extractTargetGroup: (target: string) => {
+				target: string;
+				target_group: string;
+			};
+
 			supports(feature: "MODES"): string;
 			supports(feature: string): boolean;
 		};

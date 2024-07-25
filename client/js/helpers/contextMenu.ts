@@ -4,6 +4,7 @@ import type {ClientChan, ClientNetwork, ClientUser} from "../types";
 import {switchToChannel} from "../router";
 import {TypedStore} from "../store";
 import useCloseChannel from "../hooks/use-close-channel";
+import {ChanType} from "../../../shared/types/chan";
 
 type BaseContextMenuItem = {
 	label: string;
@@ -61,7 +62,7 @@ export function generateChannelContextMenu(
 	];
 
 	// Add menu items for lobbies
-	if (channel.type === "lobby") {
+	if (channel.type === ChanType.LOBBY) {
 		items = [
 			...items,
 			{
@@ -121,7 +122,7 @@ export function generateChannelContextMenu(
 	}
 
 	// Add menu items for channels
-	if (channel.type === "channel") {
+	if (channel.type === ChanType.CHANNEL) {
 		items.push({
 			label: "Edit topic",
 			type: "item",
@@ -145,7 +146,7 @@ export function generateChannelContextMenu(
 	}
 
 	// Add menu items for queries
-	if (channel.type === "query") {
+	if (channel.type === ChanType.QUERY) {
 		items.push(
 			{
 				label: "User information",
@@ -173,7 +174,7 @@ export function generateChannelContextMenu(
 		);
 	}
 
-	if (channel.type === "channel" || channel.type === "query") {
+	if (channel.type === ChanType.CHANNEL || channel.type === ChanType.QUERY) {
 		items.push({
 			label: "Clear history",
 			type: "item",

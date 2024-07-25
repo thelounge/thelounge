@@ -58,7 +58,9 @@
 </template>
 
 <script lang="ts">
-import constants from "../js/constants";
+import {condensedTypes} from "../../shared/irc";
+import {ChanType} from "../../shared/types/chan";
+import {MessageType, SharedMsg} from "../../shared/types/msg";
 import eventbus from "../js/eventbus";
 import clipboard from "../js/clipboard";
 import socket from "../js/socket";
@@ -79,7 +81,6 @@ import {
 } from "vue";
 import {useStore} from "../js/store";
 import {ClientChan, ClientMessage, ClientNetwork, ClientLinkPreview} from "../js/types";
-import Msg from "../../server/models/msg";
 
 type CondensedMessageContainer = {
 	type: "condensed";
@@ -103,7 +104,7 @@ export default defineComponent({
 		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: Number,
 	},
-	setup(props, {emit}) {
+	setup(props) {
 		const store = useStore();
 
 		const chat = ref<HTMLDivElement | null>(null);
@@ -177,14 +178,14 @@ export default defineComponent({
 		});
 
 		const condensedMessages = computed(() => {
-			if (props.channel.type !== "channel") {
+			if (props.channel.type !== ChanType.CHANNEL && props.channel.type !== ChanType.QUERY) {
 				return props.channel.messages;
 			}
 
 			// If actions are hidden, just return a message list with them excluded
 			if (store.state.settings.statusMessages === "hidden") {
 				return props.channel.messages.filter(
-					(message) => !constants.condensedTypes.has(message.type)
+					(message) => !condensedTypes.has(message.type || "")
 				);
 			}
 
@@ -200,11 +201,7 @@ export default defineComponent({
 			for (const message of props.channel.messages) {
 				// If this message is not condensable, or its an action affecting our user,
 				// then just append the message to container and be done with it
-				if (
-					message.self ||
-					message.highlight ||
-					!constants.condensedTypes.has(message.type)
-				) {
+				if (message.self || message.highlight || !condensedTypes.has(message.type || "")) {
 					lastCondensedContainer = null;
 
 					condensed.push(message);
@@ -246,7 +243,7 @@ export default defineComponent({
 		});
 
 		const shouldDisplayDateMarker = (
-			message: Msg | ClientMessage | CondensedMessageContainer,
+			message: SharedMsg | CondensedMessageContainer,
 			id: number
 		) => {
 			const previousMessage = condensedMessages.value[id - 1];
@@ -274,12 +271,13 @@ export default defineComponent({
 			return false;
 		};
 
-		const isPreviousSource = (currentMessage: ClientMessage | Msg, id: number) => {
-			const previousMessage = condensedMessages[id - 1];
-			return !!(
+		const isPreviousSource = (currentMessage: ClientMessage, id: number) => {
+			const previousMessage = condensedMessages.value[id - 1];
+			return (
 				previousMessage &&
-				currentMessage.type === "message" &&
-				previousMessage.type === "message" &&
+				currentMessage.type === MessageType.MESSAGE &&
+				previousMessage.type === MessageType.MESSAGE &&
+				currentMessage.from &&
 				previousMessage.from &&
 				currentMessage.from.nick === previousMessage.from.nick
 			);

@@ -1,7 +1,8 @@
 import {IrcEventHandler} from "../../client";
-import {ChanType} from "../../models/chan";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -20,7 +21,7 @@ export default <IrcEventHandler>function (irc, network) {
 		if (typeof chan === "undefined") {
 			// Do not create new windows for errors as they may contain illegal characters
 			if (data.error) {
-				chan = network.channels[0];
+				chan = network.getLobby();
 			} else {
 				chan = client.createChannel({
 					type: ChanType.QUERY,
@@ -28,9 +29,9 @@ export default <IrcEventHandler>function (irc, network) {
 				});
 
 				client.emit("join", {
-					shouldOpen: true,
 					network: network.uuid,
 					chan: chan.getFilteredClone(true),
+					shouldOpen: true,
 					index: network.addChannel(chan),
 				});
 				chan.loadMessages(client, network);
@@ -43,7 +44,6 @@ export default <IrcEventHandler>function (irc, network) {
 		if (data.error) {
 			msg = new Msg({
 				type: MessageType.ERROR,
-				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 				text: "No such nick: " + data.nick,
 			});
 		} else {

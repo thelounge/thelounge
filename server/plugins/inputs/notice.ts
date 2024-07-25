@@ -12,6 +12,8 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 
 	network.irc.notice(targetName, message);
 
+	// If the IRCd does not support echo-message, simulate the message
+	// being sent back to us.
 	if (!network.irc.network.cap.isEnabled("echo-message")) {
 		let targetGroup;
 		const parsedTarget = network.irc.network.extractTargetGroup(targetName);

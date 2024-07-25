@@ -6,6 +6,7 @@ import isChannelCollapsed from "./helpers/isChannelCollapsed";
 import isIgnoredKeybind from "./helpers/isIgnoredKeybind";
 import listenForTwoFingerSwipes from "./helpers/listenForTwoFingerSwipes";
 import {ClientChan} from "./types";
+import {ChanType} from "../../shared/types/chan";
 
 // Switch to the next/previous window in the channel list.
 Mousetrap.bind(["alt+up", "alt+down"], function (e, keys) {
@@ -73,12 +74,41 @@ Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function (e, keys) {
 		index = store.state.networks.findIndex((n) => n === store.state.activeChannel?.network);
 
 		// If we're in a channel, and it's not the lobby, jump to lobby of this network when going up
-		if (direction !== -1 || store.state.activeChannel?.channel.type === "lobby") {
+		if (direction !== -1 || store.state.activeChannel?.channel.type === ChanType.LOBBY) {
 			index = (((index + direction) % length) + length) % length;
 		}
 	}
 
 	jumpToChannel(store.state.networks[index].channels[0]);
+
+	return false;
+});
+
+// Switch to the next/previous unread chat
+Mousetrap.bind(["alt+mod+up", "alt+mod+down"], function (e, keys) {
+	if (isIgnoredKeybind(e)) {
+		return true;
+	}
+
+	const channels = store.state.networks
+		.map((net) =>
+			net.channels.filter(
+				(chan) => chan.unread || chan === store.state.activeChannel?.channel
+			)
+		)
+		.flat();
+
+	if (channels.length === 0) {
+		return;
+	}
+
+	let index = channels.findIndex((chan) => chan === store.state.activeChannel?.channel);
+
+	const length = channels.length;
+	const direction = keys.split("+").pop() === "up" ? -1 : 1;
+	index = (((index + direction) % length) + length) % length;
+
+	jumpToChannel(channels[index]);
 
 	return false;
 });
@@ -113,13 +143,13 @@ Mousetrap.bind(["alt+a"], function (e) {
 });
 
 // Show the help menu.
-Mousetrap.bind(["alt+/"], async function (e) {
+Mousetrap.bind(["alt+/"], function (e) {
 	if (isIgnoredKeybind(e)) {
 		return true;
 	}
 
-	await navigate("Help");
-
+	/* eslint-disable no-console */
+	navigate("Help").catch((err) => console.log(err));
 	return false;
 });
 

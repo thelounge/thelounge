@@ -7,14 +7,14 @@
 
 		<div class="container">
 			<form ref="settingsForm" autocomplete="off" @change="onChange" @submit.prevent>
-				<router-view :settings-form="settingsForm"></router-view>
+				<router-view></router-view>
 			</form>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import {defineComponent} from "vue";
 import SidebarToggle from "../SidebarToggle.vue";
 import Navigation from "../Settings/Navigation.vue";
 import {useStore} from "../../js/store";
@@ -27,7 +27,6 @@ export default defineComponent({
 	},
 	setup() {
 		const store = useStore();
-		const settingsForm = ref<HTMLFormElement>();
 
 		const onChange = (event: Event) => {
 			const ignore = ["old_password", "new_password", "verify_password"];
@@ -51,7 +50,6 @@ export default defineComponent({
 
 		return {
 			onChange,
-			settingsForm,
 		};
 	},
 });

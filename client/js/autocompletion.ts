@@ -1,13 +1,14 @@
 import constants from "./constants";
 
 import Mousetrap from "mousetrap";
-import {Strategy, Textcomplete, StrategyProps} from "@textcomplete/core";
+import {Textcomplete, StrategyProps} from "@textcomplete/core";
 import {TextareaEditor} from "@textcomplete/textarea";
 
 import fuzzy from "fuzzy";
 
 import emojiMap from "./helpers/simplemap.json";
 import {store} from "./store";
+import {ChanType} from "../../shared/types/chan";
 
 export default enableAutocomplete;
 
@@ -38,7 +39,6 @@ const nicksStrategy: StrategyProps = {
 
 		if (term[0] === "@") {
 			// TODO: type
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			callback(completeNicks(term.slice(1), true).map((val) => ["@" + val[0], "@" + val[1]]));
 		} else {
 			callback(completeNicks(term, true));
@@ -292,7 +292,7 @@ function rawNicks() {
 	const otherUser = store.state.activeChannel.channel.name;
 
 	// If this is a query, add their name to autocomplete
-	if (me !== otherUser && store.state.activeChannel.channel.type === "query") {
+	if (me !== otherUser && store.state.activeChannel.channel.type === ChanType.QUERY) {
 		return [otherUser, me];
 	}
 
@@ -332,7 +332,7 @@ function completeChans(word: string) {
 	if (store.state.activeChannel) {
 		for (const channel of store.state.activeChannel.network.channels) {
 			// Push all channels that start with the same CHANTYPE
-			if (channel.type === "channel" && channel.name[0] === word[0]) {
+			if (channel.type === ChanType.CHANNEL && channel.name[0] === word[0]) {
 				words.push(channel.name);
 			}
 		}

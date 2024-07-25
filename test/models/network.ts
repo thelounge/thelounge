@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import {expect} from "chai";
 import sinon from "ts-sinon";
-import Chan, {ChanType} from "../../server/models/chan";
+import Chan from "../../server/models/chan";
+import {ChanType} from "../../shared/types/chan";
 import Msg from "../../server/models/msg";
 import User from "../../server/models/user";
 import Network from "../../server/models/network";
@@ -30,7 +30,7 @@ describe("Network", function () {
 			expect(network1.uuid).to.not.equal(network2.uuid);
 		});
 
-		it("lobby should be at the top", function () {
+		it("should keep the lobby at the top", function () {
 			const network = new Network({
 				name: "Super Nice Network",
 				channels: [

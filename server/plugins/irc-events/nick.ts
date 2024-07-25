@@ -1,6 +1,7 @@
 import {IrcEventHandler} from "../../client";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -11,9 +12,8 @@ export default <IrcEventHandler>function (irc, network) {
 		if (self) {
 			network.setNick(data.new_nick);
 
-			const lobby = network.channels[0];
+			const lobby = network.getLobby();
 			const msg = new Msg({
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 				text: `You're now known as ${data.new_nick}`,
 			});
 			lobby.pushMessage(client, msg, true);

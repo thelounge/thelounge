@@ -3,36 +3,42 @@ import {Server as wsServer} from "ws";
 import express, {NextFunction, Request, Response} from "express";
 import fs from "fs";
 import path from "path";
-import {Server, Socket} from "socket.io";
+import {Server as ioServer, Socket as ioSocket} from "socket.io";
 import dns from "dns";
 import colors from "chalk";
 import net from "net";
 
 import log from "./log";
-import pkg from "../package.json";
 import Client from "./client";
 import ClientManager from "./clientManager";
 import Uploader from "./plugins/uploader";
 import Helper from "./helper";
-import Config, {ConfigType, Defaults} from "./config";
+import Config, {ConfigType} from "./config";
 import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
 
-import themes, {ThemeForClient} from "./plugins/packages/themes";
+import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
 
 import packages from "./plugins/packages/index";
 import {NetworkWithIrcFramework} from "./models/network";
-import {ChanType} from "./models/chan";
 import Utils from "./command-line/utils";
 import type {
 	ClientToServerEvents,
 	ServerToClientEvents,
 	InterServerEvents,
 	SocketData,
-} from "./types/socket-events";
+	AuthPerformData,
+} from "../shared/types/socket-events";
+import {ChanType} from "../shared/types/chan";
+import {
+	LockedSharedConfiguration,
+	SharedConfiguration,
+	ConfigNetDefaults,
+	LockedConfigNetDefaults,
+} from "../shared/types/config";
 
 type ServerOptions = {
 	dev: boolean;
@@ -46,21 +52,13 @@ type IndexTemplateConfiguration = ServerConfiguration & {
 	cacheBust: string;
 };
 
-export type ClientConfiguration = Pick<
-	ConfigType,
-	"public" | "lockNetwork" | "useHexIp" | "prefetch" | "defaults"
-> & {
-	fileUpload: boolean;
-	ldapEnabled: boolean;
-	isUpdateAvailable: boolean;
-	applicationServerKey: string;
-	version: string;
-	gitCommit: string | null;
-	defaultTheme: string;
-	themes: ThemeForClient[];
-	defaults: Defaults;
-	fileUploadMaxFileSize?: number;
-};
+type Socket = ioSocket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
+export type Server = ioServer<
+	ClientToServerEvents,
+	ServerToClientEvents,
+	InterServerEvents,
+	SocketData
+>;
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -132,13 +130,13 @@ export default async function (
 		return res.sendFile(path.join(packagePath, fileName));
 	});
 
-	let server: import("http").Server | import("https").Server | null = null;
-
 	if (Config.values.public && (Config.values.ldap || {}).enable) {
 		log.warn(
 			"Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication."
 		);
 	}
+
+	let server: import("http").Server | import("https").Server;
 
 	if (!Config.values.https.enable) {
 		const createServer = (await import("http")).createServer;
@@ -220,12 +218,7 @@ export default async function (
 			return;
 		}
 
-		const sockets = new Server<
-			ClientToServerEvents,
-			ServerToClientEvents,
-			InterServerEvents,
-			SocketData
-		>(server, {
+		const sockets: Server = new ioServer(server, {
 			wsEngine: wsServer,
 			cookie: false,
 			serveClient: false,
@@ -331,7 +324,7 @@ export default async function (
 	return server;
 }
 
-function getClientLanguage(socket: Socket): string | null {
+function getClientLanguage(socket: Socket): string | undefined {
 	const acceptLanguage = socket.handshake.headers["accept-language"];
 
 	if (typeof acceptLanguage === "string" && /^[\x00-\x7F]{1,50}$/.test(acceptLanguage)) {
@@ -339,10 +332,10 @@ function getClientLanguage(socket: Socket): string | null {
 		return acceptLanguage;
 	}
 
-	return null;
+	return undefined;
 }
 
-function getClientIp(socket: Socket) {
+function getClientIp(socket: Socket): string {
 	let ip = socket.handshake.address || "127.0.0.1";
 
 	if (Config.values.reverseProxy) {
@@ -368,12 +361,12 @@ function getClientSecure(socket: Socket) {
 	return secure;
 }
 
-function allRequests(req: Request, res: Response, next: NextFunction) {
+function allRequests(_req: Request, res: Response, next: NextFunction) {
 	res.setHeader("X-Content-Type-Options", "nosniff");
 	return next();
 }
 
-function addSecurityHeaders(req: Request, res: Response, next: NextFunction) {
+function addSecurityHeaders(_req: Request, res: Response, next: NextFunction) {
 	const policies = [
 		"default-src 'none'", // default to nothing
 		"base-uri 'none'", // disallow <base>, has no fallback to default-src
@@ -403,30 +396,30 @@ function addSecurityHeaders(req: Request, res: Response, next: NextFunction) {
 	return next();
 }
 
-function forceNoCacheRequest(req: Request, res: Response, next: NextFunction) {
+function forceNoCacheRequest(_req: Request, res: Response, next: NextFunction) {
 	// Intermittent proxies must not cache the following requests,
 	// browsers must fetch the latest version of these files (service worker, source maps)
 	res.setHeader("Cache-Control", "no-cache, no-transform");
 	return next();
 }
 
-function indexRequest(req: Request, res: Response) {
+function indexRequest(_req: Request, res: Response) {
 	res.setHeader("Content-Type", "text/html");
 
-	return fs.readFile(
-		Utils.getFileFromRelativeToRoot("client/index.html.tpl"),
-		"utf-8",
-		(err, file) => {
-			if (err) {
-				throw err;
-			}
-
-			const config = getServerConfiguration() as IndexTemplateConfiguration;
-			config.cacheBust = Helper.getVersionCacheBust();
-
-			res.send(_.template(file)(config));
+	fs.readFile(Utils.getFileFromRelativeToRoot("client/index.html.tpl"), "utf-8", (err, file) => {
+		if (err) {
+			log.error(`failed to server index request: ${err.name}, ${err.message}`);
+			res.sendStatus(500);
+			return;
 		}
-	);
+
+		const config: IndexTemplateConfiguration = {
+			...getServerConfiguration(),
+			...{cacheBust: Helper.getVersionCacheBust()},
+		};
+
+		res.send(_.template(file)(config));
+	});
 }
 
 function initializeClient(
@@ -484,7 +477,7 @@ function initializeClient(
 			data.commands = null;
 			data.ignoreList = null;
 
-			client.connect(data);
+			client.connectToNetwork(data);
 		}
 	});
 
@@ -551,18 +544,10 @@ function initializeClient(
 						const hash = Helper.password.hash(p1);
 
 						client.setPassword(hash, (success: boolean) => {
-							const obj = {success: false, error: undefined} as {
-								success: boolean;
-								error: string | undefined;
-							};
-
-							if (success) {
-								obj.success = true;
-							} else {
-								obj.error = "update_failed";
-							}
-
-							socket.emit("change-password", obj);
+							socket.emit("change-password", {
+								success: success,
+								error: success ? undefined : "update_failed",
+							});
 						});
 					})
 					.catch((error: Error) => {
@@ -576,10 +561,28 @@ function initializeClient(
 		client.open(socket.id, data);
 	});
 
-	socket.on("sort", (data) => {
-		if (_.isPlainObject(data)) {
-			client.sort(data);
+	socket.on("sort:networks", (data) => {
+		if (!_.isPlainObject(data)) {
+			return;
 		}
+
+		if (!Array.isArray(data.order)) {
+			return;
+		}
+
+		client.sortNetworks(data.order);
+	});
+
+	socket.on("sort:channels", (data) => {
+		if (!_.isPlainObject(data)) {
+			return;
+		}
+
+		if (!Array.isArray(data.order) || typeof data.network !== "string") {
+			return;
+		}
+
+		client.sortChannels(data.network, data.order);
 	});
 
 	socket.on("names", (data) => {
@@ -629,13 +632,13 @@ function initializeClient(
 				return;
 			}
 
-			const message = networkAndChan.chan.findMessage(data.msgId);
+			const message = data.msgId ? networkAndChan.chan.findMessage(data.msgId) : null;
 
 			if (!message) {
 				return;
 			}
 
-			const preview = message.findPreview(data.link);
+			const preview = data.link ? message.findPreview(data.link) : null;
 
 			if (preview) {
 				preview.shown = newState;
@@ -758,9 +761,8 @@ function initializeClient(
 		});
 
 		socket.on("search", async (query) => {
-			await client.search(query).then((results) => {
-				socket.emit("search:results", results);
-			});
+			const results = await client.search(query);
+			socket.emit("search:results", results);
 		});
 
 		socket.on("mute:change", ({target, setMutedTo}) => {
@@ -828,9 +830,9 @@ function initializeClient(
 	});
 
 	// socket.join is a promise depending on the adapter.
-	void socket.join(client.id?.toString());
+	void socket.join(client.id);
 
-	const sendInitEvent = (tokenToSend: string | null) => {
+	const sendInitEvent = (tokenToSend?: string) => {
 		socket.emit("init", {
 			active: openChannel,
 			networks: client.networks.map((network) =>
@@ -842,7 +844,7 @@ function initializeClient(
 	};
 
 	if (Config.values.public) {
-		sendInitEvent(null);
+		sendInitEvent();
 	} else if (!token) {
 		client.generateToken((newToken) => {
 			token = client.calculateTokenHash(newToken);
@@ -853,21 +855,34 @@ function initializeClient(
 		});
 	} else {
 		client.updateSession(token, getClientIp(socket), socket.request);
-		sendInitEvent(null);
+		sendInitEvent();
 	}
 }
 
-function getClientConfiguration(): ClientConfiguration {
-	const config = _.pick(Config.values, [
-		"public",
-		"lockNetwork",
-		"useHexIp",
-		"prefetch",
-	]) as ClientConfiguration;
+function getClientConfiguration(): SharedConfiguration | LockedSharedConfiguration {
+	const common = {
+		fileUpload: Config.values.fileUpload.enable,
+		ldapEnabled: Config.values.ldap.enable,
+		isUpdateAvailable: changelog.isUpdateAvailable,
+		applicationServerKey: manager!.webPush.vapidKeys!.publicKey,
+		version: Helper.getVersionNumber(),
+		gitCommit: Helper.getGitCommit(),
+		themes: themes.getAll(),
+		defaultTheme: Config.values.theme,
+		public: Config.values.public,
+		useHexIp: Config.values.useHexIp,
+		prefetch: Config.values.prefetch,
+		fileUploadMaxFileSize: Uploader ? Uploader.getMaxFileSize() : undefined, // TODO can't be undefined?
+	};
 
-	config.fileUpload = Config.values.fileUpload.enable;
-	config.ldapEnabled = Config.values.ldap.enable;
-
+	const defaultsOverride = {
+		nick: Config.getDefaultNick(), // expand the number part
+    // TODO: this doesn't seem right, if the client needs this as a buffer
+		// the client ought to add it on its own
+		sasl: "",
+		saslAccount: "",
+		saslPassword: "",
+	};
 	if (!config.lockNetwork) {
 		config.defaults = _.clone(Config.values.defaults);
 	} else {
@@ -880,52 +895,85 @@ function getClientConfiguration(): ClientConfiguration {
 			"realname",
 			"join",
 			"discourseURL",
-			"MC_BOT",
+			"MC_
+      
+      ",
 		]) as Defaults;
 	}
+		
 
-	config.isUpdateAvailable = changelog.isUpdateAvailable;
-	config.applicationServerKey = manager!.webPush.vapidKeys!.publicKey;
-	config.version = pkg.version;
-	config.gitCommit = Helper.getGitCommit();
-	config.themes = themes.getAll();
-	config.defaultTheme = Config.values.theme;
-	config.defaults.nick = Config.getDefaultNick();
-	config.defaults.sasl = "";
-	config.defaults.saslAccount = "";
-	config.defaults.saslPassword = "";
-
-	if (Uploader) {
-		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();
+	if (!Config.values.lockNetwork) {
+		const defaults: ConfigNetDefaults = {
+			..._.clone(Config.values.defaults),
+			...defaultsOverride,
+		};
+		const result: SharedConfiguration = {
+			...common,
+			defaults: defaults,
+			lockNetwork: Config.values.lockNetwork,
+		};
+		return result;
 	}
 
-	return config;
+	// Only send defaults that are visible on the client
+	const defaults: LockedConfigNetDefaults = {
+		..._.pick(Config.values.defaults, ["name", "username", "password", "realname", "join"]),
+		...defaultsOverride,
+	};
+
+	const result: LockedSharedConfiguration = {
+		...common,
+		lockNetwork: Config.values.lockNetwork,
+		defaults: defaults,
+	};
+
+	return result;
 }
 
 function getServerConfiguration(): ServerConfiguration {
-	const config = _.clone(Config.values) as ServerConfiguration;
-
-	config.stylesheets = packages.getStylesheets();
-
-	return config;
+	return {...Config.values, ...{stylesheets: packages.getStylesheets()}};
 }
 
-function performAuthentication(this: Socket, data) {
+function performAuthentication(this: Socket, data: AuthPerformData) {
 	if (!_.isPlainObject(data)) {
 		return;
 	}
 
 	const socket = this;
-	let client;
+	let client: Client | undefined;
 	let token: string;
 
-	const finalInit = () =>
-		initializeClient(socket, client, token, data.lastMessage || -1, data.openChannel);
+	const finalInit = () => {
+		let lastMessage = -1;
+
+		if (data && "lastMessage" in data && data.lastMessage) {
+			lastMessage = data.lastMessage;
+		}
+
+		// TODO: bonkers, but for now good enough until we rewrite the logic properly
+		// initializeClient will check for if(openChannel) and as 0 is falsey it does the fallback...
+		let openChannel = 0;
+
+		if (data && "openChannel" in data && data.openChannel) {
+			openChannel = data.openChannel;
+		}
+
+		// TODO: remove this once the logic is cleaned up
+		if (!client) {
+			throw new Error("finalInit called with undefined client, this is a bug");
+		}
+
+		initializeClient(socket, client, token, lastMessage, openChannel);
+	};
 
 	const initClient = () => {
+		if (!client) {
+			throw new Error("initClient called with undefined client");
+		}
+
 		// Configuration does not change during runtime of TL,
 		// and the client listens to this event only once
-		if (!data.hasConfig) {
+		if (data && (!("hasConfig" in data) || !data.hasConfig)) {
 			socket.emit("configuration", getClientConfiguration());
 
 			socket.emit(
@@ -934,8 +982,10 @@ function performAuthentication(this: Socket, data) {
 			);
 		}
 
+		const clientIP = getClientIp(socket);
+
 		client.config.browser = {
-			ip: getClientIp(socket),
+			ip: clientIP,
 			isSecure: getClientSecure(socket),
 			language: getClientLanguage(socket),
 		};
@@ -945,8 +995,9 @@ function performAuthentication(this: Socket, data) {
 			return finalInit();
 		}
 
-		reverseDnsLookup(client.config.browser?.ip, (hostname) => {
-			client.config.browser!.hostname = hostname;
+		const cb_client = client; // ensure that TS figures out that client can't be nil
+		reverseDnsLookup(clientIP, (hostname) => {
+			cb_client.config.browser!.hostname = hostname;
 
 			finalInit();
 		});
@@ -954,11 +1005,13 @@ function performAuthentication(this: Socket, data) {
 
 	if (Config.values.public) {
 		client = new Client(manager!);
+		client.connect();
 		manager!.clients.push(client);
 
+		const cb_client = client; // ensure TS can see we never have a nil client
 		socket.on("disconnect", function () {
-			manager!.clients = _.without(manager!.clients, client);
-			client.quit();
+			manager!.clients = _.without(manager!.clients, cb_client);
+			cb_client.quit();
 		});
 
 		initClient();
@@ -970,7 +1023,7 @@ function performAuthentication(this: Socket, data) {
 		return;
 	}
 
-	const authCallback = (success) => {
+	const authCallback = (success: boolean) => {
 		// Authorization failed
 		if (!success) {
 			if (!client) {
@@ -995,6 +1048,10 @@ function performAuthentication(this: Socket, data) {
 		// load it and find the user again (this happens with LDAP)
 		if (!client) {
 			client = manager!.loadUser(data.user);
+
+			if (!client) {
+				throw new Error(`authCallback: ${data.user} not found after second lookup`);
+			}
 		}
 
 		initClient();
@@ -1003,14 +1060,21 @@ function performAuthentication(this: Socket, data) {
 	client = manager!.findClient(data.user);
 
 	// We have found an existing user and client has provided a token
-	if (client && data.token) {
+	if (client && "token" in data && data.token) {
 		const providedToken = client.calculateTokenHash(data.token);
 
 		if (Object.prototype.hasOwnProperty.call(client.config.sessions, providedToken)) {
 			token = providedToken;
 
-			return authCallback(true);
+			authCallback(true);
+			return;
 		}
+	}
+
+	if (!("user" in data && "password" in data)) {
+		log.warn("performAuthentication: callback data has no user or no password");
+		authCallback(false);
+		return;
 	}
 
 	Auth.initialize().then(() => {
@@ -1020,28 +1084,40 @@ function performAuthentication(this: Socket, data) {
 }
 
 function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
-	dns.reverse(ip, (reverseErr, hostnames) => {
-		if (reverseErr || hostnames.length < 1) {
-			return callback(ip);
-		}
-
-		dns.resolve(hostnames[0], net.isIP(ip) === 6 ? "AAAA" : "A", (resolveErr, resolvedIps) => {
-			// TODO: investigate SoaRecord class
-			if (!Array.isArray(resolvedIps)) {
+	// node can throw, even if we provide valid input based on the DNS server
+	// returning SERVFAIL it seems: https://github.com/thelounge/thelounge/issues/4768
+	// so we manually resolve with the ip as a fallback in case something fails
+	try {
+		dns.reverse(ip, (reverseErr, hostnames) => {
+			if (reverseErr || hostnames.length < 1) {
 				return callback(ip);
 			}
 
-			if (resolveErr || resolvedIps.length < 1) {
-				return callback(ip);
-			}
+			dns.resolve(
+				hostnames[0],
+				net.isIP(ip) === 6 ? "AAAA" : "A",
+				(resolveErr, resolvedIps) => {
+					// TODO: investigate SoaRecord class
+					if (!Array.isArray(resolvedIps)) {
+						return callback(ip);
+					}
 
-			for (const resolvedIp of resolvedIps) {
-				if (ip === resolvedIp) {
-					return callback(hostnames[0]);
+					if (resolveErr || resolvedIps.length < 1) {
+						return callback(ip);
+					}
+
+					for (const resolvedIp of resolvedIps) {
+						if (ip === resolvedIp) {
+							return callback(hostnames[0]);
+						}
+					}
+
+					return callback(ip);
 				}
-			}
-
-			return callback(ip);
+			);
 		});
-	});
+	} catch (err) {
+		log.error(`failed to resolve rDNS for ${ip}, using ip instead`, (err as any).toString());
+		setImmediate(callback, ip); // makes sure we always behave asynchronously
+	}
 }

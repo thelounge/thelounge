@@ -3,7 +3,6 @@
 		<div
 			id="chat"
 			:class="{
-				'colored-nicks': store.state.settings.coloredNicks,
 				'time-seconds': store.state.settings.showSeconds,
 				'time-12h': store.state.settings.use12hClock,
 			}"
@@ -34,18 +33,19 @@
 							<button
 								ref="loadMoreButton"
 								:disabled="
-									store.state.messageSearchInProgress || !store.state.isConnected
+									!!store.state.messageSearchPendingQuery ||
+									!store.state.isConnected
 								"
 								class="btn"
 								@click="onShowMoreClick"
 							>
-								<span v-if="store.state.messageSearchInProgress">Loading…</span>
+								<span v-if="store.state.messageSearchPendingQuery">Loading…</span>
 								<span v-else>Show older messages</span>
 							</button>
 						</div>
 
 						<div
-							v-if="store.state.messageSearchInProgress && !offset"
+							v-if="store.state.messageSearchPendingQuery && !offset"
 							class="search-status"
 						>
 							Searching…
@@ -106,6 +106,7 @@ import type {ClientMessage} from "../../js/types";
 import {useStore} from "../../js/store";
 import {useRoute, useRouter} from "vue-router";
 import {switchToChannel} from "../../js/router";
+import {SearchQuery} from "../../../shared/types/storage";
 
 export default defineComponent({
 	name: "SearchResults",
@@ -129,13 +130,14 @@ export default defineComponent({
 		const oldScrollTop = ref(0);
 		const oldChatHeight = ref(0);
 
-		const search = computed(() => store.state.messageSearchResults);
 		const messages = computed(() => {
-			if (!search.value) {
+			const results = store.state.messageSearchResults?.results;
+
+			if (!results) {
 				return [];
 			}
 
-			return search.value.results;
+			return results;
 		});
 
 		const chan = computed(() => {
@@ -185,39 +187,46 @@ export default defineComponent({
 			return new Date(previousMessage.time).getDay() !== new Date(message.time).getDay();
 		};
 
-		const doSearch = () => {
+		const clearSearchState = () => {
 			offset.value = 0;
-			store.commit("messageSearchInProgress", true);
+			store.commit("messageSearchResults", null);
+			store.commit("messageSearchPendingQuery", null);
+		};
 
-			if (!offset.value) {
-				store.commit("messageSearchInProgress", undefined); // Only reset if not getting offset
+		const doSearch = () => {
+			if (!network.value || !channel.value) {
+				return;
 			}
 
-			socket.emit("search", {
-				networkUuid: network.value?.uuid,
-				channelName: channel.value?.name,
+			clearSearchState(); // this is a new search, so we need to clear anything before that
+			const query: SearchQuery = {
+				networkUuid: network.value.uuid,
+				channelName: channel.value.name,
 				searchTerm: String(route.query.q || ""),
 				offset: offset.value,
-			});
+			};
+			store.commit("messageSearchPendingQuery", query);
+			socket.emit("search", query);
 		};
 
 		const onShowMoreClick = () => {
-			if (!chat.value) {
+			if (!chat.value || !network.value || !channel.value) {
 				return;
 			}
 
 			offset.value += 100;
-			store.commit("messageSearchInProgress", true);
 
 			oldScrollTop.value = chat.value.scrollTop;
 			oldChatHeight.value = chat.value.scrollHeight;
 
-			socket.emit("search", {
-				networkUuid: network.value?.uuid,
-				channelName: channel.value?.name,
+			const query: SearchQuery = {
+				networkUuid: network.value.uuid,
+				channelName: channel.value.name,
 				searchTerm: String(route.query.q || ""),
-				offset: offset.value + 1,
-			});
+				offset: offset.value,
+			};
+			store.commit("messageSearchPendingQuery", query);
+			socket.emit("search", query);
 		};
 
 		const jumpToBottom = async () => {
@@ -236,20 +245,6 @@ export default defineComponent({
 			// TODO: Implement jumping to messages!
 			// This is difficult because it means client will need to handle a potentially nonlinear message set
 			// (loading IntersectionObserver both before AND after the messages)
-			router
-				.push({
-					name: "MessageList",
-					params: {
-						id: channel.value?.id,
-					},
-					query: {
-						focused: id,
-					},
-				})
-				.catch((e) => {
-					// eslint-disable-next-line no-console
-					console.error(`Failed to navigate to message ${id}`, e);
-				});
 		};
 
 		watch(
@@ -300,6 +295,7 @@ export default defineComponent({
 		onUnmounted(() => {
 			eventbus.off("escapekey", closeSearch);
 			eventbus.off("re-search", doSearch);
+			clearSearchState();
 		});
 
 		return {
@@ -307,7 +303,6 @@ export default defineComponent({
 			loadMoreButton,
 			messages,
 			moreResultsAvailable,
-			search,
 			network,
 			channel,
 			route,

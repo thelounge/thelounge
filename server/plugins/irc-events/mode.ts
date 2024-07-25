@@ -1,7 +1,8 @@
 import _ from "lodash";
 import {IrcEventHandler} from "../../client";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -34,14 +35,13 @@ export default <IrcEventHandler>function (irc, network) {
 
 		const msg = new Msg({
 			type: MessageType.MODE_CHANNEL,
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			text: `${data.raw_modes} ${data.raw_params.join(" ")}`,
 		});
 		targetChan.pushMessage(client, msg);
 	});
 
 	irc.on("user info", function (data) {
-		const serverChan = network.channels[0];
+		const serverChan = network.getLobby();
 
 		const msg = new Msg({
 			type: MessageType.MODE_USER,
@@ -56,7 +56,7 @@ export default <IrcEventHandler>function (irc, network) {
 		let targetChan;
 
 		if (data.target === irc.user.nick) {
-			targetChan = network.channels[0];
+			targetChan = network.getLobby();
 		} else {
 			targetChan = network.getChannel(data.target);
 

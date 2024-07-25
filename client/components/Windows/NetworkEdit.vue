@@ -48,7 +48,7 @@ export default defineComponent({
 
 		watch(
 			() => route.params.uuid,
-			(newValue) => {
+			() => {
 				setNetworkData();
 			}
 		);

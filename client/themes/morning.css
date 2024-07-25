@@ -52,42 +52,42 @@ body {
 }
 
 /* Nicknames */
-#chat .user {
+.user {
 	color: #b0bacf;
 }
 
-#chat.colored-nicks .user.color-1 { color: #f7adf7; }
-#chat.colored-nicks .user.color-2 { color: #abf99f; }
-#chat.colored-nicks .user.color-3 { color: #86efdc; }
-#chat.colored-nicks .user.color-4 { color: #c890eb; }
-#chat.colored-nicks .user.color-5 { color: #f9a4b3; }
-#chat.colored-nicks .user.color-6 { color: #f7999a; }
-#chat.colored-nicks .user.color-7 { color: #f497b9; }
-#chat.colored-nicks .user.color-8 { color: #f9a9d7; }
-#chat.colored-nicks .user.color-9 { color: #85a7e3; }
-#chat.colored-nicks .user.color-10 { color: #a8b8ff; }
-#chat.colored-nicks .user.color-11 { color: #b695fc; }
-#chat.colored-nicks .user.color-12 { color: #f4aead; }
-#chat.colored-nicks .user.color-13 { color: #fc7cb1; }
-#chat.colored-nicks .user.color-14 { color: #ff72e0; }
-#chat.colored-nicks .user.color-15 { color: #8cb6ea; }
-#chat.colored-nicks .user.color-16 { color: #f9857c; }
-#chat.colored-nicks .user.color-17 { color: #ed9b82; }
-#chat.colored-nicks .user.color-18 { color: #8df484; }
-#chat.colored-nicks .user.color-19 { color: #ffcce3; }
-#chat.colored-nicks .user.color-20 { color: #efcc81; }
-#chat.colored-nicks .user.color-21 { color: #92a2ed; }
-#chat.colored-nicks .user.color-22 { color: #f4d484; }
-#chat.colored-nicks .user.color-23 { color: #97ea70; }
-#chat.colored-nicks .user.color-24 { color: #fcbbba; }
-#chat.colored-nicks .user.color-25 { color: #eef975; }
-#chat.colored-nicks .user.color-26 { color: #c7ff93; }
-#chat.colored-nicks .user.color-27 { color: #ffade1; }
-#chat.colored-nicks .user.color-28 { color: #98ecf2; }
-#chat.colored-nicks .user.color-29 { color: #91a2f5; }
-#chat.colored-nicks .user.color-30 { color: #b19aea; }
-#chat.colored-nicks .user.color-31 { color: #f2a4eb; }
-#chat.colored-nicks .user.color-32 { color: #85f27d; }
+.user.color-1 { color: #f7adf7; }
+.user.color-2 { color: #abf99f; }
+.user.color-3 { color: #86efdc; }
+.user.color-4 { color: #c890eb; }
+.user.color-5 { color: #f9a4b3; }
+.user.color-6 { color: #f7999a; }
+.user.color-7 { color: #f497b9; }
+.user.color-8 { color: #f9a9d7; }
+.user.color-9 { color: #85a7e3; }
+.user.color-10 { color: #a8b8ff; }
+.user.color-11 { color: #b695fc; }
+.user.color-12 { color: #f4aead; }
+.user.color-13 { color: #fc7cb1; }
+.user.color-14 { color: #ff72e0; }
+.user.color-15 { color: #8cb6ea; }
+.user.color-16 { color: #f9857c; }
+.user.color-17 { color: #ed9b82; }
+.user.color-18 { color: #8df484; }
+.user.color-19 { color: #ffcce3; }
+.user.color-20 { color: #efcc81; }
+.user.color-21 { color: #92a2ed; }
+.user.color-22 { color: #f4d484; }
+.user.color-23 { color: #97ea70; }
+.user.color-24 { color: #fcbbba; }
+.user.color-25 { color: #eef975; }
+.user.color-26 { color: #c7ff93; }
+.user.color-27 { color: #ffade1; }
+.user.color-28 { color: #98ecf2; }
+.user.color-29 { color: #91a2f5; }
+.user.color-30 { color: #b19aea; }
+.user.color-31 { color: #f2a4eb; }
+.user.color-32 { color: #85f27d; }
 
 /* Increase contrast of some IRC colors */
 .irc-fg2 { color: #0074d9; }

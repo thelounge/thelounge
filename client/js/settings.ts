@@ -2,7 +2,6 @@ import socket from "./socket";
 import type {TypedStore} from "./store";
 
 const defaultSettingConfig = {
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	apply() {},
 	default: null,
 	sync: null,

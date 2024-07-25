@@ -4,6 +4,7 @@ import fs, {Stats} from "fs";
 import os from "os";
 import _ from "lodash";
 import colors from "chalk";
+import {SearchOptions} from "ldapjs";
 
 import log from "./log";
 import Helper from "./helper";
@@ -46,7 +47,7 @@ export type Defaults = Pick<
 	| "discourseURL"
 	| "MC_BOT"
 > & {
-	join?: string;
+	join: string;
 };
 
 type Identd = {
@@ -59,7 +60,7 @@ type SearchDN = {
 	rootPassword: string;
 	filter: string;
 	base: string;
-	scope: string;
+	scope: SearchOptions["scope"];
 };
 
 type Ldap = {
@@ -76,6 +77,12 @@ type TlsOptions = any;
 type Debug = {
 	ircFramework: boolean;
 	raw: boolean;
+};
+
+type StoragePolicy = {
+	enabled: boolean;
+	maxAgeDays: number;
+	deletionPolicy: "statusOnly" | "everything";
 };
 
 export type ConfigType = {
@@ -99,6 +106,7 @@ export type ConfigType = {
 	defaults: Defaults;
 	lockNetwork: boolean;
 	messageStorage: string[];
+	storagePolicy: StoragePolicy;
 	useHexIp: boolean;
 	webirc?: WebIRC;
 	identd: Identd;

@@ -3,18 +3,12 @@
 import {ActionContext, createStore, Store, useStore as baseUseStore} from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
-import type {
-	ClientChan,
-	ClientConfiguration,
-	ClientNetwork,
-	InitClientChan,
-	NetChan,
-	ClientMessage,
-	ClientMention,
-} from "./types";
+import type {ClientChan, ClientNetwork, NetChan, ClientMention, ClientMessage} from "./types";
 import type {InjectionKey} from "vue";
 
 import {SettingsState} from "./settings";
+import {SearchQuery} from "../../shared/types/storage";
+import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
 
 const appName = document.title;
 
@@ -58,7 +52,7 @@ export type State = {
 	mentions: ClientMention[];
 	hasServiceWorker: boolean;
 	pushNotificationState: string;
-	serverConfiguration: ClientConfiguration | null;
+	serverConfiguration: SharedConfiguration | LockedSharedConfiguration | null;
 	sessions: ClientSession[];
 	sidebarOpen: boolean;
 	sidebarDragging: boolean;
@@ -85,35 +79,34 @@ export type State = {
 	messageSearchResults: {
 		results: ClientMessage[];
 	} | null;
-	messageSearchInProgress: boolean;
+	messageSearchPendingQuery: SearchQuery | null;
 	searchEnabled: boolean;
 };
 
-const state = () =>
-	({
-		appLoaded: false,
-		activeChannel: undefined,
-		currentUserVisibleError: null,
-		desktopNotificationState: detectDesktopNotificationState(),
-		isAutoCompleting: false,
-		isConnected: false,
-		networks: [],
-		mentions: [],
-		hasServiceWorker: false,
-		pushNotificationState: "unsupported",
-		serverConfiguration: null,
-		sessions: [],
-		sidebarOpen: false,
-		sidebarDragging: false,
-		userlistOpen: storage.get("thelounge.state.userlist") !== "false",
-		versionData: null,
-		versionStatus: "loading",
-		versionDataExpired: false,
-		serverHasSettings: false,
-		messageSearchResults: null,
-		messageSearchInProgress: false,
-		searchEnabled: false,
-	} as State);
+const state = (): State => ({
+	appLoaded: false,
+	activeChannel: undefined,
+	currentUserVisibleError: null,
+	desktopNotificationState: detectDesktopNotificationState(),
+	isAutoCompleting: false,
+	isConnected: false,
+	networks: [],
+	mentions: [],
+	hasServiceWorker: false,
+	pushNotificationState: "unsupported",
+	serverConfiguration: null,
+	sessions: [],
+	sidebarOpen: false,
+	sidebarDragging: false,
+	userlistOpen: storage.get("thelounge.state.userlist") !== "false",
+	versionData: null,
+	versionStatus: "loading",
+	versionDataExpired: false,
+	serverHasSettings: false,
+	messageSearchResults: null,
+	messageSearchPendingQuery: null,
+	searchEnabled: false,
+});
 
 type Getters = {
 	findChannelOnCurrentNetwork: (state: State) => (name: string) => ClientChan | undefined;
@@ -131,7 +124,6 @@ type Getters = {
 	findNetwork: (state: State) => (uuid: string) => ClientNetwork | null;
 	highlightCount(state: State): number;
 	title(state: State, getters: Omit<Getters, "title">): string;
-	initChannel: () => (channel: InitClientChan) => ClientChan;
 };
 
 // getters without the state argument
@@ -202,31 +194,6 @@ const getters: Getters = {
 
 		return alertEventCount + channelname + appName;
 	},
-	initChannel: () => (channel: InitClientChan) => {
-		// TODO: This should be a mutation
-		channel.pendingMessage = "";
-		channel.inputHistoryPosition = 0;
-
-		channel.inputHistory = [""].concat(
-			channel.messages
-				.filter((m) => m.self && m.text && m.type === "message")
-				.map((m) => m.text)
-				.reverse()
-				.slice(0, 99)
-		);
-		channel.historyLoading = false;
-		channel.scrolledToBottom = true;
-		channel.editTopic = false;
-
-		channel.moreHistoryAvailable = channel.totalMessages! > channel.messages.length;
-		delete channel.totalMessages;
-
-		if (channel.type === "channel") {
-			channel.usersOutdated = true;
-		}
-
-		return channel as ClientChan;
-	},
 };
 
 type Mutations = {
@@ -260,9 +227,9 @@ type Mutations = {
 	versionStatus(state: State, payload: State["versionStatus"]): void;
 	versionDataExpired(state: State, payload: State["versionDataExpired"]): void;
 	serverHasSettings(state: State, value: State["serverHasSettings"]): void;
-	messageSearchInProgress(state: State, value: State["messageSearchInProgress"]): void;
+	messageSearchPendingQuery(state: State, value: State["messageSearchPendingQuery"]): void;
 	messageSearchResults(state: State, value: State["messageSearchResults"]): void;
-	addMessageSearchResults(state: State, value: State["messageSearchResults"]): void;
+	addMessageSearchResults(state: State, value: NonNullable<State["messageSearchResults"]>): void;
 };
 
 const mutations: Mutations = {
@@ -338,8 +305,8 @@ const mutations: Mutations = {
 	serverHasSettings(state, value) {
 		state.serverHasSettings = value;
 	},
-	messageSearchInProgress(state, value) {
-		state.messageSearchInProgress = value;
+	messageSearchPendingQuery(state, value) {
+		state.messageSearchPendingQuery = value;
 	},
 	messageSearchResults(state, value) {
 		state.messageSearchResults = value;
@@ -354,7 +321,7 @@ const mutations: Mutations = {
 			return;
 		}
 
-		const results = [...state.messageSearchResults.results, ...value.results];
+		const results = [...value.results, ...state.messageSearchResults.results];
 
 		state.messageSearchResults = {
 			results,

@@ -1,6 +1,7 @@
 import {IrcEventHandler} from "../../client";
-import {ChanType} from "../../models/chan";
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -19,7 +20,7 @@ export default <IrcEventHandler>function (irc, network) {
 				time: data.time,
 			});
 
-			network.channels[0].pushMessage(client, msg, true);
+			network.getLobby().pushMessage(client, msg, true);
 
 			return;
 		}

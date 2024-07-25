@@ -1,53 +1,49 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import filenamify from "filenamify";
 
-import log from "../../log";
 import Config from "../../config";
 import {MessageStorage} from "./types";
-import Client from "../../client";
 import Channel from "../../models/chan";
-import {Message, MessageType} from "../../models/msg";
+import {Message} from "../../models/msg";
 import Network from "../../models/network";
+import {MessageType} from "../../../shared/types/msg";
 
 class TextFileMessageStorage implements MessageStorage {
-	client: Client;
 	isEnabled: boolean;
+	username: string;
 
-	constructor(client: Client) {
-		this.client = client;
+	constructor(username: string) {
+		this.username = username;
 		this.isEnabled = false;
 	}
 
-	enable() {
+	// eslint-disable-next-line @typescript-eslint/require-await
+	async enable() {
 		this.isEnabled = true;
 	}
 
-	close(callback: () => void) {
+	// eslint-disable-next-line @typescript-eslint/require-await
+	async close() {
 		this.isEnabled = false;
-
-		if (callback) {
-			callback();
-		}
 	}
 
-	index(network: Network, channel: Channel, msg: Message) {
+	async index(network: Network, channel: Channel, msg: Message) {
 		if (!this.isEnabled) {
 			return;
 		}
 
 		const logPath = path.join(
 			Config.getUserLogsPath(),
-			this.client.name,
+			this.username,
 			TextFileMessageStorage.getNetworkFolderName(network)
 		);
 
 		try {
-			fs.mkdirSync(logPath, {recursive: true});
-		} catch (e: any) {
-			log.error("Unable to create logs directory", String(e));
-			return;
+			await fs.mkdir(logPath, {recursive: true});
+		} catch (e) {
+			throw new Error(`Unable to create logs directory: ${e}`);
 		}
 
 		let line = `[${msg.time.toISOString()}] `;
@@ -106,35 +102,18 @@ class TextFileMessageStorage implements MessageStorage {
 
 		line += "\n";
 
-		fs.appendFile(
-			path.join(logPath, TextFileMessageStorage.getChannelFileName(channel)),
-			line,
-			(e) => {
-				if (e) {
-					log.error("Failed to write user log", e.message);
-				}
-			}
-		);
+		try {
+			await fs.appendFile(
+				path.join(logPath, TextFileMessageStorage.getChannelFileName(channel)),
+				line
+			);
+		} catch (e) {
+			throw new Error(`Failed to write user log: ${e}`);
+		}
 	}
 
-	deleteChannel() {
-		/* TODO: Truncating text logs is disabled, until we figure out some UI for it
-		if (!this.isEnabled) {
-			return;
-		}
-
-		const logPath = path.join(
-			Config.getUserLogsPath(),
-			this.client.name,
-			TextFileMessageStorage.getNetworkFolderName(network),
-			TextFileMessageStorage.getChannelFileName(channel)
-		);
-
-		fs.truncate(logPath, 0, (e) => {
-			if (e) {
-				log.error("Failed to truncate user log", e);
-			}
-		});*/
+	async deleteChannel() {
+		// Not implemented for text log files
 	}
 
 	getMessages() {

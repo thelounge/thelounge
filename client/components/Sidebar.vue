@@ -90,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted, PropType, ref} from "vue";
+import {defineComponent, nextTick, onMounted, onUnmounted, PropType, ref} from "vue";
 import {useRoute} from "vue-router";
 import {useStore} from "../js/store";
 import NetworkList from "./NetworkList.vue";
@@ -199,18 +199,20 @@ export default defineComponent({
 
 			store.commit("sidebarDragging", false);
 
-			if (sidebar.value) {
-				sidebar.value.style.transform = "";
-			}
-
-			if (props.overlay) {
-				props.overlay.style.opacity = "";
-			}
-
 			touchStartPos.value = null;
 			touchCurPos.value = null;
 			touchStartTime.value = 0;
 			menuIsMoving.value = false;
+
+			void nextTick(() => {
+				if (sidebar.value) {
+					sidebar.value.style.transform = "";
+				}
+
+				if (props.overlay) {
+					props.overlay.style.opacity = "";
+				}
+			});
 		};
 
 		const onTouchStart = (e: TouchEvent) => {

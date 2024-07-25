@@ -1,34 +1,25 @@
 import {defineComponent} from "vue";
 
-import Chan from "../../server/models/chan";
-import Network from "../../server/models/network";
-import User from "../../server/models/user";
-import Message from "../../server/models/msg";
-import {Mention} from "../../server/client";
-import {ClientConfiguration} from "../../server/server";
-import {LinkPreview} from "../../server/plugins/irc-events/link";
+import {SharedChan} from "../../shared/types/chan";
+import {SharedNetwork} from "../../shared/types/network";
+import {SharedUser} from "../../shared/types/user";
+import {SharedMention} from "../../shared/types/mention";
+import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
+import {LinkPreview, SharedMsg} from "../../shared/types/msg";
 
 interface LoungeWindow extends Window {
 	g_TheLoungeRemoveLoading?: () => void;
-	navigator: Window["navigator"] & {
-		setAppBadge?: (highlightCount: number) => void;
-		clearAppBadge?: () => void;
-	};
 }
 
-type ClientUser = User & {
-	//
-};
+type ClientUser = SharedUser;
 
-type ClientMessage = Omit<Message, "users"> & {
-	time: number;
-	users: string[];
-};
+// we will eventually need to put client specific fields here
+// which are not shared with the server
+export type ClientMessage = SharedMsg;
 
-type ClientChan = Omit<Chan, "users" | "messages"> & {
+type ClientChan = Omit<SharedChan, "messages"> & {
 	moreHistoryAvailable: boolean;
 	editTopic: boolean;
-	users: ClientUser[];
 	messages: ClientMessage[];
 
 	// these are added in store/initChannel
@@ -38,6 +29,8 @@ type ClientChan = Omit<Chan, "users" | "messages"> & {
 	historyLoading: boolean;
 	scrolledToBottom: boolean;
 	usersOutdated: boolean;
+
+	users: ClientUser[];
 };
 
 type InitClientChan = ClientChan & {
@@ -46,7 +39,7 @@ type InitClientChan = ClientChan & {
 };
 
 // We omit channels so we can use ClientChan[] instead of Chan[]
-type ClientNetwork = Omit<Network, "channels"> & {
+type ClientNetwork = Omit<SharedNetwork, "channels"> & {
 	isJoinChannelShown: boolean;
 	isCollapsed: boolean;
 	channels: ClientChan[];
@@ -57,23 +50,14 @@ type NetChan = {
 	network: ClientNetwork;
 };
 
-type ClientConfiguration = ClientConfiguration;
-type ClientMention = Mention & {
-	localetime: string;
+type ClientMention = SharedMention & {
+	localetime: string; // TODO: this needs to go the way of the dodo, nothing but a single component uses it
 	channel: NetChan | null;
 };
 
 type ClientLinkPreview = LinkPreview & {
 	sourceLoaded?: boolean;
 };
-
-declare module "vue-router" {
-	import Vue from "./vue";
-
-	interface Router {
-		app: Vue.VueApp;
-	}
-}
 
 interface BeforeInstallPromptEvent extends Event {
 	/**

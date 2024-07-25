@@ -1,9 +1,9 @@
 import socket from "../socket";
 import {store} from "../store";
 
-function input() {
+export function input(): boolean {
 	if (!store.state.activeChannel) {
-		return;
+		return false;
 	}
 
 	const messageIds: number[] = [];
@@ -11,7 +11,7 @@ function input() {
 	for (const message of store.state.activeChannel.channel.messages) {
 		let toggled = false;
 
-		for (const preview of message.previews) {
+		for (const preview of message.previews || []) {
 			if (preview.shown) {
 				preview.shown = false;
 				toggled = true;
@@ -34,5 +34,3 @@ function input() {
 
 	return true;
 }
-
-export default {input};

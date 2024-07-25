@@ -223,7 +223,6 @@ class Uploader {
 		try {
 			fs.mkdirSync(destDir, {recursive: true});
 		} catch (err: any) {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Error ensuring ${destDir} exists for uploads: ${err.message}`);
 
 			return abortWithError(err);
@@ -324,7 +323,6 @@ class Uploader {
 			return "application/octet-stream";
 		} catch (e: any) {
 			if (e.code !== "ENOENT") {
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 				log.warn(`Failed to read ${filePath}: ${e.message}`);
 			}
 		}

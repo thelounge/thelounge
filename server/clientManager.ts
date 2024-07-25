@@ -9,7 +9,7 @@ import Client, {UserConfig} from "./client";
 import Config from "./config";
 import WebPush from "./plugins/webpush";
 import log from "./log";
-import {Server} from "socket.io";
+import {Server} from "./server";
 
 class ClientManager {
 	clients: Client[];
@@ -144,6 +144,7 @@ class ClientManager {
 			}
 		} else {
 			client = new Client(this, name, userConfig);
+			client.connect();
 			this.clients.push(client);
 		}
 
@@ -183,7 +184,6 @@ class ClientManager {
 				mode: 0o600,
 			});
 		} catch (e: any) {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Failed to create user ${colors.green(name)} (${e})`);
 			throw e;
 		}
@@ -251,7 +251,6 @@ class ClientManager {
 
 			return callback ? callback() : true;
 		} catch (e: any) {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
 
 			if (callback) {
@@ -273,7 +272,7 @@ class ClientManager {
 		return true;
 	}
 
-	private readUserConfig(name: string) {
+	readUserConfig(name: string) {
 		const userPath = Config.getUserConfigPath(name);
 
 		if (!fs.existsSync(userPath)) {
@@ -285,7 +284,6 @@ class ClientManager {
 			const data = fs.readFileSync(userPath, "utf-8");
 			return JSON.parse(data) as UserConfig;
 		} catch (e: any) {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
 		}
 

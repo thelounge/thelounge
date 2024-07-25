@@ -1,7 +1,8 @@
 import {IrcEventHandler} from "../../client";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
 import Config from "../../config";
+import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -17,7 +18,7 @@ export default <IrcEventHandler>function (irc, network) {
 			command: data.command,
 		});
 
-		let target = network.channels[0];
+		let target = network.getLobby();
 
 		// If this error is channel specific and a channel
 		// with this name exists, put this error in that channel
@@ -46,7 +47,7 @@ export default <IrcEventHandler>function (irc, network) {
 			network.keepNick = irc.user.nick;
 		}
 
-		const lobby = network.channels[0];
+		const lobby = network.getLobby();
 		const msg = new Msg({
 			type: MessageType.ERROR,
 			text: message,
@@ -57,7 +58,6 @@ export default <IrcEventHandler>function (irc, network) {
 		if (irc.connection.registered === false) {
 			const nickLen = parseInt(network.irc.network.options.NICKLEN, 10) || 16;
 
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			const random = (data.nick || irc.user.nick) + Math.floor(Math.random() * 10);
 
 			// Safeguard nick changes up to allowed length
@@ -74,7 +74,7 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	irc.on("nick invalid", function (data) {
-		const lobby = network.channels[0];
+		const lobby = network.getLobby();
 		const msg = new Msg({
 			type: MessageType.ERROR,
 			text: data.nick + ": " + (data.reason || "Nickname is invalid."),

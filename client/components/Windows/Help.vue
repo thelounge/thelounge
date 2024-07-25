@@ -181,6 +181,26 @@
 
 			<div class="help-item">
 				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Ctrl</kbd> <kbd>↓</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>↓</kbd></span>
+				</div>
+				<div class="description">
+					<p>Switch to the next window with unread messages in the channel list.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Ctrl</kbd> <kbd>↑</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>⌘</kbd> <kbd>↑</kbd></span>
+				</div>
+				<div class="description">
+					<p>Switch to the previous window with unread messages in the channel list.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
 					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>A</kbd></span>
 					<span v-else><kbd>⌥</kbd> <kbd>A</kbd></span>
 				</div>
@@ -574,10 +594,13 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<code>/join channel</code>
+					<code>/join channel [password]</code>
 				</div>
 				<div class="description">
-					<p>Join a channel.</p>
+					<p>
+						Join a channel. Password is only needed in protected channels and can
+						usually be omitted.
+					</p>
 				</div>
 			</div>
 

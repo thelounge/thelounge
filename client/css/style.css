@@ -1438,42 +1438,42 @@ textarea.input {
 
 /* Nicknames */
 
-#chat .user {
+.user {
 	color: #50a656;
 }
 
-#chat.colored-nicks .user.color-1 { color: #107ead; }
-#chat.colored-nicks .user.color-2 { color: #a86500; }
-#chat.colored-nicks .user.color-3 { color: #008a3c; }
-#chat.colored-nicks .user.color-4 { color: #e00096; }
-#chat.colored-nicks .user.color-5 { color: #f0000c; }
-#chat.colored-nicks .user.color-6 { color: #000094; }
-#chat.colored-nicks .user.color-7 { color: #006441; }
-#chat.colored-nicks .user.color-8 { color: #00566e; }
-#chat.colored-nicks .user.color-9 { color: #e6006b; }
-#chat.colored-nicks .user.color-10 { color: #0d8766; }
-#chat.colored-nicks .user.color-11 { color: #006b3b; }
-#chat.colored-nicks .user.color-12 { color: #00857e; }
-#chat.colored-nicks .user.color-13 { color: #00465b; }
-#chat.colored-nicks .user.color-14 { color: #eb005a; }
-#chat.colored-nicks .user.color-15 { color: #e62600; }
-#chat.colored-nicks .user.color-16 { color: #0f8546; }
-#chat.colored-nicks .user.color-17 { color: #e60067; }
-#chat.colored-nicks .user.color-18 { color: #eb002b; }
-#chat.colored-nicks .user.color-19 { color: #eb003f; }
-#chat.colored-nicks .user.color-20 { color: #007a56; }
-#chat.colored-nicks .user.color-21 { color: #095092; }
-#chat.colored-nicks .user.color-22 { color: #000bde; }
-#chat.colored-nicks .user.color-23 { color: #008577; }
-#chat.colored-nicks .user.color-24 { color: #00367d; }
-#chat.colored-nicks .user.color-25 { color: #007e9e; }
-#chat.colored-nicks .user.color-26 { color: #006119; }
-#chat.colored-nicks .user.color-27 { color: #007ea8; }
-#chat.colored-nicks .user.color-28 { color: #3c8500; }
-#chat.colored-nicks .user.color-29 { color: #e6007e; }
-#chat.colored-nicks .user.color-30 { color: #c75300; }
-#chat.colored-nicks .user.color-31 { color: #eb0400; }
-#chat.colored-nicks .user.color-32 { color: #e60082; }
+.user.color-1 { color: #107ead; }
+.user.color-2 { color: #a86500; }
+.user.color-3 { color: #008a3c; }
+.user.color-4 { color: #e00096; }
+.user.color-5 { color: #f0000c; }
+.user.color-6 { color: #000094; }
+.user.color-7 { color: #006441; }
+.user.color-8 { color: #00566e; }
+.user.color-9 { color: #e6006b; }
+.user.color-10 { color: #0d8766; }
+.user.color-11 { color: #006b3b; }
+.user.color-12 { color: #00857e; }
+.user.color-13 { color: #00465b; }
+.user.color-14 { color: #eb005a; }
+.user.color-15 { color: #e62600; }
+.user.color-16 { color: #0f8546; }
+.user.color-17 { color: #e60067; }
+.user.color-18 { color: #eb002b; }
+.user.color-19 { color: #eb003f; }
+.user.color-20 { color: #007a56; }
+.user.color-21 { color: #095092; }
+.user.color-22 { color: #000bde; }
+.user.color-23 { color: #008577; }
+.user.color-24 { color: #00367d; }
+.user.color-25 { color: #007e9e; }
+.user.color-26 { color: #006119; }
+.user.color-27 { color: #007ea8; }
+.user.color-28 { color: #3c8500; }
+.user.color-29 { color: #e6007e; }
+.user.color-30 { color: #c75300; }
+.user.color-31 { color: #eb0400; }
+.user.color-32 { color: #e60082; }
 
 #chat .self .content {
 	color: var(--body-color-muted);
@@ -1928,7 +1928,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 100%;
 }
 
-#settings .apple-push-unsupported,
 #settings .settings-sync-panel {
 	padding: 10px;
 	margin-bottom: 16px;
@@ -1956,11 +1955,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #settings .settings-sync-panel .btn:active,
 #settings .settings-sync-panel .btn:focus {
 	box-shadow: 0 0 0 3px rgb(0 123 255 / 50%);
-}
-
-#settings .apple-push-unsupported a {
-	color: inherit;
-	text-decoration: underline;
 }
 
 #settings .opt {

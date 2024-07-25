@@ -1,6 +1,7 @@
 import {IrcEventHandler} from "../../client";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -9,7 +10,7 @@ export default <IrcEventHandler>function (irc, network) {
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
-			chan = network.channels[0];
+			chan = network.getLobby();
 		}
 
 		const invitedYou = data.invited === irc.user.nick;

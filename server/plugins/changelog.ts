@@ -3,6 +3,8 @@ import colors from "chalk";
 import log from "../log";
 import pkg from "../../package.json";
 import ClientManager from "../clientManager";
+import Config from "../config";
+import {SharedChangelogData} from "../../shared/types/changelog";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -11,31 +13,17 @@ export default {
 	fetch,
 	checkForUpdates,
 };
-export type ChangelogData = {
+const versions: SharedChangelogData = {
 	current: {
-		prerelease: boolean;
-		version: string;
-		changelog?: string;
-		url: string;
-	};
-	expiresAt: number;
-	latest?: {
-		prerelease: boolean;
-		version: string;
-		url: string;
-	};
-	packages?: boolean;
-};
-
-const versions = {
-	current: {
+		prerelease: false,
 		version: `v${pkg.version}`,
 		changelog: undefined,
+		url: "", // TODO: properly init
 	},
 	expiresAt: -1,
 	latest: undefined,
 	packages: undefined,
-} as ChangelogData;
+};
 
 async function fetch() {
 	const time = Date.now();
@@ -51,6 +39,7 @@ async function fetch() {
 				Accept: "application/vnd.github.v3.html", // Request rendered markdown
 				"User-Agent": pkg.name + "; +" + pkg.repository.url, // Identify the client
 			},
+			localAddress: Config.values.bind,
 		});
 
 		if (response.statusCode !== 200) {

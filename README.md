@@ -90,3 +90,6 @@ Before submitting any change, make sure to:
 - Run `yarn build:server` if you change anything in `server/`
   - The built files will be output to `dist/` by tsc
 - `yarn dev` can be used to start The Lounge with hot module reloading
+
+To ensure that you don't commit files that fail the linting, you can install a pre-commit git hook.
+Execute `yarn githooks-install` to do so.

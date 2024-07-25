@@ -1,8 +1,5 @@
 import {expect} from "chai";
-import {
-	findLinks,
-	findLinksWithSchema,
-} from "../../../../../client/js/helpers/ircmessageparser/findLinks";
+import {findLinks, findLinksWithSchema} from "../../shared/linkify";
 
 describe("findLinks", () => {
 	it("should find url", () => {
@@ -356,6 +353,26 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	it("should parse mailto links", () => {
+		const input = "mail@example.com mailto:mail@example.org";
+		const expected = [
+			{
+				link: "mailto:mail@example.com",
+				start: 0,
+				end: 16,
+			},
+			{
+				link: "mailto:mail@example.org",
+				start: 17,
+				end: 40,
+			},
+		];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
 	it("should not return urls with no schema if flag is specified", () => {
 		const input = "https://example.global //example.com http://example.group example.py";
 		const expected = [
@@ -374,5 +391,68 @@ describe("findLinks", () => {
 		const actual = findLinksWithSchema(input);
 
 		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should use http for protocol-less URLs", () => {
+		const input = "//example.com";
+		const expected = [
+			{
+				link: "http://example.com",
+				start: 0,
+				end: 13,
+			},
+		];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should find web+ schema urls", () => {
+		const input = "web+ap://instance.example/@Example web+whatever://example.com?some=value";
+		const expected = [
+			{
+				link: "web+ap://instance.example/@Example",
+				start: 0,
+				end: 34,
+			},
+			{
+				link: "web+whatever://example.com?some=value",
+				start: 35,
+				end: 72,
+			},
+		];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should find web+ schema urls if scheme required flag is specified", () => {
+		const input =
+			"web+ap://instance.example/@Example web+Whatever://example.com?some=value example.org";
+		const expected = [
+			{
+				link: "web+ap://instance.example/@Example",
+				start: 0,
+				end: 34,
+			},
+			{
+				link: "web+Whatever://example.com?some=value",
+				start: 35,
+				end: 72,
+			},
+		];
+
+		const actual = findLinksWithSchema(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should disregard invalid web+ links", () => {
+		const input = "web+://whatever.example";
+		const actual = findLinksWithSchema(input);
+
+		expect(actual).to.be.empty;
 	});
 });

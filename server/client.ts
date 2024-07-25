@@ -6,21 +6,25 @@ import crypto from "crypto";
 import colors from "chalk";
 
 import log from "./log";
-import Chan, {Channel, ChanType} from "./models/chan";
-import Msg, {MessageType, UserInMessage} from "./models/msg";
+import Chan, {ChanConfig} from "./models/chan";
+import Msg from "./models/msg";
 import Config from "./config";
-import constants from "../client/js/constants";
+import {condensedTypes} from "../shared/irc";
+import {MessageType} from "../shared/types/msg";
+import {SharedMention} from "../shared/types/mention";
 
 import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
-import Network, {IgnoreListItem, NetworkWithIrcFramework} from "./models/network";
+import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
-import {MessageStorage, SearchQuery} from "./plugins/messageStorage/types";
-
-type OrderItem = Chan["id"] | Network["uuid"];
-type Order = OrderItem[];
+import {MessageStorage} from "./plugins/messageStorage/types";
+import {StorageCleaner} from "./storageCleaner";
+import {SearchQuery, SearchResponse} from "../shared/types/storage";
+import {SharedChan, ChanType} from "../shared/types/chan";
+import {SharedNetwork} from "../shared/types/network";
+import {ServerToClientEvents} from "../shared/types/socket-events";
 
 const events = [
 	"away",
@@ -78,15 +82,7 @@ export type UserConfig = {
 		hostname?: string;
 		isSecure?: boolean;
 	};
-};
-
-export type Mention = {
-	chanId: number;
-	msgId: number;
-	type: MessageType;
-	time: Date;
-	text: string;
-	from: UserInMessage;
+	networks?: NetworkConfig[];
 };
 
 class Client {
@@ -95,15 +91,13 @@ class Client {
 	attachedClients!: {
 		[socketId: string]: {token: string; openChannel: number};
 	};
-	config!: UserConfig & {
-		networks?: Network[];
-	};
-	id!: number;
+	config!: UserConfig;
+	id: string;
 	idMsg!: number;
 	idChan!: number;
 	name!: string;
 	networks!: Network[];
-	mentions!: Mention[];
+	mentions!: SharedMention[];
 	manager!: ClientManager;
 	messageStorage!: MessageStorage[];
 	highlightRegex!: RegExp | null;
@@ -113,12 +107,12 @@ class Client {
 	fileHash!: string;
 
 	constructor(manager: ClientManager, name?: string, config = {} as UserConfig) {
+		this.id = uuidv4();
 		_.merge(this, {
 			awayMessage: "",
 			lastActiveChannel: -1,
 			attachedClients: {},
 			config: config,
-			id: uuidv4(),
 			idChan: 1,
 			idMsg: 1,
 			name: name,
@@ -138,16 +132,25 @@ class Client {
 
 		if (!Config.values.public && client.config.log) {
 			if (Config.values.messageStorage.includes("sqlite")) {
-				client.messageProvider = new SqliteMessageStorage(client);
+				client.messageProvider = new SqliteMessageStorage(client.name);
+
+				if (Config.values.storagePolicy.enabled) {
+					log.info(
+						`Activating storage cleaner. Policy: ${Config.values.storagePolicy.deletionPolicy}. MaxAge: ${Config.values.storagePolicy.maxAgeDays} days`
+					);
+					const cleaner = new StorageCleaner(client.messageProvider);
+					cleaner.start();
+				}
+
 				client.messageStorage.push(client.messageProvider);
 			}
 
 			if (Config.values.messageStorage.includes("text")) {
-				client.messageStorage.push(new TextFileMessageStorage(client));
+				client.messageStorage.push(new TextFileMessageStorage(client.name));
 			}
 
 			for (const messageStorage of client.messageStorage) {
-				messageStorage.enable();
+				messageStorage.enable().catch((e) => log.error(e));
 			}
 		}
 
@@ -176,8 +179,16 @@ class Client {
 				this.registerPushSubscription(session, session.pushSubscription, true);
 			}
 		});
+	}
 
-		(client.config.networks || []).forEach((network) => client.connect(network, true));
+	connect() {
+		const client = this;
+
+		if (client.networks.length !== 0) {
+			throw new Error(`${client.name} is already connected`);
+		}
+
+		(client.config.networks || []).forEach((network) => client.connectToNetwork(network, true));
 
 		// Networks are stored directly in the client object
 		// We don't need to keep it in the config object
@@ -188,7 +199,7 @@ class Client {
 
 			// Networks are created instantly, but to reduce server load on startup
 			// We randomize the IRC connections and channel log loading
-			let delay = manager.clients.length * 500;
+			let delay = client.manager.clients.length * 500;
 			client.networks.forEach((network) => {
 				setTimeout(() => {
 					network.channels.forEach((channel) => channel.loadMessages(client, network));
@@ -201,7 +212,7 @@ class Client {
 				delay += 1000 + Math.floor(Math.random() * 1000);
 			});
 
-			client.fileHash = manager.getDataToSave(client).newHash;
+			client.fileHash = client.manager.getDataToSave(client).newHash;
 		}
 	}
 
@@ -212,9 +223,12 @@ class Client {
 		return chan;
 	}
 
-	emit(event: string, data?: any) {
+	emit<Ev extends keyof ServerToClientEvents>(
+		event: Ev,
+		...args: Parameters<ServerToClientEvents[Ev]>
+	) {
 		if (this.manager !== null) {
-			this.manager.sockets.in(this.id.toString()).emit(event, data);
+			this.manager.sockets.in(this.id).emit(event, ...args);
 		}
 	}
 
@@ -238,19 +252,19 @@ class Client {
 		return false;
 	}
 
-	connect(args: Record<string, any>, isStartup = false) {
+	networkFromConfig(args: Record<string, any>): Network {
 		const client = this;
+
 		let channels: Chan[] = [];
 
-		// Get channel id for lobby before creating other channels for nicer ids
-		const lobbyChannelId = client.idChan++;
-
 		if (Array.isArray(args.channels)) {
-			let badName = false;
+			let badChanConf = false;
 
-			args.channels.forEach((chan: Chan) => {
-				if (!chan.name) {
-					badName = true;
+			args.channels.forEach((chan: ChanConfig) => {
+				const type = ChanType[(chan.type || "channel").toUpperCase()];
+
+				if (!chan.name || !type) {
+					badChanConf = true;
 					return;
 				}
 
@@ -258,13 +272,13 @@ class Client {
 					client.createChannel({
 						name: chan.name,
 						key: chan.key || "",
-						type: chan.type,
+						type: type,
 						muted: chan.muted,
 					})
 				);
 			});
 
-			if (badName && client.name) {
+			if (badChanConf && client.name) {
 				log.warn(
 					"User '" +
 						client.name +
@@ -291,7 +305,7 @@ class Client {
 		}
 
 		// TODO; better typing for args
-		const network = new Network({
+		return new Network({
 			uuid: args.uuid,
 			name: String(
 				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
@@ -321,13 +335,22 @@ class Client {
 			discourseURL: String(args.discourseURL || ""),
 			MC_BOT: String(args.MC_BOT || ""),
 		});
+	}
+
+	connectToNetwork(args: Record<string, any>, isStartup = false) {
+		const client = this;
+
+		// Get channel id for lobby before creating other channels for nicer ids
+		const lobbyChannelId = client.idChan++;
+
+		const network = this.networkFromConfig(args);
 
 		// Set network lobby channel id
-		network.channels[0].id = lobbyChannelId;
+		network.getLobby().id = lobbyChannelId;
 
 		client.networks.push(network);
 		client.emit("network", {
-			networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
+			network: network.getFilteredClone(this.lastActiveChannel, -1),
 		});
 
 		if (!network.validate(client)) {
@@ -346,7 +369,7 @@ class Client {
 		});
 
 		if (network.userDisconnected) {
-			network.channels[0].pushMessage(
+			network.getLobby().pushMessage(
 				client,
 				new Msg({
 					text: "You have manually disconnected from this network before, use the /connect command to connect again.",
@@ -361,7 +384,7 @@ class Client {
 
 		if (!isStartup) {
 			client.save();
-			channels.forEach((channel) => channel.loadMessages(client, network));
+			network.channels.forEach((channel) => channel.loadMessages(client, network));
 		}
 	}
 
@@ -467,38 +490,9 @@ class Client {
 		const cmd = args?.shift()?.toLowerCase() || "";
 
 		const irc = target.network.irc;
-		let connected = irc && irc.connection && irc.connection.connected;
+		const connected = irc?.connected;
 
-		if (inputs.userInputs.has(cmd)) {
-			const plugin = inputs.userInputs.get(cmd);
-
-			if (!plugin) {
-				// should be a no-op
-				throw new Error(`Plugin ${cmd} not found`);
-			}
-
-			if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
-				connected = true;
-				plugin.input.apply(client, [target.network, target.chan, cmd, args]);
-			}
-		} else if (inputs.pluginCommands.has(cmd)) {
-			const plugin = inputs.pluginCommands.get(cmd);
-
-			if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
-				connected = true;
-				plugin.input(
-					new PublicClient(client, plugin.packageInfo),
-					{network: target.network, chan: target.chan},
-					cmd,
-					args
-				);
-			}
-		} else if (connected) {
-			// TODO: fix
-			irc!.raw(text);
-		}
-
-		if (!connected) {
+		const emitFailureDisconnected = () => {
 			target.chan.pushMessage(
 				this,
 				new Msg({
@@ -506,7 +500,44 @@ class Client {
 					text: "You are not connected to the IRC network, unable to send your command.",
 				})
 			);
+		};
+
+		const plugin = inputs.userInputs.get(cmd);
+
+		if (plugin) {
+			if (!connected && !plugin.allowDisconnected) {
+				emitFailureDisconnected();
+				return;
+			}
+
+			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
+			return;
 		}
+
+		const extPlugin = inputs.pluginCommands.get(cmd);
+
+		if (extPlugin) {
+			if (!connected && !extPlugin.allowDisconnected) {
+				emitFailureDisconnected();
+				return;
+			}
+
+			extPlugin.input(
+				new PublicClient(client, extPlugin.packageInfo),
+				{network: target.network, chan: target.chan},
+				cmd,
+				args
+			);
+			return;
+		}
+
+		if (!connected) {
+			emitFailureDisconnected();
+			return;
+		}
+
+		// TODO: fix
+		irc!.raw(text);
 	}
 
 	compileCustomHighlights() {
@@ -571,7 +602,7 @@ class Client {
 					startIndex--;
 
 					// Do not count condensed messages towards the 100 messages
-					if (constants.condensedTypes.has(chan.messages[i].type)) {
+					if (condensedTypes.has(chan.messages[i].type)) {
 						continue;
 					}
 
@@ -616,19 +647,16 @@ class Client {
 		}
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.deleteChannel(target.network, target.chan);
+			messageStorage.deleteChannel(target.network, target.chan).catch((e) => log.error(e));
 		}
 	}
 
-	search(query: SearchQuery) {
-		if (this.messageProvider === undefined) {
-			return Promise.resolve({
+	async search(query: SearchQuery): Promise<SearchResponse> {
+		if (!this.messageProvider?.isEnabled) {
+			return {
+				...query,
 				results: [],
-				target: "",
-				networkUuid: "",
-				offset: 0,
-				searchTerm: query?.searchTerm,
-			});
+			};
 		}
 
 		return this.messageProvider.search(query);
@@ -668,56 +696,39 @@ class Client {
 		this.emit("open", targetNetChan.chan.id);
 	}
 
-	sort(data: {order: Order; type: "networks" | "channels"; target: string}) {
-		const order = data.order;
+	sortChannels(netid: SharedNetwork["uuid"], order: SharedChan["id"][]) {
+		const network = _.find(this.networks, {uuid: netid});
 
-		if (!_.isArray(order)) {
+		if (!network) {
 			return;
 		}
 
-		switch (data.type) {
-			case "networks":
-				this.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
-
-				// Sync order to connected clients
-				this.emit("sync_sort", {
-					order: this.networks.map((obj) => obj.uuid),
-					type: data.type,
-				});
-
-				break;
-
-			case "channels": {
-				const network = _.find(this.networks, {uuid: data.target});
-
-				if (!network) {
-					return;
-				}
-
-				network.channels.sort((a, b) => {
-					// Always sort lobby to the top regardless of what the client has sent
-					// Because there's a lot of code that presumes channels[0] is the lobby
-					if (a.type === ChanType.LOBBY) {
-						return -1;
-					} else if (b.type === ChanType.LOBBY) {
-						return 1;
-					}
-
-					return order.indexOf(a.id) - order.indexOf(b.id);
-				});
-
-				// Sync order to connected clients
-				this.emit("sync_sort", {
-					order: network.channels.map((obj) => obj.id),
-					type: data.type,
-					target: network.uuid,
-				});
-
-				break;
+		network.channels.sort((a, b) => {
+			// Always sort lobby to the top regardless of what the client has sent
+			// Because there's a lot of code that presumes channels[0] is the lobby
+			if (a.type === ChanType.LOBBY) {
+				return -1;
+			} else if (b.type === ChanType.LOBBY) {
+				return 1;
 			}
-		}
 
+			return order.indexOf(a.id) - order.indexOf(b.id);
+		});
 		this.save();
+		// Sync order to connected clients
+		this.emit("sync_sort:channels", {
+			network: network.uuid,
+			order: network.channels.map((obj) => obj.id),
+		});
+	}
+
+	sortNetworks(order: SharedNetwork["uuid"][]) {
+		this.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
+		this.save();
+		// Sync order to connected clients
+		this.emit("sync_sort:networks", {
+			order: this.networks.map((obj) => obj.uuid),
+		});
 	}
 
 	names(data: {target: number}) {
@@ -747,7 +758,7 @@ class Client {
 
 	quit(signOut?: boolean) {
 		const sockets = this.manager.sockets.sockets;
-		const room = sockets.adapter.rooms.get(this.id.toString());
+		const room = sockets.adapter.rooms.get(this.id);
 
 		if (room) {
 			for (const user of room) {
@@ -769,7 +780,7 @@ class Client {
 		});
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.close();
+			messageStorage.close().catch((e) => log.error(e));
 		}
 	}
 
@@ -807,12 +818,13 @@ class Client {
 	}
 
 	// TODO: type session to this.attachedClients
-	registerPushSubscription(session: any, subscription: ClientPushSubscription, noSave = false) {
+	registerPushSubscription(session: any, subscription: PushSubscriptionJSON, noSave = false) {
 		if (
 			!_.isPlainObject(subscription) ||
-			!_.isPlainObject(subscription.keys) ||
 			typeof subscription.endpoint !== "string" ||
 			!/^https?:\/\//.test(subscription.endpoint) ||
+			!_.isPlainObject(subscription.keys) ||
+			!subscription.keys || // TS compiler doesn't understand isPlainObject
 			typeof subscription.keys.p256dh !== "string" ||
 			typeof subscription.keys.auth !== "string"
 		) {

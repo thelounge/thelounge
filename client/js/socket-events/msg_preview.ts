@@ -5,7 +5,7 @@ socket.on("msg:preview", function (data) {
 	const netChan = store.getters.findChannel(data.chan);
 	const message = netChan?.channel.messages.find((m) => m.id === data.id);
 
-	if (!message) {
+	if (!message || !message.previews) {
 		return;
 	}
 

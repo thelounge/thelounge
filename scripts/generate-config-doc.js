@@ -1,18 +1,43 @@
 "use strict";
 
-// Usage: `node generate-config-doc.js DOC_REPO_PATH`
+// Usage: `npm run generate:config:doc DOC_REPO_PATH`
 //
 // Example:
 //
 // ```sh
-// node scripts/generate-config-doc.js ../thelounge.github.io/
+// npm run generate:config:doc ../thelounge.github.io/
 // ```
 
 const {readFileSync, writeFileSync} = require("fs");
 const colors = require("chalk");
-const log = require("../server/log");
 const {join} = require("path");
 const {spawnSync} = require("child_process");
+
+function timestamp() {
+	const datetime = new Date().toISOString().split(".")[0].replace("T", " ");
+
+	return colors.dim(datetime);
+}
+
+const log = {
+	/* eslint-disable no-console */
+	error(...args) {
+		console.error(timestamp(), colors.red("[ERROR]"), ...args);
+	},
+	warn(...args) {
+		console.error(timestamp(), colors.yellow("[WARN]"), ...args);
+	},
+	info(...args) {
+		console.log(timestamp(), colors.blue("[INFO]"), ...args);
+	},
+	debug(...args) {
+		console.log(timestamp(), colors.green("[DEBUG]"), ...args);
+	},
+	raw(...args) {
+		console.log(...args);
+	},
+	/* eslint-enable no-console */
+};
 
 function getGitUsername() {
 	return spawnSync("git", ["config", "user.name"], {encoding: "utf8"}).stdout.trim();
@@ -20,7 +45,17 @@ function getGitUsername() {
 
 const configContent = readFileSync(join(__dirname, "..", "defaults", "config.js"), "utf8");
 
+const docRoot = process.argv[2];
+
+if (!docRoot) {
+	log.error("Missing DOC_REPO_PATH. Pass the path to the cloned `thelounge.github.io` repo.");
+	process.exit(1);
+}
+
 const docPath = join(process.argv[2], "_includes", "config.js.md");
+
+/** @type {string[]} */
+const acc = [];
 
 const extractedDoc = configContent
 	.replace(/https:\/\/thelounge\.chat\/docs/g, "/docs") // make links relative
@@ -37,7 +72,7 @@ const extractedDoc = configContent
 		}
 
 		return acc;
-	}, [])
+	}, acc)
 	.join("\n");
 
 const infoBlockHeader = `<!--

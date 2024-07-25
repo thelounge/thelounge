@@ -1,12 +1,238 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import fs from "fs";
 import path from "path";
 import {expect} from "chai";
 import util from "../util";
-import Msg, {MessageType} from "../../server/models/msg";
+import Msg from "../../server/models/msg";
+import {MessageType} from "../../shared/types/msg";
 import Config from "../../server/config";
-import MessageStorage from "../../server/plugins/messageStorage/sqlite";
-import Client from "../../server/client";
+import MessageStorage, {
+	currentSchemaVersion,
+	migrations,
+	necessaryMigrations,
+	rollbacks,
+} from "../../server/plugins/messageStorage/sqlite";
+import sqlite3 from "sqlite3";
+import {DeletionRequest} from "../../server/plugins/messageStorage/types";
+
+const orig_schema = [
+	// Schema version #1
+	// DO NOT CHANGE THIS IN ANY WAY, it's needed to properly test migrations
+	"CREATE TABLE IF NOT EXISTS options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
+	"CREATE TABLE IF NOT EXISTS messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
+	"CREATE INDEX IF NOT EXISTS network_channel ON messages (network, channel)",
+	"CREATE INDEX IF NOT EXISTS time ON messages (time)",
+];
+
+const v1_schema_version = 1520239200;
+
+const v1_dummy_messages = [
+	{
+		network: "8f650427-79a2-4950-b8af-94088b61b37c",
+		channel: "##linux",
+		time: 1594845354280,
+		type: "message",
+		msg: '{"from":{"mode":"","nick":"rascul"},"text":"db on a flash drive doesn\'t sound very nice though","self":false,"highlight":false,"users":[]}',
+	},
+	{
+		network: "8f650427-79a2-4950-b8af-94088b61b37c",
+		channel: "##linux",
+		time: 1594845357234,
+		type: "message",
+		msg: '{"from":{"mode":"","nick":"GrandPa-G"},"text":"that\'s the point of changing to make sure.","self":false,"highlight":false,"users":[]}',
+	},
+	{
+		network: "8f650427-79a2-4950-b8af-94088b61b37c",
+		channel: "#pleroma-dev",
+		time: 1594845358464,
+		type: "message",
+		msg: '{"from":{"mode":"@","nick":"rinpatch"},"text":"it\'s complicated","self":false,"highlight":false,"users":[]}',
+	},
+];
+
+describe("SQLite migrations", function () {
+	let db: sqlite3.Database;
+
+	function serialize_run(stmt: string, ...params: any[]): Promise<void> {
+		return new Promise((resolve, reject) => {
+			db.serialize(() => {
+				db.run(stmt, params, (err) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve();
+				});
+			});
+		});
+	}
+
+	before(async function () {
+		db = new sqlite3.Database(":memory:");
+
+		for (const stmt of orig_schema) {
+			await serialize_run(stmt);
+		}
+
+		for (const msg of v1_dummy_messages) {
+			await serialize_run(
+				"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
+				msg.network,
+				msg.channel,
+				msg.time,
+				msg.type,
+				msg.msg
+			);
+		}
+	});
+
+	after(function (done) {
+		db.close(done);
+	});
+
+	it("has a down migration for every migration", function () {
+		expect(migrations.length).to.eq(rollbacks.length);
+		expect(migrations.map((m) => m.version)).to.have.ordered.members(
+			rollbacks.map((r) => r.version)
+		);
+	});
+
+	it("has working up-migrations", async function () {
+		const to_execute = necessaryMigrations(v1_schema_version);
+		expect(to_execute.length).to.eq(migrations.length);
+		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+
+		for (const stmt of to_execute.map((m) => m.stmts).flat()) {
+			await serialize_run(stmt);
+		}
+
+		await serialize_run("COMMIT TRANSACTION");
+	});
+
+	it("has working down-migrations", async function () {
+		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+
+		for (const rollback of rollbacks.slice().reverse()) {
+			if (rollback.rollback_forbidden) {
+				throw Error(
+					"Try to write a down migration, if you really can't, flip this to a break"
+				);
+			}
+
+			for (const stmt of rollback.stmts) {
+				await serialize_run(stmt);
+			}
+		}
+
+		await serialize_run("COMMIT TRANSACTION");
+	});
+});
+
+describe("SQLite unit tests", function () {
+	let store: MessageStorage;
+
+	beforeEach(async function () {
+		store = new MessageStorage("testUser");
+		await store._enable(":memory:");
+		store.initDone.resolve();
+	});
+
+	afterEach(async function () {
+		await store.close();
+	});
+
+	it("deletes messages when asked to", async function () {
+		const baseDate = new Date();
+
+		const net = {uuid: "testnet"} as any;
+		const chan = {name: "#channel"} as any;
+
+		for (let i = 0; i < 14; ++i) {
+			await store.index(
+				net,
+				chan,
+				new Msg({
+					time: dateAddDays(baseDate, -i),
+					text: `msg ${i}`,
+				})
+			);
+		}
+
+		const limit = 1;
+		const delReq: DeletionRequest = {
+			messageTypes: [MessageType.MESSAGE],
+			limit: limit,
+			olderThanDays: 2,
+		};
+
+		let deleted = await store.deleteMessages(delReq);
+		expect(deleted).to.equal(limit, "number of deleted messages doesn't match");
+
+		let id = 0;
+		let messages = await store.getMessages(net, chan, () => id++);
+		expect(messages.find((m) => m.text === "msg 13")).to.be.undefined; // oldest gets deleted first
+
+		// let's test if it properly cleans now
+		delReq.limit = 100;
+		deleted = await store.deleteMessages(delReq);
+		expect(deleted).to.equal(11, "number of deleted messages doesn't match");
+		messages = await store.getMessages(net, chan, () => id++);
+		expect(messages.map((m) => m.text)).to.have.ordered.members(["msg 1", "msg 0"]);
+	});
+
+	it("deletes only the types it should", async function () {
+		const baseDate = new Date();
+
+		const net = {uuid: "testnet"} as any;
+		const chan = {name: "#channel"} as any;
+
+		for (let i = 0; i < 6; ++i) {
+			await store.index(
+				net,
+				chan,
+				new Msg({
+					time: dateAddDays(baseDate, -i),
+					text: `msg ${i}`,
+					type: [
+						MessageType.ACTION,
+						MessageType.AWAY,
+						MessageType.JOIN,
+						MessageType.PART,
+						MessageType.KICK,
+						MessageType.MESSAGE,
+					][i],
+				})
+			);
+		}
+
+		const delReq: DeletionRequest = {
+			messageTypes: [MessageType.ACTION, MessageType.JOIN, MessageType.KICK],
+			limit: 100, // effectively no limit
+			olderThanDays: 0,
+		};
+
+		let deleted = await store.deleteMessages(delReq);
+		expect(deleted).to.equal(3, "number of deleted messages doesn't match");
+
+		let id = 0;
+		let messages = await store.getMessages(net, chan, () => id++);
+		expect(messages.map((m) => m.type)).to.have.ordered.members([
+			MessageType.MESSAGE,
+			MessageType.PART,
+			MessageType.AWAY,
+		]);
+
+		delReq.messageTypes = [
+			MessageType.JOIN, // this is not in the remaining set, just here as a dummy
+			MessageType.PART,
+			MessageType.MESSAGE,
+		];
+		deleted = await store.deleteMessages(delReq);
+		expect(deleted).to.equal(2, "number of deleted messages doesn't match");
+		messages = await store.getMessages(net, chan, () => id++);
+		expect(messages.map((m) => m.type)).to.have.ordered.members([MessageType.AWAY]);
+	});
+});
 
 describe("SQLite Message Storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -16,11 +242,38 @@ describe("SQLite Message Storage", function () {
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
 
+	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
+		return new Promise((resolve, reject) => {
+			store.database.serialize(() => {
+				store.database.get(stmt, params, (err, row) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(row);
+				});
+			});
+		});
+	}
+
+	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
+		return new Promise((resolve, reject) => {
+			store.database.serialize(() => {
+				store.database.all(stmt, params, (err, rows) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(rows);
+				});
+			});
+		});
+	}
+
 	before(function (done) {
-		store = new MessageStorage({
-			name: "testUser",
-			idMsg: 1,
-		} as Client);
+		store = new MessageStorage("testUser");
 
 		// Delete database file from previous test run
 		if (fs.existsSync(expectedPath)) {
@@ -37,61 +290,36 @@ describe("SQLite Message Storage", function () {
 		fs.rmdir(path.join(Config.getHomePath(), "logs"), done);
 	});
 
-	it("should resolve an empty array when disabled", function () {
-		return store.getMessages(null as any, null as any).then((messages) => {
-			expect(messages).to.be.empty;
-		});
-	});
-
-	it("should create database file", function () {
+	it("should create database file", async function () {
 		expect(store.isEnabled).to.be.false;
 		expect(fs.existsSync(expectedPath)).to.be.false;
 
-		store.enable();
-
+		await store.enable();
 		expect(store.isEnabled).to.be.true;
 	});
 
-	it("should create tables", function (done) {
-		store.database.all(
-			"SELECT name, tbl_name, sql FROM sqlite_master WHERE type = 'table'",
-			(err, row) => {
-				expect(err).to.be.null;
-				expect(row).to.deep.equal([
-					{
-						name: "options",
-						tbl_name: "options",
-						sql: "CREATE TABLE options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
-					},
-					{
-						name: "messages",
-						tbl_name: "messages",
-						sql: "CREATE TABLE messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
-					},
-				]);
-
-				done();
-			}
-		);
+	it("should resolve an empty array when disabled", async function () {
+		store.isEnabled = false;
+		const messages = await store.getMessages(null as any, null as any, null as any);
+		expect(messages).to.be.empty;
+		store.isEnabled = true;
 	});
 
-	it("should insert schema version to options table", function (done) {
-		store.database.get(
-			"SELECT value FROM options WHERE name = 'schema_version'",
-			(err, row) => {
-				expect(err).to.be.null;
-
-				// Should be sqlite.currentSchemaVersion,
-				// compared as string because it's returned as such from the database
-				expect(row.value).to.equal("1520239200");
-
-				done();
-			}
-		);
+	it("should insert schema version to options table", async function () {
+		const row = await db_get_one("SELECT value FROM options WHERE name = 'schema_version'");
+		expect(row.value).to.equal(currentSchemaVersion.toString());
 	});
 
-	it("should store a message", function () {
-		store.index(
+	it("should insert migrations", async function () {
+		const row = await db_get_one(
+			"SELECT id, version FROM migrations WHERE version = ?",
+			currentSchemaVersion
+		);
+		expect(row).to.not.be.undefined;
+	});
+
+	it("should store a message", async function () {
+		await store.index(
 			{
 				uuid: "this-is-a-network-guid",
 			} as any,
@@ -105,35 +333,32 @@ describe("SQLite Message Storage", function () {
 		);
 	});
 
-	it("should retrieve previously stored message", function () {
-		return store
-			.getMessages(
-				{
-					uuid: "this-is-a-network-guid",
-				} as any,
-				{
-					name: "#thisisaCHANNEL",
-				} as any
-			)
-			.then((messages) => {
-				expect(messages).to.have.lengthOf(1);
-
-				const msg = messages[0];
-
-				expect(msg.text).to.equal("Hello from sqlite world!");
-				expect(msg.type).to.equal(MessageType.MESSAGE);
-				expect(msg.time.getTime()).to.equal(123456789);
-			});
+	it("should retrieve previously stored message", async function () {
+		let msgid = 0;
+		const messages = await store.getMessages(
+			{
+				uuid: "this-is-a-network-guid",
+			} as any,
+			{
+				name: "#thisisaCHANNEL",
+			} as any,
+			() => msgid++
+		);
+		expect(messages).to.have.lengthOf(1);
+		const msg = messages[0];
+		expect(msg.text).to.equal("Hello from sqlite world!");
+		expect(msg.type).to.equal(MessageType.MESSAGE);
+		expect(msg.time.getTime()).to.equal(123456789);
 	});
 
-	it("should retrieve latest LIMIT messages in order", function () {
+	it("should retrieve latest LIMIT messages in order", async function () {
 		const originalMaxHistory = Config.values.maxHistory;
 
 		try {
 			Config.values.maxHistory = 2;
 
 			for (let i = 0; i < 200; ++i) {
-				store.index(
+				await store.index(
 					{uuid: "retrieval-order-test-network"} as any,
 					{name: "#channel"} as any,
 					new Msg({
@@ -143,60 +368,53 @@ describe("SQLite Message Storage", function () {
 				);
 			}
 
-			return store
-				.getMessages(
-					{uuid: "retrieval-order-test-network"} as any,
-					{name: "#channel"} as any
-				)
-				.then((messages) => {
-					expect(messages).to.have.lengthOf(2);
-					expect(messages.map((i) => i.text)).to.deep.equal(["msg 198", "msg 199"]);
-				});
+			let msgId = 0;
+			const messages = await store.getMessages(
+				{uuid: "retrieval-order-test-network"} as any,
+				{name: "#channel"} as any,
+				() => msgId++
+			);
+			expect(messages).to.have.lengthOf(2);
+			expect(messages.map((i_1) => i_1.text)).to.deep.equal(["msg 198", "msg 199"]);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 
-	it("should search messages", function () {
+	it("should search messages", async function () {
 		const originalMaxHistory = Config.values.maxHistory;
 
 		try {
 			Config.values.maxHistory = 2;
 
-			return store
-				.search({
-					searchTerm: "msg",
-					networkUuid: "retrieval-order-test-network",
-				} as any)
-				.then((messages) => {
-					// @ts-expect-error Property 'results' does not exist on type '[]'.
-					expect(messages.results).to.have.lengthOf(100);
+			const search = await store.search({
+				searchTerm: "msg",
+				networkUuid: "retrieval-order-test-network",
+				channelName: "",
+				offset: 0,
+			});
+			expect(search.results).to.have.lengthOf(100);
+			const expectedMessages: string[] = [];
 
-					const expectedMessages: string[] = [];
+			for (let i = 100; i < 200; ++i) {
+				expectedMessages.push(`msg ${i}`);
+			}
 
-					for (let i = 100; i < 200; ++i) {
-						expectedMessages.push(`msg ${i}`);
-					}
-
-					// @ts-expect-error Property 'results' does not exist on type '[]'.
-					expect(messages.results.map((i) => i.text)).to.deep.equal(expectedMessages);
-				});
+			expect(search.results.map((i_1) => i_1.text)).to.deep.equal(expectedMessages);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 
-	it("should search messages with escaped wildcards", function () {
-		function assertResults(query, expected) {
-			return store
-				.search({
-					searchTerm: query,
-					networkUuid: "this-is-a-network-guid2",
-				} as any)
-				.then((messages) => {
-					// @ts-expect-error Property 'results' does not exist on type '[]'.
-					expect(messages.results.map((i) => i.text)).to.deep.equal(expected);
-				});
+	it("should search messages with escaped wildcards", async function () {
+		async function assertResults(query: string, expected: string[]) {
+			const search = await store.search({
+				searchTerm: query,
+				networkUuid: "this-is-a-network-guid2",
+				channelName: "",
+				offset: 0,
+			});
+			expect(search.results.map((i) => i.text)).to.deep.equal(expected);
 		}
 
 		const originalMaxHistory = Config.values.maxHistory;
@@ -204,7 +422,7 @@ describe("SQLite Message Storage", function () {
 		try {
 			Config.values.maxHistory = 3;
 
-			store.index(
+			await store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -213,7 +431,7 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			store.index(
+			await store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -222,7 +440,7 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			store.index(
+			await store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -231,32 +449,40 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			return (
-				store
-					.getMessages(
-						{uuid: "this-is-a-network-guid2"} as any,
-						{name: "#channel"} as any
-					)
-					// .getMessages() waits for store.index() transactions to commit
-					.then(() => assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]))
-					.then(() => assertResults("%", ["foo % bar _ baz"]))
-					.then(() => assertResults("foo % bar ", ["foo % bar _ baz"]))
-					.then(() => assertResults("_", ["foo % bar _ baz"]))
-					.then(() => assertResults("bar _ baz", ["foo % bar _ baz"]))
-					.then(() => assertResults("%%", []))
-					.then(() => assertResults("@%", []))
-					.then(() => assertResults("@", ["bar @ baz"]))
-			);
+			await assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]);
+			await assertResults("%", ["foo % bar _ baz"]);
+			await assertResults("foo % bar ", ["foo % bar _ baz"]);
+			await assertResults("_", ["foo % bar _ baz"]);
+			await assertResults("bar _ baz", ["foo % bar _ baz"]);
+			await assertResults("%%", []);
+			await assertResults("@%", []);
+			await assertResults("@", ["bar @ baz"]);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 
-	it("should close database", function (done) {
-		store.close((err) => {
-			expect(err).to.be.null;
-			expect(fs.existsSync(expectedPath)).to.be.true;
-			done();
-		});
+	it("should be able to downgrade", async function () {
+		for (const rollback of rollbacks.slice().reverse()) {
+			if (rollback.rollback_forbidden) {
+				throw Error(
+					"Try to write a down migration, if you really can't, flip this to a break"
+				);
+			}
+
+			const new_version = await store.downgrade_to(rollback.version);
+			expect(new_version).to.equal(rollback.version);
+		}
+	});
+
+	it("should close database", async function () {
+		await store.close();
+		expect(fs.existsSync(expectedPath)).to.be.true;
 	});
 });
+
+function dateAddDays(date: Date, days: number) {
+	const ret = new Date(date.valueOf());
+	ret.setDate(date.getDate() + days);
+	return ret;
+}

@@ -1,24 +1,17 @@
 import _ from "lodash";
 import {v4 as uuidv4} from "uuid";
 import IrcFramework, {Client as IRCClient} from "irc-framework";
-import Chan, {Channel, ChanType} from "./chan";
-import Msg, {MessageType} from "./msg";
+import Chan, {ChanConfig, Channel} from "./chan";
+import Msg from "./msg";
 import Prefix from "./prefix";
 import Helper, {Hostmask} from "../helper";
 import Config, {WebIRC} from "../config";
 import STSPolicies from "../plugins/sts";
 import ClientCertificate, {ClientCertificateType} from "../plugins/clientCertificate";
 import Client from "../client";
-
-/**
- * List of keys which should be sent to the client by default.
- */
-const fieldsForClient = {
-	uuid: true,
-	name: true,
-	nick: true,
-	serverOptions: true,
-};
+import {MessageType} from "../../shared/types/msg";
+import {ChanType} from "../../shared/types/chan";
+import {SharedNetwork} from "../../shared/types/network";
 
 type NetworkIrcOptions = {
 	host: string;
@@ -52,7 +45,7 @@ type NetworkStatus = {
 };
 
 export type IgnoreListItem = Hostmask & {
-	when?: number;
+	when: number;
 };
 
 type IgnoreList = IgnoreListItem[];
@@ -65,6 +58,34 @@ export type NetworkWithIrcFramework = Network & {
 	irc: NonNullable<Network["irc"]> & {
 		options: NonNullableIRCWithOptions;
 	};
+};
+
+export type NetworkConfig = {
+	nick: string;
+	name: string;
+	host: string;
+	port: number;
+	tls: boolean;
+	userDisconnected: boolean;
+	rejectUnauthorized: boolean;
+	password: string;
+	awayMessage: string;
+	commands: any[];
+	username: string;
+	realname: string;
+	leaveMessage: string;
+	sasl: string;
+	saslAccount: string;
+	saslPassword: string;
+	channels: ChanConfig[];
+	uuid: string;
+	proxyHost: string;
+	proxyPort: number;
+	proxyUsername: string;
+	proxyPassword: string;
+	proxyEnabled: boolean;
+	highlightRegex?: string;
+	ignoreList: any[];
 };
 
 class Network {
@@ -211,7 +232,7 @@ class Network {
 		this.MC_BOT = cleanString(this.MC_BOT);
 
 		const error = function (network: Network, text: string) {
-			network.channels[0].pushMessage(
+			network.getLobby().pushMessage(
 				client,
 				new Msg({
 					type: MessageType.ERROR,
@@ -244,7 +265,7 @@ class Network {
 			if (Config.values.public) {
 				this.name = Config.values.defaults.name;
 				// Sync lobby channel name
-				this.channels[0].name = Config.values.defaults.name;
+				this.getLobby().name = Config.values.defaults.name;
 			}
 
 			this.host = Config.values.defaults.host;
@@ -408,7 +429,7 @@ class Network {
 			.filter((command) => command.length > 0);
 
 		// Sync lobby channel name
-		this.channels[0].name = this.name;
+		this.getLobby().name = this.name;
 
 		if (this.name !== oldNetworkName) {
 			// Send updated network name to all connected clients
@@ -423,10 +444,8 @@ class Network {
 		}
 
 		if (this.irc) {
-			const connected = this.irc.connection && this.irc.connection.connected;
-
 			if (this.nick !== oldNick) {
-				if (connected) {
+				if (this.irc.connected) {
 					// Send new nick straight away
 					this.irc.changeNick(this.nick);
 				} else {
@@ -441,7 +460,7 @@ class Network {
 			}
 
 			if (
-				connected &&
+				this.irc.connected &&
 				this.realname !== oldRealname &&
 				this.irc.network.cap.isEnabled("setname")
 			) {
@@ -489,24 +508,17 @@ class Network {
 		}
 	}
 
-	getFilteredClone(lastActiveChannel?: number, lastMessage?: number) {
-		const filteredNetwork = Object.keys(this).reduce((newNetwork, prop) => {
-			if (prop === "channels") {
-				// Channels objects perform their own cloning
-				newNetwork[prop] = this[prop].map((channel) =>
-					channel.getFilteredClone(lastActiveChannel, lastMessage)
-				);
-			} else if (fieldsForClient[prop]) {
-				// Some properties that are not useful for the client are skipped
-				newNetwork[prop] = this[prop];
-			}
-
-			return newNetwork;
-		}, {}) as Network;
-
-		filteredNetwork.status = this.getNetworkStatus();
-
-		return filteredNetwork;
+	getFilteredClone(lastActiveChannel?: number, lastMessage?: number): SharedNetwork {
+		return {
+			uuid: this.uuid,
+			name: this.name,
+			nick: this.nick,
+			serverOptions: this.serverOptions,
+			status: this.getNetworkStatus(),
+			channels: this.channels.map((channel) =>
+				channel.getFilteredClone(lastActiveChannel, lastMessage)
+			),
+		};
 	}
 
 	getNetworkStatus() {
@@ -661,6 +673,10 @@ class Network {
 			// Skip network lobby (it's always unshifted into first position)
 			return i > 0 && that.name.toLowerCase() === name;
 		});
+	}
+
+	getLobby() {
+		return this.channels[0];
 	}
 }
 

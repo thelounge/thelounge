@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import socket from "../socket";
-import cleanIrcMessage from "../helpers/ircmessageparser/cleanIrcMessage";
+import {cleanIrcMessage} from "../../../shared/irc";
 import {store} from "../store";
 import {switchToChannel} from "../router";
-import {ClientChan, ClientMention, ClientMessage, NetChan} from "../types";
+import {ClientChan, NetChan, ClientMessage} from "../types";
+import {SharedMsg, MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 let pop;
 
@@ -12,7 +13,6 @@ try {
 	pop.src = "audio/pop.wav";
 } catch (e) {
 	pop = {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		play() {},
 	};
 }
@@ -90,10 +90,18 @@ socket.on("msg", function (data) {
 		channel.moreHistoryAvailable = true;
 	}
 
-	if (channel.type === "channel") {
+	if (channel.type === ChanType.CHANNEL) {
 		updateUserList(channel, data.msg);
 	}
 });
+
+declare global {
+	// this extends the interface from lib.dom with additional stuff which is not
+	// exactly standard but implemented in some browsers
+	interface NotificationOptions {
+		timestamp?: number; // chrome has it, other browsers ignore it
+	}
+}
 
 function notifyMessage(
 	targetId: number,
@@ -105,7 +113,10 @@ function notifyMessage(
 		return;
 	}
 
-	if (msg.highlight || (store.state.settings.notifyAllMessages && msg.type === "message")) {
+	if (
+		msg.highlight ||
+		(store.state.settings.notifyAllMessages && msg.type === MessageType.MESSAGE)
+	) {
 		if (!document.hasFocus() || !activeChannel || activeChannel.channel !== channel) {
 			if (store.state.settings.notification) {
 				try {
@@ -122,22 +133,25 @@ function notifyMessage(
 			) {
 				let title: string;
 				let body: string;
+				// TODO: fix msg type and get rid of that conditional
+				const nick = msg.from && msg.from.nick ? msg.from.nick : "unkonown";
 
-				if (msg.type === "invite") {
+				if (msg.type === MessageType.INVITE) {
 					title = "New channel invite:";
-					body = msg.from.nick + " invited you to " + msg.channel;
+					body = nick + " invited you to " + msg.channel;
 				} else {
-					title = String(msg.from.nick);
+					title = nick;
 
-					if (channel.type !== "query") {
+					if (channel.type !== ChanType.QUERY) {
 						title += ` (${channel.name})`;
 					}
 
-					if (msg.type === "message") {
+					if (msg.type === MessageType.MESSAGE) {
 						title += " says:";
 					}
 
-					body = cleanIrcMessage(msg.text);
+					// TODO: fix msg type and get rid of that conditional
+					body = cleanIrcMessage(msg.text ? msg.text : "");
 				}
 
 				const timestamp = Date.parse(String(msg.time));
@@ -184,24 +198,40 @@ function notifyMessage(
 	}
 }
 
-function updateUserList(channel, msg) {
-	if (msg.type === "message" || msg.type === "action") {
-		const user = channel.users.find((u) => u.nick === msg.from.nick);
+function updateUserList(channel: ClientChan, msg: SharedMsg) {
+	switch (msg.type) {
+		case MessageType.MESSAGE: // fallthrough
 
-		if (user) {
-			user.lastMessage = new Date(msg.time).getTime() || Date.now();
+		case MessageType.ACTION: {
+			const user = channel.users.find((u) => u.nick === msg.from?.nick);
+
+			if (user) {
+				user.lastMessage = new Date(msg.time).getTime() || Date.now();
+			}
+
+			break;
 		}
-	} else if (msg.type === "quit" || msg.type === "part") {
-		const idx = channel.users.findIndex((u) => u.nick === msg.from.nick);
 
-		if (idx > -1) {
-			channel.users.splice(idx, 1);
+		case MessageType.QUIT: // fallthrough
+
+		case MessageType.PART: {
+			const idx = channel.users.findIndex((u) => u.nick === msg.from?.nick);
+
+			if (idx > -1) {
+				channel.users.splice(idx, 1);
+			}
+
+			break;
 		}
-	} else if (msg.type === "kick") {
-		const idx = channel.users.findIndex((u) => u.nick === msg.target.nick);
 
-		if (idx > -1) {
-			channel.users.splice(idx, 1);
+		case MessageType.KICK: {
+			const idx = channel.users.findIndex((u) => u.nick === msg.target?.nick);
+
+			if (idx > -1) {
+				channel.users.splice(idx, 1);
+			}
+
+			break;
 		}
 	}
 }

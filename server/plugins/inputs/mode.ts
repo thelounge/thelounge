@@ -1,7 +1,8 @@
 import {PluginInputHandler} from "./index";
 
-import Msg, {MessageType} from "../../models/msg";
-import {ChanType} from "../../models/chan";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 const commands = ["mode", "umode", "op", "deop", "hop", "dehop", "voice", "devoice"];
 

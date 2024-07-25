@@ -15,6 +15,7 @@
 				<RevealPassword v-slot:default="slotProps">
 					<input
 						id="current-password"
+						v-model="old_password"
 						autocomplete="current-password"
 						:type="slotProps.isVisible ? 'text' : 'password'"
 						name="old_password"
@@ -28,6 +29,7 @@
 				<RevealPassword v-slot:default="slotProps">
 					<input
 						id="new-password"
+						v-model="new_password"
 						:type="slotProps.isVisible ? 'text' : 'password'"
 						name="new_password"
 						autocomplete="new-password"
@@ -41,6 +43,7 @@
 				<RevealPassword v-slot:default="slotProps">
 					<input
 						id="new-password-verify"
+						v-model="verify_password"
 						:type="slotProps.isVisible ? 'text' : 'password'"
 						name="verify_password"
 						autocomplete="new-password"
@@ -111,17 +114,11 @@ export default defineComponent({
 		RevealPassword,
 		Session,
 	},
-	props: {
-		settingsForm: {
-			type: Object as PropType<HTMLFormElement>,
-			required: true,
-		},
-	},
-	setup(props) {
+	setup() {
 		const store = useStore();
 
 		const passwordErrors = {
-			missing_fields: "Please enter a new password",
+			missing_fields: "Please fill in all fields",
 			password_mismatch: "Both new password fields must match",
 			password_incorrect: "The current password field does not match your account password",
 			update_failed: "Failed to update your password",
@@ -131,6 +128,10 @@ export default defineComponent({
 			success: boolean;
 			error: keyof typeof passwordErrors;
 		}>();
+
+		const old_password = ref("");
+		const new_password = ref("");
+		const verify_password = ref("");
 
 		const currentSession = computed(() => {
 			return store.state.sessions.find((item) => item.current);
@@ -149,12 +150,10 @@ export default defineComponent({
 		});
 
 		const changePassword = () => {
-			const allFields = new FormData(props.settingsForm);
-
 			const data = {
-				old_password: allFields.get("old_password"),
-				new_password: allFields.get("new_password"),
-				verify_password: allFields.get("verify_password"),
+				old_password: old_password.value,
+				new_password: new_password.value,
+				verify_password: verify_password.value,
 			};
 
 			if (!data.old_password || !data.new_password || !data.verify_password) {
@@ -189,6 +188,9 @@ export default defineComponent({
 			activeSessions,
 			otherSessions,
 			changePassword,
+			old_password,
+			new_password,
+			verify_password,
 		};
 	},
 });

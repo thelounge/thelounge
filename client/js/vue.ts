@@ -5,11 +5,11 @@ import {createApp} from "vue";
 import {store, CallableGetters, key} from "./store";
 import App from "../components/App.vue";
 import storage from "./localStorage";
-import {router, navigate} from "./router";
+import {router} from "./router";
 import socket from "./socket";
+import "./socket-events"; // this sets up all socket event listeners, do not remove
 import eventbus from "./eventbus";
 
-import "./socket-events";
 import "./webpush";
 import "./keybinds";
 import {LoungeWindow} from "./types";
@@ -20,7 +20,6 @@ const faviconAlerted = favicon?.dataset.other || "";
 
 export const VueApp = createApp(App);
 
-router.app = VueApp;
 VueApp.use(router);
 VueApp.use(store, key);
 
@@ -62,10 +61,10 @@ store.watch(
 
 		if (nav.setAppBadge) {
 			if (highlightCount > 0) {
-				nav.setAppBadge(highlightCount);
+				nav.setAppBadge(highlightCount).catch(() => {});
 			} else {
 				if (nav.clearAppBadge) {
-					nav.clearAppBadge();
+					nav.clearAppBadge().catch(() => {});
 				}
 			}
 		}

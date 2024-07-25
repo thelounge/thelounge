@@ -1,54 +1,54 @@
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
 import LinkPrefetch from "./link";
-import cleanIrcMessage from "../../../client/js/helpers/ircmessageparser/cleanIrcMessage";
+import {cleanIrcMessage} from "../../../shared/irc";
 import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
-import Chan, {ChanType} from "../../models/chan";
+import Chan from "../../models/chan";
 import User from "../../models/user";
+import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
+import {MessageEventArgs} from "irc-framework";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
+
+type HandleInput = {
+	nick: string;
+	hostname: string;
+	ident: string;
+	target: string;
+	type: MessageType;
+	time?: number;
+	text?: string;
+	from_server?: boolean;
+	message: string;
+	group?: string;
+};
+
+function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
+	return {...data, type: type};
+}
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("notice", function (data) {
-		data.type = MessageType.NOTICE;
-
-		type ModifiedData = typeof data & {
-			type: MessageType.NOTICE;
-		};
-
-		handleMessage(data as ModifiedData);
+		handleMessage(convertForHandle(MessageType.NOTICE, data));
 	});
 
 	irc.on("action", function (data) {
-		data.type = MessageType.ACTION;
-		handleMessage(data);
+		handleMessage(convertForHandle(MessageType.ACTION, data));
 	});
 
 	irc.on("privmsg", function (data) {
-		data.type = MessageType.MESSAGE;
-		handleMessage(data);
+		handleMessage(convertForHandle(MessageType.MESSAGE, data));
 	});
 
 	irc.on("wallops", function (data) {
 		data.from_server = true;
-		data.type = MessageType.WALLOPS;
-		handleMessage(data);
+		handleMessage(convertForHandle(MessageType.WALLOPS, data));
 	});
 
-	function handleMessage(data: {
-		nick: string;
-		hostname: string;
-		ident: string;
-		target: string;
-		type: MessageType;
-		time: number;
-		text?: string;
-		from_server?: boolean;
-		message: string;
-		group?: string;
-	}) {
+	function handleMessage(data: HandleInput) {
 		let chan: Chan | undefined;
 		let from: User;
 		let highlight = false;
@@ -75,7 +75,7 @@ export default <IrcEventHandler>function (irc, network) {
 				!network.getChannel(data.target) ||
 				network.getChannel(data.target)?.type !== ChanType.CHANNEL)
 		) {
-			chan = network.channels[0];
+			chan = network.getLobby();
 			from = chan.getUser(data.nick);
 		} else {
 			if (shouldIgnore) {
@@ -95,7 +95,7 @@ export default <IrcEventHandler>function (irc, network) {
 				// Send notices that are not targeted at us into the server window
 				if (data.type === MessageType.NOTICE) {
 					showInActive = true;
-					chan = network.channels[0];
+					chan = network.getLobby();
 				} else {
 					chan = client.createChannel({
 						type: ChanType.QUERY,
@@ -105,6 +105,7 @@ export default <IrcEventHandler>function (irc, network) {
 					client.emit("join", {
 						network: network.uuid,
 						chan: chan.getFilteredClone(true),
+						shouldOpen: false,
 						index: network.addChannel(chan),
 					});
 					client.save();
@@ -125,7 +126,7 @@ export default <IrcEventHandler>function (irc, network) {
 		// msg is constructed down here because `from` is being copied in the constructor
 		const msg = new Msg({
 			type: data.type,
-			time: data.time as any,
+			time: data.time ? new Date(data.time) : undefined,
 			text: data.message,
 			self: self,
 			from: from,
@@ -164,7 +165,6 @@ export default <IrcEventHandler>function (irc, network) {
 
 		while ((match = nickRegExp.exec(data.message))) {
 			if (chan.findUser(match[1])) {
-				// @ts-expect-error Type 'string' is not assignable to type '{ mode: string; }'.ts(2345)
 				msg.users.push(match[1]);
 			}
 		}

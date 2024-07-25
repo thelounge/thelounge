@@ -1,8 +1,6 @@
-// @ts-nocheck TODO re-enable
 import {expect} from "chai";
-import Client from "../../server/client";
-
-import Chan, {ChanType} from "../../server/models/chan";
+import Chan from "../../server/models/chan";
+import {ChanType} from "../../shared/types/chan";
 import ModeCommand from "../../server/plugins/inputs/mode";
 
 describe("Commands", function () {
@@ -59,12 +57,16 @@ describe("Commands", function () {
 			},
 		});
 
-		it("should not mess with the given target", function (this: CommandContext) {
+		function modeCommandInputCall(net, chan, cmd, args) {
+			ModeCommand.input.call({} as any, net as any, chan, cmd, Array.from(args));
+		}
+
+		it("should not mess with the given target", function () {
 			const test = function (expected: string, args: string[]) {
-				ModeCommand.input(testableNetwork, channel, "mode", Array.from(args));
+				modeCommandInputCall(testableNetwork, channel, "mode", Array.from(args));
 				expect(testableNetwork.lastCommand).to.equal(expected);
 
-				ModeCommand.input(testableNetwork, lobby, "mode", Array.from(args));
+				modeCommandInputCall(testableNetwork, lobby, "mode", args);
 				expect(testableNetwork.lastCommand).to.equal(expected);
 			};
 
@@ -77,51 +79,51 @@ describe("Commands", function () {
 		});
 
 		it("should assume target if none given", function () {
-			ModeCommand.input(testableNetwork, channel, "mode", []);
+			modeCommandInputCall(testableNetwork, channel, "mode", []);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge");
 
-			ModeCommand.input(testableNetwork, lobby, "mode", []);
+			modeCommandInputCall(testableNetwork, lobby, "mode", []);
 			expect(testableNetwork.lastCommand).to.equal("MODE xPaw");
 
-			ModeCommand.input(testableNetwork, channel, "mode", ["+b"]);
+			modeCommandInputCall(testableNetwork, channel, "mode", ["+b"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +b");
 
-			ModeCommand.input(testableNetwork, lobby, "mode", ["+b"]);
+			modeCommandInputCall(testableNetwork, lobby, "mode", ["+b"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE xPaw +b");
 
-			ModeCommand.input(testableNetwork, channel, "mode", ["-o", "hey"]);
+			modeCommandInputCall(testableNetwork, channel, "mode", ["-o", "hey"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -o hey");
 
-			ModeCommand.input(testableNetwork, lobby, "mode", ["-i", "idk"]);
+			modeCommandInputCall(testableNetwork, lobby, "mode", ["-i", "idk"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE xPaw -i idk");
 		});
 
 		it("should support shorthand commands", function () {
-			ModeCommand.input(testableNetwork, channel, "op", ["xPaw"]);
+			modeCommandInputCall(testableNetwork, channel, "op", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +o xPaw");
 
-			ModeCommand.input(testableNetwork, channel, "deop", ["xPaw"]);
+			modeCommandInputCall(testableNetwork, channel, "deop", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -o xPaw");
 
-			ModeCommand.input(testableNetwork, channel, "hop", ["xPaw"]);
+			modeCommandInputCall(testableNetwork, channel, "hop", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +h xPaw");
 
-			ModeCommand.input(testableNetwork, channel, "dehop", ["xPaw"]);
+			modeCommandInputCall(testableNetwork, channel, "dehop", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -h xPaw");
 
-			ModeCommand.input(testableNetwork, channel, "voice", ["xPaw"]);
+			modeCommandInputCall(testableNetwork, channel, "voice", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +v xPaw");
 
-			ModeCommand.input(testableNetwork, channel, "devoice", ["xPaw"]);
+			modeCommandInputCall(testableNetwork, channel, "devoice", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v xPaw");
 		});
 
 		it("should use ISUPPORT MODES on shorthand commands", function () {
-			ModeCommand.input(testableNetwork, channel, "voice", ["xPaw", "Max-P"]);
+			modeCommandInputCall(testableNetwork, channel, "voice", ["xPaw", "Max-P"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +vv xPaw Max-P");
 
 			// since the limit for modes on tests is 4, it should send two commands
-			ModeCommand.input(testableNetwork, channel, "devoice", [
+			modeCommandInputCall(testableNetwork, channel, "devoice", [
 				"xPaw",
 				"Max-P",
 				"hey",
@@ -135,10 +137,10 @@ describe("Commands", function () {
 		});
 
 		it("should fallback to all modes at once for shorthand commands", function () {
-			ModeCommand.input(testableNetworkNoSupports, channel, "voice", ["xPaw"]);
+			modeCommandInputCall(testableNetworkNoSupports, channel, "voice", ["xPaw"]);
 			expect(testableNetworkNoSupports.lastCommand).to.equal("MODE #thelounge +v xPaw");
 
-			ModeCommand.input(testableNetworkNoSupports, channel, "devoice", ["xPaw", "Max-P"]);
+			modeCommandInputCall(testableNetworkNoSupports, channel, "devoice", ["xPaw", "Max-P"]);
 			expect(testableNetworkNoSupports.lastCommand).to.equal(
 				"MODE #thelounge -vv xPaw Max-P"
 			);

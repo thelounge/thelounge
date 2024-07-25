@@ -1,5 +1,9 @@
 name: Release
 
+permissions:
+  contents: read
+  id-token: write
+
 on:
   push:
     tags: v*
@@ -14,8 +18,9 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
+          node-version: "latest"
           registry-url: "https://registry.npmjs.org/"
 
       - name: Install
@@ -31,13 +36,13 @@ jobs:
 
       - name: Publish latest
         if: "!contains(github.ref, '-')"
-        run: npm publish --tag latest
+        run: npm publish --tag latest --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
       - name: Publish next
         if: contains(github.ref, '-')
-        run: npm publish --tag next
+        run: npm publish --tag next --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 

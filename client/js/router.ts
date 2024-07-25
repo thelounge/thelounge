@@ -110,26 +110,23 @@ router.beforeEach((to, from, next) => {
 	next();
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
 	// Disallow navigating to non-existing routes
 	if (!to.matched.length) {
-		next(false);
-		return;
+		return false;
 	}
 
 	// Disallow navigating to invalid channels
 	if (to.name === "RoutedChat" && !store.getters.findChannel(Number(to.params.id))) {
-		next(false);
-		return;
+		return false;
 	}
 
 	// Disallow navigating to invalid networks
 	if (to.name === "NetworkEdit" && !store.getters.findNetwork(String(to.params.uuid))) {
-		next(false);
-		return;
+		return false;
 	}
 
-	next();
+	return true;
 });
 
 router.afterEach((to) => {
@@ -165,7 +162,6 @@ async function navigate(routeName: string, params: any = {}) {
 		// If current route is null, replace the history entry
 		// This prevents invalid entries from lingering in history,
 		// and then the route guard preventing proper navigation
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		await router.replace({name: routeName, params}).catch(() => {});
 	}
 }

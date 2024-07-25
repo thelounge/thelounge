@@ -1,12 +1,13 @@
 import {IrcEventHandler} from "../../client";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("unknown command", function (command) {
-		let target = network.channels[0];
+		let target = network.getLobby();
 
 		// Do not display users own name
 		if (command.params.length > 0 && command.params[0] === network.irc.user.nick) {

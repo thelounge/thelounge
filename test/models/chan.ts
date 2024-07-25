@@ -195,33 +195,28 @@ describe("Chan", function () {
 	});
 
 	describe("#getFilteredClone(lastActiveChannel, lastMessage)", function () {
-		it("should send empty user list", function () {
-			const chan = new Chan();
-			chan.setUser(new User({nick: "test"}));
-
-			expect(chan.getFilteredClone().users).to.be.empty;
-		});
-
 		it("should keep necessary properties", function () {
 			const chan = new Chan();
 
-			expect(chan.getFilteredClone())
-				.to.be.an("object")
-				.that.has.all.keys(
-					"firstUnread",
-					"highlight",
-					"id",
-					"key",
-					"messages",
-					"muted",
-					"totalMessages",
-					"name",
-					"state",
-					"topic",
-					"type",
-					"unread",
-					"users"
-				);
+			expect(chan.getFilteredClone()).to.be.an("object").that.has.all.keys(
+				"firstUnread",
+				"highlight",
+				"id",
+				"key",
+				"messages",
+				"muted",
+				"totalMessages",
+				"name",
+				"state",
+				"topic",
+				"type",
+				"unread",
+				// the following are there in special cases, need to fix the types
+				"num_users",
+				"special",
+				"closed",
+				"data"
+			);
 		});
 
 		it("should send only last message for non active channel", function () {

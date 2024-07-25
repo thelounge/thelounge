@@ -1,8 +1,9 @@
 import {PluginInputHandler} from "./index";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
 import Config from "../../config";
-import {ChanType, ChanState} from "../../models/chan";
+import {MessageType} from "../../../shared/types/msg";
+import {ChanType, ChanState} from "../../../shared/types/chan";
 
 const commands = ["close", "leave", "part"];
 const allowDisconnected = true;
@@ -36,9 +37,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	if (
 		target.type !== ChanType.CHANNEL ||
 		target.state === ChanState.PARTED ||
-		!network.irc ||
-		!network.irc.connection ||
-		!network.irc.connection.connected
+		!network.irc.connected
 	) {
 		this.part(network, target);
 	} else {
