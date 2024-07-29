@@ -211,7 +211,7 @@ export default defineComponent({
 
 			if (props.channel.topic !== newTopic) {
 				const target = props.channel.id;
-				const text = `/raw TOPIC ${props.channel.name} :${newTopic}`;
+				const text = `/topic ${newTopic}`;
 				socket.emit("input", {target, text});
 			}
 		};
