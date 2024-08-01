@@ -1770,10 +1770,10 @@
     tapable "^2.2.0"
     webpack "^5"
 
-"@types/ws@8.5.10":
-  version "8.5.10"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.10.tgz#4acfb517970853fa6574a3a6886791d04a396787"
-  integrity sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==
+"@types/ws@8.5.12":
+  version "8.5.12"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.12.tgz#619475fe98f35ccca2a2f6c137702d85ec247b7e"
+  integrity sha512-3tPRkv1EtkDpzlgyKyI8pGsGZAGPEaXeu0DOj5DI25Ja91bdAYddYHbADRYVrZMRbfW+1l5YwXVDKohDJNQxkQ==
   dependencies:
     "@types/node" "*"
 
