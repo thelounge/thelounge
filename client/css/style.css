@@ -590,6 +590,10 @@ p {
 #app {
 	height: 100%;
 	width: 100%;
+	padding-top: env(safe-area-inset-top);
+	margin-bottom: env(safe-area-inset-bottom);
+	padding-left: env(safe-area-inset-left);
+	padding-right: env(safe-area-inset-right);
 }
 
 #viewport {
@@ -675,6 +679,7 @@ p {
 	max-height: 100%;
 	will-change: transform;
 	color: #b7c5d1; /* same as .channel-list-item color */
+	padding-bottom: env(safe-area-inset-bottom);
 }
 
 #viewport.menu-open #sidebar {
