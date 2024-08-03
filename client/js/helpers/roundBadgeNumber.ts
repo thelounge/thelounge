@@ -3,5 +3,9 @@ export default (count: number) => {
 		return count.toString();
 	}
 
-	return (count / 1000).toFixed(2).slice(0, -1) + "k";
+	const suffixes = ["", "k", "M"];
+	const magnitudeIndex = Math.min(Math.floor(Math.log10(count) / 3), suffixes.length - 1);
+	const magnitude = 1000 ** magnitudeIndex;
+	const roundedCount = (count / magnitude).toFixed(1);
+	return roundedCount + suffixes[magnitudeIndex];
 };
