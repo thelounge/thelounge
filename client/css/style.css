@@ -50,6 +50,7 @@
 html {
 	box-sizing: border-box;
 	-webkit-tap-highlight-color: transparent; /* remove tap highlight on touch devices */
+	padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
 }
 
 *,
@@ -105,6 +106,13 @@ body {
 	  * See http://stackoverflow.com/a/29313685/1935861
 	  */
 	overflow: hidden; /* iOS Safari requires overflow rather than overflow-y */
+}
+
+@media screen and (orientation: portrait) {
+	/* Allow the main chat interface to merge into the background. */
+	body {
+		background: white;
+	}
 }
 
 body.force-no-select * {
@@ -672,7 +680,7 @@ p {
 	display: none;
 	flex-direction: column;
 	width: 220px;
-	max-height: 100%;
+	max-height: 100vh;
 	will-change: transform;
 	color: #b7c5d1; /* same as .channel-list-item color */
 }
@@ -2211,6 +2219,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: relative;
 }
 
+@media screen and (orientation: landscape) {
+	/* Pad the form with safe area insets. */
+	#form {
+		padding-bottom: env(safe-area-inset-bottom)
+	}
+
+	/* When the form becomes focused, remove the safe area insets padding. A bit of a hack, but seems to work. */
+	#form:focus-within {
+		padding-bottom: 6px; /* Reset to the default padding */
+	}
+}
+
 #user-visible-error {
 	font-size: 14px;
 	line-height: 1.5;
@@ -2272,6 +2292,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #form #upload[disabled],
 #form #submit[disabled] {
 	opacity: 0.5;
+}
+
+#mentions-popup-container {
+	margin-top: env(safe-area-inset-top);
 }
 
 #mentions-popup-container,
@@ -2638,7 +2662,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#sidebar {
 		display: flex;
 		background: var(--body-bg-color);
-		height: 100%;
+		height: 100vh;
+		padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 		position: absolute;
 		left: -220px;
 		z-index: 10;
@@ -2937,3 +2962,4 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	justify-content: center;
 	align-items: center;
 }
+
