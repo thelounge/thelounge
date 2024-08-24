@@ -673,7 +673,7 @@ p {
 	display: none;
 	flex-direction: column;
 	width: 220px;
-	max-height: 100vh;
+	max-height: 100%;
 	will-change: transform;
 	color: #b7c5d1; /* same as .channel-list-item color */
 }
