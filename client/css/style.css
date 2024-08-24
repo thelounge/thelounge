@@ -108,13 +108,6 @@ body {
 	overflow: hidden; /* iOS Safari requires overflow rather than overflow-y */
 }
 
-@media screen and (orientation: portrait) {
-	/* Allow the main chat interface to merge into the background. */
-	body {
-		background: white;
-	}
-}
-
 body.force-no-select * {
 	user-select: none !important;
 }
@@ -2662,8 +2655,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#sidebar {
 		display: flex;
 		background: var(--body-bg-color);
-		height: 100vh;
-		padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+		height: 100%;
+		padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 		position: absolute;
 		left: -220px;
 		z-index: 10;

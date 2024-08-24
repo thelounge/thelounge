@@ -15,12 +15,6 @@
 	box-shadow: 0 0 25px rgb(0 0 0 / 50%);
 }
 
-@media screen and (orientation: portrait) {
-	.window {
-		box-shadow: 0 0 0;
-	}
-}
-
 @media (max-width: 768px) {
 	#loading .window {
 		margin: 0;
