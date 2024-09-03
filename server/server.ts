@@ -107,7 +107,7 @@ export default async function (
 	// handler. Remember this if you make changes to this function, serving of
 	// local themes will not get those changes.
 	app.get("/themes/:theme.css", (req, res) => {
-		const themeName = req.params.theme;
+		const themeName = encodeURIComponent(req.params.theme);
 		const theme = themes.getByName(themeName);
 
 		if (theme === undefined || theme.filename === undefined) {

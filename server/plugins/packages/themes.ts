@@ -85,7 +85,7 @@ function makePackageThemeObject(
 	return {
 		displayName: module.name || moduleName,
 		filename: path.join(modulePath, module.css),
-		name: moduleName,
+		name: encodeURIComponent(moduleName),
 		themeColor: themeColor,
 	};
 }
