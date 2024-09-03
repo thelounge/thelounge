@@ -47,9 +47,15 @@ program
 				.readFile(path.join(packageName.substring("file:".length), "package.json"), "utf-8")
 				.then((data) => JSON.parse(data) as typeof packageJson);
 		} else {
-			const split = packageName.split("@");
-			packageName = split[0];
-			const packageVersion = split[1] || "latest";
+			// properly split scoped and non-scoped npm packages
+			// into their name and version
+			let packageVersion = "latest";
+			const atIndex = packageName.indexOf("@", 1);
+
+			if (atIndex !== -1) {
+				packageVersion = packageName.slice(atIndex + 1);
+				packageName = packageName.slice(0, atIndex);
+			}
 
 			readFile = packageJson.default(packageName, {
 				fullMetadata: true,
