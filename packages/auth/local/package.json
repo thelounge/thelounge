@@ -1,0 +1,34 @@
+{
+  "name": "thelounge-auth-plugin-local",
+  "description": "Local Auth for thelounge",
+  "version": "1.0.0",
+  "preferGlobal": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thelounge/thelounge.git"
+  },
+  "homepage": "https://thelounge.chat/",
+  "scripts": {},
+  "keywords": [
+    "lounge",
+    "browser",
+    "web",
+    "chat",
+    "client",
+    "irc",
+    "server",
+    "thelounge",
+    "auth"
+  ],
+  "thelounge": {
+    "supports": ">=4.4.3"
+  },
+  "license": "MIT",
+  "files": [
+    "./index.js",
+    "./package.json"
+  ],
+  "dependencies": {
+    "bcryptjs": "2.4.3"
+  }
+}

@@ -4,7 +4,6 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 
-import Auth from "./plugins/auth";
 import Client, {UserConfig} from "./client";
 import Config from "./config";
 import WebPush from "./plugins/webpush";
@@ -28,18 +27,7 @@ class ClientManager {
 
 		if (!Config.values.public) {
 			this.loadUsers();
-
-			// LDAP does not have user commands, and users are dynamically
-			// created upon logon, so we don't need to watch for new files
-			if (!Config.values.ldap.enable) {
-				this.autoloadUsers();
-			}
 		}
-	}
-
-	findClient(name: string) {
-		name = name.toLowerCase();
-		return this.clients.find((u) => u.name.toLowerCase() === name);
 	}
 
 	loadUsers() {
@@ -74,75 +62,22 @@ class ClientManager {
 			return true;
 		});
 
-		// This callback is used by Auth plugins to load users they deem acceptable
-		const callbackLoadUser = (user) => {
-			this.loadUser(user);
-		};
-
-		if (!Auth.loadUsers(users, callbackLoadUser)) {
-			// Fallback to loading all users
-			users.forEach((name) => this.loadUser(name));
-		}
-	}
-
-	autoloadUsers() {
-		fs.watch(
-			Config.getUsersPath(),
-			_.debounce(
-				() => {
-					const loaded = this.clients.map((c) => c.name);
-					const updatedUsers = this.getUsers();
-
-					if (updatedUsers.length === 0) {
-						log.info(
-							`There are currently no users. Create one with ${colors.bold(
-								"thelounge add <name>"
-							)}.`
-						);
-					}
-
-					// Reload all users. Existing users will only have their passwords reloaded.
-					updatedUsers.forEach((name) => this.loadUser(name));
-
-					// Existing users removed since last time users were loaded
-					_.difference(loaded, updatedUsers).forEach((name) => {
-						const client = _.find(this.clients, {name});
-
-						if (client) {
-							client.quit(true);
-							this.clients = _.without(this.clients, client);
-							log.info(`User ${colors.bold(name)} disconnected and removed.`);
-						}
-					});
-				},
-				1000,
-				{maxWait: 10000}
-			)
-		);
+		// Fallback to loading all users
+		users.forEach((name) => this.loadUser(name));
 	}
 
 	loadUser(name: string) {
-		const userConfig = this.readUserConfig(name);
+		let userConfig = this.readUserConfig(name) ?? {
+			clientSettings: {},
+			log: true,
+			password: "",
+			sessions: {},
+		};
 
-		if (!userConfig) {
-			return;
-		}
+		name = name.toLowerCase();
+		let client = this.clients.find((u) => u.name.toLowerCase() === name);
 
-		let client = this.findClient(name);
-
-		if (client) {
-			if (userConfig.password !== client.config.password) {
-				/**
-				 * If we happen to reload an existing client, make super duper sure we
-				 * have their latest password. We're not replacing the entire config
-				 * object, because that could have undesired consequences.
-				 *
-				 * @see https://github.com/thelounge/thelounge/issues/598
-				 */
-				client.config.password = userConfig.password;
-				log.info(`Password for user ${colors.bold(name)} was reset.`);
-			}
-		} else {
+		if (!client) {
 			client = new Client(this, name, userConfig);
 			client.connect();
 			this.clients.push(client);
@@ -188,6 +123,14 @@ class ClientManager {
 			throw e;
 		}
 
+		this.fixUserPerms(name);
+
+		return true;
+	}
+
+	private fixUserPerms(name: string) {
+		const userPath = Config.getUserConfigPath(name);
+
 		try {
 			const userFolderStat = fs.statSync(Config.getUsersPath());
 			const userFileStat = fs.statSync(userPath);
@@ -216,8 +159,6 @@ class ClientManager {
 			// We're simply verifying file owner as a safe guard for users
 			// that run `thelounge add` as root, so we don't care if it fails
 		}
-
-		return true;
 	}
 
 	getDataToSave(client: Client) {
@@ -249,6 +190,8 @@ class ClientManager {
 			});
 			fs.renameSync(pathTemp, pathReal);
 
+			this.fixUserPerms(client.name);
+
 			return callback ? callback() : true;
 		} catch (e: any) {
 			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
@@ -277,7 +220,7 @@ class ClientManager {
 
 		if (!fs.existsSync(userPath)) {
 			log.error(`Tried to read non-existing user ${colors.green(name)}`);
-			return false;
+			return null;
 		}
 
 		try {
@@ -287,7 +230,7 @@ class ClientManager {
 			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
 		}
 
-		return false;
+		return null;
 	}
 }
 

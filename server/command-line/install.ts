@@ -46,6 +46,15 @@ program
 			readFile = fspromises
 				.readFile(path.join(packageName.substring("file:".length), "package.json"), "utf-8")
 				.then((data) => JSON.parse(data) as typeof packageJson);
+		} else if (packageName.startsWith("internal:")) {
+			isLocalFile = true;
+			// make it easy to install the internal packages
+			packageName = packageName.substring("internal:".length);
+			packageName = "file:" + path.resolve(__dirname, "../../../packages", packageName);
+
+			readFile = fspromises
+				.readFile(path.join(packageName.substring("file:".length), "package.json"), "utf-8")
+				.then((data) => JSON.parse(data) as typeof packageJson);
 		} else {
 			const split = packageName.split("@");
 			packageName = split[0];
