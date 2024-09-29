@@ -34,6 +34,11 @@
 				</dd>
 			</template>
 
+			<template v-if="message.whois.actual_username">
+				<dt>Actual username:</dt>
+				<dd>{{ message.whois.actual_username }}</dd>
+			</template>
+
 			<template v-if="message.whois.real_name">
 				<dt>Real name:</dt>
 				<dd><ParsedMessage :network="network" :text="message.whois.real_name" /></dd>
