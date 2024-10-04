@@ -5,6 +5,7 @@
 		:aria-label="'User list for ' + channel.name"
 		@mouseleave="removeHoverUser"
 	>
+		<h3 class="sr-only">Userlist</h3>
 		<div class="count">
 			<input
 				ref="input"
