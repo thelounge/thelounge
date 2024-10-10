@@ -28,7 +28,7 @@
 			</span>
 		</template>
 		<template v-else-if="isAction()">
-			<span class="from"><span class="only-copy">***&nbsp;</span></span>
+			<span class="from"><span class="only-copy" aria-hidden="true">***&nbsp;</span></span>
 			<component :is="messageComponent" :network="network" :message="message" />
 		</template>
 		<template v-else-if="message.type === 'action'">
