@@ -19,12 +19,14 @@
 				left: style.left + 'px',
 			}"
 			tabindex="-1"
+			:aria-activedescendant="activeItem > -1 ? `context-menu-item-${activeItem}` : undefined"
 			@mouseleave="activeItem = -1"
 			@keydown.enter.prevent="clickActiveItem"
 		>
 			<!-- TODO: type -->
 			<template v-for="(item, id) of (items as any)" :key="item.name">
 				<li
+					:id="`context-menu-item-${id}`"
 					:class="[
 						'context-menu-' + item.type,
 						item.class ? 'context-menu-' + item.class : null,
