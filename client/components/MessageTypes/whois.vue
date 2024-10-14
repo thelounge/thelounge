@@ -91,9 +91,11 @@
 				<dd>Yes</dd>
 			</template>
 
-			<template v-if="message.whois.certfp">
-				<dt>Certificate:</dt>
-				<dd>{{ message.whois.certfp }}</dd>
+			<template v-if="message.whois.certfps">
+				<template v-for="certfp in message.whois.certfps" :key="certfp">
+					<dt>Certificate:</dt>
+					<dd>{{ certfp }}</dd>
+				</template>
 			</template>
 
 			<template v-if="message.whois.server">
