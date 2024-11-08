@@ -11,8 +11,11 @@ import fs from "fs";
 import Utils from "../../command-line/utils";
 import Client from "../../client";
 
-type Package = {
-	onServerStart: (packageApis: any) => void;
+export type AuthHandler = (client: Client, providerData: any) => Promise<boolean>;
+
+export type PackageApis = ReturnType<typeof packageApis>;
+export type Package = {
+	onServerStart: (packageApis: PackageApis) => void;
 };
 
 const packageMap = new Map<string, Package>();
@@ -29,6 +32,7 @@ export type PackageInfo = {
 
 const stylesheets: string[] = [];
 const files: string[] = [];
+const authProviders: [string, AuthHandler][] = [];
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -42,6 +46,7 @@ export default {
 	getFiles,
 	getStylesheets,
 	getPackage,
+	getAuthProviders,
 	loadPackages,
 	outdated,
 };
@@ -49,6 +54,9 @@ export default {
 // TODO: verify binds worked. Used to be 'this' instead of 'packageApis'
 const packageApis = function (packageInfo: PackageInfo) {
 	return {
+		Auth: {
+			register: addAuthProvider.bind(packageApis, packageInfo.packageName),
+		},
 		Stylesheets: {
 			addFile: addStylesheet.bind(packageApis, packageInfo.packageName),
 		},
@@ -105,6 +113,14 @@ function getEnabledPackages(packageJson: string) {
 	}
 
 	return [];
+}
+
+function addAuthProvider(packageName: string, handler: AuthHandler) {
+	authProviders.push([packageName, handler]);
+}
+
+function getAuthProviders() {
+	return authProviders;
 }
 
 function getPersistentStorageDir(packageName: string) {

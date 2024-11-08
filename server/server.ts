@@ -17,7 +17,6 @@ import Config, {ConfigType} from "./config";
 import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
-import Auth from "./plugins/auth";
 
 import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
@@ -232,12 +231,8 @@ export default async function (
 			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
 
-			if (Config.values.public) {
-				performAuthentication.call(socket, {});
-			} else {
-				socket.on("auth:perform", performAuthentication);
-				socket.emit("auth:start", serverHash);
-			}
+			socket.on("auth:perform", performAuthentication);
+			socket.emit("auth:start", serverHash);
 		});
 
 		manager = new ClientManager();
@@ -917,14 +912,12 @@ function getServerConfiguration(): ServerConfiguration {
 	return {...Config.values, ...{stylesheets: packages.getStylesheets()}};
 }
 
-function performAuthentication(this: Socket, data: AuthPerformData) {
+async function performAuthentication(this: Socket, data: any) {
 	if (!_.isPlainObject(data)) {
 		return;
 	}
 
 	const socket = this;
-	let client: Client | undefined;
-	let token: string;
 
 	const finalInit = () => {
 		let lastMessage = -1;
@@ -986,26 +979,6 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		});
 	};
 
-	if (Config.values.public) {
-		client = new Client(manager!);
-		client.connect();
-		manager!.clients.push(client);
-
-		const cb_client = client; // ensure TS can see we never have a nil client
-		socket.on("disconnect", function () {
-			manager!.clients = _.without(manager!.clients, cb_client);
-			cb_client.quit();
-		});
-
-		initClient();
-
-		return;
-	}
-
-	if (typeof data.user !== "string") {
-		return;
-	}
-
 	const authCallback = (success: boolean) => {
 		// Authorization failed
 		if (!success) {
@@ -1027,23 +1000,32 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 			return;
 		}
 
-		// If authorization succeeded but there is no loaded user,
-		// load it and find the user again (this happens with LDAP)
-		if (!client) {
-			client = manager!.loadUser(data.user);
-
-			if (!client) {
-				throw new Error(`authCallback: ${data.user} not found after second lookup`);
-			}
-		}
-
 		initClient();
 	};
 
-	client = manager!.findClient(data.user);
+	let client: Client | undefined;
+	let token: string;
+
+	if (Config.values.public) {
+		client = new Client(manager!);
+		client.connect();
+		manager!.clients.push(client);
+
+		const cb_client = client; // ensure TS can see we never have a nil client
+		socket.on("disconnect", function () {
+			manager!.clients = _.without(manager!.clients, cb_client);
+			cb_client.quit();
+		});
+
+		initClient();
+
+		return;
+	}
+
+	client = manager!.loadUser(data.user);
 
 	// We have found an existing user and client has provided a token
-	if (client && "token" in data && data.token) {
+	if ("token" in data && data.token) {
 		const providedToken = client.calculateTokenHash(data.token);
 
 		if (Object.prototype.hasOwnProperty.call(client.config.sessions, providedToken)) {
@@ -1054,16 +1036,22 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		}
 	}
 
-	if (!("user" in data && "password" in data)) {
-		log.warn("performAuthentication: callback data has no user or no password");
-		authCallback(false);
-		return;
+	log.warn("auth provider count: " + packages.getAuthProviders().length);
+
+	for (const [providerName, handler] of packages.getAuthProviders()) {
+		log.warn(`calling handler for ${providerName}`);
+
+		if (
+			await handler(client, {user: data.user, password: data.password, ...data[providerName]})
+		) {
+			manager!.saveUser(client);
+			authCallback(true);
+			return;
+		}
 	}
 
-	Auth.initialize().then(() => {
-		// Perform password checking
-		Auth.auth(manager, client, data.user, data.password, authCallback);
-	});
+	log.warn("no auth providers succeeded!");
+	authCallback(false);
 }
 
 function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {

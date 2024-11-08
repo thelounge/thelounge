@@ -52,7 +52,8 @@
     "./client/index.html.tpl",
     "./dist/package.json",
     "./dist/**/*.js",
-    "./public/**"
+    "./public/**",
+    "./packages/**"
   ],
   "dependencies": {
     "@fastify/busboy": "1.0.0",
