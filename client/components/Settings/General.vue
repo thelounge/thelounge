@@ -29,13 +29,14 @@
 						name="uploadCanvas"
 					/>
 					Attempt to remove metadata from images before uploading
-					<span
+					<button
 						class="tooltipped tooltipped-n tooltipped-no-delay"
 						aria-label="This option renders the image into a canvas element to remove metadata from the image.
 	This may break orientation if your browser does not support that."
+						type="button"
 					>
-						<button class="extra-help" />
-					</span>
+						<span class="extra-help" />
+					</button>
 				</label>
 			</div>
 		</div>

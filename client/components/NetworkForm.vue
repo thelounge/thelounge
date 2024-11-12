@@ -258,14 +258,15 @@
 				<div class="connect-row">
 					<label for="connect:commands">
 						Commands
-						<span
+						<button
 							class="tooltipped tooltipped-ne tooltipped-no-delay"
 							aria-label="One /command per line.
 Each command will be executed in
 the server tab on new connection"
+							type="button"
 						>
-							<button class="extra-help" />
-						</span>
+							<span class="extra-help" />
+						</button>
 					</label>
 					<textarea
 						id="connect:commands"
