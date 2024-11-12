@@ -63,17 +63,14 @@
 						aria-label="Open the context menu"
 						@click="openContextMenu"
 					/>
-					<span
+					<button
 						v-if="channel.type === 'channel'"
-						class="rt-tooltip tooltipped tooltipped-w"
+						class="tooltipped tooltipped-w"
 						aria-label="Toggle user list"
+						@click="store.commit('toggleUserlist')"
 					>
-						<button
-							class="rt"
-							aria-label="Toggle user list"
-							@click="store.commit('toggleUserlist')"
-						/>
-					</span>
+						<span class="rt" />
+					</button>
 				</div>
 				<div v-if="channel.type === 'special'" class="chat-content">
 					<div class="chat">

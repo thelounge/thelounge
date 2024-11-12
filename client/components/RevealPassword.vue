@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<slot :is-visible="isVisible" />
-		<span
+		<button
 			ref="revealButton"
 			type="button"
 			:class="[
@@ -11,8 +11,8 @@
 			:aria-label="isVisible ? 'Hide password' : 'Show password'"
 			@click="onClick"
 		>
-			<span :aria-label="isVisible ? 'Hide password' : 'Show password'" />
-		</span>
+			<span />
+		</button>
 	</div>
 </template>
 

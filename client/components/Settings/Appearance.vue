@@ -44,12 +44,13 @@
 		</template>
 		<h2 id="label-status-messages">
 			Status messages
-			<span
+			<button
 				class="tooltipped tooltipped-n tooltipped-no-delay"
 				aria-label="Joins, parts, quits, kicks, nick changes, and mode changes"
+				type="button"
 			>
-				<button class="extra-help" />
-			</span>
+				<span class="extra-help" />
+			</button>
 		</h2>
 		<div role="group" aria-labelledby="label-status-messages">
 			<label class="opt">
@@ -103,12 +104,13 @@
 			<label class="opt">
 				<label for="nickPostfix" class="opt">
 					Nick autocomplete postfix
-					<span
+					<button
 						class="tooltipped tooltipped-n tooltipped-no-delay"
 						aria-label="Nick autocomplete postfix (for example a comma)"
+						type="button"
 					>
-						<button class="extra-help" />
-					</span>
+						<span class="extra-help" />
+					</button>
 				</label>
 				<input
 					id="nickPostfix"

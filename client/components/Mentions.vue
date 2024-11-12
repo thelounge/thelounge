@@ -36,18 +36,13 @@
 								{{ messageTime(message.time.toString()) }}
 							</span>
 						</div>
-						<div>
-							<span
-								class="close-tooltip tooltipped tooltipped-w"
-								aria-label="Dismiss this mention"
-							>
-								<button
-									class="msg-dismiss"
-									aria-label="Dismiss this mention"
-									@click="dismissMention(message)"
-								></button>
-							</span>
-						</div>
+						<button
+							class="tooltipped tooltipped-w"
+							aria-label="Dismiss this mention"
+							@click="dismissMention(message)"
+						>
+							<span class="msg-dismiss" />
+						</button>
 					</div>
 					<div class="content" dir="auto">
 						<ParsedMessage :message="(message as any)" />
