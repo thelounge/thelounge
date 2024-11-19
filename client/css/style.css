@@ -1083,7 +1083,8 @@ textarea.input {
 
 .header .title {
 	font-size: 15px;
-	padding-left: 6px;
+	margin: 0;
+	padding: 0 0 0 6px;
 	flex-shrink: 1;
 	white-space: nowrap;
 	overflow: hidden;
@@ -1340,8 +1341,7 @@ textarea.input {
 	border-top: 1px solid var(--unread-marker-color);
 }
 
-#chat .unread-marker-text::before {
-	content: "New messages";
+#chat .unread-marker-text {
 	background-color: var(--window-bg-color);
 	color: var(--unread-marker-color);
 	padding: 0 10px;
@@ -1366,8 +1366,7 @@ textarea.input {
 	border-top: 1px solid var(--date-marker-color);
 }
 
-#chat .date-marker-text::before {
-	content: attr(aria-label);
+#chat .date-marker-text {
 	background-color: var(--window-bg-color);
 	color: var(--date-marker-color);
 	padding: 0 10px;

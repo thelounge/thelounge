@@ -1,13 +1,10 @@
 <template>
-	<div
-		v-if="store.state.networks.length === 0"
-		class="empty"
-		role="navigation"
-		aria-label="Network and Channel list"
-	>
+	<div v-if="store.state.networks.length === 0" class="empty" role="navigation">
+		<h2 class="sr-only">Network and Channel List</h2>
 		You are not connected to any networks yet.
 	</div>
-	<div v-else ref="networklist" role="navigation" aria-label="Network and Channel list">
+	<div v-else ref="networklist" role="navigation">
+		<h2 class="sr-only">Network and Channel List</h2>
 		<div class="jump-to-input">
 			<input
 				ref="searchInput"

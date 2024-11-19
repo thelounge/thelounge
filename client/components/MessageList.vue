@@ -1,5 +1,6 @@
 <template>
 	<div ref="chat" class="chat" tabindex="-1">
+		<h3 class="sr-only">Chat Messages</h3>
 		<div v-show="channel.moreHistoryAvailable" class="show-more">
 			<button
 				ref="loadMoreButton"
@@ -25,13 +26,13 @@
 					:message="message as any"
 					:focused="message.id === focused"
 				/>
-				<div
+				<h4
 					v-if="shouldDisplayUnreadMarker(Number(message.id))"
 					:key="message.id + '-unread'"
 					class="unread-marker"
 				>
-					<span class="unread-marker-text" />
-				</div>
+					<span class="unread-marker-text">New messages</span>
+				</h4>
 
 				<MessageCondensed
 					v-if="message.type === 'condensed'"
