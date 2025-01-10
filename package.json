@@ -77,6 +77,7 @@
     "tlds": "1.228.0",
     "ua-parser-js": "1.0.39",
     "web-push-neo": "0.1.2",
+    "whatwg-mimetype": "4.0.0",
     "yarn": "1.22.22"
   },
   "devDependencies": {
@@ -84,7 +85,6 @@
     "@textcomplete/core": "0.1.10",
     "@textcomplete/textarea": "0.1.10",
     "@types/bcryptjs": "2.4.6",
-    "@types/cheerio": "0.22.35",
     "@types/content-disposition": "0.5.8",
     "@types/express": "4.17.21",
     "@types/ldapjs": "2.2.5",
@@ -97,6 +97,7 @@
     "@types/semver": "7.3.9",
     "@types/sortablejs": "1.15.8",
     "@types/ua-parser-js": "0.7.39",
+    "@types/whatwg-mimetype": "3.0.2",
     "@types/ws": "8.5.12",
     "@typescript-eslint/eslint-plugin": "7.8.0",
     "@typescript-eslint/parser": "7.8.0",

@@ -3,6 +3,7 @@ import type {Element} from "domhandler";
 import got from "got";
 import {URL} from "url";
 import mime from "mime-types";
+import MIMEType from "whatwg-mimetype";
 
 import log from "../../log";
 import Config from "../../config";
@@ -16,6 +17,7 @@ import Msg from "../../models/msg";
 type FetchRequest = {
 	data: Buffer;
 	type: string;
+	charset: string | undefined;
 	size: number;
 };
 const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
@@ -79,8 +81,9 @@ function parseHtml(preview, res, client: Client) {
 	// TODO:
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	return new Promise((resolve: (preview: FetchRequest | null) => void) => {
-		const $ = cheerio.load(res.data);
-
+		const $ = cheerio.loadBuffer(res.data, {
+			encoding: {transportLayerEncodingLabel: res.charset},
+		});
 		return parseHtmlMedia($, preview, client)
 			.then((newRes) => resolve(newRes))
 			.catch(() => {
@@ -140,8 +143,7 @@ function parseHtml(preview, res, client: Client) {
 	});
 }
 
-// TODO: type $
-function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> {
+function parseHtmlMedia($: cheerio.CheerioAPI, preview, client: Client): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject();
@@ -467,15 +469,22 @@ function fetch(uri: string, headers: Record<string, string>) {
 				.on("end", () => gotStream.destroy())
 				.on("close", () => {
 					let type = "";
+					let charset;
 
 					// If we downloaded more data then specified in Content-Length, use real data size
 					const size = contentLength > buffer.length ? contentLength : buffer.length;
 
 					if (contentType) {
-						type = contentType.split(/ *; */).shift() || "";
+						try {
+							const mimeType = new MIMEType(contentType);
+							type = mimeType.essence;
+							charset = getTransportLayerEncodingLabel(mimeType);
+						} catch {
+							// the Content-Type value isn't valid; ignore it
+						}
 					}
 
-					resolve({data: buffer, type, size});
+					resolve({data: buffer, type, charset, size});
 				});
 		} catch (e: any) {
 			return reject(e);
@@ -489,6 +498,14 @@ function fetch(uri: string, headers: Record<string, string>) {
 	currentFetchPromises.set(cacheKey, promise);
 
 	return promise;
+}
+
+function getTransportLayerEncodingLabel(mimeType: MIMEType): string | undefined {
+	try {
+		return mimeType.parameters.get("charset");
+	} catch (error) {
+		return undefined;
+	}
 }
 
 function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
