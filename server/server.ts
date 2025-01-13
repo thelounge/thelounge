@@ -1024,6 +1024,9 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 			}
 
 			socket.emit("auth:failed");
+			// disconnect the socket to avoid bypassing firewall
+			// protections against bulk password guessing attacks
+			socket.disconnect();
 			return;
 		}
 
