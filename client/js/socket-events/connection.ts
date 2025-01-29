@@ -76,7 +76,7 @@ function requestIdleCallback(callback, timeout) {
 		// until either the idle period ends or there are no more idle callbacks eligible to be run.
 		window.requestIdleCallback(callback, {timeout});
 	} else {
-	  	callback();
+		callback();
 	}
 }
 
