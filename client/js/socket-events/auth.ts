@@ -20,7 +20,7 @@ socket.on("auth:success", function () {
 socket.on("auth:failed", async function () {
 	storage.remove("token");
 	store.commit("isAuthFailure", true);
-	
+
 	if (store.state.appLoaded) {
 		return reloadPage("Authentication failed, reloading…");
 	}

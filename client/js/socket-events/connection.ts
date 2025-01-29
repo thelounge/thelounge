@@ -27,20 +27,21 @@ socket.on("connect", function () {
 
 function handleConnectError(data) {
 	const message = String(data.message || data);
-	
-        if (store.state.isAuthFailure) {
-             socket.disconnect();
-             return updateErrorMessage(`Disconnected from the server (${message}), Please close the tab and try again later.`);
-	 }
-	 
-	 return (handleDisconnect(data));
+
+	if (store.state.isAuthFailure) {
+		return updateErrorMessageAndExit(
+			`Disconnected from the server, Please close the tab and try again later.`
+		);
+	}
+
+	return handleDisconnect(data);
 }
 
 function handleDisconnect(data) {
 	const message = String(data.message || data);
 
 	store.commit("isConnected", false);
-	
+
 	if (!socket.io.reconnection()) {
 		store.commit(
 			"currentUserVisibleError",
@@ -80,11 +81,16 @@ function updateLoadingMessage() {
 	}
 }
 
-function updateErrorMessage(message: string) {
-        const parentDOM = document.getElementById("sign-in");
-        const error = parentDOM.getElementsByClassName("error")[0];
-    
-        if (error) {
-            error.textContent = message;
-        }
+function updateErrorMessageAndExit(message: string) {
+	socket.disconnect();
+
+	const parentDOM = document.getElementById("sign-in");
+
+	if (parentDOM) {
+		const error = parentDOM.getElementsByClassName("error")[0];
+
+		if (error) {
+			error.textContent = message;
+		}
+	}
 }

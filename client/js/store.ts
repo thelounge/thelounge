@@ -45,7 +45,7 @@ export type State = {
 	activeChannel?: NetChan;
 	currentUserVisibleError: string | null;
 	desktopNotificationState: DesktopNotificationState;
-	isAuthFailure : boolean;
+	isAuthFailure: boolean;
 	isAutoCompleting: boolean;
 	isConnected: boolean;
 	networks: ClientNetwork[];
@@ -89,7 +89,7 @@ const state = (): State => ({
 	activeChannel: undefined,
 	currentUserVisibleError: null,
 	desktopNotificationState: detectDesktopNotificationState(),
-	isAuthFailure : false,
+	isAuthFailure: false,
 	isAutoCompleting: false,
 	isConnected: false,
 	networks: [],
