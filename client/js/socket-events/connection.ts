@@ -2,7 +2,7 @@ import {store} from "../store";
 import socket from "../socket";
 
 socket.on("disconnect", handleDisconnect);
-socket.on("connect_error", handleDisconnect);
+socket.on("connect_error", handleConnectError);
 socket.on("error", handleDisconnect);
 
 socket.io.on("reconnect_attempt", function (attempt) {
@@ -25,11 +25,30 @@ socket.on("connect", function () {
 	updateLoadingMessage();
 });
 
+function handleConnectError(data) {
+	const message = String(data.message || data);
+	
+	console.error("connect-error");
+	console.error("isAuthFailure is ", store.state.isAuthFailure);
+
+        if (store.state.isAuthFailure) {
+	    store.commit(	
+	            "currentUserVisibleError",
+		    `Disconnected from the server (${message}), Please close the tab and try again later.`
+	     );
+	     updateLoadingMessage();
+	     return;
+	 }
+	 
+	 return (handleDisconnect(data));
+}
+
 function handleDisconnect(data) {
 	const message = String(data.message || data);
 
 	store.commit("isConnected", false);
-
+	console.error('isAuthfailure: ', store.state.isAuthFailure);
+	
 	if (!socket.io.reconnection()) {
 		store.commit(
 			"currentUserVisibleError",
@@ -57,7 +76,7 @@ function requestIdleCallback(callback, timeout) {
 		// until either the idle period ends or there are no more idle callbacks eligible to be run.
 		window.requestIdleCallback(callback, {timeout});
 	} else {
-		callback();
+	  	callback();
 	}
 }
 
