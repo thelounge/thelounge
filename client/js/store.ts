@@ -45,8 +45,10 @@ export type State = {
 	activeChannel?: NetChan;
 	currentUserVisibleError: string | null;
 	desktopNotificationState: DesktopNotificationState;
+	isAuthFailure : boolean;
 	isAutoCompleting: boolean;
 	isConnected: boolean;
+	reconnectionPause: boolean;
 	networks: ClientNetwork[];
 	// TODO: type
 	mentions: ClientMention[];
@@ -88,8 +90,10 @@ const state = (): State => ({
 	activeChannel: undefined,
 	currentUserVisibleError: null,
 	desktopNotificationState: detectDesktopNotificationState(),
+	isAuthFailure : false,
 	isAutoCompleting: false,
 	isConnected: false,
+	reconnectionPause: false,
 	networks: [],
 	mentions: [],
 	hasServiceWorker: false,
@@ -201,8 +205,10 @@ type Mutations = {
 	activeChannel(state: State, netChan: State["activeChannel"]): void;
 	currentUserVisibleError(state: State, error: State["currentUserVisibleError"]): void;
 	refreshDesktopNotificationState(state: State): void;
+	isAuthFailure(state: State, payload: State["isAuthFailure"]): void;
 	isAutoCompleting(state: State, isAutoCompleting: State["isAutoCompleting"]): void;
 	isConnected(state: State, payload: State["isConnected"]): void;
+	reconnectionPause(state: State, payload: State["reconnectionPause"]): void;		
 	networks(state: State, networks: State["networks"]): void;
 	mentions(state: State, mentions: State["mentions"]): void;
 
@@ -245,12 +251,18 @@ const mutations: Mutations = {
 	refreshDesktopNotificationState(state) {
 		state.desktopNotificationState = detectDesktopNotificationState();
 	},
+	isAuthFailure(state, payload) {
+		state.isAuthFailure = payload;
+	},
 	isAutoCompleting(state, isAutoCompleting) {
 		state.isAutoCompleting = isAutoCompleting;
 	},
 	isConnected(state, payload) {
 		state.isConnected = payload;
 	},
+	reconnectionPause(state, payload) {
+		state.reconnectionPause = payload;
+	},		
 	networks(state, networks) {
 		state.networks = networks;
 	},
