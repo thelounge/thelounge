@@ -28,16 +28,9 @@ socket.on("connect", function () {
 function handleConnectError(data) {
 	const message = String(data.message || data);
 	
-	console.error("connect-error");
-	console.error("isAuthFailure is ", store.state.isAuthFailure);
-
         if (store.state.isAuthFailure) {
-	    store.commit(	
-	            "currentUserVisibleError",
-		    `Disconnected from the server (${message}), Please close the tab and try again later.`
-	     );
-	     updateLoadingMessage();
-	     return;
+             socket.disconnect();
+             return updateErrorMessage(`Disconnected from the server (${message}), Please close the tab and try again later.`);
 	 }
 	 
 	 return (handleDisconnect(data));
@@ -47,7 +40,6 @@ function handleDisconnect(data) {
 	const message = String(data.message || data);
 
 	store.commit("isConnected", false);
-	console.error('isAuthfailure: ', store.state.isAuthFailure);
 	
 	if (!socket.io.reconnection()) {
 		store.commit(
@@ -86,4 +78,13 @@ function updateLoadingMessage() {
 	if (loading) {
 		loading.textContent = store.state.currentUserVisibleError;
 	}
+}
+
+function updateErrorMessage(message: string) {
+        const parentDOM = document.getElementById("sign-in");
+        const error = parentDOM.getElementsByClassName("error")[0];
+    
+        if (error) {
+            error.textContent = message;
+        }
 }

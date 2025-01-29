@@ -48,7 +48,6 @@ export type State = {
 	isAuthFailure : boolean;
 	isAutoCompleting: boolean;
 	isConnected: boolean;
-	reconnectionPause: boolean;
 	networks: ClientNetwork[];
 	// TODO: type
 	mentions: ClientMention[];
@@ -93,7 +92,6 @@ const state = (): State => ({
 	isAuthFailure : false,
 	isAutoCompleting: false,
 	isConnected: false,
-	reconnectionPause: false,
 	networks: [],
 	mentions: [],
 	hasServiceWorker: false,
@@ -208,7 +206,6 @@ type Mutations = {
 	isAuthFailure(state: State, payload: State["isAuthFailure"]): void;
 	isAutoCompleting(state: State, isAutoCompleting: State["isAutoCompleting"]): void;
 	isConnected(state: State, payload: State["isConnected"]): void;
-	reconnectionPause(state: State, payload: State["reconnectionPause"]): void;		
 	networks(state: State, networks: State["networks"]): void;
 	mentions(state: State, mentions: State["mentions"]): void;
 
@@ -260,9 +257,6 @@ const mutations: Mutations = {
 	isConnected(state, payload) {
 		state.isConnected = payload;
 	},
-	reconnectionPause(state, payload) {
-		state.reconnectionPause = payload;
-	},		
 	networks(state, networks) {
 		state.networks = networks;
 	},
