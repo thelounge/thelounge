@@ -42,6 +42,10 @@ function handleDisconnect(data) {
 
 	store.commit("isConnected", false);
 
+	if (store.state.disableReconnection) {
+		return;
+	}
+
 	if (!socket.io.reconnection()) {
 		store.commit(
 			"currentUserVisibleError",
@@ -83,7 +87,9 @@ function updateLoadingMessage() {
 
 function updateErrorMessageAndExit(message: string) {
 	socket.disconnect();
+	store.commit("disableReconnection", true);
 
+	// display server unavailable message and disable login button
 	const parentDOM = document.getElementById("sign-in");
 
 	if (parentDOM) {
@@ -92,12 +98,23 @@ function updateErrorMessageAndExit(message: string) {
 		if (error) {
 			error.textContent = message;
 		}
+
+		const button = parentDOM.getElementsByClassName("btn")[0];
+
+		if (button) {
+			button.setAttribute("disabled", "");
+		}
 	}
 
+	// tell serviceWorker to discard fetch requests
 	if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.ready
 			.then((registration) => {
-				registration.active?.postMessage({type: "shutdown"});
+			    registration.active?.postMessage({type: "shutdown"});
+                            registration.unregister().then((boolean) => {
+                                console.log("unreg worked");                        
+                                // if boolean == true unregister is succesful
+                            });                             
 			})
 			.catch((e) => {
 				// couldn't communicate with the service-worker

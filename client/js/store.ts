@@ -45,6 +45,7 @@ export type State = {
 	activeChannel?: NetChan;
 	currentUserVisibleError: string | null;
 	desktopNotificationState: DesktopNotificationState;
+	disableReconnection: boolean;
 	isAuthFailure: boolean;
 	isAutoCompleting: boolean;
 	isConnected: boolean;
@@ -89,6 +90,7 @@ const state = (): State => ({
 	activeChannel: undefined,
 	currentUserVisibleError: null,
 	desktopNotificationState: detectDesktopNotificationState(),
+	disableReconnection: false,
 	isAuthFailure: false,
 	isAutoCompleting: false,
 	isConnected: false,
@@ -203,6 +205,7 @@ type Mutations = {
 	activeChannel(state: State, netChan: State["activeChannel"]): void;
 	currentUserVisibleError(state: State, error: State["currentUserVisibleError"]): void;
 	refreshDesktopNotificationState(state: State): void;
+	disableReconnection(state: State, payload: State["disableReconnection"]): void;
 	isAuthFailure(state: State, payload: State["isAuthFailure"]): void;
 	isAutoCompleting(state: State, isAutoCompleting: State["isAutoCompleting"]): void;
 	isConnected(state: State, payload: State["isConnected"]): void;
@@ -247,6 +250,9 @@ const mutations: Mutations = {
 	},
 	refreshDesktopNotificationState(state) {
 		state.desktopNotificationState = detectDesktopNotificationState();
+	},
+	disableReconnection(state, payload) {
+		state.disableReconnection = payload;
 	},
 	isAuthFailure(state, payload) {
 		state.isAuthFailure = payload;
