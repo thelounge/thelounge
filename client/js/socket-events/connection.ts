@@ -30,7 +30,7 @@ function handleConnectError(data) {
 
 	if (store.state.isAuthFailure) {
 		return updateErrorMessageAndExit(
-			`Disconnected from the server, Please close the tab and try again later.`
+			`Disconnected from the server. Please close the tab and try again later.`
 		);
 	}
 
@@ -92,5 +92,15 @@ function updateErrorMessageAndExit(message: string) {
 		if (error) {
 			error.textContent = message;
 		}
+	}
+
+	if ("serviceWorker" in navigator) {
+		navigator.serviceWorker.ready
+			.then((registration) => {
+				registration.active?.postMessage({type: "shutdown"});
+			})
+			.catch((e) => {
+				// couldn't communicate with the service-worker
+			});
 	}
 }
