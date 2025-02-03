@@ -110,11 +110,12 @@ function updateErrorMessageAndExit(message: string) {
 	if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.ready
 			.then((registration) => {
-			    registration.active?.postMessage({type: "shutdown"});
-                            registration.unregister().then((boolean) => {
-                                console.log("unreg worked");                        
-                                // if boolean == true unregister is succesful
-                            });                             
+				registration.active?.postMessage({type: "shutdown"});
+				registration
+					.unregister()
+					.catch((e) => {
+						// couldn't communicate with the service-worker
+					});
 			})
 			.catch((e) => {
 				// couldn't communicate with the service-worker
