@@ -2,7 +2,7 @@ import {store} from "../store";
 import socket from "../socket";
 
 socket.on("disconnect", handleDisconnect);
-socket.on("connect_error", handleDisconnect);
+socket.on("connect_error", handleConnectError);
 socket.on("error", handleDisconnect);
 
 socket.io.on("reconnect_attempt", function (attempt) {
@@ -25,10 +25,26 @@ socket.on("connect", function () {
 	updateLoadingMessage();
 });
 
+function handleConnectError(data) {
+	const message = String(data.message || data);
+
+	if (store.state.isAuthFailure) {
+		return updateErrorMessageAndExit(
+			`Disconnected from the server. Please close the tab and try again later.`
+		);
+	}
+
+	return handleDisconnect(data);
+}
+
 function handleDisconnect(data) {
 	const message = String(data.message || data);
 
 	store.commit("isConnected", false);
+
+	if (store.state.disableReconnection) {
+		return;
+	}
 
 	if (!socket.io.reconnection()) {
 		store.commit(
@@ -66,5 +82,40 @@ function updateLoadingMessage() {
 
 	if (loading) {
 		loading.textContent = store.state.currentUserVisibleError;
+	}
+}
+
+function updateErrorMessageAndExit(message: string) {
+	socket.disconnect();
+	store.commit("disableReconnection", true);
+
+	// display server unavailable message and disable login button
+	const parentDOM = document.getElementById("sign-in");
+
+	if (parentDOM) {
+		const error = parentDOM.getElementsByClassName("error")[0];
+
+		if (error) {
+			error.textContent = message;
+		}
+
+		const button = parentDOM.getElementsByClassName("btn")[0];
+
+		if (button) {
+			button.setAttribute("disabled", "");
+		}
+	}
+
+	// tell serviceWorker to discard fetch requests
+	if ("serviceWorker" in navigator) {
+		navigator.serviceWorker.ready
+			.then((registration) => {
+				registration.active?.postMessage({type: "shutdown"});
+				// unregister the worker to stop caching data
+				void registration.unregister();
+			})
+			.catch((e) => {
+				// couldn't communicate with the service-worker
+			});
 	}
 }
