@@ -111,11 +111,8 @@ function updateErrorMessageAndExit(message: string) {
 		navigator.serviceWorker.ready
 			.then((registration) => {
 				registration.active?.postMessage({type: "shutdown"});
-				registration
-					.unregister()
-					.catch((e) => {
-						// couldn't communicate with the service-worker
-					});
+				// unregister the worker to stop caching data
+				void registration.unregister();
 			})
 			.catch((e) => {
 				// couldn't communicate with the service-worker
