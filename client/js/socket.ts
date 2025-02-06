@@ -22,3 +22,9 @@ declare global {
 }
 
 export default socket;
+
+/**
+ * Message for use when the socket disconnects and will not reconnect
+ * (e.g. forced disconnects after auth failures)
+ */
+export const tryAgainMessage = "Disconnected from the server. Please try again later.";
