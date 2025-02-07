@@ -34,9 +34,9 @@ export type ConfigNetDefaults = {
 	saslAccount: string;
 	saslPassword: string;
 };
-export type LockedConfigNetDefaults = Pick<
+export type LockedConfigNetDefaults = Omit<
 	ConfigNetDefaults,
-	"name" | "nick" | "username" | "password" | "realname" | "join"
+	"host" | "name" | "port" | "tls" | "rejectUnauthorized"
 >;
 
 export type LockedSharedConfiguration = SharedConfigurationBase & {
