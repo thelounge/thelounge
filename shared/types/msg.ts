@@ -98,3 +98,16 @@ export type SharedMsg = {
 	statusmsgGroup?: string;
 	params?: string[];
 };
+
+export type HandleInput = {
+	nick: string;
+	hostname: string;
+	ident: string;
+	target: string;
+	type: MessageType;
+	time?: number;
+	text?: string;
+	from_server?: boolean;
+	message: string;
+	group?: string;
+};

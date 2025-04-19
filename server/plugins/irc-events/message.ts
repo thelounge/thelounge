@@ -5,24 +5,11 @@ import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
 import Chan from "../../models/chan";
 import User from "../../models/user";
-import {MessageType} from "../../../shared/types/msg";
+import {MessageType, HandleInput} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 import {MessageEventArgs} from "irc-framework";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
-
-type HandleInput = {
-	nick: string;
-	hostname: string;
-	ident: string;
-	target: string;
-	type: MessageType;
-	time?: number;
-	text?: string;
-	from_server?: boolean;
-	message: string;
-	group?: string;
-};
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
 	return {...data, type: type};
@@ -65,7 +52,7 @@ export default <IrcEventHandler>function (irc, network) {
 		const shouldIgnore =
 			!self &&
 			network.ignoreList.some(function (entry) {
-				return Helper.isIgnored(entry, data, data.message);
+				return Helper.isIgnored(entry, data);
 			});
 
 		// Server messages that aren't targeted at a channel go to the server window

@@ -2,11 +2,10 @@ import pkg from "../package.json";
 import _ from "lodash";
 import path from "path";
 import os from "os";
-import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import log from "./log";
+import {HandleInput} from "../shared/types/msg";
 
 export type Hostmask = {
 	nick: string;
@@ -172,7 +171,7 @@ function compareHostmask(a: Hostmask | IgnoreEntry, b: Hostmask | IgnoreEntry) {
 	);
 }
 
-function isIgnored(ignoreEntry: IgnoreEntry, messageEvent: Hostmask, message: string) {
+function isIgnored(ignoreEntry: IgnoreEntry, messageEvent: HandleInput) {
 	// check if a hostmask is a match
 	if (!compareHostmask(ignoreEntry, messageEvent)) {
 		return false;
@@ -186,7 +185,7 @@ function isIgnored(ignoreEntry: IgnoreEntry, messageEvent: Hostmask, message: st
 	// if message rexgex is set execute a check on it
 	try {
 		const regex = new RegExp(ignoreEntry.messageRegex, "i");
-		return regex.test(message.trim() || "");
+		return regex.test(messageEvent.message.trim() || "");
 	} catch (e) {
 		return false;
 	}
