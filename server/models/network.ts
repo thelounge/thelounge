@@ -4,7 +4,7 @@ import IrcFramework, {Client as IRCClient} from "irc-framework";
 import Chan, {ChanConfig, Channel} from "./chan";
 import Msg from "./msg";
 import Prefix from "./prefix";
-import Helper, {Hostmask} from "../helper";
+import Helper, {IgnoreEntry} from "../helper";
 import Config, {WebIRC} from "../config";
 import STSPolicies from "../plugins/sts";
 import ClientCertificate, {ClientCertificateType} from "../plugins/clientCertificate";
@@ -44,7 +44,7 @@ type NetworkStatus = {
 	secure: boolean;
 };
 
-export type IgnoreListItem = Hostmask & {
+export type IgnoreListItem = IgnoreEntry & {
 	when: number;
 };
 

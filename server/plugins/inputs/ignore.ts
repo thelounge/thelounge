@@ -13,14 +13,15 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			client,
 			new Msg({
 				type: MessageType.ERROR,
-				text: `Usage: /${cmd} <nick>[!ident][@host]`,
+				text: `Usage: /${cmd} <nick>[!ident][@host] [messageRegex]`,
 			})
 		);
-
 		return;
 	}
 
 	const target = args[0].trim();
+	const targetRegex = args.slice(1).join(" ").trim(); // everything after hostmask is message regex (opt)
+
 	const hostmask = Helper.parseHostmask(target);
 
 	switch (cmd) {
@@ -38,40 +39,66 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			}
 
 			if (
-				network.ignoreList.some(function (entry) {
-					return Helper.compareHostmask(entry, hostmask);
-				})
+				network.ignoreList.some(
+					(entry) =>
+						Helper.compareHostmask(entry, hostmask) &&
+						(entry.messageRegex || "") === targetRegex
+				)
 			) {
 				chan.pushMessage(
 					client,
 					new Msg({
 						type: MessageType.ERROR,
-						text: "The specified user/hostmask is already ignored",
+						text: "The specified user/hostmask/regex is already ignored",
 					})
 				);
 				return;
 			}
 
+			let validRegex = "";
+
+			if (targetRegex !== "") {
+				try {
+					new RegExp(targetRegex);
+					validRegex = targetRegex;
+				} catch (e) {
+					chan.pushMessage(
+						client,
+						new Msg({
+							type: MessageType.ERROR,
+							text: `Invalid message regex: ${targetRegex}`,
+						})
+					);
+					return;
+				}
+			}
+
 			network.ignoreList.push({
 				...hostmask,
 				when: Date.now(),
+				messageRegex: validRegex,
 			});
 
 			client.save();
+
 			chan.pushMessage(
 				client,
 				new Msg({
-					type: MessageType.ERROR, // TODO: Successfully added via type.Error 🤔 ?
-					text: `\u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f added to ignorelist`,
+					type: MessageType.ERROR,
+					text:
+						`\u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f added to ignorelist` +
+						(validRegex ? ` with regex: /${validRegex}/` : ""),
 				})
 			);
 			return;
 		}
 
 		case "unignore": {
-			const idx = network.ignoreList.findIndex(function (entry) {
-				return Helper.compareHostmask(entry, hostmask);
-			});
+			const idx = network.ignoreList.findIndex(
+				(entry) =>
+					Helper.compareHostmask(entry, hostmask) &&
+					(entry.messageRegex || "") === targetRegex
+			);
 
 			if (idx === -1) {
 				chan.pushMessage(
@@ -87,11 +114,17 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			network.ignoreList.splice(idx, 1);
 			client.save();
 
+			let messageSuffix: string = "from ignorelist";
+
+			if (targetRegex !== "") {
+				messageSuffix = `with message regex \u0002${targetRegex}\u000f from ignorelist`;
+			}
+
 			chan.pushMessage(
 				client,
 				new Msg({
 					type: MessageType.ERROR, // TODO: Successfully removed via type.Error 🤔 ?
-					text: `Successfully removed \u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f from ignorelist`,
+					text: `Successfully removed \u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f ${messageSuffix}`,
 				})
 			);
 		}

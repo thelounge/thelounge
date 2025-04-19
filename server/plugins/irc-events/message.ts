@@ -65,7 +65,7 @@ export default <IrcEventHandler>function (irc, network) {
 		const shouldIgnore =
 			!self &&
 			network.ignoreList.some(function (entry) {
-				return Helper.compareHostmask(entry, data);
+				return Helper.isIgnored(entry, data, data.message);
 			});
 
 		// Server messages that aren't targeted at a channel go to the server window

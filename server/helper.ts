@@ -6,11 +6,16 @@ import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import log from "./log";
 
 export type Hostmask = {
 	nick: string;
 	ident: string;
 	hostname: string;
+};
+
+export type IgnoreEntry = Hostmask & {
+	messageRegex?: string;
 };
 
 const Helper = {
@@ -22,6 +27,7 @@ const Helper = {
 	ip2hex,
 	parseHostmask,
 	compareHostmask,
+	isIgnored,
 	compareWithWildcard,
 	catch_to_error,
 
@@ -158,12 +164,32 @@ function parseHostmask(hostmask: string): Hostmask {
 	return result;
 }
 
-function compareHostmask(a: Hostmask, b: Hostmask) {
+function compareHostmask(a: Hostmask | IgnoreEntry, b: Hostmask | IgnoreEntry) {
 	return (
 		compareWithWildcard(a.nick, b.nick) &&
 		compareWithWildcard(a.ident, b.ident) &&
 		compareWithWildcard(a.hostname, b.hostname)
 	);
+}
+
+function isIgnored(ignoreEntry: IgnoreEntry, messageEvent: Hostmask, message: string) {
+	// check if a hostmask is a match
+	if (!compareHostmask(ignoreEntry, messageEvent)) {
+		return false;
+	}
+
+	// if no message regex is specified, ignore all messages from this entry
+	if (!ignoreEntry.messageRegex || ignoreEntry.messageRegex === "") {
+		return true;
+	}
+
+	// if message rexgex is set execute a check on it
+	try {
+		const regex = new RegExp(ignoreEntry.messageRegex, "i");
+		return regex.test(message.trim() || "");
+	} catch (e) {
+		return false;
+	}
 }
 
 function compareWithWildcard(a: string, b: string) {
