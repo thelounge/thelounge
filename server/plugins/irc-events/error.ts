@@ -84,6 +84,7 @@ export default <IrcEventHandler>function (irc, network) {
 			const random: string = (data.nick || irc.user.nick) + Math.floor(Math.random() * 10);
 
 			// Safeguard nick changes up to allowed length
+			// Some servers may send "nick in use" error even for randomly generated nicks
 			if (random.length <= nickLen) {
 				irc.changeNick(random);
 				// Only emit UI update if fallback is used
