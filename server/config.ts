@@ -113,6 +113,7 @@ export type ConfigType = {
 	debug: Debug;
 	themeColor: string;
 	keepNickOnConnect?: boolean;
+	keepNickRetryInterval?: number;
 };
 
 class Config {

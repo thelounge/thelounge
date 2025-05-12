@@ -67,13 +67,16 @@ export default <IrcEventHandler>function (irc, network) {
 			const nickLen = parseInt(network.irc.network.options.NICKLEN, 10) || 16;
 
 			if (keepNickOnConnect) {
-				// Wait and retry original nick ever x seconds
+				// Wait and retry original nick every X ms (pulled from the config but defaults to 30000ms)
+				const retryInterval =
+					network.keepNickRetryInterval || Config.values.keepNickRetryInterval || 30000;
+
 				if (!keepNickRetryTimer && network.keepNick) {
 					keepNickRetryTimer = setInterval(() => {
 						if (network.keepNick) {
 							irc.changeNick(network.keepNick);
 						}
-					}, 10000); // TODO: maybe make this configurable?
+					}, retryInterval);
 				}
 
 				// Do not change to a fallback nick, just keep retrying

@@ -131,6 +131,7 @@ describe("Network", function () {
 				],
 				ignoreList: [],
 				keepNickOnConnect: false,
+				keepNickRetryInterval: 30000,
 			});
 		});
 	});

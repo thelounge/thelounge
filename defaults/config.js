@@ -225,6 +225,12 @@ module.exports = {
 	// This value is set to `false` by default for backward compatibility.
 	keepNickOnConnect: false,
 
+	// ### `keepNickRetryInterval`
+	//
+	// When using the 'No fallback nick' option, this sets how often (in milliseconds)
+	// The Lounge will retry your original nick if it is in use. Default is 30000 (30 seconds).
+	keepNickRetryInterval: 30000,
+
 	// ## Default network
 
 	// ### `defaults`

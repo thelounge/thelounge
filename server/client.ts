@@ -334,6 +334,10 @@ class Client {
 			proxyPassword: String(args.proxyPassword || ""),
 			keepNickOnConnect:
 				typeof args.keepNickOnConnect === "boolean" ? args.keepNickOnConnect : undefined,
+			keepNickRetryInterval:
+				typeof args.keepNickRetryInterval === "number"
+					? args.keepNickRetryInterval
+					: undefined,
 		});
 	}
 

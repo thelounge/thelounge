@@ -114,6 +114,7 @@ class Network {
 	proxyEnabled!: boolean;
 	highlightRegex?: RegExp;
 	keepNickOnConnect?: boolean;
+	keepNickRetryInterval?: number;
 
 	irc?: IrcFramework.Client & {
 		options?: NetworkIrcOptions;
@@ -175,6 +176,10 @@ class Network {
 			ignoreList: [],
 			keepNick: null,
 			keepNickOnConnect: !!attr?.keepNickOnConnect,
+			keepNickRetryInterval:
+				typeof attr?.keepNickRetryInterval === "number"
+					? attr.keepNickRetryInterval
+					: Config.values.keepNickRetryInterval,
 		});
 
 		if (!this.uuid) {
@@ -593,6 +598,7 @@ class Network {
 			"proxyUsername",
 			"proxyPassword",
 			"keepNickOnConnect",
+			"keepNickRetryInterval",
 		];
 
 		if (!Config.values.lockNetwork) {
@@ -636,6 +642,7 @@ class Network {
 			"proxyEnabled",
 			"proxyPassword",
 			"keepNickOnConnect",
+			"keepNickRetryInterval",
 		]) as Network;
 
 		network.channels = this.channels
