@@ -130,6 +130,7 @@ describe("Network", function () {
 					{name: "PrivateChat", type: "query", muted: true},
 				],
 				ignoreList: [],
+				keepNickOnConnect: false,
 			});
 		});
 	});

@@ -113,6 +113,7 @@ class Network {
 	proxyPassword!: string;
 	proxyEnabled!: boolean;
 	highlightRegex?: RegExp;
+	keepNickOnConnect?: boolean;
 
 	irc?: IrcFramework.Client & {
 		options?: NetworkIrcOptions;
@@ -173,6 +174,7 @@ class Network {
 			chanCache: [],
 			ignoreList: [],
 			keepNick: null,
+			keepNickOnConnect: !!attr?.keepNickOnConnect,
 		});
 
 		if (!this.uuid) {
@@ -290,7 +292,7 @@ class Network {
 	}
 
 	createIrcFramework(this: NetworkWithIrcFramework, client: Client) {
-		this.irc = new IrcFramework.Client({
+		const ircOptions = {
 			version: false, // We handle it ourselves
 			outgoing_addr: Config.values.bind,
 			enable_chghost: true,
@@ -301,9 +303,10 @@ class Network {
 			// Exponential backoff maxes out at 300 seconds after 9 reconnects,
 			// it will keep trying for well over an hour (plus the timeouts)
 			auto_reconnect_max_retries: 30,
-
+			...(this.keepNickOnConnect ? {nick_retries: 0} : {}),
 			// TODO: this type should be set after setIrcFrameworkOptions
-		}) as NetworkWithIrcFramework["irc"];
+		};
+		this.irc = new IrcFramework.Client(ircOptions as any) as NetworkWithIrcFramework["irc"];
 
 		this.setIrcFrameworkOptions(client);
 
@@ -411,6 +414,7 @@ class Network {
 		this.proxyUsername = String(args.proxyUsername || "");
 		this.proxyPassword = String(args.proxyPassword || "");
 		this.proxyEnabled = !!args.proxyEnabled;
+		this.keepNickOnConnect = !!args.keepNickOnConnect;
 
 		// Split commands into an array
 		this.commands = String(args.commands || "")
@@ -588,6 +592,7 @@ class Network {
 			"proxyPort",
 			"proxyUsername",
 			"proxyPassword",
+			"keepNickOnConnect",
 		];
 
 		if (!Config.values.lockNetwork) {
@@ -630,6 +635,7 @@ class Network {
 			"proxyUsername",
 			"proxyEnabled",
 			"proxyPassword",
+			"keepNickOnConnect",
 		]) as Network;
 
 		network.channels = this.channels
