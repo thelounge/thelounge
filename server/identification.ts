@@ -1,175 +1,244 @@
 import fs from "fs";
-import net, {Socket} from "net";
+import net, { Socket } from "net";
 import colors from "chalk";
 import Helper from "./helper";
 import Config from "./config";
 import log from "./log";
 
 type Connection = {
-	socket: Socket;
-	user: string;
+  socket: Socket;
+  user: string;
 };
 
 class Identification {
-	private connectionId: number;
-	private connections: Map<number, Connection>;
-	private oidentdFile?: string;
+  private connectionId: number;
+  private connections: Map<number, Connection>;
+  private oidentdFile?: string;
 
-	constructor(startedCallback: (identHandler: Identification, err?: Error) => void) {
-		this.connectionId = 0;
-		this.connections = new Map();
+  constructor(
+    startedCallback: (identHandler: Identification, err?: Error) => void
+  ) {
+    this.connectionId = 0;
+    this.connections = new Map();
 
-		if (typeof Config.values.oidentd === "string") {
-			this.oidentdFile = Helper.expandHome(Config.values.oidentd);
-			log.info(`Oidentd file: ${colors.green(this.oidentdFile)}`);
+    if (typeof Config.values.oidentd === "string") {
+      this.oidentdFile = Helper.expandHome(Config.values.oidentd);
+      log.info(`Oidentd file: ${colors.green(this.oidentdFile)}`);
 
-			this.refresh();
-		}
+      this.refresh();
+    }
 
-		if (Config.values.identd.enable) {
-			if (this.oidentdFile) {
-				log.warn(
-					"Using both identd and oidentd at the same time, this is most likely not intended."
-				);
-			}
+    if (Config.values.identd.enable) {
+      if (this.oidentdFile) {
+        log.warn(
+          "Using both identd and oidentd at the same time, this is most likely not intended."
+        );
+      }
 
-			const server = net.createServer(this.serverConnection.bind(this));
+      const server = net.createServer(this.serverConnection.bind(this));
 
-			server.on("error", (err) => {
-				startedCallback(this, err);
-			});
+      server.on("error", (err) => {
+        startedCallback(this, err);
+      });
 
-			server.listen(
-				{
-					port: Config.values.identd.port || 113,
-					host: Config.values.bind,
-				},
-				() => {
-					const address = server.address();
+      server.listen(
+        {
+          port: Config.values.identd.port || 113,
+          host: Config.values.bind,
+        },
+        () => {
+          const address = server.address();
 
-					if (typeof address === "string") {
-						log.info(`Identd server available on ${colors.green(address)}`);
-					} else if (address?.address) {
-						log.info(
-							`Identd server available on ${colors.green(
-								address.address + ":" + address.port.toString()
-							)}`
-						);
-					}
+          if (typeof address === "string") {
+            log.info(`Identd server available on ${colors.green(address)}`);
+          } else if (address?.address) {
+            log.info(
+              `Identd server available on ${colors.green(
+                address.address + ":" + address.port.toString()
+              )}`
+            );
+          }
 
-					startedCallback(this);
-				}
-			);
-		} else {
-			startedCallback(this);
-		}
-	}
+          startedCallback(this);
+        }
+      );
+    } else {
+      startedCallback(this);
+    }
+  }
 
-	serverConnection(socket: Socket) {
-		socket.on("error", (err: string) => log.error(`Identd socket error: ${err}`));
-		socket.setTimeout(5000, () => {
-			log.warn(
-				`identd: no data received, closing connection to ${
-					socket.remoteAddress || "undefined"
-				}`
-			);
-			socket.destroy();
-		});
+  serverConnection(socket: Socket) {
+    socket.on("error", (err: string) =>
+      log.error(`Identd socket error: ${err}`)
+    );
+    socket.setTimeout(5000, () => {
+      log.warn(
+        `identd: no data received, closing connection to ${
+          socket.remoteAddress || "undefined"
+        }`
+      );
+      socket.destroy();
+    });
 
-		if (Config.values.identd.proxyProtocol) {
-			let buffer = Buffer.alloc(0);
-			let proxyProtocolParsed = false;
+    if (Config.values.identd.proxyProtocol) {
+      let buffer = Buffer.alloc(0);
+      let proxyProtocolParsed = false;
 
-			const onData = (data: Buffer) => {
-				if (!proxyProtocolParsed) {
-					buffer = Buffer.concat([buffer, data]);
+      const onData = (data: Buffer) => {
+        if (!proxyProtocolParsed) {
+          buffer = Buffer.concat([buffer, data]);
 
-					const newlineIndex = buffer.indexOf("\r\n");
+          const newlineIndex = buffer.indexOf("\r\n");
 
-					if (newlineIndex !== -1) {
-						const header = buffer.subarray(0, newlineIndex).toString();
-						const remainingData = buffer.subarray(newlineIndex + 2);
+          if (newlineIndex !== -1) {
+            const header = buffer.subarray(0, newlineIndex).toString();
+            const remainingData = buffer.subarray(newlineIndex + 2);
 
-						if (header.startsWith("PROXY")) {
-							const parts = header.split(" ");
-							if (parts.length >= 6) {
-								socket.remoteAddress = parts[2];
-								socket.remotePort = parseInt(parts[4], 10);
-								log.debug(`identd: PROXY protocol detected. Real client: ${socket.remoteAddress}:${socket.remotePort}`);
-							} else {
-								log.warn(`identd: Malformed PROXY protocol header: ${header}`);
-							}
-						} else {
-							log.warn("identd: PROXY protocol enabled but header not found. Treating as regular identd query.");
-						}
+            if (header.startsWith("PROXY")) {
+              const parts = header.split(" ");
+              if (parts.length >= 6) {
+                socket.remoteAddress = parts[2];
+                socket.remotePort = parseInt(parts[4], 10);
+                log.debug(
+                  `identd: PROXY protocol detected. Real client: ${socket.remoteAddress}:${socket.remotePort}`
+                );
+              } else {
+                log.warn(`identd: Malformed PROXY protocol header: ${header}`);
+              }
+            } else {
+              log.warn(
+                "identd: PROXY protocol enabled but header not found. Treating as regular identd query."
+              );
+            }
 
-						proxyProtocolParsed = true;
-						this.respondToIdent(socket, remainingData.length > 0 ? remainingData : Buffer.from(""));
-						socket.end();
-						socket.off("data", onData);
-					}
-				} else {
-					log.debug("identd: Additional data received after PROXY/IDENT parsing, ignoring.");
-				}
-			};
+            proxyProtocolParsed = true;
+            this.respondToIdent(
+              socket,
+              remainingData.length > 0 ? remainingData : Buffer.from("")
+            );
+            socket.end();
+            socket.off("data", onData);
+          }
+        } else {
+          log.debug(
+            "identd: Additional data received after PROXY/IDENT parsing, ignoring."
+          );
+        }
+      };
 
-			socket.on("data", onData);
-		} else {
-			socket.once("data", (data) => {
-				this.respondToIdent(socket, data);
-				socket.end();
-			});
-		}
-	}
+      socket.on("data", onData);
+    } else {
+      socket.once("data", (data) => {
+        this.respondToIdent(socket, data);
+        socket.end();
+      });
+    }
+  }
 
-	respondToIdent(socket: Socket, buffer: Buffer) {
-		if (!socket.remoteAddress) {
-			log.warn("identd: no remote address");
-			return;
-		}
+  respondToIdent(socket: Socket, buffer: Buffer) {
+    if (!socket.remoteAddress) {
+      log.warn("identd: no remote address");
+      return;
+    }
 
-		const data = buffer.toString().split(",");
+    const data = buffer.toString().split(",");
 
-		const lport = parseInt(data[0], 10) || 0;
-		const fport = parseInt(data[1], 10) || 0;
+    const lport = parseInt(data[0], 10) || 0;
+    const fport = parseInt(data[1], 10) || 0;
 
-		if (lport < 1 || fport < 1 || lport > 65535 || fport > 65535) {
-			log.warn(`identd: bogus request from ${socket.remoteAddress}`);
-			return;
-		}
+    if (lport < 1 || fport < 1 || lport > 65535 || fport > 65535) {
+      log.warn(`identd: bogus request from ${socket.remoteAddress}`);
+      return;
+    }
 
-		log.debug(`identd: remote ${socket.remoteAddress} query ${lport}, ${fport}`);
+    log.debug(
+      `identd: remote ${socket.remoteAddress} query ${lport}, ${fport}`
+    );
 
-		for (const connection of this.connections.values()) {
-			if (
-				connection.socket.remotePort === fport &&
-				connection.socket.localPort === lport &&
-				socket.remoteAddress === connection.socket.remoteAddress &&
-				socket.localAddress === connection.socket.localAddress
-			) {
-				const reply = `${lport}, ${fport} : USERID : TheLounge : ${connection.user}\r\n`;
-				log.debug(`identd: reply is ${reply.trimEnd()}`);
-				socket.write(reply);
-				return;
-			}
-		}
+    for (const connection of this.connections.values()) {
+      if (
+        connection.socket.remotePort === fport &&
+        connection.socket.localPort === lport &&
+        socket.remoteAddress === connection.socket.remoteAddress &&
+        socket.localAddress === connection.socket.localAddress
+      ) {
+        const reply = `${lport}, ${fport} : USERID : TheLounge : ${connection.user}\r\n`;
+        log.debug(`identd: reply is ${reply.trimEnd()}`);
+        socket.write(reply);
+        return;
+      }
+    }
 
-		const reply = `${lport}, ${fport} : ERROR : NO-USER\r\n`;
-		log.debug(`identd: reply is ${reply.trimEnd()}`);
-		socket.write(reply);
-	}
+    const reply = `${lport}, ${fport} : ERROR : NO-USER\r\n`;
+    log.debug(`identd: reply is ${reply.trimEnd()}`);
+    socket.write(reply);
+  }
 
-	addSocket(socket: Socket, user: string) {
-		const id = ++this.connectionId;
+  addSocket(socket: Socket, user: string) {
+    const id = ++this.connectionId;
 
-		this.connections.set(id, {socket, user});
+    this.connections.set(id, { socket, user });
 
-		if (this.oidentdFile) {
-			this.refresh();
-		}
+    if (this.oidentdFile) {
+      this.refresh();
+    }
 
-		return id;
-	}
+    return id;
+  }
 
-	removeSocket(id: number) {
-		this.connections.delete(id);
+  removeSocket(id: number) {
+    this.connections.delete(id);
+    if (this.oidentdFile) {
+      this.refresh();
+    }
+  }
+
+  refresh() {
+    let file =
+      "# Warning: file generated by The Lounge: changes will be overwritten!\n";
+
+    this.connections.forEach((connection, id) => {
+      if (!connection.socket.remotePort || !connection.socket.localPort) {
+        // Race condition: this can happen when more than one socket gets disconnected at
+        // once, since we `refresh()` for each one being added/removed. This results
+        // in there possibly being one or more disconnected sockets remaining when we get here.
+        log.warn(
+          `oidentd: socket has no remote or local port (id=${id}). See https://github.com/thelounge/thelounge/pull/4695.`
+        );
+        return;
+      }
+
+      if (!connection.socket.remoteAddress) {
+        log.warn(
+          `oidentd: socket has no remote address, will not respond to queries`
+        );
+        return;
+      }
+
+      if (!connection.socket.localAddress) {
+        log.warn(
+          `oidentd: socket has no local address, will not respond to queries`
+        );
+        return;
+      }
+
+      // we only want to respond if all the ip,port tuples match, to avoid user enumeration
+      file +=
+        `to ${connection.socket.remoteAddress}` +
+        ` fport ${connection.socket.remotePort}` +
+        ` from ${connection.socket.localAddress}` +
+        ` lport ${connection.socket.localPort}` +
+        ` { reply "${connection.user}" }\n`;
+    });
+
+    if (this.oidentdFile) {
+      fs.writeFile(this.oidentdFile, file, { flag: "w+" }, function (err) {
+        if (err) {
+          log.error("Failed to update oidentd file!", err.message);
+        }
+      });
+    }
+  }
+}
+
+export default Identification;
