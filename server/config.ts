@@ -51,6 +51,7 @@ export type Defaults = Pick<
 type Identd = {
 	enable: boolean;
 	port: number;
+	proxyProtocol: boolean;
 };
 
 type SearchDN = {
