@@ -340,7 +340,10 @@ class Network {
 
 		if (!this.sasl) {
 			delete this.irc.options.sasl_mechanism;
-			delete this.irc.options.account;
+			// irc-framework has a funny fallback where it uses nick + server pw
+			// in the sasl handshake, if account is undefined, so we need an empty
+			// object here to really turn it off
+			this.irc.options.account = {};
 		} else if (this.sasl === "external") {
 			this.irc.options.sasl_mechanism = "EXTERNAL";
 			this.irc.options.account = {};
