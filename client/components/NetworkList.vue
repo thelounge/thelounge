@@ -340,7 +340,7 @@ export default defineComponent({
 
 			moveItemInArray(netChan.network.channels, oldIndex, newIndex);
 
-			socket.emit("sort:channel", {
+			socket.emit("sort:channels", {
 				network: netChan.network.uuid,
 				order: netChan.network.channels.map((c) => c.id),
 			});
