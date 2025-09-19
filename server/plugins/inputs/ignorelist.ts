@@ -22,6 +22,7 @@ const input: PluginInputHandler = function (network, chan, _cmd, _args) {
 	const chanName = "Ignored users";
 	const ignored = network.ignoreList.map((data) => ({
 		hostmask: `${data.nick}!${data.ident}@${data.hostname}`,
+		messageRegex: data.messageRegex || null,
 		when: data.when,
 	}));
 	let newChan = network.getChannel(chanName);
