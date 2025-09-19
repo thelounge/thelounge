@@ -112,6 +112,8 @@ export type ConfigType = {
 	ldap: Ldap;
 	debug: Debug;
 	themeColor: string;
+	keepNickOnConnect?: boolean;
+	keepNickRetryInterval?: number;
 };
 
 class Config {
