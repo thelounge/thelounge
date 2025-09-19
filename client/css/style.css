@@ -321,6 +321,7 @@ p {
 #chat .msg[data-type="ctcp_request"] .from::before,
 #chat .msg[data-type="whois"] .from::before,
 #chat .msg[data-type="nick"] .from::before,
+#chat .msg[data-type="chghost"] .from::before,
 #chat .msg[data-type="action"] .from::before,
 #chat .msg[data-type="plugin"] .from::before,
 #chat .msg[data-type="raw"] .from::before,
@@ -488,7 +489,8 @@ p {
 	color: #2ecc40;
 }
 
-#chat .msg[data-type="nick"] .from::before {
+#chat .msg[data-type="nick"] .from::before,
+#chat .msg[data-type="chghost"] .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
@@ -1547,6 +1549,7 @@ textarea.input {
 #chat .msg[data-type="kick"] .content,
 #chat .msg[data-type="mode"] .content,
 #chat .msg[data-type="nick"] .content,
+#chat .msg[data-type="chghost"] .content,
 #chat .msg[data-type="part"] .content,
 #chat .msg[data-type="quit"] .content,
 #chat .msg[data-type="topic"] .content,
