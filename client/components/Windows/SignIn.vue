@@ -19,7 +19,7 @@
 			<label for="signin-username">Username</label>
 			<input
 				id="signin-username"
-				v-model="username"
+				v-model.trim="username"
 				class="input"
 				type="text"
 				name="username"
