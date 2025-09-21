@@ -1904,6 +1904,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 6px;
 }
 
+#connect .no-fallback-nick {
+	margin: 0;
+	margin-bottom: 8px;
+}
+
 #connect .tls input,
 #connect input[name="proxyEnabled"] {
 	margin: 3px 10px 0 0;
