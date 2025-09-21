@@ -1522,6 +1522,7 @@ textarea.input {
 #chat table.ban-list .banned_by,
 #chat table.ban-list .banned_at,
 #chat table.ignore-list .hostmask,
+#chat table.ignore-list .message-regex,
 #chat table.ignore-list .when {
 	text-align: left;
 }

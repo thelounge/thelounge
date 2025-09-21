@@ -3,12 +3,18 @@
 		<thead>
 			<tr>
 				<th class="hostmask">Hostmask</th>
+				<th class="message-regex">Message Regex</th>
 				<th class="when">Ignored At</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr v-for="user in channel.data" :key="user.hostmask">
-				<td class="hostmask"><ParsedMessage :network="network" :text="user.hostmask" /></td>
+				<td class="hostmask">
+					<ParsedMessage :network="network" :text="user.hostmask" />
+				</td>
+				<td class="message-regex">
+					{{ user.messageRegex?.trim() }}
+				</td>
 				<td class="when">{{ localetime(user.when) }}</td>
 			</tr>
 		</tbody>
