@@ -90,6 +90,17 @@
 			</label>
 		</div>
 
+		<div>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.hideMessagePreviews"
+					type="checkbox"
+					name="hideMessagePreviews"
+				/>
+				Hide message previews in push notifications
+			</label>
+		</div>
+
 		<div v-if="!store.state.serverConfiguration?.public">
 			<label class="opt">
 				<label for="highlights" class="opt">

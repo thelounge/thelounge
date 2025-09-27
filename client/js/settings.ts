@@ -73,6 +73,9 @@ const defaultConfig = {
 	notifyAllMessages: {
 		default: false,
 	},
+	hideMessagePreviews: {
+		default: false,
+	},
 	showSeconds: {
 		default: false,
 	},

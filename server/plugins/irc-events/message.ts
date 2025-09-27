@@ -179,7 +179,14 @@ export default <IrcEventHandler>function (irc, network) {
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
 		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
 			let title = chan.name;
-			let body = cleanMessage;
+			let body: string;
+
+			// Check if user has disabled message previews
+			if (client.config.clientSettings.hideMessagePreviews) {
+				body = "sent you a message";
+			} else {
+				body = cleanMessage;
+			}
 
 			if (msg.type === MessageType.ACTION) {
 				// For actions, do not include colon in the message
