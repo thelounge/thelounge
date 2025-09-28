@@ -70,6 +70,9 @@ class WebPush {
 	}
 
 	push(client: Client, payload: any, onlyToOffline: boolean) {
+		// Check if the user has enabled the setting to skip mobile push when desktop is active
+		const skipMobilePushWhenDesktopActive = client.config.clientSettings?.skipMobilePushWhenDesktopActive !== false;
+		
 		// Check if there are any active desktop sessions
 		const hasActiveDesktopSession = this.hasActiveDesktopSession(client);
 		
@@ -79,9 +82,11 @@ class WebPush {
 					return;
 				}
 
-				// Skip mobile push notifications only if there's an active desktop session 
-				// AND this mobile session is not currently active (closed)
-				if (hasActiveDesktopSession && this.isMobileDevice(agent)) {
+				// Skip mobile push notifications only if:
+				// 1. The setting is enabled (default: false) AND
+				// 2. There's an active desktop session  AND
+				// 3. This mobile session is not currently active (closed)
+				if (skipMobilePushWhenDesktopActive && hasActiveDesktopSession && this.isMobileDevice(agent)) {
 					const isThisMobileSessionActive = _.find(client.attachedClients, {token}) !== undefined;
 					if (!isThisMobileSessionActive) {
 						return;

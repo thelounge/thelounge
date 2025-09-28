@@ -145,6 +145,10 @@ const defaultConfig = {
 	searchEnabled: {
 		default: false,
 	},
+	skipMobilePushWhenDesktopActive: {
+		default: false,
+		sync: "always",
+	},
 };
 
 export const config = normalizeConfig(defaultConfig);

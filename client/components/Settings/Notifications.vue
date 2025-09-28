@@ -92,6 +92,24 @@
 
 		<div v-if="!store.state.serverConfiguration?.public">
 			<label class="opt">
+				<input
+					:checked="store.state.settings.skipMobilePushWhenDesktopActive"
+					type="checkbox"
+					name="skipMobilePushWhenDesktopActive"
+				/>
+				Only send mobile notifications if desktop session is inactive
+				<span
+					class="tooltipped tooltipped-n tooltipped-no-delay"
+					aria-label="When enabled, mobile push notifications will be skipped
+if you have an active desktop session."
+				>
+					<button class="extra-help" />
+				</span>
+			</label>
+		</div>
+
+		<div v-if="!store.state.serverConfiguration?.public">
+			<label class="opt">
 				<label for="highlights" class="opt">
 					Custom highlights
 					<span
