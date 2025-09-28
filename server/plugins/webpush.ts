@@ -70,10 +70,22 @@ class WebPush {
 	}
 
 	push(client: Client, payload: any, onlyToOffline: boolean) {
-		_.forOwn(client.config.sessions, ({pushSubscription}, token) => {
+		// Check if there are any active desktop sessions
+		const hasActiveDesktopSession = this.hasActiveDesktopSession(client);
+		
+		_.forOwn(client.config.sessions, ({pushSubscription, agent}, token) => {
 			if (pushSubscription) {
 				if (onlyToOffline && _.find(client.attachedClients, {token}) !== undefined) {
 					return;
+				}
+
+				// Skip mobile push notifications only if there's an active desktop session 
+				// AND this mobile session is not currently active (closed)
+				if (hasActiveDesktopSession && this.isMobileDevice(agent)) {
+					const isThisMobileSessionActive = _.find(client.attachedClients, {token}) !== undefined;
+					if (!isThisMobileSessionActive) {
+						return;
+					}
 				}
 
 				this.pushSingle(client, pushSubscription, payload);
@@ -100,6 +112,51 @@ class WebPush {
 			}
 
 			log.error(`WebPush Error (${String(error)})`);
+		});
+	}
+
+	/**
+	 * Check if a user agent string represents a mobile device
+	 */
+	private isMobileDevice(agent: string): boolean {
+		if (!agent) {
+			return false;
+		}
+
+		const mobileKeywords = [
+			'Android',
+			'iPhone',
+			'iPad',
+			'iPod',
+			'iOS',
+			'iPadOS',
+			'Mobile',
+			'BlackBerry',
+			'Windows Phone',
+			'webOS',
+			'Palm',
+			'Symbian'
+		];
+
+		return mobileKeywords.some(keyword => 
+			agent.toLowerCase().includes(keyword.toLowerCase())
+		);
+	}
+
+	/**
+	 * Check if there are any active desktop sessions for this client
+	 */
+	private hasActiveDesktopSession(client: Client): boolean {
+		return _.some(client.attachedClients, (attachedClient, socketId) => {
+			const sessionToken = attachedClient.token;
+			const session = client.config.sessions[sessionToken];
+			
+			if (!session || !session.agent) {
+				return false;
+			}
+
+			// If the session is active (attached) and not mobile, it's a desktop session
+			return !this.isMobileDevice(session.agent);
 		});
 	}
 }
