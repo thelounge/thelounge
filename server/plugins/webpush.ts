@@ -64,8 +64,8 @@ class WebPush {
 
 		WebPushAPI.setVapidDetails(
 			"https://github.com/thelounge/thelounge",
-			this.vapidKeys.publicKey,
-			this.vapidKeys.privateKey
+			this.vapidKeys!.publicKey,
+			this.vapidKeys!.privateKey
 		);
 	}
 
