@@ -73,9 +73,6 @@ const defaultConfig = {
 	notifyAllMessages: {
 		default: false,
 	},
-	hideMessagePreviews: {
-		default: false,
-	},
 	showSeconds: {
 		default: false,
 	},
@@ -147,6 +144,12 @@ const defaultConfig = {
 	},
 	searchEnabled: {
 		default: false,
+	},
+	notifications: {
+		default: {
+			hideMessagePreview: false,
+		},
+		sync: "always",
 	},
 };
 

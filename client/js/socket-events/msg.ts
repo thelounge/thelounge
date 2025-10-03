@@ -137,16 +137,17 @@ function notifyMessage(
 				const nick = msg.from && msg.from.nick ? msg.from.nick : "unknown";
 
 				// Check if user has disabled message previews
-				if (store.state.settings.hideMessagePreviews) {
+				if (store.state.settings.notifications.hideMessagePreview) {
 					body = "You have a new message";
 				} else {
+					// TODO: fix msg type and get rid of that conditional
 					body = cleanIrcMessage(msg.text ? msg.text : "");
 				}
 
 				if (msg.type === MessageType.INVITE) {
 					title = "New channel invite:";
 
-					if (!store.state.settings.hideMessagePreviews) {
+					if (!store.state.settings.notifications.hideMessagePreview) {
 						body = nick + " invited you to " + msg.channel;
 					}
 				} else {

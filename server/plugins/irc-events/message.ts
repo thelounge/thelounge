@@ -182,7 +182,7 @@ export default <IrcEventHandler>function (irc, network) {
 			let body: string;
 
 			// Check if user has disabled message previews
-			if (client.config.clientSettings.hideMessagePreviews) {
+			if (client.config.clientSettings.notifications.hideMessagePreview) {
 				body = "sent you a message";
 			} else {
 				body = cleanMessage;
