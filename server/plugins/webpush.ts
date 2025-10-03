@@ -70,7 +70,7 @@ class WebPush {
 	}
 
 	push(client: Client, payload: any, onlyToOffline: boolean) {
-		if (client.config.clientSettings?.onlyPushWhenInactive === true && _.size(client.attachedClients) > 0) {
+		if (client.config.clientSettings?.notifications?.onlyPushWhenAllSocketsClosed === true && _.size(client.attachedClients) > 0) {
 			return;
 		}
 		

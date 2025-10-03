@@ -145,8 +145,10 @@ const defaultConfig = {
 	searchEnabled: {
 		default: false,
 	},
-	onlyPushWhenInactive: {
-		default: false,
+	notifications: {
+		default: {
+			onlyPushWhenAllSocketsClosed: false,
+		},
 		sync: "always",
 	},
 };

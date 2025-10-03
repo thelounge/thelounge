@@ -33,9 +33,9 @@
 			<div>
 				<label class="opt">
 					<input
-						:checked="store.state.settings.onlyPushWhenInactive"
+						:checked="store.state.settings.notifications.onlyPushWhenAllSocketsClosed"
 						type="checkbox"
-						name="onlyPushWhenInactive"
+						name="notifications.onlyPushWhenAllSocketsClosed"
 					/>
 					Only send push notifications when all sessions are inactive
 				</label>
