@@ -30,6 +30,16 @@
 					<span>Push notifications are not supported by your browser.</span>
 				</div>
 			</div>
+			<div>
+				<label class="opt">
+					<input
+						:checked="store.state.settings.onlyPushWhenInactive"
+						type="checkbox"
+						name="onlyPushWhenInactive"
+					/>
+					Only send push notifications when all sessions are inactive
+				</label>
+			</div>
 		</template>
 
 		<h2>Browser Notifications</h2>
@@ -87,17 +97,6 @@
 					name="notifyAllMessages"
 				/>
 				Enable notification for all messages
-			</label>
-		</div>
-
-		<div v-if="!store.state.serverConfiguration?.public">
-			<label class="opt">
-				<input
-					:checked="store.state.settings.onlyPushWhenInactive"
-					type="checkbox"
-					name="onlyPushWhenInactive"
-				/>
-				Only send push notifications when all sessions are inactive
 			</label>
 		</div>
 
