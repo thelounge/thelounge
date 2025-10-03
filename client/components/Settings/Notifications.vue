@@ -6,7 +6,7 @@
 				<input
 					:checked="store.state.settings.notifications.hideMessagePreview"
 					type="checkbox"
-					name="hideMessagePreview"
+					name="notifications.hideMessagePreview"
 				/>
 				Hide message preview in all notifications
 			</label>
