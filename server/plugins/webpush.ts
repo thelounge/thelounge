@@ -64,17 +64,13 @@ class WebPush {
 
 		WebPushAPI.setVapidDetails(
 			"https://github.com/thelounge/thelounge",
-			this.vapidKeys!.publicKey,
-			this.vapidKeys!.privateKey
+			this.vapidKeys.publicKey,
+			this.vapidKeys.privateKey
 		);
 	}
 
 	push(client: Client, payload: any, onlyToOffline: boolean) {
-		// Check if the user has enabled the setting to only send push when all sessions are inactive
-		const onlyPushWhenInactive = client.config.clientSettings?.onlyPushWhenInactive === true;
-		
-		// If the setting is enabled and there are active sessions, don't send any push notifications
-		if (onlyPushWhenInactive && _.size(client.attachedClients) > 0) {
+		if (client.config.clientSettings?.onlyPushWhenInactive === true && _.size(client.attachedClients) > 0) {
 			return;
 		}
 		
@@ -110,7 +106,6 @@ class WebPush {
 			log.error(`WebPush Error (${String(error)})`);
 		});
 	}
-
 }
 
 export default WebPush;
