@@ -145,7 +145,7 @@ const defaultConfig = {
 	searchEnabled: {
 		default: false,
 	},
-	skipMobilePushWhenDesktopActive: {
+	onlyPushWhenInactive: {
 		default: false,
 		sync: "always",
 	},
