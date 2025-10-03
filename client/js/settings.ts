@@ -145,6 +145,12 @@ const defaultConfig = {
 	searchEnabled: {
 		default: false,
 	},
+	notifications: {
+		default: {
+			hideMessagePreview: false,
+		},
+		sync: "always",
+	},
 };
 
 export const config = normalizeConfig(defaultConfig);
