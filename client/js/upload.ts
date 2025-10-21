@@ -1,12 +1,10 @@
 import {update as updateCursor} from "undate";
 
-import socket from "./socket";
 import {store} from "./store";
 
 class Uploader {
 	xhr: XMLHttpRequest | null = null;
 	fileQueue: File[] = [];
-	tokenKeepAlive: NodeJS.Timeout | null = null;
 
 	overlay: HTMLDivElement | null = null;
 	uploadProgressbar: HTMLSpanElement | null = null;
@@ -17,9 +15,7 @@ class Uploader {
 	onDrop = (e: DragEvent) => this.drop(e);
 	onPaste = (e: ClipboardEvent) => this.paste(e);
 
-	init() {
-		socket.on("upload:auth", (token) => this.uploadNextFileInQueue(token));
-	}
+	init() {}
 
 	mounted() {
 		this.overlay = document.getElementById("upload-overlay") as HTMLDivElement;
@@ -122,7 +118,6 @@ class Uploader {
 			return;
 		}
 
-		const wasQueueEmpty = this.fileQueue.length === 0;
 		const maxFileSize = store.state.serverConfiguration?.fileUploadMaxFileSize || 0;
 
 		for (const file of files) {
@@ -141,15 +136,7 @@ class Uploader {
 			this.fileQueue.push(file);
 		}
 
-		// if the queue was empty and we added some files to it, and there currently
-		// is no upload in process, request a token to start the upload process
-		if (wasQueueEmpty && this.xhr === null && this.fileQueue.length > 0) {
-			this.requestToken();
-		}
-	}
-
-	requestToken() {
-		socket.emit("upload:auth");
+		this.uploadQueue();
 	}
 
 	setProgress(value: number) {
@@ -161,28 +148,24 @@ class Uploader {
 		this.uploadProgressbar.style.width = `${value}%`;
 	}
 
-	uploadNextFileInQueue(token: string) {
-		const file = this.fileQueue.shift();
+	uploadQueue() {
+		while (this.fileQueue.length > 0) {
+			const file = this.fileQueue.shift();
 
-		if (!file) {
-			return;
-		}
+			if (!file) {
+				return;
+			}
 
-		// Tell the server that we are still upload to this token
-		// so it does not become invalidated and fail the upload.
-		// This issue only happens if The Lounge is proxied through other software
-		// as it may buffer the upload before the upload request will be processed by The Lounge.
-		this.tokenKeepAlive = setInterval(() => socket.emit("upload:ping", token), 40 * 1000);
-
-		if (
-			store.state.settings.uploadCanvas &&
-			file.type.startsWith("image/") &&
-			!file.type.includes("svg") &&
-			file.type !== "image/gif"
-		) {
-			this.renderImage(file, (newFile) => this.performUpload(token, newFile));
-		} else {
-			this.performUpload(token, file);
+			if (
+				store.state.settings.uploadCanvas &&
+				file.type.startsWith("image/") &&
+				!file.type.includes("svg") &&
+				file.type !== "image/gif"
+			) {
+				this.renderImage(file, (newFile) => this.performUpload(newFile));
+			} else {
+				this.performUpload(file);
+			}
 		}
 	}
 
@@ -220,7 +203,7 @@ class Uploader {
 		fileReader.readAsDataURL(file);
 	}
 
-	performUpload(token: string, file: File) {
+	performUpload(file: File) {
 		this.xhr = new XMLHttpRequest();
 
 		this.xhr.upload.addEventListener(
@@ -251,27 +234,17 @@ class Uploader {
 				this.handleResponse(response);
 
 				this.xhr = null;
-
-				// this file was processed, if we still have files in the queue, upload the next one
-				if (this.fileQueue.length > 0) {
-					this.requestToken();
-				}
 			}
 		};
 
 		const formData = new FormData();
 		formData.append("file", file);
-		this.xhr.open("POST", `uploads/new/${token}`);
+		this.xhr.open("POST", `uploads/new`);
 		this.xhr.send(formData);
 	}
 
 	handleResponse(response: {error?: string; url?: string}) {
 		this.setProgress(0);
-
-		if (this.tokenKeepAlive) {
-			clearInterval(this.tokenKeepAlive);
-			this.tokenKeepAlive = null;
-		}
 
 		if (response.error) {
 			store.commit("currentUserVisibleError", response.error);

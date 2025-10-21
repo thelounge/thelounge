@@ -39,7 +39,7 @@ import {
 	Ref,
 	InjectionKey,
 } from "vue";
-import {useStore} from "../js/store";
+import {AuthMethods, useStore} from "../js/store";
 import type {DebouncedFunc} from "lodash";
 
 export const imageViewerKey = Symbol() as InjectionKey<Ref<typeof ImageViewer | null>>;
@@ -160,6 +160,17 @@ export default defineComponent({
 			};
 
 			dayChangeTimeout.value = setTimeout(emitDayChange, msUntilNextDay());
+
+			if (!store.state.authMethod) {
+				fetch(window.location.origin + "/api/auth-config")
+					.then((response) => response.json())
+					.then((authConfig: {method: AuthMethods}) => {
+						store.commit("setAuthConfig", authConfig);
+					})
+					.catch(() => {
+						store.commit("setAuthConfig", {method: undefined});
+					});
+			}
 		});
 
 		onBeforeUnmount(() => {

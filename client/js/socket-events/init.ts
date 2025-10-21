@@ -12,10 +12,6 @@ socket.on("init", async function (data) {
 	store.commit("isConnected", true);
 	store.commit("currentUserVisibleError", null);
 
-	if (data.token) {
-		storage.set("token", data.token);
-	}
-
 	if (!store.state.appLoaded) {
 		store.commit("appLoaded");
 

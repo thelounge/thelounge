@@ -40,6 +40,8 @@ export type ClientSession = {
 	token: string;
 };
 
+export type AuthMethods = "none" | "local" | "oidc" | "ldap" | undefined;
+
 export type State = {
 	appLoaded: boolean;
 	activeChannel?: NetChan;
@@ -47,6 +49,7 @@ export type State = {
 	desktopNotificationState: DesktopNotificationState;
 	isAutoCompleting: boolean;
 	isConnected: boolean;
+	authMethod: AuthMethods;
 	networks: ClientNetwork[];
 	// TODO: type
 	mentions: ClientMention[];
@@ -90,6 +93,7 @@ const state = (): State => ({
 	desktopNotificationState: detectDesktopNotificationState(),
 	isAutoCompleting: false,
 	isConnected: false,
+	authMethod: undefined,
 	networks: [],
 	mentions: [],
 	hasServiceWorker: false,
@@ -230,6 +234,7 @@ type Mutations = {
 	messageSearchPendingQuery(state: State, value: State["messageSearchPendingQuery"]): void;
 	messageSearchResults(state: State, value: State["messageSearchResults"]): void;
 	addMessageSearchResults(state: State, value: NonNullable<State["messageSearchResults"]>): void;
+	setAuthConfig(state: State, payload: {method: AuthMethods}): void;
 };
 
 const mutations: Mutations = {
@@ -326,6 +331,9 @@ const mutations: Mutations = {
 		state.messageSearchResults = {
 			results,
 		};
+	},
+	setAuthConfig(state: State, payload: {method: AuthMethods}) {
+		state.authMethod = payload.method;
 	},
 };
 
