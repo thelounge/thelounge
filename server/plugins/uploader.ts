@@ -11,6 +11,7 @@ import log from "../log";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
 import {Request, Response} from "express";
+import type {Express} from "express-serve-static-core";
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -71,13 +72,16 @@ class Uploader {
 		return setTimeout(() => uploadTokens.delete(token), 60 * 1000);
 	}
 
-	// TODO: type
-	static router(this: void, express: any) {
-		express.get("/uploads/:name/:slug*?", Uploader.routeGetFile);
+	static router(this: void, express: Express) {
+		express.get("/uploads/:name{/*slug}", Uploader.routeGetFile);
 		express.post("/uploads/new/:token", Uploader.routeUploadFile);
 	}
 
-	static async routeGetFile(this: void, req: Request, res: Response) {
+	static async routeGetFile(
+		this: void,
+		req: Request<{name: string; slug?: string[]}>,
+		res: Response
+	) {
 		const name = req.params.name;
 
 		const nameRegex = /^[0-9a-f]{16}$/;
@@ -97,7 +101,7 @@ class Uploader {
 		}
 
 		// Force a download in the browser if it's not an allowed type (binary or otherwise unknown)
-		let slug = req.params.slug;
+		let slug = req.params.slug?.filter(Boolean).join("/");
 		const isInline = detectedMimeType in inlineContentDispositionTypes;
 		let disposition = isInline ? "inline" : "attachment";
 
@@ -128,10 +132,10 @@ class Uploader {
 		res.setHeader("Cache-Control", "max-age=86400");
 		res.contentType(detectedMimeType);
 
-		return res.sendFile(filePath);
+		return res.sendFile(filePath, {dotfiles: "allow"});
 	}
 
-	static routeUploadFile(this: void, req: Request, res: Response) {
+	static routeUploadFile(this: void, req: Request<{token: string}>, res: Response) {
 		let busboyInstance: busboy | null | undefined;
 		let uploadUrl: string | URL;
 		let randomName: string;
