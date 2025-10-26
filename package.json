@@ -3,6 +3,7 @@
   "description": "The self-hosted Web IRC client",
   "version": "4.4.3",
   "preferGlobal": true,
+  "type": "commonjs",
   "bin": {
     "thelounge": "index.js"
   },
@@ -43,7 +44,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "files": [
     "./.thelounge_home",
@@ -104,7 +105,7 @@
     "@types/mime-types": "^3.0.1",
     "@types/mocha": "^10.0.10",
     "@types/mousetrap": "^1.6.15",
-    "@types/node": "^18.19.130",
+    "@types/node": "^22.19.1",
     "@types/node-forge": "^1.3.14",
     "@types/read": "^0.0.32",
     "@types/semver": "^7.7.1",
