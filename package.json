@@ -90,7 +90,7 @@
     "@babel/core": "^7.28.5",
     "@babel/plugin-transform-runtime": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
-    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-free": "^7.1.0",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@textcomplete/core": "^0.1.13",
     "@textcomplete/textarea": "^0.1.13",
