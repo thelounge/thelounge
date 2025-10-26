@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import log from "../log";
 import colors from "chalk";
 import semver from "semver";
@@ -6,9 +5,9 @@ import Helper from "../helper";
 import Config from "../config";
 import Utils from "./utils";
 import {Command} from "commander";
-import {FullMetadata} from "package-json";
+import {FullVersion} from "package-json";
 
-type CustomMetadata = FullMetadata & {
+type CustomMetadata = FullVersion & {
 	thelounge: {
 		supports: string;
 	};
