@@ -41,6 +41,7 @@ const config: webpack.Configuration = {
 	},
 	resolve: {
 		extensions: [".ts", ".js", ".vue"],
+		conditionNames: ["import", "require", "default", "node"],
 	},
 	module: {
 		rules: [
@@ -167,11 +168,6 @@ const config: webpack.Configuration = {
 				},
 			],
 		}),
-		// socket.io uses debug, we don't need it
-		new webpack.NormalModuleReplacementPlugin(
-			/debug/,
-			path.resolve(__dirname, "scripts/noop.js")
-		),
 	],
 };
 
@@ -205,7 +201,7 @@ export default (env: any, argv: any) => {
 			// Client tests that require Vue may end up requireing socket.io
 			new webpack.NormalModuleReplacementPlugin(
 				/js(\/|\\)socket\.js/,
-				path.resolve(__dirname, "scripts/noop.js")
+				path.resolve(__dirname, "scripts/noop.mjs")
 			),
 		];
 	}
