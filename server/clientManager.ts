@@ -87,7 +87,7 @@ class ClientManager {
 
 	autoloadUsers() {
 		fs.watch(Config.getUsersPath(), (_eventType, file) => {
-			if (!file.endsWith(".json")) {
+			if (!file?.endsWith(".json")) {
 				return;
 			}
 
