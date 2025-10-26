@@ -139,8 +139,7 @@ function parseHtml(preview, res, client: Client) {
 	});
 }
 
-// TODO: type $
-function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> {
+function parseHtmlMedia($: cheerio.CheerioAPI, preview, client: Client): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject();
@@ -167,7 +166,7 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 				return;
 			}
 
-			$(`meta[property="og:${type}:type"]`).each(function (this: cheerio.Element, i: number) {
+			$(`meta[property="og:${type}:type"]`).each(function (i: number) {
 				const mimeType = $(this).attr("content");
 
 				if (!mimeType) {
