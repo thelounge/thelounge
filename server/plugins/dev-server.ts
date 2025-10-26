@@ -28,6 +28,10 @@ export default (app: express.Application) => {
 
 	const compiler = webpack(webpackConfig);
 
+	if (!compiler) {
+		throw new Error("Webpack failed to create a compiler");
+	}
+
 	app.use(
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		webpackDevMiddleware(compiler, {
@@ -35,8 +39,7 @@ export default (app: express.Application) => {
 			publicPath: webpackConfig.output?.publicPath,
 		})
 	).use(
-		// TODO: Fix compiler type
-		webpackHotMiddleware(compiler as any, {
+		webpackHotMiddleware(compiler, {
 			path: "/storage/__webpack_hmr",
 		})
 	);
