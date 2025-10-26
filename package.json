@@ -78,7 +78,7 @@
     "semver": "^7.7.3",
     "socket.io": "^4.8.1",
     "tlds": "^1.261.0",
-    "ua-parser-js": "^1.0.41",
+    "ua-parser-js": "^2.0.6",
     "uuid": "^11.1.0",
     "web-push": "^3.6.7",
     "yarn": "^1.22.22"
@@ -109,7 +109,6 @@
     "@types/read": "^0.0.32",
     "@types/semver": "^7.7.1",
     "@types/sortablejs": "^1.15.9",
-    "@types/ua-parser-js": "^0.7.39",
     "@types/web-push": "^3.6.4",
     "@types/webpack-env": "^1.18.8",
     "@types/webpack-hot-middleware": "^2.25.12",
