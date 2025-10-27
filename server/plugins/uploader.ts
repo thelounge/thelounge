@@ -3,7 +3,7 @@ import busboy, {BusboyFileStream, BusboyHeaders} from "@fastify/busboy";
 import {v4 as uuidv4} from "uuid";
 import path from "path";
 import fs from "fs";
-import fileType from "file-type";
+import {fileTypeFromBuffer} from "file-type/core";
 import {readChunk} from "read-chunk";
 import crypto from "crypto";
 import {isUtf8} from "buffer";
@@ -303,7 +303,7 @@ class Uploader {
 			const buffer = await readChunk(filePath, {startPosition: 0, length: 5120});
 
 			// returns {ext, mime} if found, null if not.
-			const file = await fileType.fromBuffer(buffer);
+			const file = await fileTypeFromBuffer(buffer);
 
 			// if a file type was detected correctly, return it
 			if (file) {
