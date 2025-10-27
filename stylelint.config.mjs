@@ -1,7 +1,7 @@
-module.exports = {
+/** @type {import("stylelint").Config} */
+export default {
 	extends: "stylelint-config-standard",
 	rules: {
-		indentation: "tab",
 		"font-family-no-missing-generic-family-keyword": null,
 		"no-descending-specificity": null,
 		"at-rule-no-vendor-prefix": true,
