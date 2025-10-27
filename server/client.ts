@@ -666,7 +666,7 @@ class Client {
 		// process this event normally even if there is no attached client anymore.
 		const attachedClient =
 			this.attachedClients[socketId] ||
-			({} as Record<string, typeof this.attachedClients[0]>);
+			({} as Record<string, (typeof this.attachedClients)[0]>);
 
 		// Opening a window like settings
 		if (target === null) {
