@@ -64,7 +64,7 @@
     "content-disposition": "^0.5.4",
     "express": "^5.1.0",
     "file-type": "^21.1.0",
-    "filenamify": "^4.3.0",
+    "filenamify": "^7.0.1",
     "got": "^11.8.6",
     "irc-framework": "^4.14.0",
     "ldapjs": "^2.3.3",
