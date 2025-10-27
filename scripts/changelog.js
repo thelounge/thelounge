@@ -46,7 +46,7 @@ node scripts/changelog <version>
 "use strict";
 
 const _ = require("lodash");
-const colors = require("chalk");
+const colors = require("chalk").default;
 const fs = require("fs");
 const path = require("path");
 const got = require("got");
