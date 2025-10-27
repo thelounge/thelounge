@@ -6,7 +6,7 @@ import fs from "fs";
 import fileType from "file-type";
 import readChunk from "read-chunk";
 import crypto from "crypto";
-import isUtf8 from "is-utf8";
+import {isUtf8} from "buffer";
 import log from "../log";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
