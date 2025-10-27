@@ -13,7 +13,7 @@ program
 	.option("--password [password]", "new password, will be prompted if not specified")
 	.option("--save-logs", "if password is specified, this enables saving logs to disk")
 	.argument("<name>", "name of the user")
-	.action(function (name, cmdObj) {
+	.action(async function (name, cmdObj) {
 		if (!fs.existsSync(Config.getUsersPath())) {
 			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
@@ -39,37 +39,21 @@ program
 			return;
 		}
 
-		log.prompt(
-			{
-				text: "Enter password:",
-				silent: true,
-			},
-			function (err, password) {
-				if (!password) {
-					log.error("Password cannot be empty.");
-					return;
-				}
+		const password = await log.prompt({
+			text: "Enter password:",
+			silent: true,
+		});
 
-				if (!err) {
-					log.prompt(
-						{
-							text: "Save logs to disk?",
-							default: "yes",
-						},
-						function (err2, enableLog) {
-							if (!err2) {
-								add(
-									manager,
-									name,
-									password,
-									enableLog.charAt(0).toLowerCase() === "y"
-								);
-							}
-						}
-					);
-				}
-			}
-		);
+		if (!password) {
+			log.error("Password cannot be empty.");
+			return;
+		}
+
+		const enableLog = await log.prompt({
+			text: "Save logs to disk?",
+			default: "yes",
+		});
+		add(manager, name, password, enableLog.charAt(0).toLowerCase() === "y");
 	});
 
 function add(manager, name, password, enableLog) {
