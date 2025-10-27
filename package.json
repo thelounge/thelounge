@@ -63,7 +63,7 @@
     "commander": "^14.0.3",
     "content-disposition": "^1.0.1",
     "express": "^5.2.1",
-    "file-type": "^16.5.4",
+    "file-type": "^21.3.0",
     "filenamify": "^4.3.0",
     "got": "^11.8.6",
     "irc-framework": "^4.14.0",
