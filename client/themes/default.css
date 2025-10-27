@@ -15,7 +15,7 @@
 	box-shadow: 0 0 25px rgb(0 0 0 / 50%);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
 	#loading .window {
 		margin: 0;
 	}
