@@ -417,8 +417,8 @@ function fetch(uri: string, headers: Record<string, string>) {
 
 		try {
 			const gotStream = got.stream(uri, {
-				retry: 0,
-				timeout: prefetchTimeout || 5000, // milliseconds
+				retry: {limit: 0},
+				timeout: {request: prefetchTimeout || 5000}, // milliseconds
 				headers: getRequestHeaders(headers),
 				localAddress: Config.values.bind,
 			});
