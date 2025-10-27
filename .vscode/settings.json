@@ -2,7 +2,6 @@
   "editor.formatOnSave": true,
   "prettier.useEditorConfig": true,
   "prettier.requireConfig": true,
-  "prettier.disableLanguages": [],
   "eslint.packageManager": "yarn",
   "eslint.codeActionsOnSave.mode": "all",
   "[typescript]": {"editor.defaultFormatter": "esbenp.prettier-vscode"},

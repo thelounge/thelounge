@@ -142,11 +142,11 @@ ${
 	prereleaseType(items.version) === "rc"
 		? `This is a release candidate (RC) for v${stableVersion(
 				items.version
-		  )} to ensure maximum stability for public release.
+			)} to ensure maximum stability for public release.
 Bugs may be fixed, but no further features will be added until the next stable version.`
 		: `This is a pre-release for v${stableVersion(
 				items.version
-		  )} to offer latest changes without having to wait for a stable release.
+			)} to offer latest changes without having to wait for a stable release.
 At this stage, features may still be added or modified until the first release candidate for this version gets released.`
 }
 
