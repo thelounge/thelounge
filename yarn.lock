@@ -38,7 +38,7 @@
     semver "^6.3.1"
 
 "@babel/generator@^7.28.6", "@babel/generator@^7.29.0":
-  version "7.29.1"
+  version "7.29.0"
   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.29.0.tgz#4cba5a76b3c71d8be31761b03329d5dc7768447f"
   integrity sha512-vSH118/wwM/pLR38g/Sgk05sNtro6TlTJKuiMXDaZqPUfjTFcudpCOt00IhOfj+1BFAX+UFAlzCU+6WXr3GLFQ==
   dependencies:
@@ -1851,13 +1851,6 @@
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@types/http-errors/-/http-errors-2.0.5.tgz#5b749ab2b16ba113423feb1a64a95dcd30398472"
   integrity sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==
-
-"@types/is-utf8@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@types/is-utf8/-/is-utf8-0.2.3.tgz#4821e365f6518778bd7c9b3f8b3a5c42a8e96706"
-  integrity sha512-pOsafTvuyh/FBJm+LP81graldeJLPtJ/UcfqzD+qNoey7PpG2saE/v+h8r4gxT6BGO8mzAuK2fkYLr6goOdwwg==
-  dependencies:
-    "@types/node" "*"
 
 "@types/json-schema@*", "@types/json-schema@^7.0.15", "@types/json-schema@^7.0.8", "@types/json-schema@^7.0.9":
   version "7.0.15"
@@ -4986,11 +4979,6 @@ is-unicode-supported@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/is-unicode-supported/-/is-unicode-supported-0.1.0.tgz#3f26c76a809593b52bfa2ecb5710ed2779b522a7"
   integrity sha512-knxG2q4UC3u8stRGyAVJCOdxFmv5DZiRcdlIaAQXAbSfJya+OhopNotLQrstBhququ4ZpuKbDc/8S6mgXgPFPw==
-
-is-utf8@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/is-utf8/-/is-utf8-0.2.1.tgz#4b0da1442104d1b336340e80797e865cf39f7d72"
-  integrity sha512-rMYPYvCzsXywIsldgLaSoPlw5PfoB/ssr7hY4pLfcodrA5M/eArza1a9VmTiNIBNMjOGr1Ow9mTyU2o69U6U9Q==
 
 is-windows@^1.0.2:
   version "1.0.2"
