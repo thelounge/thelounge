@@ -118,6 +118,7 @@ const tsTestRulesTemp = defineConfig({
 		// TODO: remove these
 		"@typescript-eslint/no-unsafe-return": "off",
 		"@typescript-eslint/no-empty-function": "off",
+		"@typescript-eslint/no-unused-expressions": "off",
 		"@typescript-eslint/restrict-plus-operands": "off",
 	},
 }).rules;
@@ -172,7 +173,7 @@ module.exports = defineConfig({
 			rules: {...baseRules, ...tsRules, ...tsRulesTemp, ...vueRules},
 		},
 		{
-			files: ["./tests/**/*.ts"],
+			files: ["./test/**/*.ts"],
 			parser: "@typescript-eslint/parser",
 			rules: {
 				...baseRules,

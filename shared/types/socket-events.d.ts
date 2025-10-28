@@ -174,6 +174,10 @@ interface ClientToServerEvents {
 	search: EventHandler<SearchQuery>;
 }
 
-interface InterServerEvents {}
+interface InterServerEvents {
+	[EventName: string]: never;
+}
 
-interface SocketData {}
+interface SocketData {
+	[_: string]: never;
+}

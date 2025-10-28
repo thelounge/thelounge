@@ -142,7 +142,7 @@ function parseHtml(preview, res, client: Client) {
 function parseHtmlMedia($: cheerio.CheerioAPI, preview, client: Client): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
-			reject();
+			reject(new Error("media preview disabled"));
 			return;
 		}
 
@@ -157,7 +157,7 @@ function parseHtmlMedia($: cheerio.CheerioAPI, preview, client: Client): Promise
 			!openGraphType.startsWith("video") &&
 			!openGraphType.startsWith("music")
 		) {
-			reject();
+			reject(new Error(`og:type="${openGraphType}" is not a media type`));
 			return;
 		}
 
@@ -200,7 +200,7 @@ function parseHtmlMedia($: cheerio.CheerioAPI, preview, client: Client): Promise
 					})
 						.then((resMedia) => {
 							if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
-								return reject();
+								return reject(new Error(`invalid media type "${resMedia.type}"`));
 							}
 
 							preview.type = type;
@@ -217,7 +217,7 @@ function parseHtmlMedia($: cheerio.CheerioAPI, preview, client: Client): Promise
 		});
 
 		if (!foundMedia) {
-			reject();
+			reject(new Error("no media content found"));
 		}
 	});
 }
@@ -474,6 +474,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 					resolve({data: buffer, type, size});
 				});
 		} catch (e: any) {
+			// eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
 			return reject(e);
 		}
 	});

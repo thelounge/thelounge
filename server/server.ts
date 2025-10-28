@@ -190,7 +190,6 @@ export default async function (
 		};
 	}
 
-	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 	server.on("error", (err) => log.error(`${err}`));
 
 	server.listen(listenParams, () => {
@@ -231,7 +230,6 @@ export default async function (
 		});
 
 		sockets.on("connect", (socket) => {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
 
 			if (Config.values.public) {
