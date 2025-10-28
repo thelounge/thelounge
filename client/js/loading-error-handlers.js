@@ -101,7 +101,7 @@
 
 			userSpecifiedCSSElement.innerHTML = userSettings.userStyles;
 		}
-	} catch (e) {
+	} catch {
 		//
 	}
 
