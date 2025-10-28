@@ -1,17 +1,12 @@
 // @ts-check
 const {defineConfig} = require("eslint-define-config");
 
-const projects = defineConfig({
+const {parserOptions} = defineConfig({
 	parserOptions: {
-		project: [
-			"./tsconfig.json",
-			"./client/tsconfig.json",
-			"./server/tsconfig.json",
-			"./shared/tsconfig.json",
-			"./test/tsconfig.json",
-		],
+		projectService: true,
+		tsconfigRootDir: __dirname,
 	},
-}).parserOptions.project;
+});
 
 const baseRules = defineConfig({
 	rules: {
@@ -133,8 +128,7 @@ module.exports = defineConfig({
 			files: ["**/*.ts", "**/*.vue"],
 			parser: "@typescript-eslint/parser",
 			parserOptions: {
-				tsconfigRootDir: __dirname,
-				project: projects,
+				...parserOptions,
 				extraFileExtensions: [".vue"],
 			},
 			plugins: ["@typescript-eslint"],
@@ -154,13 +148,12 @@ module.exports = defineConfig({
 			files: ["**/*.vue"],
 			parser: "vue-eslint-parser",
 			parserOptions: {
+				...parserOptions,
+				parser: "@typescript-eslint/parser",
 				ecmaVersion: 2022,
 				ecmaFeatures: {
 					jsx: true,
 				},
-				parser: "@typescript-eslint/parser",
-				tsconfigRootDir: __dirname,
-				project: projects,
 			},
 			plugins: ["vue"],
 			extends: [
