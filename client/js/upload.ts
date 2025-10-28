@@ -214,7 +214,11 @@ class Uploader {
 				}, file.type);
 			};
 
-			img.src = String(fileReader.result);
+			if (typeof fileReader.result === "string") {
+				img.src = fileReader.result;
+			} else {
+				fileReader.abort();
+			}
 		};
 
 		fileReader.readAsDataURL(file);

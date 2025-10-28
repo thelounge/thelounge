@@ -16,7 +16,7 @@ program
 			return;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		const ClientManager = require("../../clientManager").default;
 		const manager = new ClientManager();
 

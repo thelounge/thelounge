@@ -104,12 +104,16 @@ program
 							// the lockfile properly. We need to run an install in that case
 							// even though that's supposed to be done by the add subcommand
 							return Utils.executeYarnCommand("install").catch((err) => {
-								throw `Failed to update lockfile after package install ${err}`;
+								throw new Error(
+									`Failed to update lockfile after package install ${err}`
+								);
 							});
 						}
 					})
 					.catch((code) => {
-						throw `Failed to install ${colors.red(humanVersion)}. Exit code: ${code}`;
+						throw new Error(
+							`Failed to install ${colors.red(humanVersion)}. Exit code: ${code}`
+						);
 					});
 			})
 			.catch((e) => {

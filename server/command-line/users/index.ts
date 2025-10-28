@@ -2,9 +2,9 @@ import Config from "../../config";
 let add, reset;
 
 if (!Config.values.ldap.enable) {
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	add = require("./add").default;
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	reset = require("./reset").default;
 }
 
