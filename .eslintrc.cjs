@@ -74,7 +74,7 @@ const vueRules = defineConfig({
 		"import/no-default-export": 0,
 		"import/unambiguous": 0, // vue SFC can miss script tags
 		"@typescript-eslint/prefer-readonly": 0, // can be used in template
-		"vue/component-tags-order": [
+		"vue/block-order": [
 			"error",
 			{
 				order: ["template", "style", "script"],
@@ -164,7 +164,7 @@ module.exports = defineConfig({
 			plugins: ["vue"],
 			extends: [
 				"eslint:recommended",
-				"plugin:vue/vue3-recommended",
+				"plugin:vue/recommended",
 				"plugin:@typescript-eslint/recommended",
 				"plugin:@typescript-eslint/recommended-requiring-type-checking",
 				"prettier",
