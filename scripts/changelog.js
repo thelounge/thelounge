@@ -92,7 +92,7 @@ const changelogPath = path.resolve(__dirname, "..", "CHANGELOG.md");
 if (token === undefined) {
 	try {
 		token = fs.readFileSync(path.resolve(__dirname, "./github_token.txt")).toString().trim();
-	} catch (e) {
+	} catch {
 		log.error(`Environment variable ${colors.bold("CHANGELOG_TOKEN")} must be set.`);
 		log.error(`Alternative create ${colors.bold("scripts/github_token.txt")} file.`);
 		process.exit(1);

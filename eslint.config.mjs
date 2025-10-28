@@ -1,10 +1,19 @@
-// @ts-check
-const {defineConfig} = require("eslint-define-config");
+import {FlatCompat} from "@eslint/eslintrc";
+import eslint from "@eslint/js";
+import {globalIgnores} from "eslint/config";
+import {defineConfig} from "eslint-define-config";
+
+const compat = new FlatCompat({
+	baseDirectory: import.meta.dirname,
+	resolvePluginsRelativeTo: import.meta.dirname,
+	recommendedConfig: eslint.configs.recommended,
+	allConfig: eslint.configs.all,
+});
 
 const {parserOptions} = defineConfig({
 	parserOptions: {
 		projectService: true,
-		tsconfigRootDir: __dirname,
+		tsconfigRootDir: import.meta.dirname,
 	},
 });
 
@@ -66,9 +75,9 @@ const baseRules = defineConfig({
 
 const vueRules = defineConfig({
 	rules: {
-		"import/no-default-export": 0,
-		"import/unambiguous": 0, // vue SFC can miss script tags
-		"@typescript-eslint/prefer-readonly": 0, // can be used in template
+		"import/no-default-export": "off",
+		"import/unambiguous": "off", // vue SFC can miss script tags
+		"@typescript-eslint/prefer-readonly": "off", // can be used in template
 		"vue/block-order": [
 			"error",
 			{
@@ -80,6 +89,8 @@ const vueRules = defineConfig({
 		"vue/no-v-html": "off",
 		"vue/require-default-prop": "off",
 		"vue/v-slot-style": ["error", "longform"],
+		// FIXME: not working with FlatCompat
+		"vue/valid-v-for": "off",
 	},
 }).rules;
 
@@ -118,7 +129,7 @@ const tsTestRulesTemp = defineConfig({
 	},
 }).rules;
 
-module.exports = defineConfig({
+const baseConfig = compat.config({
 	root: true,
 	parserOptions: {
 		ecmaVersion: 2022,
@@ -185,3 +196,5 @@ module.exports = defineConfig({
 	extends: ["eslint:recommended", "prettier"],
 	rules: baseRules,
 });
+
+export default [...baseConfig, globalIgnores(["**/public/", "**/coverage/", "**/dist/"])];

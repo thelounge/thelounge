@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 // @ts-nocheck
 // eslint-disable
 
