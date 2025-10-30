@@ -1,5 +1,5 @@
 import Config from "../config";
-import busboy, {BusboyHeaders} from "@fastify/busboy";
+import busboy, {BusboyFileStream, BusboyHeaders} from "@fastify/busboy";
 import {v4 as uuidv4} from "uuid";
 import path from "path";
 import fs from "fs";
@@ -234,19 +234,7 @@ class Uploader {
 
 		busboyInstance.on(
 			"file",
-			(
-				fieldname: any,
-				fileStream: {
-					on: (
-						arg0: string,
-						arg1: {(err: any): Response<any, Record<string, any>>; (): void}
-					) => void;
-					unpipe: (arg0: any) => void;
-					read: {bind: (arg0: any) => any};
-					pipe: (arg0: any) => void;
-				},
-				filename: string | number | boolean
-			) => {
+			(fieldname: string, fileStream: BusboyFileStream, filename: string) => {
 				uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
 
 				if (Config.values.fileUpload.baseUrl) {
@@ -257,17 +245,21 @@ class Uploader {
 
 				// if the busboy data stream errors out or goes over the file size limit
 				// abort the processing with an error
-				// @ts-expect-error Argument of type '(err: any) => Response<any, Record<string, any>>' is not assignable to parameter of type '{ (err: any): Response<any, Record<string, any>>; (): void; }'.ts(2345)
 				fileStream.on("error", abortWithError);
 				fileStream.on("limit", () => {
-					fileStream.unpipe(streamWriter);
+					if (streamWriter) {
+						fileStream.unpipe(streamWriter);
+					}
+
 					fileStream.on("readable", fileStream.read.bind(fileStream));
 
 					return abortWithError(Error("File size limit reached"));
 				});
 
 				// Attempt to write the stream to file
-				fileStream.pipe(streamWriter);
+				if (streamWriter) {
+					fileStream.pipe(streamWriter);
+				}
 			}
 		);
 
