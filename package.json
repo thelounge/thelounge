@@ -3,9 +3,7 @@
   "description": "The self-hosted Web IRC client",
   "version": "4.4.3",
   "preferGlobal": true,
-  "bin": {
-    "thelounge": "index.js"
-  },
+  "bin": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/thelounge/thelounge.git"
@@ -137,6 +135,7 @@
     "eslint-plugin-vue": "9.25.0",
     "fork-ts-checker-webpack-plugin": "7.2.13",
     "fuzzy": "0.1.3",
+    "ldapjs": "2.3.3",
     "mini-css-extract-plugin": "2.5.3",
     "mocha": "9.2.2",
     "mousetrap": "1.6.5",
@@ -161,7 +160,6 @@
     "typescript": "5.4.5",
     "undate": "0.3.0",
     "vue": "3.2.35",
-    "ldapjs": "2.3.3",
     "vue-eslint-parser": "9.4.3",
     "vue-loader": "17.0.1",
     "vue-router": "4.0.15",
