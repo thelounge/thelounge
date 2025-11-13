@@ -333,36 +333,50 @@ export default async function (
 
 		// Create stop method that properly closes everything
 		const stop = (callback: (err?: Error) => void) => {
-			log.info("[STOP] Starting server shutdown...");
+			// Remove signal handlers to prevent double-close on SIGTERM/SIGINT
+			/* eslint-disable @typescript-eslint/no-misused-promises */
+			process.removeListener("SIGINT", exitGracefully);
+			process.removeListener("SIGTERM", exitGracefully);
+			/* eslint-enable @typescript-eslint/no-misused-promises */
 
 			// Close in proper order: Socket.IO -> identd -> HTTP server
 			const closeIdentd = () => {
 				if (identd) {
-					log.info("[STOP] Closing identd server...");
 					identd.close(() => {
-						log.info("[STOP] identd closed, closing HTTP server...");
-						server.close((err) => {
-							log.info("[STOP] HTTP server closed");
-							callback(err);
-						});
+						if (server.listening) {
+							server.close(callback);
+						} else {
+							callback();
+						}
 					});
 				} else {
-					log.info("[STOP] No identd, closing HTTP server...");
-					server.close((err) => {
-						log.info("[STOP] HTTP server closed");
-						callback(err);
-					});
+					if (server.listening) {
+						server.close(callback);
+					} else {
+						callback();
+					}
 				}
 			};
 
 			if (sockets) {
-				log.info("[STOP] Closing Socket.IO...");
-				sockets.close(() => {
-					log.info("[STOP] Socket.IO closed");
+				// Disconnect all clients before closing
+				sockets.disconnectSockets(true);
+
+				// Add safety timeout in case close() callback is never called
+				let closeCallbackCalled = false;
+				const safetyTimeout = setTimeout(() => {
+					if (!closeCallbackCalled) {
+						log.warn("Socket.IO close() timeout - forcing shutdown");
+						closeIdentd();
+					}
+				}, 1000);
+
+				void sockets.close(() => {
+					closeCallbackCalled = true;
+					clearTimeout(safetyTimeout);
 					closeIdentd();
 				});
 			} else {
-				log.info("[STOP] No Socket.IO");
 				closeIdentd();
 			}
 		};
