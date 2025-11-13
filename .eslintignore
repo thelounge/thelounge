@@ -1,3 +1,4 @@
 public/
 coverage/
 dist/
+webpack.config.ts
