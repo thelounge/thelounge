@@ -13,7 +13,10 @@
     "../package.json"
   ] /* If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. When a 'files' property is specified, only those files and those specified by 'include' are included. */,
   "ts-node": {
-    "files": true
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   },
   "compilerOptions": {
     "jsx": "preserve" /* Specify what JSX code is generated. */,
