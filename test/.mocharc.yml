@@ -2,6 +2,12 @@ color: true
 check-leaks: true
 recursive: true
 reporter: dot
+# TODO: Remove --exit once all event loop references are properly cleaned up
+# Despite improvements to Socket.IO cleanup (disconnectSockets, signal handler removal,
+# identd server closing), something still keeps the event loop alive after tests complete.
+# Candidates: file watchers (fs.watch with persistent:false), pending timers, or
+# Socket.IO internal state in v4.8.1. Further investigation needed.
+exit: true
 ignore: "test/client/**"
 spec: ["test/**/*.ts"]
 require:
