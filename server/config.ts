@@ -248,18 +248,21 @@ class Config {
         const manifestPath = Utils.getFileFromRelativeToRoot("public", "thelounge.webmanifest");
 
         // Check if manifest exists, if not, the app most likely was not built
+        // Skip this check in test environment
         if (!fs.existsSync(manifestPath)) {
-            log.error(
-                `The client application was not built. Run ${colors.bold(
-                    "NODE_ENV=production yarn build"
-                )} to resolve this.`
-            );
-            process.exit(1);
+            if (process.env.NODE_ENV !== "test") {
+                log.error(
+                    `The client application was not built. Run ${colors.bold(
+                        "NODE_ENV=production yarn build"
+                    )} to resolve this.`
+                );
+                process.exit(1);
+            }
+        } else {
+            // Load theme color from the web manifest
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+            this.values.themeColor = manifest.theme_color;
         }
-
-        // Load theme color from the web manifest
-        const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-        this.values.themeColor = manifest.theme_color;
 
         // log dir probably shouldn't be world accessible.
         // Create it with the desired permission bits if it doesn't exist yet.
