@@ -11582,7 +11582,6 @@ __metadata:
     webpack-cli: "npm:4.9.2"
     webpack-dev-middleware: "npm:5.3.4"
     webpack-hot-middleware: "npm:2.25.4"
-    yarn: "npm:1.22.22"
   dependenciesMeta:
     sqlite3:
       optional: true
@@ -12813,16 +12812,6 @@ __metadata:
     y18n: "npm:^4.0.0"
     yargs-parser: "npm:^18.1.2"
   checksum: 10c0/f1ca680c974333a5822732825cca7e95306c5a1e7750eb7b973ce6dc4f97a6b0a8837203c8b194f461969bfe1fb1176d1d423036635285f6010b392fa498ab2d
-  languageName: node
-  linkType: hard
-
-"yarn@npm:1.22.22":
-  version: 1.22.22
-  resolution: "yarn@npm:1.22.22"
-  bin:
-    yarn: bin/yarn.js
-    yarnpkg: bin/yarn.js
-  checksum: 10c0/8c77198c93d7542e7f4e131c63b66de357b7076ecfbcfe709ec0d674115c2dd9edaa45196e5510e6e9366d368707a802579e3402071002e1c9d9a99d491478de
   languageName: node
   linkType: hard
 
