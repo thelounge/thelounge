@@ -1,11 +1,21 @@
 import {expect} from "chai";
-import sinon from "ts-sinon";
+import sinon from "sinon";
 
 import log from "../../server/log";
 import Config from "../../server/config";
 import TestUtil from "../util";
 
 describe("mergeConfig", function () {
+	let sandbox: sinon.SinonSandbox;
+
+	beforeEach(function () {
+		sandbox = sinon.createSandbox();
+	});
+
+	afterEach(function () {
+		sandbox.restore();
+	});
+
 	it("should mutate object", function () {
 		const config = {
 			ip: "default",
@@ -64,7 +74,7 @@ describe("mergeConfig", function () {
 
 	it("should warn for unknown top level keys", function () {
 		let warning = "";
-		const warnStub = sinon
+		sandbox
 			.stub(log, "warn")
 			.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
@@ -83,7 +93,6 @@ describe("mergeConfig", function () {
 			optionTwo: 789,
 		});
 
-		warnStub.restore();
 		expect(warning).to.equal('Unknown key "optionTwo", please verify your config.\n');
 	});
 
@@ -249,7 +258,7 @@ describe("mergeConfig", function () {
 	});
 
 	it("should only merge same type", function () {
-		const logWarnStub = sinon.stub(log, "warn");
+		sandbox.stub(log, "warn");
 
 		expect(
 			Config._merge_config_objects(
@@ -280,7 +289,5 @@ describe("mergeConfig", function () {
 		).to.deep.equal({
 			shouldBeString: "string",
 		});
-
-		logWarnStub.restore();
 	});
 });

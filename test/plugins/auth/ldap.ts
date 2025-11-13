@@ -5,7 +5,7 @@ import ldap from "ldapjs";
 import {expect} from "chai";
 import TestUtil from "../../util";
 import ClientManager from "../../../server/clientManager";
-import sinon from "ts-sinon";
+import sinon from "sinon";
 
 const user = "johndoe";
 const wrongUser = "eve";
@@ -89,6 +89,15 @@ function testLdapAuth() {
 	// be used. But ideally the auth plugin should not use any of those.
 	const manager = {} as ClientManager;
 	const client = true;
+	let sandbox: sinon.SinonSandbox;
+
+	beforeEach(function () {
+		sandbox = sinon.createSandbox();
+	});
+
+	afterEach(function () {
+		sandbox.restore();
+	});
 
 	it("should successfully authenticate with correct password", function (done) {
 		// TODO: why is client = true?
@@ -101,7 +110,7 @@ function testLdapAuth() {
 	it("should fail to authenticate with incorrect password", function (done) {
 		let error = "";
 
-		const errorLogStub = sinon
+		sandbox
 			.stub(log, "error")
 			.callsFake(TestUtil.sanitizeLog((str) => (error += str)));
 
@@ -110,21 +119,19 @@ function testLdapAuth() {
 			expect(error).to.equal(
 				"LDAP bind failed: InsufficientAccessError: The caller does not have sufficient rights to perform the requested operation.\n"
 			);
-			errorLogStub.restore();
 			done();
 		});
 	});
 
 	it("should fail to authenticate with incorrect username", function (done) {
 		let warning = "";
-		const warnLogStub = sinon
+		sandbox
 			.stub(log, "warn")
 			.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 		ldapAuth.auth(manager, client as any, wrongUser, correctPassword, function (valid) {
 			expect(valid).to.equal(false);
 			expect(warning).to.equal("LDAP Search did not find anything for: eve (0)\n");
-			warnLogStub.restore();
 			done();
 		});
 	});
