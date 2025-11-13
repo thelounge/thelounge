@@ -60,6 +60,12 @@ export type Server = ioServer<
 	SocketData
 >;
 
+export type ServerInstance = {
+	httpServer: import("http").Server | import("https").Server;
+	io: Server;
+	stop: (callback: (err?: Error) => void) => void;
+};
+
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
 
@@ -69,7 +75,7 @@ export default async function (
 	options: ServerOptions = {
 		dev: false,
 	}
-) {
+): Promise<ServerInstance> {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
 		process.arch
@@ -191,6 +197,8 @@ export default async function (
 	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 	server.on("error", (err) => log.error(`${err}`));
 
+	let sockets: Server | null = null;
+
 	server.listen(listenParams, () => {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
@@ -218,7 +226,7 @@ export default async function (
 			return;
 		}
 
-		const sockets: Server = new ioServer(server, {
+		sockets = new ioServer(server, {
 			wsEngine: wsServer,
 			cookie: false,
 			serveClient: false,
@@ -265,7 +273,7 @@ export default async function (
 				process.exit(1);
 			}
 
-			manager.init(identHandler, sockets);
+			manager.init(identHandler, sockets!);
 		});
 
 		// Handle ctrl+c and kill gracefully
@@ -321,7 +329,25 @@ export default async function (
 		changelog.checkForUpdates(manager);
 	});
 
-	return server;
+	// Create stop method that properly closes everything
+	const stop = (callback: (err?: Error) => void) => {
+		// First close Socket.IO (disconnect all clients)
+		if (sockets) {
+			sockets.close(() => {
+				// Then close HTTP server
+				server.close(callback);
+			});
+		} else {
+			// If sockets not initialized, just close HTTP server
+			server.close(callback);
+		}
+	};
+
+	return {
+		httpServer: server,
+		io: sockets!,
+		stop,
+	};
 }
 
 function getClientLanguage(socket: Socket): string | undefined {
