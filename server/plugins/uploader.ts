@@ -132,7 +132,7 @@ class Uploader {
 	}
 
 	static routeUploadFile(this: void, req: Request, res: Response) {
-		let busboyInstance: NodeJS.WritableStream | busboy | null | undefined;
+		let busboyInstance: busboy | null | undefined;
 		let uploadUrl: string | URL;
 		let randomName: string;
 		let destDir: fs.PathLike;
