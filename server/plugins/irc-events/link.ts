@@ -447,7 +447,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 							"prefetchMaxSearchSize" in Config.values
 								? Config.values.prefetchMaxSearchSize * 1024
 								: // set to the previous size if config option is unset
-								  50 * 1024;
+									50 * 1024;
 					}
 				})
 				.on("error", (e) => reject(e))

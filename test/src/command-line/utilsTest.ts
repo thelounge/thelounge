@@ -19,9 +19,7 @@ describe("Utils", function () {
 		it("should start and end with empty lines to display correctly with --help", function () {
 			// Mock `log.raw` to extract its effect into an array
 			const stdout: string[] = [];
-			sandbox
-				.stub(log, "raw")
-				.callsFake(TestUtil.sanitizeLog((str) => stdout.push(str)));
+			sandbox.stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => stdout.push(str)));
 
 			Utils.extraHelp();
 
@@ -38,9 +36,7 @@ describe("Utils", function () {
 			// Mock `log.raw` to extract its effect into a concatenated string
 			let stdout = "";
 
-			sandbox
-				.stub(log, "raw")
-				.callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
+			sandbox.stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
 
 			Utils.extraHelp();
 
