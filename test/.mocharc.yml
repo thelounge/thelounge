@@ -2,6 +2,7 @@ color: true
 check-leaks: true
 recursive: true
 reporter: dot
+exit: true
 ignore: "test/client/**"
 spec: ["test/**/*.ts"]
 require:
