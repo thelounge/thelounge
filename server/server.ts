@@ -198,6 +198,7 @@ export default async function (
 	server.on("error", (err) => log.error(`${err}`));
 
 	let sockets: Server | null = null;
+	let identd: Identification | null = null;
 
 	return new Promise<ServerInstance>((resolve) => {
 		server.listen(listenParams, () => {
@@ -274,6 +275,7 @@ export default async function (
 				process.exit(1);
 			}
 
+			identd = identHandler;
 			manager.init(identHandler, sockets!);
 		});
 
@@ -331,15 +333,37 @@ export default async function (
 
 		// Create stop method that properly closes everything
 		const stop = (callback: (err?: Error) => void) => {
-			// First close Socket.IO (disconnect all clients)
+			log.info("[STOP] Starting server shutdown...");
+
+			// Close in proper order: Socket.IO -> identd -> HTTP server
+			const closeIdentd = () => {
+				if (identd) {
+					log.info("[STOP] Closing identd server...");
+					identd.close(() => {
+						log.info("[STOP] identd closed, closing HTTP server...");
+						server.close((err) => {
+							log.info("[STOP] HTTP server closed");
+							callback(err);
+						});
+					});
+				} else {
+					log.info("[STOP] No identd, closing HTTP server...");
+					server.close((err) => {
+						log.info("[STOP] HTTP server closed");
+						callback(err);
+					});
+				}
+			};
+
 			if (sockets) {
+				log.info("[STOP] Closing Socket.IO...");
 				sockets.close(() => {
-					// Then close HTTP server
-					server.close(callback);
+					log.info("[STOP] Socket.IO closed");
+					closeIdentd();
 				});
 			} else {
-				// If sockets not initialized, just close HTTP server
-				server.close(callback);
+				log.info("[STOP] No Socket.IO");
+				closeIdentd();
 			}
 		};
 
