@@ -78,8 +78,7 @@
     "tlds": "1.228.0",
     "ua-parser-js": "1.0.39",
     "uuid": "8.3.2",
-    "web-push": "3.4.5",
-    "yarn": "1.22.22"
+    "web-push": "3.4.5"
   },
   "optionalDependencies": {
     "sqlite3": "5.1.7"
@@ -168,5 +167,6 @@
     "webpack-cli": "4.9.2",
     "webpack-dev-middleware": "5.3.4",
     "webpack-hot-middleware": "2.25.4"
-  }
+  },
+  "packageManager": "yarn@4.11.0"
 }
