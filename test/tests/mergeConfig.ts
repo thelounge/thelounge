@@ -74,9 +74,7 @@ describe("mergeConfig", function () {
 
 	it("should warn for unknown top level keys", function () {
 		let warning = "";
-		sandbox
-			.stub(log, "warn")
-			.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+		sandbox.stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 		expect(
 			Config._merge_config_objects(

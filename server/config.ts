@@ -115,9 +115,9 @@ export type ConfigType = {
 };
 
 class Config {
-	values = require(path.resolve(
-		path.join(__dirname, "..", "defaults", "config.js")
-	)) as ConfigType;
+	values = require(
+		path.resolve(path.join(__dirname, "..", "defaults", "config.js"))
+	) as ConfigType;
 	#homePath = "";
 
 	getHomePath() {

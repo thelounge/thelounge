@@ -110,9 +110,7 @@ function testLdapAuth() {
 	it("should fail to authenticate with incorrect password", function (done) {
 		let error = "";
 
-		sandbox
-			.stub(log, "error")
-			.callsFake(TestUtil.sanitizeLog((str) => (error += str)));
+		sandbox.stub(log, "error").callsFake(TestUtil.sanitizeLog((str) => (error += str)));
 
 		ldapAuth.auth(manager, client as any, user, wrongPassword, function (valid) {
 			expect(valid).to.equal(false);
@@ -125,9 +123,7 @@ function testLdapAuth() {
 
 	it("should fail to authenticate with incorrect username", function (done) {
 		let warning = "";
-		sandbox
-			.stub(log, "warn")
-			.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+		sandbox.stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 		ldapAuth.auth(manager, client as any, wrongUser, correctPassword, function (valid) {
 			expect(valid).to.equal(false);
