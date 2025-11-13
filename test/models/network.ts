@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import sinon from "ts-sinon";
+import sinon from "sinon";
 import Chan from "../../server/models/chan";
 import {ChanType} from "../../shared/types/chan";
 import Msg from "../../server/models/msg";
