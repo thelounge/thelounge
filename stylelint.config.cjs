@@ -1,7 +1,8 @@
 module.exports = {
 	extends: "stylelint-config-standard",
+	plugins: ["@stylistic/stylelint-plugin"],
 	rules: {
-		indentation: "tab",
+		"@stylistic/indentation": "tab",
 		"font-family-no-missing-generic-family-keyword": null,
 		"no-descending-specificity": null,
 		"at-rule-no-vendor-prefix": true,
