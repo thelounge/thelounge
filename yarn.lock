@@ -7958,7 +7958,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.11, nanoid@npm:^3.3.7":
+"nanoid@npm:^3.3.11":
   version: 3.3.11
   resolution: "nanoid@npm:3.3.11"
   bin:
@@ -8684,7 +8684,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"picocolors@npm:^1.0.0, picocolors@npm:^1.1.0, picocolors@npm:^1.1.1":
+"picocolors@npm:^1.0.0, picocolors@npm:^1.1.1":
   version: 1.1.1
   resolution: "picocolors@npm:1.1.1"
   checksum: 10c0/e2e3e8170ab9d7c7421969adaa7e1b31434f789afb9b3f115f6b96d91945041ac3ceb02e9ec6fe6510ff036bcc0bf91e69a1772edc0b707e12b19c0f2d6bcf58
@@ -8998,16 +8998,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-import@npm:14.0.2":
-  version: 14.0.2
-  resolution: "postcss-import@npm:14.0.2"
+"postcss-import@npm:16.1.1":
+  version: 16.1.1
+  resolution: "postcss-import@npm:16.1.1"
   dependencies:
     postcss-value-parser: "npm:^4.0.0"
     read-cache: "npm:^1.0.0"
     resolve: "npm:^1.1.7"
   peerDependencies:
     postcss: ^8.0.0
-  checksum: 10c0/33c836af2d9c82de086271890ff8f36a42aafa398b884e9ec72eac39f10d96483aeabee662a2b841274314b28a5d9a6a1b9e9a9f573c2cf8bc438f12afaad526
+  checksum: 10c0/b91245971564891110cb407c7459bd470893ccbdd3328fdd384ef2be4d0e5f304e5834acbb8b537ad562c001db34bee1c29b55994bead5ab5a53b1edc2a687b9
   languageName: node
   linkType: hard
 
@@ -9520,18 +9520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:8.4.47":
-  version: 8.4.47
-  resolution: "postcss@npm:8.4.47"
-  dependencies:
-    nanoid: "npm:^3.3.7"
-    picocolors: "npm:^1.1.0"
-    source-map-js: "npm:^1.2.1"
-  checksum: 10c0/929f68b5081b7202709456532cee2a145c1843d391508c5a09de2517e8c4791638f71dd63b1898dba6712f8839d7a6da046c72a5e44c162e908f5911f57b5f44
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.2.15, postcss@npm:^8.4.5, postcss@npm:^8.5.6":
+"postcss@npm:8.5.6, postcss@npm:^8.2.15, postcss@npm:^8.4.5, postcss@npm:^8.5.6":
   version: 8.5.6
   resolution: "postcss@npm:8.5.6"
   dependencies:
@@ -11358,8 +11347,8 @@ __metadata:
     npm-run-all: "npm:4.1.5"
     nyc: "npm:15.1.0"
     package-json: "npm:7.0.0"
-    postcss: "npm:8.4.47"
-    postcss-import: "npm:14.0.2"
+    postcss: "npm:8.5.6"
+    postcss-import: "npm:16.1.1"
     postcss-loader: "npm:6.2.1"
     postcss-preset-env: "npm:7.3.0"
     prettier: "npm:2.5.1"
