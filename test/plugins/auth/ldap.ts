@@ -143,11 +143,13 @@ describe("LDAP authentication plugin", function () {
         server = startLdapServer(done);
     });
 
-    after(function () {
-        server.close(() => {
-            // no-op
-        });
+    after(function (done) {
+        this.timeout(10000); // LDAP server needs time to close all connections
         logInfoStub.restore();
+        server.close(() => {
+            // ldapjs server.close() callback
+            done();
+        });
     });
 
     beforeEach(function () {

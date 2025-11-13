@@ -2,6 +2,11 @@ color: true
 check-leaks: true
 recursive: true
 reporter: dot
+# TODO: Remove --exit flag after fixing Socket.IO cleanup
+# Root cause: server/server.ts creates Socket.IO instance (line 221) but doesn't
+# export it, so tests cannot call sockets.close() before server.close().
+# This leaves Socket.IO connections open, preventing process exit.
+# Proper fix requires refactoring to expose sockets instance for test teardown.
 exit: true
 ignore: "test/client/**"
 spec: ["test/**/*.ts"]
