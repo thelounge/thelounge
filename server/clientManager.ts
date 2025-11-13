@@ -87,28 +87,32 @@ class ClientManager {
 	}
 
 	autoloadUsers() {
-		this.userWatcher = fs.watch(Config.getUsersPath(), {persistent: false}, (_eventType, file) => {
-			if (!file || !file.endsWith(".json")) {
-				return;
+		this.userWatcher = fs.watch(
+			Config.getUsersPath(),
+			{persistent: false},
+			(_eventType, file) => {
+				if (!file || !file.endsWith(".json")) {
+					return;
+				}
+
+				const name = file.slice(0, -5);
+
+				const userPath = Config.getUserConfigPath(name);
+
+				if (fs.existsSync(userPath)) {
+					this.loadUser(name);
+					return;
+				}
+
+				const client = _.find(this.clients, {name});
+
+				if (client) {
+					client.quit(true);
+					this.clients = _.without(this.clients, client);
+					log.info(`User ${colors.bold(name)} disconnected and removed.`);
+				}
 			}
-
-			const name = file.slice(0, -5);
-
-			const userPath = Config.getUserConfigPath(name);
-
-			if (fs.existsSync(userPath)) {
-				this.loadUser(name);
-				return;
-			}
-
-			const client = _.find(this.clients, {name});
-
-			if (client) {
-				client.quit(true);
-				this.clients = _.without(this.clients, client);
-				log.info(`User ${colors.bold(name)} disconnected and removed.`);
-			}
-		});
+		);
 	}
 
 	stopAutoloadUsers() {
