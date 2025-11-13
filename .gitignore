@@ -7,3 +7,8 @@ package-lock.json
 coverage/
 public/
 dist/
+.DS_Store
+.yarn/install-state.gz
+memory.db
+*.db-shm
+*.db-wal
