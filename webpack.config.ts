@@ -198,8 +198,17 @@ export default (env: any, argv: any) => {
 		config.optimization!.splitChunks = false;
 
 		// Disable plugins like copy files, it is not required
+		// Use separate fork-ts-checker instance for test mode without build:true
+		// to prevent hanging (build:true in v9.x keeps workers alive)
 		config.plugins = [
-			tsCheckerPlugin,
+			new ForkTsCheckerWebpackPlugin({
+				typescript: {
+					diagnosticOptions: {
+						semantic: true,
+						syntactic: true,
+					},
+				},
+			}),
 			vueLoaderPlugin,
 			miniCssExtractPlugin,
 			// Client tests that require Vue may end up requireing socket.io
