@@ -2350,6 +2350,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/wtfnode@npm:^0":
+  version: 0.10.0
+  resolution: "@types/wtfnode@npm:0.10.0"
+  checksum: 10c0/495ba8a348c5176e539255cd485cd093f67c9c52bd3ce7c9ecaf8d9d1ffdd1632e541b4364b19b91d70c4979881e54cb2a8b0858e6069423b423cdb402bd35e0
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:7.8.0":
   version: 7.8.0
   resolution: "@typescript-eslint/eslint-plugin@npm:7.8.0"
@@ -11306,6 +11313,7 @@ __metadata:
     "@types/webpack-env": "npm:1.16.4"
     "@types/webpack-hot-middleware": "npm:2.25.6"
     "@types/ws": "npm:8.5.12"
+    "@types/wtfnode": "npm:^0"
     "@typescript-eslint/eslint-plugin": "npm:7.8.0"
     "@typescript-eslint/parser": "npm:7.8.0"
     "@vue/runtime-dom": "npm:3.5.24"
@@ -11385,6 +11393,7 @@ __metadata:
     webpack-cli: "npm:6.0.1"
     webpack-dev-middleware: "npm:7.4.2"
     webpack-hot-middleware: "npm:2.26.1"
+    wtfnode: "npm:^0.10.1"
   dependenciesMeta:
     sqlite3:
       optional: true
@@ -12455,6 +12464,15 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 10c0/f4a49064afae4500be772abdc2211c8518f39e1c959640457dcee15d4488628620625c783902a52af2dd02f68558da2868fd06e6fd0e67ebcd09e6881b1b5bfe
+  languageName: node
+  linkType: hard
+
+"wtfnode@npm:^0.10.1":
+  version: 0.10.1
+  resolution: "wtfnode@npm:0.10.1"
+  bin:
+    wtfnode: proxy.js
+  checksum: 10c0/e57269d438735ce20f0c2f80e64a6ded5710db82799e25c246131cf78b4abd300c2a22137aed2de96341138b02ea192d4fca030e5ebed14d51bff760b4fbc2dc
   languageName: node
   linkType: hard
 

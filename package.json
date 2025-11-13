@@ -114,6 +114,7 @@
     "@types/webpack-env": "1.16.4",
     "@types/webpack-hot-middleware": "2.25.6",
     "@types/ws": "8.5.12",
+    "@types/wtfnode": "^0",
     "@typescript-eslint/eslint-plugin": "7.8.0",
     "@typescript-eslint/parser": "7.8.0",
     "@vue/runtime-dom": "3.5.24",
@@ -166,7 +167,8 @@
     "webpack": "5.102.1",
     "webpack-cli": "6.0.1",
     "webpack-dev-middleware": "7.4.2",
-    "webpack-hot-middleware": "2.26.1"
+    "webpack-hot-middleware": "2.26.1",
+    "wtfnode": "^0.10.1"
   },
   "packageManager": "yarn@4.11.0"
 }

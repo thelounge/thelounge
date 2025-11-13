@@ -37,6 +37,7 @@ const cache = {
 };
 
 let experimentalWarningPrinted = false;
+let packageWatcher: fs.FSWatcher | null = null;
 
 export default {
 	getFiles,
@@ -44,6 +45,7 @@ export default {
 	getPackage,
 	loadPackages,
 	outdated,
+	stopWatching,
 };
 
 // TODO: verify binds worked. Used to be 'this' instead of 'packageApis'
@@ -191,7 +193,7 @@ function loadPackages() {
 }
 
 function watchPackages(packageJson: string) {
-	fs.watch(
+	packageWatcher = fs.watch(
 		packageJson,
 		{
 			persistent: false,
@@ -212,6 +214,13 @@ function watchPackages(packageJson: string) {
 			{maxWait: 10000}
 		)
 	);
+}
+
+function stopWatching() {
+	if (packageWatcher) {
+		packageWatcher.close();
+		packageWatcher = null;
+	}
 }
 
 async function outdated(cacheTimeout = TIME_TO_LIVE) {

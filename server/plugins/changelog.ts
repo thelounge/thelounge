@@ -8,10 +8,13 @@ import {SharedChangelogData} from "../../shared/types/changelog";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
+let updateCheckTimeout: NodeJS.Timeout | null = null;
+
 export default {
 	isUpdateAvailable: false,
 	fetch,
 	checkForUpdates,
+	stopUpdateChecks,
 };
 const versions: SharedChangelogData = {
 	current: {
@@ -103,7 +106,7 @@ function checkForUpdates(manager: ClientManager) {
 		.then((versionData) => {
 			if (!module.exports.isUpdateAvailable) {
 				// Check for updates every 24 hours + random jitter of <3 hours
-				setTimeout(
+				updateCheckTimeout = setTimeout(
 					() => checkForUpdates(manager),
 					24 * 3600 * 1000 + Math.floor(Math.random() * 10000000)
 				);
@@ -125,4 +128,11 @@ function checkForUpdates(manager: ClientManager) {
 		.catch((error: Error) => {
 			log.error(`Failed to check for updates: ${error.message}`);
 		});
+}
+
+function stopUpdateChecks() {
+	if (updateCheckTimeout) {
+		clearTimeout(updateCheckTimeout);
+		updateCheckTimeout = null;
+	}
 }

@@ -333,51 +333,28 @@ export default async function (
 
 		// Create stop method that properly closes everything
 		const stop = (callback: (err?: Error) => void) => {
+			// Stop changelog update checks to clear the 24-hour timeout
+			changelog.stopUpdateChecks();
+
+			// Stop file watchers
+			packages.stopWatching();
+			if (manager) {
+				manager.stopAutoloadUsers();
+			}
+
 			// Remove signal handlers to prevent double-close on SIGTERM/SIGINT
 			/* eslint-disable @typescript-eslint/no-misused-promises */
 			process.removeListener("SIGINT", exitGracefully);
 			process.removeListener("SIGTERM", exitGracefully);
 			/* eslint-enable @typescript-eslint/no-misused-promises */
 
-			// Close in proper order: Socket.IO -> identd -> HTTP server
-			const closeIdentd = () => {
-				if (identd) {
-					identd.close(() => {
-						if (server.listening) {
-							server.close(callback);
-						} else {
-							callback();
-						}
-					});
-				} else {
-					if (server.listening) {
-						server.close(callback);
-					} else {
-						callback();
-					}
-				}
-			};
-
-			if (sockets) {
-				// Disconnect all clients before closing
-				sockets.disconnectSockets(true);
-
-				// Add safety timeout in case close() callback is never called
-				let closeCallbackCalled = false;
-				const safetyTimeout = setTimeout(() => {
-					if (!closeCallbackCalled) {
-						log.warn("Socket.IO close() timeout - forcing shutdown");
-						closeIdentd();
-					}
-				}, 1000);
-
-				void sockets.close(() => {
-					closeCallbackCalled = true;
-					clearTimeout(safetyTimeout);
-					closeIdentd();
+			// Close identd first, then HTTP server (which will auto-close Socket.IO)
+			if (identd) {
+				identd.close(() => {
+					server.close(callback);
 				});
 			} else {
-				closeIdentd();
+				server.close(callback);
 			}
 		};
 
