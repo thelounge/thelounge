@@ -60,6 +60,12 @@ export type Server = ioServer<
 	SocketData
 >;
 
+export type ServerInstance = {
+	httpServer: import("http").Server | import("https").Server;
+	io: Server;
+	stop: (callback: (err?: Error) => void) => void;
+};
+
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
 
@@ -69,7 +75,7 @@ export default async function (
 	options: ServerOptions = {
 		dev: false,
 	}
-) {
+): Promise<ServerInstance> {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
 		process.arch
@@ -191,7 +197,11 @@ export default async function (
 	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 	server.on("error", (err) => log.error(`${err}`));
 
-	server.listen(listenParams, () => {
+	let sockets: Server | null = null;
+	let identd: Identification | null = null;
+
+	return new Promise<ServerInstance>((resolve) => {
+		server.listen(listenParams, () => {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
 		} else {
@@ -218,7 +228,7 @@ export default async function (
 			return;
 		}
 
-		const sockets: Server = new ioServer(server, {
+		sockets = new ioServer(server, {
 			wsEngine: wsServer,
 			cookie: false,
 			serveClient: false,
@@ -265,7 +275,8 @@ export default async function (
 				process.exit(1);
 			}
 
-			manager.init(identHandler, sockets);
+			identd = identHandler;
+			manager.init(identHandler, sockets!);
 		});
 
 		// Handle ctrl+c and kill gracefully
@@ -319,9 +330,41 @@ export default async function (
 		}
 
 		changelog.checkForUpdates(manager);
-	});
 
-	return server;
+		// Create stop method that properly closes everything
+		const stop = (callback: (err?: Error) => void) => {
+			// Stop changelog update checks to clear the 24-hour timeout
+			changelog.stopUpdateChecks();
+
+			// Stop file watchers
+			packages.stopWatching();
+			if (manager) {
+				manager.stopAutoloadUsers();
+			}
+
+			// Remove signal handlers to prevent double-close on SIGTERM/SIGINT
+			/* eslint-disable @typescript-eslint/no-misused-promises */
+			process.removeListener("SIGINT", exitGracefully);
+			process.removeListener("SIGTERM", exitGracefully);
+			/* eslint-enable @typescript-eslint/no-misused-promises */
+
+			// Close identd first, then HTTP server (which will auto-close Socket.IO)
+			if (identd) {
+				identd.close(() => {
+					server.close(callback);
+				});
+			} else {
+				server.close(callback);
+			}
+		};
+
+		resolve({
+			httpServer: server,
+			io: sockets!,
+			stop,
+		});
+	});
+	});
 }
 
 function getClientLanguage(socket: Socket): string | undefined {

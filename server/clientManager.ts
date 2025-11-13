@@ -16,6 +16,7 @@ class ClientManager {
 	sockets!: Server;
 	identHandler: any;
 	webPush!: WebPush;
+	userWatcher: fs.FSWatcher | null = null;
 
 	constructor() {
 		this.clients = [];
@@ -86,7 +87,7 @@ class ClientManager {
 	}
 
 	autoloadUsers() {
-		fs.watch(Config.getUsersPath(), {persistent: false}, (_eventType, file) => {
+		this.userWatcher = fs.watch(Config.getUsersPath(), {persistent: false}, (_eventType, file) => {
 			if (!file || !file.endsWith(".json")) {
 				return;
 			}
@@ -108,6 +109,13 @@ class ClientManager {
 				log.info(`User ${colors.bold(name)} disconnected and removed.`);
 			}
 		});
+	}
+
+	stopAutoloadUsers() {
+		if (this.userWatcher) {
+			this.userWatcher.close();
+			this.userWatcher = null;
+		}
 	}
 
 	loadUser(name: string) {

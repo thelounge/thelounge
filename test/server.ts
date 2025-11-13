@@ -13,7 +13,7 @@ describe("Server", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 
-	let server;
+	let serverInstance: import("../server/server").ServerInstance;
 	let logInfoStub: sinon.SinonStub<string[], void>;
 	let logWarnStub: sinon.SinonStub<string[], void>;
 	let checkForUpdatesStub: sinon.SinonStub<[manager: ClientManager], void>;
@@ -35,7 +35,7 @@ describe("Server", function () {
 		});
 
 		checkForUpdatesStub = sinon.stub(changelog, "checkForUpdates");
-		server = await (await import("../server/server")).default({} as any);
+		serverInstance = await (await import("../server/server")).default({} as any);
 	});
 
 	after(function (done) {
@@ -44,7 +44,8 @@ describe("Server", function () {
 		logInfoStub.restore();
 		logWarnStub.restore();
 		checkForUpdatesStub.restore();
-		server.close(done);
+		// Use stop() method which properly closes Socket.IO then HTTP server
+		serverInstance.stop(done);
 	});
 
 	const webURL = `http://${Config.values.host}:${Config.values.port}/`;
