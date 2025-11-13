@@ -199,7 +199,8 @@ export default async function (
 
 	let sockets: Server | null = null;
 
-	server.listen(listenParams, () => {
+	return new Promise<ServerInstance>((resolve) => {
+		server.listen(listenParams, () => {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
 		} else {
@@ -327,27 +328,28 @@ export default async function (
 		}
 
 		changelog.checkForUpdates(manager);
-	});
 
-	// Create stop method that properly closes everything
-	const stop = (callback: (err?: Error) => void) => {
-		// First close Socket.IO (disconnect all clients)
-		if (sockets) {
-			sockets.close(() => {
-				// Then close HTTP server
+		// Create stop method that properly closes everything
+		const stop = (callback: (err?: Error) => void) => {
+			// First close Socket.IO (disconnect all clients)
+			if (sockets) {
+				sockets.close(() => {
+					// Then close HTTP server
+					server.close(callback);
+				});
+			} else {
+				// If sockets not initialized, just close HTTP server
 				server.close(callback);
-			});
-		} else {
-			// If sockets not initialized, just close HTTP server
-			server.close(callback);
-		}
-	};
+			}
+		};
 
-	return {
-		httpServer: server,
-		io: sockets!,
-		stop,
-	};
+		resolve({
+			httpServer: server,
+			io: sockets!,
+			stop,
+		});
+	});
+	});
 }
 
 function getClientLanguage(socket: Socket): string | undefined {
