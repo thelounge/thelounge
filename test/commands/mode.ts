@@ -58,7 +58,7 @@ describe("Commands", function () {
 		});
 
 		function modeCommandInputCall(net, chan, cmd, args) {
-			ModeCommand.input.call({} as any, net as any, chan, cmd, Array.from(args));
+			ModeCommand.input.call({} as any, net, chan, cmd, Array.from(args));
 		}
 
 		it("should not mess with the given target", function () {

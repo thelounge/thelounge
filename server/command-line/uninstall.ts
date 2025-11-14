@@ -10,9 +10,9 @@ program
 	.description("Uninstall a theme or a package")
 	.on("--help", Utils.extraHelp)
 	.action(async function (packageName: string) {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		 
 		const fs = require("fs").promises;
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		 
 		const path = require("path");
 
 		const packagesConfig = path.join(Config.getPackagesPath(), "package.json");

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+ 
 import path from "path";
 import fs, {Stats} from "fs";
 import os from "os";

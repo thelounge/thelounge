@@ -57,7 +57,7 @@ function getGitCommit() {
 	// --git-dir ".git" makes git only check current directory for `.git`, and not travel upwards
 	// We set cwd to the location of `index.js` as soon as the process is started
 	try {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		 
 		_gitCommit = require("child_process")
 			.execSync(
 				'git --git-dir ".git" rev-parse --short HEAD', // Returns hash of current commit

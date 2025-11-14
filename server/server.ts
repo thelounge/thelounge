@@ -194,7 +194,7 @@ export default async function (
 		};
 	}
 
-	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+	 
 	server.on("error", (err) => log.error(`${err}`));
 
 	let sockets: Server | null = null;
@@ -239,7 +239,7 @@ export default async function (
 			});
 
 			sockets.on("connect", (socket) => {
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+				 
 				socket.on("error", (err) => log.error(`io socket error: ${err}`));
 
 				if (Config.values.public) {
@@ -361,7 +361,7 @@ export default async function (
 
 			resolve({
 				httpServer: server,
-				io: sockets!,
+				io: sockets,
 				stop,
 			});
 		});

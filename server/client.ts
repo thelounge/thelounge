@@ -535,7 +535,7 @@ class Client {
 		}
 
 		// TODO: fix
-		irc!.raw(text);
+		irc.raw(text);
 	}
 
 	compileCustomHighlights() {

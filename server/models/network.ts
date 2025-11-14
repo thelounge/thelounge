@@ -52,9 +52,9 @@ type IgnoreList = IgnoreListItem[];
 
 type NonNullableIRCWithOptions = NonNullable<IRCClient & {options: NetworkIrcOptions}>;
 
-// eslint-disable-next-line no-use-before-define
+ 
 export type NetworkWithIrcFramework = Network & {
-	// eslint-disable-next-line no-use-before-define
+	 
 	irc: NonNullable<Network["irc"]> & {
 		options: NonNullableIRCWithOptions;
 	};
