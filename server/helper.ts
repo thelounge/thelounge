@@ -2,7 +2,6 @@ import pkg from "../package.json";
 import _ from "lodash";
 import path from "path";
 import os from "os";
-import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -66,7 +65,7 @@ function getGitCommit() {
 			.toString()
 			.trim();
 		return _gitCommit;
-	} catch (e: any) {
+	} catch {
 		// Not a git repository or git is not installed
 		_gitCommit = null;
 		return null;

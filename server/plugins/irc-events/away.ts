@@ -4,9 +4,6 @@ import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
-	irc.on("away", (data) => handleAway(MessageType.AWAY, data));
-	irc.on("back", (data) => handleAway(MessageType.BACK, data));
-
 	const handleAway = (type: MessageType, data) => {
 		const away = data.message;
 
@@ -68,4 +65,7 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 		});
 	};
+
+	irc.on("away", (data) => handleAway(MessageType.AWAY, data));
+	irc.on("back", (data) => handleAway(MessageType.BACK, data));
 };

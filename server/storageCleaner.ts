@@ -139,7 +139,7 @@ export class StorageCleaner {
 	}
 }
 
-function assertNoBadPolicy(_: never): never {
+function assertNoBadPolicy(): never {
 	throw new Error(
 		`Invalid deletion policy "${Config.values.storagePolicy.deletionPolicy}" in the \`storagePolicy\` object, fix your config.`
 	);

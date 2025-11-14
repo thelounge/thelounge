@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, PropType, h} from "vue";
+import {defineComponent, PropType} from "vue";
 import parse from "../js/helpers/parse";
 import type {ClientMessage, ClientNetwork} from "../js/types";
 

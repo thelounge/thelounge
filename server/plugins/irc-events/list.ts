@@ -6,7 +6,7 @@ import {ChanType, SpecialChanType} from "../../../shared/types/chan";
 export default <IrcEventHandler>function (irc, network) {
 	const MAX_CHANS = 500;
 
-	irc.on("channel list start", () {
+	irc.on("channel list start", () => {
 		network.chanCache = [];
 
 		updateListStatus({
@@ -14,7 +14,7 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 	});
 
-	irc.on("channel list", (channels) {
+	irc.on("channel list", (channels) => {
 		Array.prototype.push.apply(network.chanCache, channels);
 
 		updateListStatus({
@@ -22,7 +22,7 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 	});
 
-	irc.on("channel list end", () {
+	irc.on("channel list end", () => {
 		updateListStatus(
 			network.chanCache.sort((a, b) => b.num_users! - a.num_users!).slice(0, MAX_CHANS)
 		);

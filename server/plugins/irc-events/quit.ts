@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("quit", (data) {
+	irc.on("quit", (data) => {
 		network.channels.forEach((chan) => {
 			const user = chan.findUser(data.nick);
 

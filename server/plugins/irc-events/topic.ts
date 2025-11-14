@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("topic", (data) {
+	irc.on("topic", (data) => {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
@@ -28,7 +28,7 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 	});
 
-	irc.on("topicsetby", (data) {
+	irc.on("topicsetby", (data) => {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {

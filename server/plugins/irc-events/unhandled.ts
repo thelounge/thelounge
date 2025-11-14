@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("unknown command", (command) {
+	irc.on("unknown command", (command) => {
 		let target = network.getLobby();
 
 		// Do not display users own name

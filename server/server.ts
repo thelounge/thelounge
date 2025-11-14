@@ -212,6 +212,7 @@ export default async function (
 					// Node.js changed address.family from number (4, 6) to string ("IPv4", "IPv6")
 					// in v18, but may revert this change. Support both formats for compatibility.
 					const family = address.family as string | number;
+
 					if (family === "IPv6" || family === 6) {
 						address.address = "[" + address.address + "]";
 					}

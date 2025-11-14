@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("part", (data) {
+	irc.on("part", (data) => {
 		if (!data.channel) {
 			return;
 		}

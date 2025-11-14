@@ -9,6 +9,16 @@ import {MessageType} from "../../../shared/types/msg";
 import {ChanType, ChanState} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
+	const sendStatus = () => {
+		const status = network.getNetworkStatus();
+		const toSend = {
+			...status,
+			network: network.uuid,
+		};
+
+		this.emit("network:status", toSend);
+	};
+
 	network.getLobby().pushMessage(
 		this,
 		new Msg({
@@ -210,14 +220,4 @@ export default <IrcEventHandler>function (irc, network) {
 			serverOptions: network.serverOptions,
 		});
 	});
-
-	const sendStatus = () => {
-		const status = network.getNetworkStatus();
-		const toSend = {
-			...status,
-			network: network.uuid,
-		};
-
-		this.emit("network:status", toSend);
-	};
 };

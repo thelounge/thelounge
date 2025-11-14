@@ -4,14 +4,6 @@ import Msg from "../../models/msg";
 import STSPolicies from "../sts";
 
 export default <IrcEventHandler>function (irc, network) {
-	irc.on("cap ls", (data) => {
-		handleSTS(data, true);
-	});
-
-	irc.on("cap new", (data) => {
-		handleSTS(data, false);
-	});
-
 	const handleSTS = (data, shouldReconnect: boolean) => {
 		if (!Object.prototype.hasOwnProperty.call(data.capabilities, "sts")) {
 			return;
@@ -73,4 +65,12 @@ export default <IrcEventHandler>function (irc, network) {
 			this.save();
 		}
 	};
+
+	irc.on("cap ls", (data) => {
+		handleSTS(data, true);
+	});
+
+	irc.on("cap new", (data) => {
+		handleSTS(data, false);
+	});
 };

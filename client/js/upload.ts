@@ -243,7 +243,7 @@ class Uploader {
 
 				try {
 					response = JSON.parse(this.xhr.responseText);
-				} catch (err) {
+				} catch {
 					// This is just a safe guard and should not happen if server doesn't throw any errors.
 					// Browsers break the HTTP spec by aborting the request without reading any response data,
 					// if there is still data to be uploaded. Servers will only error in extreme cases like bad

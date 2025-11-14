@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, PropType, watch, onUnmounted, onBeforeUnmount} from "vue";
+import {defineComponent, ref, PropType, watch, onBeforeUnmount} from "vue";
 import Sortable from "sortablejs";
 
 const Props = {

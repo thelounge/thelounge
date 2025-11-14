@@ -257,21 +257,6 @@ describe("SQLite Message Storage", function () {
 		});
 	}
 
-	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.all(stmt, params, (err, rows) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(rows);
-				});
-			});
-		});
-	}
-
 	before(function (done) {
 		store = new MessageStorage("testUser");
 

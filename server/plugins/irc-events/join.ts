@@ -6,7 +6,7 @@ import {ChanState} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("join", (data) {
+	irc.on("join", (data) => {
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {

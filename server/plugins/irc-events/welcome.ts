@@ -4,7 +4,7 @@ import Msg from "../../models/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("registered", (data) {
+	irc.on("registered", (data) => {
 		network.setNick(data.nick);
 
 		const lobby = network.getLobby();

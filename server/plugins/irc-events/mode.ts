@@ -10,7 +10,7 @@ export default <IrcEventHandler>function (irc, network) {
 	// extracting it from `/join #channel key`. This lets us not have to
 	// temporarily store the key until successful join, but also saves the key
 	// if a key is set or changed while being on the channel.
-	irc.on("channel info", (data) {
+	irc.on("channel info", (data) => {
 		if (!data.modes) {
 			return;
 		}
@@ -39,7 +39,7 @@ export default <IrcEventHandler>function (irc, network) {
 		targetChan.pushMessage(this, msg);
 	});
 
-	irc.on("user info", (data) {
+	irc.on("user info", (data) => {
 		const serverChan = network.getLobby();
 
 		const msg = new Msg({

@@ -474,7 +474,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 
 					resolve({data: buffer, type, size});
 				});
-		} catch (e: any) {
+		} catch (e) {
 			return reject(e instanceof Error ? e : new Error(String(e)));
 		}
 	});
@@ -510,7 +510,7 @@ function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
 		url.hash = "";
 
 		return url.toString();
-	} catch (e: any) {
+	} catch {
 		// if an exception was thrown, the url is not valid
 	}
 

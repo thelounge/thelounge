@@ -47,7 +47,6 @@ describe("Client", function () {
 
 	it("should parse channel configuration", function () {
 		const manager = new ClientManager();
-		const channel: ChanConfig = {name: "AAAA!", type: "query"};
 		const networkConfig: NetworkConfig = {
 			...commonNetworkConfig,
 			channels: [{name: "AAAA!", type: "query"}, {name: "#thelounge"}, {name: "&foobar"}],
@@ -78,7 +77,6 @@ describe("Client", function () {
 
 	it("should ignore invalid channel types", function () {
 		const manager = new ClientManager();
-		const channel: ChanConfig = {name: "AAAA!", type: "query"};
 		const networkConfig: NetworkConfig = {
 			...commonNetworkConfig,
 			channels: [

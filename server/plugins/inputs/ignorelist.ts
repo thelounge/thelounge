@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 const commands = ["ignorelist"];
 
-const input: PluginInputHandler = (network, chan, _cmd, _args) {
+const input: PluginInputHandler = (network, chan) => {
 
 	if (network.ignoreList.length === 0) {
 		chan.pushMessage(

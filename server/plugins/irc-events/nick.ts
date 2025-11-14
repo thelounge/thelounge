@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("nick", (data) {
+	irc.on("nick", (data) => {
 		const self = data.nick === irc.user.nick;
 
 		if (self) {

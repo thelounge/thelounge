@@ -2,7 +2,7 @@ import {IrcEventHandler} from "../../this";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("userlist", (data) {
+	irc.on("userlist", (data) => {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {

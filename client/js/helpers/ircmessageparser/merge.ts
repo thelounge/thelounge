@@ -20,10 +20,6 @@ type Fragment = {
 	text: string;
 };
 
-type PartWithFragments = Part & {
-	fragments: Fragment[];
-};
-
 // Merge text part information within a styling fragment
 function assign(textPart: Part, fragment: Fragment) {
 	const fragStart = fragment.start;

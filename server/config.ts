@@ -70,8 +70,6 @@ type Ldap = {
 	baseDN?: string;
 };
 
-type TlsOptions = any;
-
 type Debug = {
 	ircFramework: boolean;
 	raw: boolean;

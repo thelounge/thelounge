@@ -16,7 +16,7 @@ let sqlite3: any;
 
 try {
 	sqlite3 = require("sqlite3");
-} catch (e: any) {
+} catch {
 	Config.values.messageStorage = Config.values.messageStorage.filter((item) => item !== "sqlite");
 
 	log.error(

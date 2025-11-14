@@ -30,19 +30,19 @@ function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInpu
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("notice", (data) {
+	irc.on("notice", (data) => {
 		handleMessage(convertForHandle(MessageType.NOTICE, data));
 	});
 
-	irc.on("action", (data) {
+	irc.on("action", (data) => {
 		handleMessage(convertForHandle(MessageType.ACTION, data));
 	});
 
-	irc.on("privmsg", (data) {
+	irc.on("privmsg", (data) => {
 		handleMessage(convertForHandle(MessageType.MESSAGE, data));
 	});
 
-	irc.on("wallops", (data) {
+	irc.on("wallops", (data) => {
 		data.from_server = true;
 		handleMessage(convertForHandle(MessageType.WALLOPS, data));
 	});

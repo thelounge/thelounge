@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 
-	irc.on("motd", (data) {
+	irc.on("motd", (data) => {
 		const lobby = network.getLobby();
 
 		if (data.motd) {
