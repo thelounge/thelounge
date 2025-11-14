@@ -300,7 +300,7 @@ describe("SQLite Message Storage", function () {
 			"SELECT id, version FROM migrations WHERE version = ?",
 			currentSchemaVersion
 		);
-		assert.isNotUndefined(row);
+		assert.isDefined(row);
 	});
 
 	it("should store a message", async function () {
