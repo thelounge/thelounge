@@ -58,7 +58,11 @@ const config: webpack.Configuration = {
 			},
 			{
 				test: /\.ts$/i,
-				include: [path.resolve(__dirname, "client"), path.resolve(__dirname, "shared")],
+				include: [
+					path.resolve(__dirname, "client"),
+					path.resolve(__dirname, "shared"),
+					path.resolve(__dirname, "test"),
+				],
 				exclude: path.resolve(__dirname, "node_modules"),
 				use: {
 					loader: "babel-loader",
