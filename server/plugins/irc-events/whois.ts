@@ -1,26 +1,28 @@
-import {IrcEventHandler} from "../../this";
+import {IrcEventHandler} from "../../client";
 
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 
-export default <IrcEventHandler>function (irc, network) {
+export default <IrcEventHandler>function (this: any, irc, network) {
 
-	irc.on("whois", handleWhois);
-
-	irc.on("whowas", (data) => {
-		data.whowas = true;
-
-		handleWhois(data);
+	irc.on("whois", function(this: any, data: any) {
+		handleWhois.call(this, data);
 	});
 
-	function handleWhois(data) {
+	irc.on("whowas", function(this: any, data: any) {
+		data.whowas = true;
+
+		handleWhois.call(this, data);
+	});
+
+	function handleWhois(this: any, data: any) {
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
 			// Do not create new windows for errors as they may contain illegal characters
 			if (data.error) {
-				chan = network.getLobby();
+				chan = network.getLobby()!;
 			} else {
 				chan = this.createChannel({
 					type: ChanType.QUERY,
@@ -29,11 +31,11 @@ export default <IrcEventHandler>function (irc, network) {
 
 				this.emit("join", {
 					network: network.uuid,
-					chan: chan.getFilteredClone(true),
+					chan: chan!.getFilteredClone(true),
 					shouldOpen: true,
-					index: network.addChannel(chan),
+					index: network.addChannel(chan!),
 				});
-				chan.loadMessages(this, network);
+				chan!.loadMessages(this, network);
 				this.save();
 			}
 		}
@@ -56,6 +58,6 @@ export default <IrcEventHandler>function (irc, network) {
 			});
 		}
 
-		chan.pushMessage(this, msg);
+		chan!.pushMessage(this, msg);
 	}
 };
