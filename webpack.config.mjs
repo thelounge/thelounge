@@ -28,7 +28,7 @@ const miniCssExtractPlugin = new MiniCssExtractPlugin({
 });
 
 const isProduction = process.env.NODE_ENV === "production";
-const config: webpack.Configuration = {
+const config = {
     mode: isProduction ? "production" : "development",
     entry: {
         "js/bundle.js": [path.resolve(__dirname, "client/js/vue.ts")],
