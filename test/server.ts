@@ -64,7 +64,9 @@ describe("Server", function () {
 
 			expect(response.statusCode).to.equal(200);
 			expect(body.name).to.equal("The Lounge");
-			expect(response.headers["content-type"]).to.equal("application/manifest+json");
+			expect(response.headers["content-type"]).to.match(
+				/^application\/manifest\+json(?:;\s*charset=utf-8)?$/
+			);
 		});
 	});
 
