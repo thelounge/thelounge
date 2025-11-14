@@ -22,10 +22,9 @@ class Prefix {
 		this.modeToSymbol = {};
 		this.symbols = [];
 
-		const that = this;
-		this.prefix.forEach(function (p) {
-			that.modeToSymbol[p.mode] = p.symbol;
-			that.symbols.push(p.symbol);
+		this.prefix.forEach((p) => {
+			this.modeToSymbol[p.mode] = p.symbol;
+			this.symbols.push(p.symbol);
 		});
 	}
 

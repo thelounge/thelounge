@@ -1,12 +1,11 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../this";
 
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
-	irc.on("motd", function (data) {
+	irc.on("motd", (data) {
 		const lobby = network.getLobby();
 
 		if (data.motd) {
@@ -15,7 +14,7 @@ export default <IrcEventHandler>function (irc, network) {
 				command: "motd",
 				text: data.motd,
 			});
-			lobby.pushMessage(client, msg);
+			lobby.pushMessage(this, msg);
 		}
 
 		if (data.error) {
@@ -24,7 +23,7 @@ export default <IrcEventHandler>function (irc, network) {
 				command: "motd",
 				text: data.error,
 			});
-			lobby.pushMessage(client, msg);
+			lobby.pushMessage(this, msg);
 		}
 	});
 };

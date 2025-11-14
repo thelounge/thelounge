@@ -2,7 +2,7 @@ import Msg from "../../models/msg";
 import LinkPrefetch from "./link";
 import {cleanIrcMessage} from "../../../shared/irc";
 import Helper from "../../helper";
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../this";
 import Chan from "../../models/chan";
 import User from "../../models/user";
 import {MessageType} from "../../../shared/types/msg";
@@ -29,21 +29,20 @@ function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInpu
 }
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
-	irc.on("notice", function (data) {
+	irc.on("notice", (data) {
 		handleMessage(convertForHandle(MessageType.NOTICE, data));
 	});
 
-	irc.on("action", function (data) {
+	irc.on("action", (data) {
 		handleMessage(convertForHandle(MessageType.ACTION, data));
 	});
 
-	irc.on("privmsg", function (data) {
+	irc.on("privmsg", (data) {
 		handleMessage(convertForHandle(MessageType.MESSAGE, data));
 	});
 
-	irc.on("wallops", function (data) {
+	irc.on("wallops", (data) {
 		data.from_server = true;
 		handleMessage(convertForHandle(MessageType.WALLOPS, data));
 	});
@@ -97,19 +96,19 @@ export default <IrcEventHandler>function (irc, network) {
 					showInActive = true;
 					chan = network.getLobby();
 				} else {
-					chan = client.createChannel({
+					chan = this.createChannel({
 						type: ChanType.QUERY,
 						name: target,
 					});
 
-					client.emit("join", {
+					this.emit("join", {
 						network: network.uuid,
 						chan: chan.getFilteredClone(true),
 						shouldOpen: false,
 						index: network.addChannel(chan),
 					});
-					client.save();
-					chan.loadMessages(client, network);
+					this.save();
+					chan.loadMessages(this, network);
 				}
 			}
 
@@ -147,14 +146,14 @@ export default <IrcEventHandler>function (irc, network) {
 			msg.highlight = network.highlightRegex?.test(data.message);
 
 			// If we still don't have a highlight, test against custom highlights if there's any
-			if (!msg.highlight && client.highlightRegex) {
-				msg.highlight = client.highlightRegex.test(cleanMessage);
+			if (!msg.highlight && this.highlightRegex) {
+				msg.highlight = this.highlightRegex.test(cleanMessage);
 			}
 		}
 
 		// if highlight exceptions match, do not highlight at all
-		if (msg.highlight && client.highlightExceptionRegex) {
-			msg.highlight = !client.highlightExceptionRegex.test(cleanMessage);
+		if (msg.highlight && this.highlightExceptionRegex) {
+			msg.highlight = !this.highlightExceptionRegex.test(cleanMessage);
 		}
 
 		if (data.group) {
@@ -171,10 +170,10 @@ export default <IrcEventHandler>function (irc, network) {
 
 		// No prefetch URLs unless are simple MESSAGE or ACTION types
 		if ([MessageType.MESSAGE, MessageType.ACTION].includes(data.type)) {
-			LinkPrefetch(client, chan, msg, cleanMessage);
+			LinkPrefetch(this, chan, msg, cleanMessage);
 		}
 
-		chan.pushMessage(client, msg, !msg.self);
+		chan.pushMessage(this, msg, !msg.self);
 
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
 		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
@@ -189,7 +188,7 @@ export default <IrcEventHandler>function (irc, network) {
 				body = `${data.nick}: ${body}`;
 			}
 
-			// If a channel is active on any client, highlight won't increment and notification will say (0 mention)
+			// If a channel is active on any this, highlight won't increment and notification will say (0 mention)
 			if (chan.highlight > 0) {
 				title += ` (${chan.highlight} ${
 					chan.type === ChanType.QUERY ? "new message" : "mention"
@@ -202,8 +201,8 @@ export default <IrcEventHandler>function (irc, network) {
 				}`;
 			}
 
-			client.manager.webPush.push(
-				client,
+			this.manager.webPush.push(
+				this,
 				{
 					type: "notification",
 					chanId: chan.id,
@@ -215,9 +214,9 @@ export default <IrcEventHandler>function (irc, network) {
 			);
 		}
 
-		// Keep track of all mentions in channels for this client
+		// Keep track of all mentions in channels for this this
 		if (msg.highlight && chan.type === ChanType.CHANNEL) {
-			client.mentions.push({
+			this.mentions.push({
 				chanId: chan.id,
 				msgId: msg.id,
 				type: msg.type,
@@ -226,8 +225,8 @@ export default <IrcEventHandler>function (irc, network) {
 				from: msg.from,
 			});
 
-			if (client.mentions.length > 100) {
-				client.mentions.splice(0, client.mentions.length - 100);
+			if (this.mentions.length > 100) {
+				this.mentions.splice(0, this.mentions.length - 100);
 			}
 		}
 	}

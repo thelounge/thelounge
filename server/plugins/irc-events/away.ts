@@ -4,12 +4,10 @@ import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
 	irc.on("away", (data) => handleAway(MessageType.AWAY, data));
 	irc.on("back", (data) => handleAway(MessageType.BACK, data));
 
-	function handleAway(type: MessageType, data) {
+	const handleAway = (type: MessageType, data) => {
 		const away = data.message;
 
 		if (data.self) {
@@ -20,7 +18,7 @@ export default <IrcEventHandler>function (irc, network) {
 				time: data.time,
 			});
 
-			network.getLobby().pushMessage(client, msg, true);
+			network.getLobby().pushMessage(this, msg, true);
 
 			return;
 		}
@@ -51,7 +49,7 @@ export default <IrcEventHandler>function (irc, network) {
 						from: user,
 					});
 
-					chan.pushMessage(client, msg);
+					chan.pushMessage(this, msg);
 
 					break;
 				}
@@ -69,5 +67,5 @@ export default <IrcEventHandler>function (irc, network) {
 				}
 			}
 		});
-	}
+	};
 };

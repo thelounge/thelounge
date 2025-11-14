@@ -1,9 +1,8 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../this";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
-	irc.on("userlist", function (data) {
+	irc.on("userlist", (data) {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
@@ -21,7 +20,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 		chan.users = newUsers;
 
-		client.emit("users", {
+		this.emit("users", {
 			chan: chan.id,
 		});
 	});

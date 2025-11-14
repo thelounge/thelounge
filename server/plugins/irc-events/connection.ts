@@ -9,20 +9,18 @@ import {MessageType} from "../../../shared/types/msg";
 import {ChanType, ChanState} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
 	network.getLobby().pushMessage(
-		client,
+		this,
 		new Msg({
 			text: "Network created, connecting to " + network.host + ":" + network.port + "...",
 		}),
 		true
 	);
 
-	irc.on("registered", function () {
+	irc.on("registered", () => {
 		if (network.irc.network.cap.enabled.length > 0) {
 			network.getLobby().pushMessage(
-				client,
+				this,
 				new Msg({
 					text: "Enabled capabilities: " + network.irc.network.cap.enabled.join(", "),
 				}),
@@ -34,16 +32,16 @@ export default <IrcEventHandler>function (irc, network) {
 		if (network.awayMessage) {
 			irc.raw("AWAY", network.awayMessage);
 			// Only set generic away message if there are no clients attached
-		} else if (client.awayMessage && _.size(client.attachedClients) === 0) {
-			irc.raw("AWAY", client.awayMessage);
+		} else if (this.awayMessage && _.size(this.attachedClients) === 0) {
+			irc.raw("AWAY", this.awayMessage);
 		}
 
 		let delay = 1000;
 
 		if (Array.isArray(network.commands)) {
 			network.commands.forEach((cmd) => {
-				setTimeout(function () {
-					client.input({
+				setTimeout(() => {
+					this.input({
 						target: network.getLobby().id,
 						text: cmd,
 					});
@@ -57,20 +55,20 @@ export default <IrcEventHandler>function (irc, network) {
 				return;
 			}
 
-			setTimeout(function () {
+			setTimeout(() => {
 				network.irc.join(chan.name, chan.key);
 			}, delay);
 			delay += 1000;
 		});
 	});
 
-	irc.on("socket connected", function () {
+	irc.on("socket connected", () => {
 		if (irc.network.options.PREFIX) {
 			network.serverOptions.PREFIX.update(irc.network.options.PREFIX);
 		}
 
 		network.getLobby().pushMessage(
-			client,
+			this,
 			new Msg({
 				text: "Connected to the network.",
 			}),
@@ -80,9 +78,9 @@ export default <IrcEventHandler>function (irc, network) {
 		sendStatus();
 	});
 
-	irc.on("close", function () {
+	irc.on("close", () => {
 		network.getLobby().pushMessage(
-			client,
+			this,
 			new Msg({
 				text: "Disconnected from the network, and will not reconnect. Use /connect to reconnect again.",
 			}),
@@ -92,19 +90,19 @@ export default <IrcEventHandler>function (irc, network) {
 
 	let identSocketId;
 
-	irc.on("raw socket connected", function (socket) {
-		let ident = client.name || network.username;
+	irc.on("raw socket connected", (socket) => {
+		let ident = this.name || network.username;
 
 		if (Config.values.useHexIp) {
-			ident = Helper.ip2hex(client.config.browser!.ip!);
+			ident = Helper.ip2hex(this.config.browser!.ip!);
 		}
 
-		identSocketId = client.manager.identHandler.addSocket(socket, ident);
+		identSocketId = this.manager.identHandler.addSocket(socket, ident);
 	});
 
-	irc.on("socket close", function (error) {
+	irc.on("socket close", (error) => {
 		if (identSocketId > 0) {
-			client.manager.identHandler.removeSocket(identSocketId);
+			this.manager.identHandler.removeSocket(identSocketId);
 			identSocketId = 0;
 		}
 
@@ -115,7 +113,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 		if (error) {
 			network.getLobby().pushMessage(
-				client,
+				this,
 				new Msg({
 					type: MessageType.ERROR,
 					text: `Connection closed unexpectedly: ${
@@ -133,7 +131,7 @@ export default <IrcEventHandler>function (irc, network) {
 			network.setNick(network.keepNick);
 			network.keepNick = null;
 
-			client.emit("nick", {
+			this.emit("nick", {
 				network: network.uuid,
 				nick: network.nick,
 			});
@@ -143,18 +141,18 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	if (Config.values.debug.ircFramework) {
-		irc.on("debug", function (message) {
+		irc.on("debug", (message) => {
 			log.debug(
-				`[${client.name} (${client.id}) on ${network.name} (${network.uuid}]`,
+				`[${this.name} (${this.id}) on ${network.name} (${network.uuid}]`,
 				message
 			);
 		});
 	}
 
 	if (Config.values.debug.raw) {
-		irc.on("raw", function (message) {
+		irc.on("raw", (message) => {
 			network.getLobby().pushMessage(
-				client,
+				this,
 				new Msg({
 					self: !message.from_server,
 					type: MessageType.RAW,
@@ -165,9 +163,9 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 	}
 
-	irc.on("socket error", function (err) {
+	irc.on("socket error", (err) => {
 		network.getLobby().pushMessage(
-			client,
+			this,
 			new Msg({
 				type: MessageType.ERROR,
 				text: "Socket error: " + err,
@@ -176,9 +174,9 @@ export default <IrcEventHandler>function (irc, network) {
 		);
 	});
 
-	irc.on("reconnecting", function (data) {
+	irc.on("reconnecting", (data) => {
 		network.getLobby().pushMessage(
-			client,
+			this,
 			new Msg({
 				text: `Disconnected from the network. Reconnecting in ${Math.round(
 					data.wait / 1000
@@ -188,9 +186,9 @@ export default <IrcEventHandler>function (irc, network) {
 		);
 	});
 
-	irc.on("ping timeout", function () {
+	irc.on("ping timeout", () => {
 		network.getLobby().pushMessage(
-			client,
+			this,
 			new Msg({
 				text: "Ping timeout, disconnecting…",
 			}),
@@ -198,7 +196,7 @@ export default <IrcEventHandler>function (irc, network) {
 		);
 	});
 
-	irc.on("server options", function (data) {
+	irc.on("server options", (data) => {
 		network.serverOptions.PREFIX.update(data.options.PREFIX);
 
 		if (data.options.CHANTYPES) {
@@ -207,19 +205,19 @@ export default <IrcEventHandler>function (irc, network) {
 
 		network.serverOptions.NETWORK = data.options.NETWORK;
 
-		client.emit("network:options", {
+		this.emit("network:options", {
 			network: network.uuid,
 			serverOptions: network.serverOptions,
 		});
 	});
 
-	function sendStatus() {
+	const sendStatus = () => {
 		const status = network.getNetworkStatus();
 		const toSend = {
 			...status,
 			network: network.uuid,
 		};
 
-		client.emit("network:status", toSend);
-	}
+		this.emit("network:status", toSend);
+	};
 };

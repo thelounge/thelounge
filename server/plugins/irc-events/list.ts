@@ -1,13 +1,12 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../this";
 
 import Chan from "../../models/chan";
 import {ChanType, SpecialChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 	const MAX_CHANS = 500;
 
-	irc.on("channel list start", function () {
+	irc.on("channel list start", () {
 		network.chanCache = [];
 
 		updateListStatus({
@@ -15,7 +14,7 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 	});
 
-	irc.on("channel list", function (channels) {
+	irc.on("channel list", (channels) {
 		Array.prototype.push.apply(network.chanCache, channels);
 
 		updateListStatus({
@@ -23,7 +22,7 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 	});
 
-	irc.on("channel list end", function () {
+	irc.on("channel list end", () {
 		updateListStatus(
 			network.chanCache.sort((a, b) => b.num_users! - a.num_users!).slice(0, MAX_CHANS)
 		);
@@ -41,14 +40,14 @@ export default <IrcEventHandler>function (irc, network) {
 		let chan = network.getChannel("Channel List");
 
 		if (typeof chan === "undefined") {
-			chan = client.createChannel({
+			chan = this.createChannel({
 				type: ChanType.SPECIAL,
 				special: SpecialChanType.CHANNELLIST,
 				name: "Channel List",
 				data: msg,
 			});
 
-			client.emit("join", {
+			this.emit("join", {
 				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				shouldOpen: false,
@@ -57,7 +56,7 @@ export default <IrcEventHandler>function (irc, network) {
 		} else {
 			chan.data = msg;
 
-			client.emit("msg:special", {
+			this.emit("msg:special", {
 				chan: chan.id,
 				data: msg,
 			});

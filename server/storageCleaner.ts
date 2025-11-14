@@ -115,10 +115,8 @@ export class StorageCleaner {
 	}
 
 	private schedule(ms: number) {
-		const self = this;
-
 		this.ticker = setTimeout(() => {
-			self.runDeletes().catch((err) => {
+			this.runDeletes().catch((err) => {
 				log.error("storageCleaner: unexpected failure");
 				throw err;
 			});

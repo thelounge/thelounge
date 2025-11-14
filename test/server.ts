@@ -1,6 +1,6 @@
 import log from "../server/log";
 import Config from "../server/config";
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import got from "got";
 import io from "socket.io-client";
 import util from "./util";
@@ -110,7 +110,7 @@ describe("Server", function () {
 			});
 
 			client.on("network", (data) => {
-				expect(data.network).to.exist;
+				assert.exists(data.network);
 				expect(data.network.nick).to.equal("test-user");
 				expect(data.network.name).to.equal("Test Network");
 				expect(data.network.channels).to.have.lengthOf(3);
@@ -150,7 +150,7 @@ describe("Server", function () {
 			client.on("init", (data) => {
 				expect(data.active).to.equal(-1);
 				expect(data.networks).to.be.an("array");
-				expect(data.networks).to.be.empty;
+				assert.isEmpty(data.networks);
 				expect(data.token).to.equal(undefined);
 
 				done();

@@ -17,11 +17,10 @@ const ctcpResponses = {
 };
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 	const lobby = network.getLobby();
 
-	irc.on("ctcp response", function (data) {
-		const shouldIgnore = network.ignoreList.some(function (entry) {
+	irc.on("ctcp response", (data) => {
+		const shouldIgnore = network.ignoreList.some((entry) => {
 			return Helper.compareHostmask(entry, data);
 		});
 
@@ -41,7 +40,7 @@ export default <IrcEventHandler>function (irc, network) {
 			from: chan.getUser(data.nick),
 			ctcpMessage: data.message,
 		});
-		chan.pushMessage(client, msg, true);
+		chan.pushMessage(this, msg, true);
 	});
 
 	// Limit requests to a rate of one per second max
@@ -59,7 +58,7 @@ export default <IrcEventHandler>function (irc, network) {
 					return;
 				}
 
-				const shouldIgnore = network.ignoreList.some(function (entry) {
+				const shouldIgnore = network.ignoreList.some((entry) => {
 					return Helper.compareHostmask(entry, data);
 				});
 
@@ -82,7 +81,7 @@ export default <IrcEventHandler>function (irc, network) {
 					hostmask: data.ident + "@" + data.hostname,
 					ctcpMessage: data.message,
 				});
-				lobby.pushMessage(client, msg, true);
+				lobby.pushMessage(this, msg, true);
 			},
 			1000,
 			{trailing: false}

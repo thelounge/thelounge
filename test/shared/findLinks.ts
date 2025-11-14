@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import {findLinks, findLinksWithSchema} from "../../shared/linkify";
 
 describe("findLinks", () => {
@@ -453,6 +453,6 @@ describe("findLinks", () => {
 		const input = "web+://whatever.example";
 		const actual = findLinksWithSchema(input);
 
-		expect(actual).to.be.empty;
+		assert.isEmpty(actual);
 	});
 });

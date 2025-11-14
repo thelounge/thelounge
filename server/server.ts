@@ -967,7 +967,6 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	const socket = this;
 	let client: Client | undefined;
 	let token: string;
 
@@ -991,7 +990,7 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 			throw new Error("finalInit called with undefined client, this is a bug");
 		}
 
-		initializeClient(socket, client, token, lastMessage, openChannel);
+		initializeClient(this, client, token, lastMessage, openChannel);
 	};
 
 	const initClient = () => {
@@ -1002,20 +1001,20 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		// Configuration does not change during runtime of TL,
 		// and the client listens to this event only once
 		if (data && (!("hasConfig" in data) || !data.hasConfig)) {
-			socket.emit("configuration", getClientConfiguration());
+			this.emit("configuration", getClientConfiguration());
 
-			socket.emit(
+			this.emit(
 				"push:issubscribed",
 				token && client.config.sessions[token].pushSubscription ? true : false
 			);
 		}
 
-		const clientIP = getClientIp(socket);
+		const clientIP = getClientIp(this);
 
 		client.config.browser = {
 			ip: clientIP,
-			isSecure: getClientSecure(socket),
-			language: getClientLanguage(socket),
+			isSecure: getClientSecure(this),
+			language: getClientLanguage(this),
 		};
 
 		// If webirc is enabled perform reverse dns lookup
@@ -1037,7 +1036,7 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		manager!.clients.push(client);
 
 		const cb_client = client; // ensure TS can see we never have a nil client
-		socket.on("disconnect", function () {
+		this.on("disconnect", () => {
 			manager!.clients = _.without(manager!.clients, cb_client);
 			cb_client.quit();
 		});
@@ -1057,18 +1056,18 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 			if (!client) {
 				log.warn(
 					`Authentication for non existing user attempted from ${colors.bold(
-						getClientIp(socket)
+						getClientIp(this)
 					)}`
 				);
 			} else {
 				log.warn(
 					`Authentication failed for user ${colors.bold(data.user)} from ${colors.bold(
-						getClientIp(socket)
+						getClientIp(this)
 					)}`
 				);
 			}
 
-			socket.emit("auth:failed");
+			this.emit("auth:failed");
 			return;
 		}
 

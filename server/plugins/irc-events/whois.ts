@@ -1,11 +1,10 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../this";
 
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
 	irc.on("whois", handleWhois);
 
@@ -23,19 +22,19 @@ export default <IrcEventHandler>function (irc, network) {
 			if (data.error) {
 				chan = network.getLobby();
 			} else {
-				chan = client.createChannel({
+				chan = this.createChannel({
 					type: ChanType.QUERY,
 					name: data.nick,
 				});
 
-				client.emit("join", {
+				this.emit("join", {
 					network: network.uuid,
 					chan: chan.getFilteredClone(true),
 					shouldOpen: true,
 					index: network.addChannel(chan),
 				});
-				chan.loadMessages(client, network);
-				client.save();
+				chan.loadMessages(this, network);
+				this.save();
 			}
 		}
 
@@ -57,6 +56,6 @@ export default <IrcEventHandler>function (irc, network) {
 			});
 		}
 
-		chan.pushMessage(client, msg);
+		chan.pushMessage(this, msg);
 	}
 };

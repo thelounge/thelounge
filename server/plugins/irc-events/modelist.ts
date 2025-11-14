@@ -1,11 +1,10 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../this";
 
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 import {SpecialChanType, ChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
 	irc.on("banlist", (list) => {
 		const data = list.bans.map((ban) => ({
@@ -51,7 +50,7 @@ export default <IrcEventHandler>function (irc, network) {
 				chan = network.getLobby();
 			}
 
-			chan.pushMessage(client, msg, true);
+			chan.pushMessage(this, msg, true);
 
 			return;
 		}
@@ -60,13 +59,13 @@ export default <IrcEventHandler>function (irc, network) {
 		let chan = network.getChannel(chanName);
 
 		if (typeof chan === "undefined") {
-			chan = client.createChannel({
+			chan = this.createChannel({
 				type: ChanType.SPECIAL,
 				special: type,
 				name: chanName,
 				data: data,
 			});
-			client.emit("join", {
+			this.emit("join", {
 				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				shouldOpen: false,
@@ -75,7 +74,7 @@ export default <IrcEventHandler>function (irc, network) {
 		} else {
 			chan.data = data;
 
-			client.emit("msg:special", {
+			this.emit("msg:special", {
 				chan: chan.id,
 				data: data,
 			});

@@ -3,9 +3,7 @@ import {IrcEventHandler} from "../../client";
 import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("help", function (data) {
+	irc.on("help", (data) => {
 		const lobby = network.getLobby();
 
 		if (data.help) {
@@ -14,7 +12,7 @@ export default <IrcEventHandler>function (irc, network) {
 				command: "help",
 				text: data.help,
 			});
-			lobby.pushMessage(client, msg, true);
+			lobby.pushMessage(this, msg, true);
 		}
 	});
 };

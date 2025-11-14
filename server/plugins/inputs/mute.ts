@@ -39,10 +39,9 @@ function change_mute_state(client: Client, target: Chan, valueToSet: boolean) {
 
 const input: PluginInputHandler = function (network, chan, cmd, args) {
 	const valueToSet = cmd === "mute" ? true : false;
-	const client = this;
 
 	if (args.length === 0) {
-		change_mute_state(client, chan, valueToSet);
+		change_mute_state(this, chan, valueToSet);
 		return;
 	}
 
@@ -52,7 +51,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		const targetNames = targets.map((ch) => ch.name);
 		const missing = args.filter((x) => !targetNames.includes(x));
 		chan.pushMessage(
-			client,
+			this,
 			new Msg({
 				type: MessageType.ERROR,
 				text: `No open ${
@@ -64,7 +63,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	}
 
 	for (const target of targets) {
-		change_mute_state(client, target, valueToSet);
+		change_mute_state(this, target, valueToSet);
 	}
 };
 

@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import constants from "../../../client/js/constants";
 import {describe} from "mocha";
 
@@ -20,8 +20,10 @@ describe("client-side constants", function () {
 
 	describe(".timeFormats", function () {
 		it("should be objects of strings", function () {
-			expect(constants.timeFormats.msgDefault).to.be.an("string").that.is.not.empty;
-			expect(constants.timeFormats.msgWithSeconds).to.be.an("string").that.is.not.empty;
+			assert.isString(constants.timeFormats.msgDefault);
+			assert.isNotEmpty(constants.timeFormats.msgDefault);
+			assert.isString(constants.timeFormats.msgWithSeconds);
+			assert.isNotEmpty(constants.timeFormats.msgWithSeconds);
 		});
 	});
 });
