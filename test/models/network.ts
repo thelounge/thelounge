@@ -353,10 +353,9 @@ describe("Network", function () {
 			expect(nameEmitCalled).to.equal(true);
 			expect(network.uuid).to.not.equal("newuuid");
 
-			// @ts-expect-error Property 'ip' does not exist on type 'Network'.
-			expect(network.ip).to.equal(undefined);
-			// @ts-expect-error Property 'hostname' does not exist on type 'Network'.
-			expect(network.hostname).to.equal(undefined);
+			// Verify that ip and hostname properties are not set on the network object
+			expect("ip" in network).to.equal(false);
+			expect("hostname" in network).to.equal(false);
 
 			expect(network.name).to.equal("Lounge Test Network");
 			expect(network.channels[0].name).to.equal("Lounge Test Network");

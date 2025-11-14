@@ -234,19 +234,7 @@ class Uploader {
 
 		busboyInstance.on(
 			"file",
-			(
-				fieldname: any,
-				fileStream: {
-					on: (
-						arg0: string,
-						arg1: {(err: any): Response<any, Record<string, any>>; (): void}
-					) => void;
-					unpipe: (arg0: any) => void;
-					read: {bind: (arg0: any) => any};
-					pipe: (arg0: any) => void;
-				},
-				filename: string | number | boolean
-			) => {
+			(fieldname: string, fileStream: NodeJS.ReadableStream, filename: string) => {
 				uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
 
 				if (Config.values.fileUpload.baseUrl) {
@@ -257,7 +245,6 @@ class Uploader {
 
 				// if the busboy data stream errors out or goes over the file size limit
 				// abort the processing with an error
-				// @ts-expect-error Argument of type '(err: any) => Response<any, Record<string, any>>' is not assignable to parameter of type '{ (err: any): Response<any, Record<string, any>>; (): void; }'.ts(2345)
 				fileStream.on("error", abortWithError);
 				fileStream.on("limit", () => {
 					fileStream.unpipe(streamWriter);
