@@ -92,11 +92,11 @@ describe("Custom highlights", function () {
 		// test updating the regex and invalid custom hl inputs
 		client.config.clientSettings.highlights = ",,";
 		client.compileCustomHighlights();
-		expect(client.highlightRegex).to.be.null;
+		expect(client.highlightRegex).to.equal(null);
 
 		client.config.clientSettings.highlights = "  ";
 		client.compileCustomHighlights();
-		expect(client.highlightRegex).to.be.null;
+		expect(client.highlightRegex).to.equal(null);
 	});
 
 	// tests for highlight exceptions

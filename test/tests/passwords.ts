@@ -14,7 +14,7 @@ describe("Client passwords", function () {
 		);
 
 		return comparedPassword.then((result) => {
-			expect(result).to.be.true;
+			expect(result).to.equal(true);
 		});
 	});
 
@@ -26,7 +26,7 @@ describe("Client passwords", function () {
 		);
 
 		return comparedPassword.then((result) => {
-			expect(result).to.be.false;
+			expect(result).to.equal(false);
 		});
 	});
 
@@ -35,7 +35,7 @@ describe("Client passwords", function () {
 		const comparedPassword = Helper.password.compare(inputPassword, hashedPassword);
 
 		return comparedPassword.then((result) => {
-			expect(result).to.be.true;
+			expect(result).to.equal(true);
 		});
 	});
 
@@ -44,11 +44,11 @@ describe("Client passwords", function () {
 			Helper.password.requiresUpdate(
 				"$2a$08$K4l.hteJcCP9D1G5PANzYuBGvdqhUSUDOLQLU.xeRxTbvtp01KINm"
 			)
-		).to.be.true;
+		).to.equal(true);
 		expect(
 			Helper.password.requiresUpdate(
 				"$2a$11$zrPPcfZ091WNfs6QrRHtQeUitlgrJcecfZhxOFiQs0FWw7TN3Q1oS"
 			)
-		).to.be.false;
+		).to.equal(false);
 	});
 });

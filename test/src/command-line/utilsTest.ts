@@ -47,7 +47,7 @@ describe("Utils", function () {
 	describe(".parseConfigOptions", function () {
 		describe("when it's the first option given", function () {
 			it("should return nothing when passed an invalid config", function () {
-				expect(Utils.parseConfigOptions("foo")).to.be.undefined;
+				expect(Utils.parseConfigOptions("foo")).to.equal(undefined);
 			});
 
 			it("should correctly parse boolean values", function () {

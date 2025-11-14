@@ -35,7 +35,7 @@ describe("packages", function () {
 
 	describe(".getPackage", function () {
 		it("should contain no reference to packages before loading them", function () {
-			expect(packages.getPackage("thelounge-package-foo")).to.be.undefined;
+			expect(packages.getPackage("thelounge-package-foo")).to.equal(undefined);
 		});
 
 		it("should return details of a registered package after it was loaded", function () {

@@ -170,7 +170,7 @@ describe("SQLite unit tests", function () {
 
 		let id = 0;
 		let messages = await store.getMessages(net, chan, () => id++);
-		expect(messages.find((m) => m.text === "msg 13")).to.be.undefined; // oldest gets deleted first
+		expect(messages.find((m) => m.text === "msg 13")).to.equal(undefined); // oldest gets deleted first
 
 		// let's test if it properly cleans now
 		delReq.limit = 100;
@@ -291,11 +291,11 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should create database file", async function () {
-		expect(store.isEnabled).to.be.false;
-		expect(fs.existsSync(expectedPath)).to.be.false;
+		expect(store.isEnabled).to.equal(false);
+		expect(fs.existsSync(expectedPath)).to.equal(false);
 
 		await store.enable();
-		expect(store.isEnabled).to.be.true;
+		expect(store.isEnabled).to.equal(true);
 	});
 
 	it("should resolve an empty array when disabled", async function () {
@@ -477,7 +477,7 @@ describe("SQLite Message Storage", function () {
 
 	it("should close database", async function () {
 		await store.close();
-		expect(fs.existsSync(expectedPath)).to.be.true;
+		expect(fs.existsSync(expectedPath)).to.equal(true);
 	});
 });
 
