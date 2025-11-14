@@ -115,10 +115,8 @@ export class StorageCleaner {
 	}
 
 	private schedule(ms: number) {
-		const self = this;
-
 		this.ticker = setTimeout(() => {
-			self.runDeletes().catch((err) => {
+			this.runDeletes().catch((err) => {
 				log.error("storageCleaner: unexpected failure");
 				throw err;
 			});
@@ -141,7 +139,7 @@ export class StorageCleaner {
 	}
 }
 
-function assertNoBadPolicy(_: never): never {
+function assertNoBadPolicy(_policy: string): never {
 	throw new Error(
 		`Invalid deletion policy "${Config.values.storagePolicy.deletionPolicy}" in the \`storagePolicy\` object, fix your config.`
 	);

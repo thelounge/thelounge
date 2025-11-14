@@ -4,17 +4,7 @@ import Msg from "../../models/msg";
 import STSPolicies from "../sts";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("cap ls", (data) => {
-		handleSTS(data, true);
-	});
-
-	irc.on("cap new", (data) => {
-		handleSTS(data, false);
-	});
-
-	function handleSTS(data, shouldReconnect: boolean) {
+	const handleSTS = (data, shouldReconnect: boolean) => {
 		if (!Object.prototype.hasOwnProperty.call(data.capabilities, "sts")) {
 			return;
 		}
@@ -43,7 +33,7 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 
 			network.getLobby().pushMessage(
-				client,
+				this,
 				new Msg({
 					text: `Server sent a strict transport security policy, reconnecting to ${network.host}:${port}…`,
 				}),
@@ -72,7 +62,15 @@ export default <IrcEventHandler>function (irc, network) {
 				irc.connect();
 			}
 
-			client.save();
+			this.save();
 		}
-	}
+	};
+
+	irc.on("cap ls", (data) => {
+		handleSTS(data, true);
+	});
+
+	irc.on("cap new", (data) => {
+		handleSTS(data, false);
+	});
 };

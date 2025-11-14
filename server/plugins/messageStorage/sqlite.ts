@@ -16,7 +16,7 @@ let sqlite3: any;
 
 try {
 	sqlite3 = require("sqlite3");
-} catch (e: any) {
+} catch {
 	Config.values.messageStorage = Config.values.messageStorage.filter((item) => item !== "sqlite");
 
 	log.error(
@@ -220,7 +220,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const version = await this.current_version();
 
 		if (version > currentSchemaVersion) {
-			throw `sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is The Lounge out of date?`;
+			throw new Error(`sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is The Lounge out of date?`);
 		} else if (version === currentSchemaVersion) {
 			return; // nothing to do
 		}
@@ -259,7 +259,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		return new Promise<void>((resolve, reject) => {
 			this.database.close((err) => {
 				if (err) {
-					reject(`Failed to close sqlite database: ${err.message}`);
+					reject(new Error(`Failed to close sqlite database: ${err.message}`));
 					return;
 				}
 

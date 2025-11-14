@@ -11,7 +11,7 @@ let pop;
 try {
 	pop = new Audio();
 	pop.src = "audio/pop.wav";
-} catch (e) {
+} catch {
 	pop = {
 		play() {},
 	};
@@ -121,7 +121,7 @@ function notifyMessage(
 			if (store.state.settings.notification) {
 				try {
 					pop.play();
-				} catch (exception) {
+				} catch {
 					// On mobile, sounds can not be played without user interaction.
 				}
 			}
@@ -190,7 +190,7 @@ function notifyMessage(
 							}
 						});
 					}
-				} catch (exception) {
+				} catch {
 					// `new Notification(...)` is not supported and should be silenced.
 				}
 			}

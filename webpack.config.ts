@@ -185,10 +185,20 @@ export default (env: any, argv: any) => {
 
 		// Add the istanbul plugin to babel-loader options
 		for (const rule of config.module!.rules!) {
-			// @ts-expect-error Property 'use' does not exist on type 'RuleSetRule | "..."'.
-			if (rule.use.loader === "babel-loader") {
-				// @ts-expect-error Property 'use' does not exist on type 'RuleSetRule | "..."'.
-				rule.use.options.plugins = ["istanbul"];
+			// Check if rule is an object with 'use' property (not a string like "...")
+			if (
+				rule &&
+				typeof rule === "object" &&
+				"use" in rule &&
+				rule.use &&
+				typeof rule.use === "object" &&
+				"loader" in rule.use &&
+				rule.use.loader === "babel-loader" &&
+				"options" in rule.use &&
+				rule.use.options &&
+				typeof rule.use.options === "object"
+			) {
+				(rule.use.options as {plugins?: string[]}).plugins = ["istanbul"];
 			}
 		}
 

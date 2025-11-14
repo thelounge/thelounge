@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+ 
 import log from "../log";
 import fs from "fs";
 import path from "path";
@@ -26,7 +26,7 @@ Config.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
 // Check config file owner and warn if we're running under a different user
 try {
 	verifyFileOwner();
-} catch (e: any) {
+} catch {
 	// We do not care about failures of these checks
 	// fs.statSync will throw if config.js does not exist (e.g. first run)
 }

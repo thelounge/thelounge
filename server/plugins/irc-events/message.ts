@@ -28,27 +28,26 @@ function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInpu
 	return {...data, type: type};
 }
 
-export default <IrcEventHandler>function (irc, network) {
-	const client = this;
+export default <IrcEventHandler>function (this: any, irc, network) {
 
-	irc.on("notice", function (data) {
+	irc.on("notice", (data) => {
 		handleMessage(convertForHandle(MessageType.NOTICE, data));
 	});
 
-	irc.on("action", function (data) {
+	irc.on("action", (data) => {
 		handleMessage(convertForHandle(MessageType.ACTION, data));
 	});
 
-	irc.on("privmsg", function (data) {
+	irc.on("privmsg", (data) => {
 		handleMessage(convertForHandle(MessageType.MESSAGE, data));
 	});
 
-	irc.on("wallops", function (data) {
+	irc.on("wallops", (data) => {
 		data.from_server = true;
 		handleMessage(convertForHandle(MessageType.WALLOPS, data));
 	});
 
-	function handleMessage(data: HandleInput) {
+	function handleMessage(this: any, data: HandleInput) {
 		let chan: Chan | undefined;
 		let from: User;
 		let highlight = false;
@@ -97,28 +96,28 @@ export default <IrcEventHandler>function (irc, network) {
 					showInActive = true;
 					chan = network.getLobby();
 				} else {
-					chan = client.createChannel({
+					chan = this.createChannel({
 						type: ChanType.QUERY,
 						name: target,
 					});
 
-					client.emit("join", {
+					this.emit("join", {
 						network: network.uuid,
-						chan: chan.getFilteredClone(true),
+						chan: chan!.getFilteredClone(true),
 						shouldOpen: false,
-						index: network.addChannel(chan),
+						index: network.addChannel(chan!),
 					});
-					client.save();
-					chan.loadMessages(client, network);
+					this.save();
+					chan!.loadMessages(this, network);
 				}
 			}
 
-			from = chan.getUser(data.nick);
+			from = chan!.getUser(data.nick);
 
 			// Query messages (unless self or muted) always highlight
-			if (chan.type === ChanType.QUERY) {
+			if (chan!.type === ChanType.QUERY) {
 				highlight = !self;
-			} else if (chan.type === ChanType.CHANNEL) {
+			} else if (chan!.type === ChanType.CHANNEL) {
 				from.lastMessage = data.time || Date.now();
 			}
 		}
@@ -147,14 +146,14 @@ export default <IrcEventHandler>function (irc, network) {
 			msg.highlight = network.highlightRegex?.test(data.message);
 
 			// If we still don't have a highlight, test against custom highlights if there's any
-			if (!msg.highlight && client.highlightRegex) {
-				msg.highlight = client.highlightRegex.test(cleanMessage);
+			if (!msg.highlight && this.highlightRegex) {
+				msg.highlight = this.highlightRegex.test(cleanMessage);
 			}
 		}
 
 		// if highlight exceptions match, do not highlight at all
-		if (msg.highlight && client.highlightExceptionRegex) {
-			msg.highlight = !client.highlightExceptionRegex.test(cleanMessage);
+		if (msg.highlight && this.highlightExceptionRegex) {
+			msg.highlight = !this.highlightExceptionRegex.test(cleanMessage);
 		}
 
 		if (data.group) {
@@ -164,49 +163,49 @@ export default <IrcEventHandler>function (irc, network) {
 		let match: RegExpExecArray | null;
 
 		while ((match = nickRegExp.exec(data.message))) {
-			if (chan.findUser(match[1])) {
+			if (chan!.findUser(match[1])) {
 				msg.users.push(match[1]);
 			}
 		}
 
 		// No prefetch URLs unless are simple MESSAGE or ACTION types
 		if ([MessageType.MESSAGE, MessageType.ACTION].includes(data.type)) {
-			LinkPrefetch(client, chan, msg, cleanMessage);
+			LinkPrefetch(this, chan!, msg, cleanMessage);
 		}
 
-		chan.pushMessage(client, msg, !msg.self);
+		chan!.pushMessage(this, msg, !msg.self);
 
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
-		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
-			let title = chan.name;
+		if (!chan!.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
+			let title = chan!.name;
 			let body = cleanMessage;
 
 			if (msg.type === MessageType.ACTION) {
 				// For actions, do not include colon in the message
 				body = `${data.nick} ${body}`;
-			} else if (chan.type !== ChanType.QUERY) {
+			} else if (chan!.type !== ChanType.QUERY) {
 				// In channels, prepend sender nickname to the message
 				body = `${data.nick}: ${body}`;
 			}
 
-			// If a channel is active on any client, highlight won't increment and notification will say (0 mention)
-			if (chan.highlight > 0) {
-				title += ` (${chan.highlight} ${
-					chan.type === ChanType.QUERY ? "new message" : "mention"
-				}${chan.highlight > 1 ? "s" : ""})`;
+			// If a channel is active on any this, highlight won't increment and notification will say (0 mention)
+			if (chan!.highlight > 0) {
+				title += ` (${chan!.highlight} ${
+					chan!.type === ChanType.QUERY ? "new message" : "mention"
+				}${chan!.highlight > 1 ? "s" : ""})`;
 			}
 
-			if (chan.highlight > 1) {
-				body += `\n\n… and ${chan.highlight - 1} other message${
-					chan.highlight > 2 ? "s" : ""
+			if (chan!.highlight > 1) {
+				body += `\n\n… and ${chan!.highlight - 1} other message${
+					chan!.highlight > 2 ? "s" : ""
 				}`;
 			}
 
-			client.manager.webPush.push(
-				client,
+			this.manager.webPush.push(
+				this,
 				{
 					type: "notification",
-					chanId: chan.id,
+					chanId: chan!.id,
 					timestamp: data.time || Date.now(),
 					title: title,
 					body: body,
@@ -215,10 +214,10 @@ export default <IrcEventHandler>function (irc, network) {
 			);
 		}
 
-		// Keep track of all mentions in channels for this client
-		if (msg.highlight && chan.type === ChanType.CHANNEL) {
-			client.mentions.push({
-				chanId: chan.id,
+		// Keep track of all mentions in channels for this this
+		if (msg.highlight && chan!.type === ChanType.CHANNEL) {
+			this.mentions.push({
+				chanId: chan!.id,
 				msgId: msg.id,
 				type: msg.type,
 				time: msg.time,
@@ -226,8 +225,8 @@ export default <IrcEventHandler>function (irc, network) {
 				from: msg.from,
 			});
 
-			if (client.mentions.length > 100) {
-				client.mentions.splice(0, client.mentions.length - 100);
+			if (this.mentions.length > 100) {
+				this.mentions.splice(0, this.mentions.length - 100);
 			}
 		}
 	}

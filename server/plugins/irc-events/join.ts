@@ -5,33 +5,32 @@ import {MessageType} from "../../../shared/types/msg";
 import {ChanState} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
-	irc.on("join", function (data) {
+	irc.on("join", (data) => {
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
-			chan = client.createChannel({
+			chan = this.createChannel({
 				name: data.channel,
 				state: ChanState.JOINED,
 			});
 
-			client.emit("join", {
+			this.emit("join", {
 				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				shouldOpen: false,
 				index: network.addChannel(chan),
 			});
-			client.save();
+			this.save();
 
-			chan.loadMessages(client, network);
+			chan.loadMessages(this, network);
 
 			// Request channels' modes
 			network.irc.raw("MODE", chan.name);
 		} else if (data.nick === irc.user.nick) {
 			chan.state = ChanState.JOINED;
 
-			client.emit("channel:state", {
+			this.emit("channel:state", {
 				chan: chan.id,
 				state: chan.state,
 			});
@@ -47,10 +46,10 @@ export default <IrcEventHandler>function (irc, network) {
 			type: MessageType.JOIN,
 			self: data.nick === irc.user.nick,
 		});
-		chan.pushMessage(client, msg);
+		chan.pushMessage(this, msg);
 
 		chan.setUser(new User({nick: data.nick}));
-		client.emit("users", {
+		this.emit("users", {
 			chan: chan.id,
 		});
 	});

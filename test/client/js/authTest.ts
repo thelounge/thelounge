@@ -21,14 +21,12 @@ describe("Auth", function () {
 
 		it("should empty the local storage", function () {
 			Auth.signout();
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'calledOnce' does not exist on type '() =... Remove this comment to see the full error message
-			expect(localStorage.clear.calledOnce).to.equal(true);
+			expect(localStorageClearStub.calledOnce).to.equal(true);
 		});
 
 		it("should reload the page", function () {
 			Auth.signout();
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'calledOnce' does not exist on type '{ ()... Remove this comment to see the full error message
-			expect(location.reload.calledOnce).to.equal(true);
+			expect(locationReloadStub.calledOnce).to.equal(true);
 		});
 	});
 });

@@ -1,9 +1,6 @@
-import type {Database} from "sqlite3";
-
 import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";
 import {Network} from "../../models/network";
-import Client from "../../client";
 import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
 import type {MessageType} from "../../../shared/types/msg";
 

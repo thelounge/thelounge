@@ -105,7 +105,7 @@
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
-import {computed, defineComponent, onMounted, PropType, ref} from "vue";
+import {computed, defineComponent, onMounted, ref} from "vue";
 import {useStore} from "../../js/store";
 
 export default defineComponent({

@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import sinon from "sinon";
 import Chan from "../../server/models/chan";
 import {ChanType} from "../../shared/types/chan";
@@ -210,7 +210,7 @@ describe("Network", function () {
 		it("should apply STS policies iff they match", function () {
 			const client = {idMsg: 1, emit() {}} as any;
 			STSPolicies.update("irc.example.com", 7000, 3600);
-			expect(STSPolicies.get("irc.example.com")).to.not.be.null;
+			assert.isNotNull(STSPolicies.get("irc.example.com"));
 
 			let network = new Network({
 				host: "irc.example.com",
@@ -243,10 +243,10 @@ describe("Network", function () {
 
 			const network = new Network({host: "irc.example.com", sasl: "external"});
 			(network as any).createIrcFramework(client);
-			expect(network.irc).to.not.be.null;
+			assert.isNotNull(network.irc);
 
 			const client_cert = network.irc?.options?.client_certificate;
-			expect(client_cert).to.not.be.null;
+			assert.isNotNull(client_cert);
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
 			expect(network.validate(client as any)).to.equal(true);
@@ -262,14 +262,14 @@ describe("Network", function () {
 
 			const client = {idMsg: 1, emit() {}, messageStorage: []};
 			STSPolicies.update("irc.example.com", 7000, 3600);
-			expect(STSPolicies.get("irc.example.com")).to.not.be.null;
+			assert.isNotNull(STSPolicies.get("irc.example.com"));
 
 			const network = new Network({host: "irc.example.com", sasl: "external"});
 			(network as any).createIrcFramework(client);
-			expect(network.irc).to.not.be.null;
+			assert.isNotNull(network.irc);
 
 			const client_cert = network.irc?.options?.client_certificate;
-			expect(client_cert).to.not.be.null;
+			assert.isNotNull(client_cert);
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
 			expect(network.validate(client as any)).to.equal(true);
@@ -290,17 +290,17 @@ describe("Network", function () {
 
 			const client = {idMsg: 1, emit() {}};
 			STSPolicies.update("irc.example.com", 7000, 3600);
-			expect(STSPolicies.get("irc.example.com")).to.not.be.null;
+			assert.isNotNull(STSPolicies.get("irc.example.com"));
 
 			let network: any = new Network({host: "irc.example.com"});
 			network.createIrcFramework(client);
-			expect(network.irc).to.not.be.null;
+			assert.isNotNull(network.irc);
 			expect(network.irc.options.client_certificate).to.equal(null);
 
 			network = new Network({host: "irc.example.com", sasl: "external"});
 			network.createIrcFramework(client);
-			expect(network.irc).to.not.be.null;
-			expect(network.irc.options.client_certificate).to.not.be.null;
+			assert.isNotNull(network.irc);
+			assert.isNotNull(network.irc.options.client_certificate);
 
 			ClientCertificate.remove(network.uuid);
 			Config.values.public = true;
@@ -353,10 +353,9 @@ describe("Network", function () {
 			expect(nameEmitCalled).to.equal(true);
 			expect(network.uuid).to.not.equal("newuuid");
 
-			// @ts-expect-error Property 'ip' does not exist on type 'Network'.
-			expect(network.ip).to.equal(undefined);
-			// @ts-expect-error Property 'hostname' does not exist on type 'Network'.
-			expect(network.hostname).to.equal(undefined);
+			// Verify that ip and hostname properties are not set on the network object
+			expect("ip" in network).to.equal(false);
+			expect("hostname" in network).to.equal(false);
 
 			expect(network.name).to.equal("Lounge Test Network");
 			expect(network.channels[0].name).to.equal("Lounge Test Network");
@@ -389,7 +388,7 @@ describe("Network", function () {
 				channels: [chan],
 			});
 
-			expect(network.channels[0].users).to.be.empty;
+			assert.isEmpty(network.channels[0].users);
 		});
 
 		it("should keep necessary properties", function () {

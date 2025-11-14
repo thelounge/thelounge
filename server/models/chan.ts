@@ -240,14 +240,12 @@ class Chan {
 			return;
 		}
 
-		const targetChannel: Chan = this;
-
 		// Is this particular message or channel loggable
 		if (!msg.isLoggable() || !this.isLoggable()) {
 			// Because notices are nasty and can be shown in active channel on the client
 			// if there is no open query, we want to always log notices in the sender's name
 			if (msg.type === MessageType.NOTICE && msg.showInActive) {
-				targetChannel.name = msg.from.nick || ""; // TODO: check if || works
+				this.name = msg.from.nick || ""; // TODO: check if || works
 			} else {
 				return;
 			}
@@ -261,7 +259,7 @@ class Chan {
 		}
 
 		for (const messageStorage of client.messageStorage) {
-			messageStorage.index(target.network, targetChannel, msg).catch((e) => log.error(e));
+			messageStorage.index(target.network, this, msg).catch((e) => log.error(e));
 		}
 	}
 

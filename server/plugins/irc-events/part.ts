@@ -4,9 +4,8 @@ import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
-	irc.on("part", function (data) {
+	irc.on("part", (data) => {
 		if (!data.channel) {
 			return;
 		}
@@ -26,10 +25,10 @@ export default <IrcEventHandler>function (irc, network) {
 			from: user,
 			self: data.nick === irc.user.nick,
 		});
-		chan.pushMessage(client, msg);
+		chan.pushMessage(this, msg);
 
 		if (data.nick === irc.user.nick) {
-			client.part(network, chan);
+			this.part(network, chan);
 		} else {
 			chan.removeUser(user);
 		}

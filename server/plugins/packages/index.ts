@@ -25,6 +25,9 @@ export type PackageInfo = {
 	files?: string[];
 	// Legacy support
 	name?: string;
+	// Theme-specific fields (present when type === "theme")
+	themeColor?: string;
+	css?: string;
 };
 
 const stylesheets: string[] = [];
@@ -126,7 +129,7 @@ function loadPackage(packageName: string) {
 		packageInfo = JSON.parse(fs.readFileSync(path.join(packagePath, "package.json"), "utf-8"));
 
 		if (!packageInfo.thelounge) {
-			throw "'thelounge' is not present in package.json";
+			throw new Error("'thelounge' is not present in package.json");
 		}
 
 		if (
@@ -135,7 +138,7 @@ function loadPackage(packageName: string) {
 				includePrerelease: true, // our pre-releases should respect the semver guarantees
 			})
 		) {
-			throw `v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`;
+			throw new Error(`v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`);
 		}
 
 		packageFile = require(packagePath);
@@ -159,8 +162,8 @@ function loadPackage(packageName: string) {
 	packageMap.set(packageName, packageFile);
 
 	if (packageInfo.type === "theme") {
-		// @ts-expect-error Argument of type 'PackageInfo' is not assignable to parameter of type 'ThemeModule'.
-		themes.addTheme(packageName, packageInfo);
+		// PackageInfo includes theme-specific fields when type === "theme"
+		themes.addTheme(packageName, packageInfo as any);
 
 		if (packageInfo.files) {
 			packageInfo.files.forEach((file) => addFile(packageName, file));

@@ -174,6 +174,8 @@ interface ClientToServerEvents {
 	search: EventHandler<SearchQuery>;
 }
 
-interface InterServerEvents {}
+// Socket.IO requires these interfaces to be defined even if empty
+// Using Record<string, never> to explicitly indicate no events/data are defined
+type InterServerEvents = Record<string, never>;
 
-interface SocketData {}
+type SocketData = Record<string, never>;

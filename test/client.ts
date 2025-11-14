@@ -1,6 +1,5 @@
 import {expect} from "chai";
 import {NetworkConfig} from "../server/models/network";
-import {ChanConfig} from "../server/models/chan";
 import {ChanType} from "../shared/types/chan";
 import ClientManager from "../server/clientManager";
 import Client from "../server/client";
@@ -47,7 +46,6 @@ describe("Client", function () {
 
 	it("should parse channel configuration", function () {
 		const manager = new ClientManager();
-		const channel: ChanConfig = {name: "AAAA!", type: "query"};
 		const networkConfig: NetworkConfig = {
 			...commonNetworkConfig,
 			channels: [{name: "AAAA!", type: "query"}, {name: "#thelounge"}, {name: "&foobar"}],
@@ -78,7 +76,6 @@ describe("Client", function () {
 
 	it("should ignore invalid channel types", function () {
 		const manager = new ClientManager();
-		const channel: ChanConfig = {name: "AAAA!", type: "query"};
 		const networkConfig: NetworkConfig = {
 			...commonNetworkConfig,
 			channels: [

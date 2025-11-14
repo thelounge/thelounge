@@ -1,5 +1,5 @@
 import log from "../../../server/log";
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import TestUtil from "../../util";
 import sinon from "sinon";
 import packagePlugin from "../../../server/plugins/packages";
@@ -13,7 +13,7 @@ describe("packages", function () {
 		logInfoStub = sinon.stub(log, "info");
 
 		delete require.cache[require.resolve("../../../server/plugins/packages")];
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		 
 		packages = require("../../../server/plugins/packages").default;
 	});
 
@@ -23,7 +23,7 @@ describe("packages", function () {
 
 	describe(".getStylesheets", function () {
 		it("should contain no stylesheets before packages are loaded", function () {
-			expect(packages.getStylesheets()).to.be.empty;
+			assert.isEmpty(packages.getStylesheets());
 		});
 
 		it("should return the list of registered stylesheets for loaded packages", function () {

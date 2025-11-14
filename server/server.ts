@@ -194,7 +194,7 @@ export default async function (
 		};
 	}
 
-	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+	 
 	server.on("error", (err) => log.error(`${err}`));
 
 	let sockets: Server | null = null;
@@ -209,9 +209,11 @@ export default async function (
 				const address = server?.address();
 
 				if (address && typeof address !== "string") {
-					// TODO: Node may revert the Node 18 family string --> number change
-					// @ts-expect-error This condition will always return 'false' since the types 'string' and 'number' have no overlap.
-					if (address.family === "IPv6" || address.family === 6) {
+					// Node.js changed address.family from number (4, 6) to string ("IPv4", "IPv6")
+					// in v18, but may revert this change. Support both formats for compatibility.
+					const family = address.family as string | number;
+
+					if (family === "IPv6" || family === 6) {
 						address.address = "[" + address.address + "]";
 					}
 
@@ -239,7 +241,7 @@ export default async function (
 			});
 
 			sockets.on("connect", (socket) => {
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+				 
 				socket.on("error", (err) => log.error(`io socket error: ${err}`));
 
 				if (Config.values.public) {
@@ -361,7 +363,7 @@ export default async function (
 
 			resolve({
 				httpServer: server,
-				io: sockets!,
+				io: sockets,
 				stop,
 			});
 		});
@@ -966,7 +968,6 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	const socket = this;
 	let client: Client | undefined;
 	let token: string;
 
@@ -990,7 +991,7 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 			throw new Error("finalInit called with undefined client, this is a bug");
 		}
 
-		initializeClient(socket, client, token, lastMessage, openChannel);
+		initializeClient(this, client, token, lastMessage, openChannel);
 	};
 
 	const initClient = () => {
@@ -1001,20 +1002,20 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		// Configuration does not change during runtime of TL,
 		// and the client listens to this event only once
 		if (data && (!("hasConfig" in data) || !data.hasConfig)) {
-			socket.emit("configuration", getClientConfiguration());
+			this.emit("configuration", getClientConfiguration());
 
-			socket.emit(
+			this.emit(
 				"push:issubscribed",
 				token && client.config.sessions[token].pushSubscription ? true : false
 			);
 		}
 
-		const clientIP = getClientIp(socket);
+		const clientIP = getClientIp(this);
 
 		client.config.browser = {
 			ip: clientIP,
-			isSecure: getClientSecure(socket),
-			language: getClientLanguage(socket),
+			isSecure: getClientSecure(this),
+			language: getClientLanguage(this),
 		};
 
 		// If webirc is enabled perform reverse dns lookup
@@ -1036,7 +1037,7 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		manager!.clients.push(client);
 
 		const cb_client = client; // ensure TS can see we never have a nil client
-		socket.on("disconnect", function () {
+		this.on("disconnect", () => {
 			manager!.clients = _.without(manager!.clients, cb_client);
 			cb_client.quit();
 		});
@@ -1056,18 +1057,18 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 			if (!client) {
 				log.warn(
 					`Authentication for non existing user attempted from ${colors.bold(
-						getClientIp(socket)
+						getClientIp(this)
 					)}`
 				);
 			} else {
 				log.warn(
 					`Authentication failed for user ${colors.bold(data.user)} from ${colors.bold(
-						getClientIp(socket)
+						getClientIp(this)
 					)}`
 				);
 			}
 
-			socket.emit("auth:failed");
+			this.emit("auth:failed");
 			return;
 		}
 

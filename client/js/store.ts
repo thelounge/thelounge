@@ -22,7 +22,7 @@ enum DesktopNotificationState {
 function detectDesktopNotificationState(): DesktopNotificationState {
 	if (!("Notification" in window)) {
 		return DesktopNotificationState.Unsupported;
-	} else if (Notification.permission === DesktopNotificationState.Granted) {
+	} else if (Notification.permission === "granted") {
 		return DesktopNotificationState.Granted;
 	} else if (!window.isSecureContext) {
 		return DesktopNotificationState.NoHttps;

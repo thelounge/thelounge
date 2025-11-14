@@ -110,7 +110,7 @@ router.beforeEach((to, from, next) => {
 	next();
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
 	// Disallow navigating to non-existing routes
 	if (!to.matched.length) {
 		return false;

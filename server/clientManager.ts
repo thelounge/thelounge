@@ -186,8 +186,8 @@ class ClientManager {
 				mode: 0o600,
 			});
 			fs.renameSync(tmpPath, userPath);
-		} catch (e: any) {
-			log.error(`Failed to create user ${colors.green(name)} (${e})`);
+		} catch (e) {
+			log.error(`Failed to create user ${colors.green(name)} (${e instanceof Error ? e.message : String(e)})`);
 			throw e;
 		}
 
@@ -215,7 +215,7 @@ class ClientManager {
 				);
 				fs.chownSync(userPath, userFolderStat.uid, userFolderStat.gid);
 			}
-		} catch (e: any) {
+		} catch {
 			// We're simply verifying file owner as a safe guard for users
 			// that run `thelounge add` as root, so we don't care if it fails
 		}
@@ -253,7 +253,7 @@ class ClientManager {
 			fs.renameSync(pathTemp, pathReal);
 
 			return callback ? callback() : true;
-		} catch (e: any) {
+		} catch (e) {
 			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
 
 			if (callback) {
@@ -286,7 +286,7 @@ class ClientManager {
 		try {
 			const data = fs.readFileSync(userPath, "utf-8");
 			return JSON.parse(data) as UserConfig;
-		} catch (e: any) {
+		} catch (e) {
 			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
 		}
 

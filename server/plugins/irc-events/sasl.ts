@@ -4,7 +4,6 @@ import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
 	irc.on("loggedin", (data) => {
 		const lobby = network.getLobby();
@@ -13,7 +12,7 @@ export default <IrcEventHandler>function (irc, network) {
 			type: MessageType.LOGIN,
 			text: "Logged in as: " + data.account,
 		});
-		lobby.pushMessage(client, msg, true);
+		lobby.pushMessage(this, msg, true);
 	});
 
 	irc.on("loggedout", () => {
@@ -23,6 +22,6 @@ export default <IrcEventHandler>function (irc, network) {
 			type: MessageType.LOGOUT,
 			text: "Logged out",
 		});
-		lobby.pushMessage(client, msg, true);
+		lobby.pushMessage(this, msg, true);
 	});
 };

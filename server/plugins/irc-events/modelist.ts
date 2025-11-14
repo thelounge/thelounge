@@ -4,8 +4,7 @@ import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 import {SpecialChanType, ChanType} from "../../../shared/types/chan";
 
-export default <IrcEventHandler>function (irc, network) {
-	const client = this;
+export default <IrcEventHandler>function (this: any, irc, network) {
 
 	irc.on("banlist", (list) => {
 		const data = list.bans.map((ban) => ({
@@ -27,7 +26,7 @@ export default <IrcEventHandler>function (irc, network) {
 		handleList(SpecialChanType.INVITELIST, "Invite list", list.channel, data);
 	});
 
-	function handleList(
+	function handleList(this: any,
 		type: SpecialChanType,
 		name: string,
 		channel: string,
@@ -48,10 +47,10 @@ export default <IrcEventHandler>function (irc, network) {
 			// Send error to lobby if we receive empty list for a channel we're not in
 			if (typeof chan === "undefined") {
 				msg.showInActive = true;
-				chan = network.getLobby();
+				chan = network.getLobby()!;
 			}
 
-			chan.pushMessage(client, msg, true);
+			chan.pushMessage(this, msg, true);
 
 			return;
 		}
@@ -60,23 +59,23 @@ export default <IrcEventHandler>function (irc, network) {
 		let chan = network.getChannel(chanName);
 
 		if (typeof chan === "undefined") {
-			chan = client.createChannel({
+			chan = this.createChannel({
 				type: ChanType.SPECIAL,
 				special: type,
 				name: chanName,
 				data: data,
 			});
-			client.emit("join", {
+			this.emit("join", {
 				network: network.uuid,
-				chan: chan.getFilteredClone(true),
+				chan: chan!.getFilteredClone(true),
 				shouldOpen: false,
-				index: network.addChannel(chan),
+				index: network.addChannel(chan!),
 			});
 		} else {
 			chan.data = data;
 
-			client.emit("msg:special", {
-				chan: chan.id,
+			this.emit("msg:special", {
+				chan: chan!.id,
 				data: data,
 			});
 		}

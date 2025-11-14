@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import fs from "fs";
 import path from "path";
 
@@ -56,8 +56,7 @@ describe("public folder", function () {
 	});
 
 	it("loading-error-handlers.js is copied", function () {
-		expect(fs.existsSync(path.join(publicFolder, "js", "loading-error-handlers.js"))).to.be
-			.true;
+		assert.isTrue(fs.existsSync(path.join(publicFolder, "js", "loading-error-handlers.js")));
 	});
 
 	it("service worker has cacheName set", function (done) {

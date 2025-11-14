@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+ 
 import log from "../log";
 import colors from "chalk";
 import {Command} from "commander";

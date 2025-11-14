@@ -16,7 +16,7 @@ program
 			return;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		 
 		const ClientManager = require("../../clientManager").default;
 		const manager = new ClientManager();
 
@@ -26,7 +26,7 @@ program
 			} else {
 				log.error(`User ${colors.bold(name)} does not exist.`);
 			}
-		} catch (e: any) {
+		} catch {
 			// There was an error, already logged
 		}
 	});

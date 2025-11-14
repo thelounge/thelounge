@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import util from "../util";
 import Config from "../../server/config";
 import storage from "../../server/plugins/storage";
@@ -134,9 +134,9 @@ describe("Image storage", function () {
 	it("should clear storage folder", function () {
 		const dir = Config.getStoragePath();
 
-		expect(fs.readdirSync(dir)).to.not.be.empty;
+		assert.isNotEmpty(fs.readdirSync(dir));
 		storage.emptyDir();
-		expect(fs.readdirSync(dir)).to.be.empty;
+		assert.isEmpty(fs.readdirSync(dir));
 		expect(fs.existsSync(dir)).to.equal(true);
 	});
 });

@@ -4,9 +4,8 @@ import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
 
-	irc.on("topic", function (data) {
+	irc.on("topic", (data) => {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
@@ -20,16 +19,16 @@ export default <IrcEventHandler>function (irc, network) {
 			text: data.topic,
 			self: data.nick === irc.user.nick,
 		});
-		chan.pushMessage(client, msg);
+		chan.pushMessage(this, msg);
 
 		chan.topic = data.topic;
-		client.emit("topic", {
+		this.emit("topic", {
 			chan: chan.id,
 			topic: chan.topic,
 		});
 	});
 
-	irc.on("topicsetby", function (data) {
+	irc.on("topicsetby", (data) => {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
@@ -42,6 +41,6 @@ export default <IrcEventHandler>function (irc, network) {
 			when: new Date(data.when * 1000),
 			self: data.nick === irc.user.nick,
 		});
-		chan.pushMessage(client, msg);
+		chan.pushMessage(this, msg);
 	});
 };

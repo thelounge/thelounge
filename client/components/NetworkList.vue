@@ -543,8 +543,6 @@ export default defineComponent({
 			Mousetrap.unbind("alt+j");
 		});
 
-		const networkContainerRef = ref<HTMLDivElement>();
-		const channelRefs = ref<{[key: string]: HTMLDivElement}>({});
 
 		return {
 			store,

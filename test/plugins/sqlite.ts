@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {expect} from "chai";
+import {expect, assert} from "chai";
 import util from "../util";
 import Msg from "../../server/models/msg";
 import {MessageType} from "../../shared/types/msg";
@@ -257,21 +257,6 @@ describe("SQLite Message Storage", function () {
 		});
 	}
 
-	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.all(stmt, params, (err, rows) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(rows);
-				});
-			});
-		});
-	}
-
 	before(function (done) {
 		store = new MessageStorage("testUser");
 
@@ -301,7 +286,7 @@ describe("SQLite Message Storage", function () {
 	it("should resolve an empty array when disabled", async function () {
 		store.isEnabled = false;
 		const messages = await store.getMessages(null as any, null as any, null as any);
-		expect(messages).to.be.empty;
+		assert.isEmpty(messages);
 		store.isEnabled = true;
 	});
 
@@ -315,7 +300,7 @@ describe("SQLite Message Storage", function () {
 			"SELECT id, version FROM migrations WHERE version = ?",
 			currentSchemaVersion
 		);
-		expect(row).to.not.be.undefined;
+		assert.isNotUndefined(row);
 	});
 
 	it("should store a message", async function () {

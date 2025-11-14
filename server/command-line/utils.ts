@@ -150,7 +150,7 @@ class Utils {
 							if (json.type === "success") {
 								success = true;
 							}
-						} catch (e: any) {
+						} catch {
 							// Stdout buffer has limitations and yarn may print
 							// big package trees, for example in the upgrade command
 							// See https://github.com/thelounge/thelounge/issues/3679
@@ -177,7 +177,7 @@ class Utils {
 							}
 
 							return;
-						} catch (e: any) {
+						} catch {
 							// we simply fall through and log at debug... chances are there's nothing the user can do about it
 							// as it includes things like deprecation warnings, but we might want to know as developers
 						}
@@ -193,7 +193,7 @@ class Utils {
 
 			add.on("close", (code) => {
 				if (!success || code !== 0) {
-					return reject(code);
+					return reject(new Error(`Process exited with code ${code}`));
 				}
 
 				resolve(true);

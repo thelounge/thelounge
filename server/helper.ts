@@ -2,7 +2,6 @@ import pkg from "../package.json";
 import _ from "lodash";
 import path from "path";
 import os from "os";
-import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -57,7 +56,7 @@ function getGitCommit() {
 	// --git-dir ".git" makes git only check current directory for `.git`, and not travel upwards
 	// We set cwd to the location of `index.js` as soon as the process is started
 	try {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		 
 		_gitCommit = require("child_process")
 			.execSync(
 				'git --git-dir ".git" rev-parse --short HEAD', // Returns hash of current commit
@@ -66,7 +65,7 @@ function getGitCommit() {
 			.toString()
 			.trim();
 		return _gitCommit;
-	} catch (e: any) {
+	} catch {
 		// Not a git repository or git is not installed
 		_gitCommit = null;
 		return null;

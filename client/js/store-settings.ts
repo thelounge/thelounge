@@ -75,7 +75,7 @@ function loadFromLocalStorage() {
 
 	try {
 		storedSettings = JSON.parse(storage.get("settings") || "{}");
-	} catch (e) {
+	} catch {
 		storage.remove("settings");
 	}
 
