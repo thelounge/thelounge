@@ -43,7 +43,7 @@ describe("Chan", function () {
 		});
 
 		it("should not find a message that does not exist", function () {
-			expect(chan.findMessage(42)).to.be.undefined;
+			expect(chan.findMessage(42)).to.equal(undefined);
 		});
 	});
 
@@ -52,7 +52,7 @@ describe("Chan", function () {
 			const chan = new Chan();
 			chan.setUser(new User({nick: "TestUser"}));
 
-			expect(chan.users.has("testuser")).to.be.true;
+			expect(chan.users.has("testuser")).to.equal(true);
 		});
 
 		it("should update user object", function () {

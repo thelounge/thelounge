@@ -142,7 +142,7 @@ describe("Network", function () {
 				host: "localhost",
 			});
 
-			expect(network.validate({} as any)).to.be.true;
+			expect(network.validate({} as any)).to.equal(true);
 			expect(network.nick).to.equal("thelounge");
 			expect(network.username).to.equal("thelounge");
 			expect(network.realname).to.equal("thelounge");
@@ -152,7 +152,7 @@ describe("Network", function () {
 				host: "localhost",
 				nick: "@Invalid Nick?",
 			});
-			expect(network2.validate({} as any)).to.be.true;
+			expect(network2.validate({} as any)).to.equal(true);
 			expect(network2.username).to.equal("InvalidNick");
 		});
 
@@ -168,11 +168,11 @@ describe("Network", function () {
 				tls: false,
 				rejectUnauthorized: false,
 			});
-			expect(network.validate({} as any)).to.be.true;
+			expect(network.validate({} as any)).to.equal(true);
 			expect(network.host).to.equal("irc.example.com");
 			expect(network.port).to.equal(6697);
-			expect(network.tls).to.be.true;
-			expect(network.rejectUnauthorized).to.be.true;
+			expect(network.tls).to.equal(true);
+			expect(network.rejectUnauthorized).to.equal(true);
 
 			// Make sure we lock in public mode (also resets public=true for other tests)
 			Config.values.public = true;
@@ -180,7 +180,7 @@ describe("Network", function () {
 			const network2 = new Network({
 				host: "some.fake.tld",
 			});
-			expect(network2.validate({} as any)).to.be.true;
+			expect(network2.validate({} as any)).to.equal(true);
 			expect(network2.host).to.equal("irc.example.com");
 
 			Config.values.lockNetwork = false;
@@ -192,7 +192,7 @@ describe("Network", function () {
 				nick: "dummy",
 			});
 
-			expect(network.validate({} as any)).to.be.true;
+			expect(network.validate({} as any)).to.equal(true);
 			expect(network.nick).to.equal("dummy");
 			expect(network.realname).to.equal("dummy");
 
@@ -202,7 +202,7 @@ describe("Network", function () {
 				realname: "notdummy",
 			});
 
-			expect(network2.validate({} as any)).to.be.true;
+			expect(network2.validate({} as any)).to.equal(true);
 			expect(network2.nick).to.equal("dummy");
 			expect(network2.realname).to.equal("notdummy");
 		});
@@ -218,9 +218,9 @@ describe("Network", function () {
 				tls: false,
 			});
 
-			expect(network.validate(client)).to.be.true;
+			expect(network.validate(client)).to.equal(true);
 			expect(network.port).to.equal(7000);
-			expect(network.tls).to.be.true;
+			expect(network.tls).to.equal(true);
 
 			network = new Network({
 				host: "irc2.example.com",
@@ -228,12 +228,12 @@ describe("Network", function () {
 				tls: false,
 			});
 
-			expect(network.validate(client)).to.be.true;
+			expect(network.validate(client)).to.equal(true);
 			expect(network.port).to.equal(1337);
-			expect(network.tls).to.be.false;
+			expect(network.tls).to.equal(false);
 
 			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
-			expect(STSPolicies.get("irc.example.com")).to.be.null;
+			expect(STSPolicies.get("irc.example.com")).to.equal(null);
 		});
 
 		it("should not remove client certs if TLS is disabled", function () {
@@ -249,7 +249,7 @@ describe("Network", function () {
 			expect(client_cert).to.not.be.null;
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
-			expect(network.validate(client as any)).to.be.true;
+			expect(network.validate(client as any)).to.equal(true);
 
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
@@ -272,7 +272,7 @@ describe("Network", function () {
 			expect(client_cert).to.not.be.null;
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
-			expect(network.validate(client as any)).to.be.true;
+			expect(network.validate(client as any)).to.equal(true);
 
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
@@ -280,7 +280,7 @@ describe("Network", function () {
 			Config.values.public = true;
 
 			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
-			expect(STSPolicies.get("irc.example.com")).to.be.null;
+			expect(STSPolicies.get("irc.example.com")).to.equal(null);
 		});
 	});
 
@@ -295,7 +295,7 @@ describe("Network", function () {
 			let network: any = new Network({host: "irc.example.com"});
 			network.createIrcFramework(client);
 			expect(network.irc).to.not.be.null;
-			expect(network.irc.options.client_certificate).to.be.null;
+			expect(network.irc.options.client_certificate).to.equal(null);
 
 			network = new Network({host: "irc.example.com", sasl: "external"});
 			network.createIrcFramework(client);
@@ -306,7 +306,7 @@ describe("Network", function () {
 			Config.values.public = true;
 
 			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
-			expect(STSPolicies.get("irc.example.com")).to.be.null;
+			expect(STSPolicies.get("irc.example.com")).to.equal(null);
 		});
 	});
 
@@ -349,14 +349,14 @@ describe("Network", function () {
 				}
 			);
 
-			expect(saveCalled).to.be.true;
-			expect(nameEmitCalled).to.be.true;
+			expect(saveCalled).to.equal(true);
+			expect(nameEmitCalled).to.equal(true);
 			expect(network.uuid).to.not.equal("newuuid");
 
 			// @ts-expect-error Property 'ip' does not exist on type 'Network'.
-			expect(network.ip).to.be.undefined;
+			expect(network.ip).to.equal(undefined);
 			// @ts-expect-error Property 'hostname' does not exist on type 'Network'.
-			expect(network.hostname).to.be.undefined;
+			expect(network.hostname).to.equal(undefined);
 
 			expect(network.name).to.equal("Lounge Test Network");
 			expect(network.channels[0].name).to.equal("Lounge Test Network");
@@ -364,8 +364,8 @@ describe("Network", function () {
 			expect(network.nick).to.equal("newNick");
 			expect(network.host).to.equal("new.tld");
 			expect(network.port).to.equal(1337);
-			expect(network.tls).to.be.false;
-			expect(network.rejectUnauthorized).to.be.false;
+			expect(network.tls).to.equal(false);
+			expect(network.rejectUnauthorized).to.equal(false);
 			expect(network.username).to.equal("1234");
 			expect(network.password).to.equal("4567");
 			expect(network.realname).to.equal("8901");

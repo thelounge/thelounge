@@ -140,7 +140,7 @@ describe("Server", function () {
 
 		it("should emit push subscription state message", (done) => {
 			client.on("push:issubscribed", (data) => {
-				expect(data).to.be.false;
+				expect(data).to.equal(false);
 
 				done();
 			});
@@ -151,7 +151,7 @@ describe("Server", function () {
 				expect(data.active).to.equal(-1);
 				expect(data.networks).to.be.an("array");
 				expect(data.networks).to.be.empty;
-				expect(data.token).to.be.undefined;
+				expect(data.token).to.equal(undefined);
 
 				done();
 			});

@@ -137,6 +137,6 @@ describe("Image storage", function () {
 		expect(fs.readdirSync(dir)).to.not.be.empty;
 		storage.emptyDir();
 		expect(fs.readdirSync(dir)).to.be.empty;
-		expect(fs.existsSync(dir)).to.be.true;
+		expect(fs.existsSync(dir)).to.equal(true);
 	});
 });
