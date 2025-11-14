@@ -51,7 +51,7 @@ export default <IrcEventHandler>function (irc, network) {
 		serverChan.pushMessage(this, msg);
 	});
 
-	irc.on("mode", (data) {
+	irc.on("mode", (data) => {
 		let targetChan;
 
 		if (data.target === irc.user.nick) {

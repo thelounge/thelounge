@@ -104,7 +104,7 @@ import {watch, computed, defineComponent, nextTick, ref, onMounted, onUnmounted}
 import type {ClientMessage} from "../../js/types";
 
 import {useStore} from "../../js/store";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import {switchToChannel} from "../../js/router";
 import {SearchQuery} from "../../../shared/types/storage";
 
