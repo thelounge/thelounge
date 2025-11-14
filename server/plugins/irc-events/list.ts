@@ -1,4 +1,4 @@
-import {IrcEventHandler} from "../../this";
+import {IrcEventHandler} from "../../client";
 
 import Chan from "../../models/chan";
 import {ChanType, SpecialChanType} from "../../../shared/types/chan";
@@ -31,6 +31,7 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	function updateListStatus(
+		this: any,
 		msg:
 			| {
 					text: string;
@@ -49,15 +50,15 @@ export default <IrcEventHandler>function (irc, network) {
 
 			this.emit("join", {
 				network: network.uuid,
-				chan: chan.getFilteredClone(true),
+				chan: chan!.getFilteredClone(true),
 				shouldOpen: false,
-				index: network.addChannel(chan),
+				index: network.addChannel(chan!),
 			});
 		} else {
-			chan.data = msg;
+			chan!.data = msg;
 
 			this.emit("msg:special", {
-				chan: chan.id,
+				chan: chan!.id,
 				data: msg,
 			});
 		}

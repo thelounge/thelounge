@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {IrcEventHandler} from "../../this";
+import {IrcEventHandler} from "../../client";
 
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";

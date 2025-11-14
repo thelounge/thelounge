@@ -247,14 +247,14 @@ class Uploader {
 				// abort the processing with an error
 				fileStream.on("error", abortWithError);
 				fileStream.on("limit", () => {
-					fileStream.unpipe(streamWriter);
+					fileStream.unpipe(streamWriter!);
 					fileStream.on("readable", fileStream.read.bind(fileStream));
 
 					return abortWithError(Error("File size limit reached"));
 				});
 
 				// Attempt to write the stream to file
-				fileStream.pipe(streamWriter);
+				fileStream.pipe(streamWriter!);
 			}
 		);
 

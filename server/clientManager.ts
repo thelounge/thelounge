@@ -253,7 +253,7 @@ class ClientManager {
 			fs.renameSync(pathTemp, pathReal);
 
 			return callback ? callback() : true;
-		} catch {
+		} catch (e) {
 			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
 
 			if (callback) {
@@ -286,7 +286,7 @@ class ClientManager {
 		try {
 			const data = fs.readFileSync(userPath, "utf-8");
 			return JSON.parse(data) as UserConfig;
-		} catch {
+		} catch (e) {
 			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
 		}
 

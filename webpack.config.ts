@@ -193,9 +193,12 @@ export default (env: any, argv: any) => {
 				rule.use &&
 				typeof rule.use === "object" &&
 				"loader" in rule.use &&
-				rule.use.loader === "babel-loader"
+				rule.use.loader === "babel-loader" &&
+				"options" in rule.use &&
+				rule.use.options &&
+				typeof rule.use.options === "object"
 			) {
-				rule.use.options.plugins = ["istanbul"];
+				(rule.use.options as {plugins?: string[]}).plugins = ["istanbul"];
 			}
 		}
 

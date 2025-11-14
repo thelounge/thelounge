@@ -1,6 +1,6 @@
 import Msg from "../../models/msg";
 import User from "../../models/user";
-import type {IrcEventHandler} from "../../this";
+import type {IrcEventHandler} from "../../client";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanState} from "../../../shared/types/chan";
 

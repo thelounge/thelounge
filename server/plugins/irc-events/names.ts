@@ -1,4 +1,4 @@
-import {IrcEventHandler} from "../../this";
+import {IrcEventHandler} from "../../client";
 
 export default <IrcEventHandler>function (irc, network) {
 

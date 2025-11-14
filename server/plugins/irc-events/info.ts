@@ -1,5 +1,5 @@
 import Msg from "../../models/msg";
-import {IrcEventHandler} from "../../this";
+import {IrcEventHandler} from "../../client";
 import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {

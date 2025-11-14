@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 const commands = ["ignorelist"];
 
-const input: PluginInputHandler = (network, chan) => {
+const input: PluginInputHandler = function (this: any, network, chan) {
 
 	if (network.ignoreList.length === 0) {
 		chan.pushMessage(
@@ -34,18 +34,18 @@ const input: PluginInputHandler = (network, chan) => {
 		});
 		this.emit("join", {
 			network: network.uuid,
-			chan: newChan.getFilteredClone(true),
+			chan: newChan!.getFilteredClone(true),
 			shouldOpen: false,
-			index: network.addChannel(newChan),
+			index: network.addChannel(newChan!),
 		});
 		return;
 	}
 
 	// TODO: add type for this chan/event
-	newChan.data = ignored;
+	newChan!.data = ignored;
 
 	this.emit("msg:special", {
-		chan: newChan.id,
+		chan: newChan!.id,
 		data: ignored,
 	});
 };
