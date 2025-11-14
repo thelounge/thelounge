@@ -2,6 +2,7 @@
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
   "version": "4.4.3",
+  "type": "module",
   "preferGlobal": true,
   "bin": "index.js",
   "repository": {
@@ -40,7 +41,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=24.11.1"
   },
   "files": [
     "./.thelounge_home",
