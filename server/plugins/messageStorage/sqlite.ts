@@ -259,7 +259,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		return new Promise<void>((resolve, reject) => {
 			this.database.close((err) => {
 				if (err) {
-					reject(`Failed to close sqlite database: ${err.message}`);
+					reject(new Error(`Failed to close sqlite database: ${err.message}`));
 					return;
 				}
 
