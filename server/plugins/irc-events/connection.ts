@@ -118,7 +118,9 @@ export default <IrcEventHandler>function (irc, network) {
 				client,
 				new Msg({
 					type: MessageType.ERROR,
-					text: `Connection closed unexpectedly: ${String(error)}`,
+					text: `Connection closed unexpectedly: ${
+			error instanceof Error ? error.message : typeof error === "string" ? error : "Unknown error"
+		}`,
 				}),
 				true
 			);
