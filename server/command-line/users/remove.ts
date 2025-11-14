@@ -1,9 +1,9 @@
-import log from "../../log";
+import log from "../../log.js";
 import colors from "chalk";
 import {Command} from "commander";
 import fs from "fs";
-import Config from "../../config";
-import Utils from "../utils";
+import Config from "../../config.js";
+import Utils from "../utils.js";
 
 const program = new Command("remove");
 program

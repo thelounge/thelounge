@@ -1,7 +1,7 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import STSPolicies from "../sts";
+import Msg from "../../models/msg.js";
+import STSPolicies from "../sts.js";
 
 export default <IrcEventHandler>function (irc, network) {
 	const handleSTS = (data, shouldReconnect: boolean) => {

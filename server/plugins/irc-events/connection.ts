@@ -1,12 +1,12 @@
 import _ from "lodash";
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import log from "../../log";
-import Msg from "../../models/msg";
-import Helper from "../../helper";
-import Config from "../../config";
-import {MessageType} from "../../../shared/types/msg";
-import {ChanType, ChanState} from "../../../shared/types/chan";
+import log from "../../log.js";
+import Msg from "../../models/msg.js";
+import Helper from "../../helper.js";
+import Config from "../../config.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {ChanType, ChanState} from "../../../shared/types/chan.js";
 
 export default <IrcEventHandler>function (irc, network) {
 	const sendStatus = () => {

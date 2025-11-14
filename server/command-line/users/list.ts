@@ -1,7 +1,7 @@
-import log from "../../log";
+import log from "../../log.js";
 import colors from "chalk";
 import {Command} from "commander";
-import Utils from "../utils";
+import Utils from "../utils.js";
 
 const program = new Command("list");
 program

@@ -8,23 +8,23 @@ import dns from "dns";
 import colors from "chalk";
 import net from "net";
 
-import log from "./log";
-import Client from "./client";
-import ClientManager from "./clientManager";
-import Uploader from "./plugins/uploader";
-import Helper from "./helper";
-import Config, {ConfigType} from "./config";
-import Identification from "./identification";
-import changelog from "./plugins/changelog";
-import inputs from "./plugins/inputs";
-import Auth from "./plugins/auth";
+import log from "./log.js";
+import Client from "./client.js";
+import ClientManager from "./clientManager.js";
+import Uploader from "./plugins/uploader.js";
+import Helper from "./helper.js";
+import Config, {ConfigType} from "./config.js";
+import Identification from "./identification.js";
+import changelog from "./plugins/changelog.js";
+import inputs from "./plugins/inputs.js";
+import Auth from "./plugins/auth.js";
 
-import themes from "./plugins/packages/themes";
+import themes from "./plugins/packages/themes.js";
 themes.loadLocalThemes();
 
-import packages from "./plugins/packages/index";
-import {NetworkWithIrcFramework} from "./models/network";
-import Utils from "./command-line/utils";
+import packages from "./plugins/packages/index.js";
+import {NetworkWithIrcFramework} from "./models/network.js";
+import Utils from "./command-line/utils.js";
 import type {
 	ClientToServerEvents,
 	ServerToClientEvents,
@@ -32,7 +32,7 @@ import type {
 	SocketData,
 	AuthPerformData,
 } from "../shared/types/socket-events";
-import {ChanType} from "../shared/types/chan";
+import {ChanType} from "../shared/types/chan.js";
 import {
 	LockedSharedConfiguration,
 	SharedConfiguration,

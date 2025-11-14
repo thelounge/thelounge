@@ -1,6 +1,6 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
+import Msg from "../../models/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
 

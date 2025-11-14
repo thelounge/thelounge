@@ -1,7 +1,7 @@
 import colors from "chalk";
-import Client from "../client";
-import ClientManager from "../clientManager";
-import log from "../log";
+import Client from "../client.js";
+import ClientManager from "../clientManager.js";
+import log from "../log.js";
 
 export type AuthHandler = (
 	manager: ClientManager,

@@ -1,4 +1,4 @@
-import Config from "../config";
+import Config from "../config.js";
 import busboy, {BusboyHeaders} from "@fastify/busboy";
 import {v4 as uuidv4} from "uuid";
 import path from "path";
@@ -7,7 +7,7 @@ import fileType from "file-type";
 import readChunk from "read-chunk";
 import crypto from "crypto";
 import isUtf8 from "is-utf8";
-import log from "../log";
+import log from "../log.js";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
 import {Request, Response} from "express";

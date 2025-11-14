@@ -5,26 +5,26 @@ import escapeRegExp from "lodash/escapeRegExp";
 import crypto from "crypto";
 import colors from "chalk";
 
-import log from "./log";
-import Chan, {ChanConfig} from "./models/chan";
-import Msg from "./models/msg";
-import Config from "./config";
-import {condensedTypes} from "../shared/irc";
-import {MessageType} from "../shared/types/msg";
-import {SharedMention} from "../shared/types/mention";
+import log from "./log.js";
+import Chan, {ChanConfig} from "./models/chan.js";
+import Msg from "./models/msg.js";
+import Config from "./config.js";
+import {condensedTypes} from "../shared/irc.js";
+import {MessageType} from "../shared/types/msg.js";
+import {SharedMention} from "../shared/types/mention.js";
 
-import inputs from "./plugins/inputs";
-import PublicClient from "./plugins/packages/publicClient";
-import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
-import TextFileMessageStorage from "./plugins/messageStorage/text";
-import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
-import ClientManager from "./clientManager";
-import {MessageStorage} from "./plugins/messageStorage/types";
-import {StorageCleaner} from "./storageCleaner";
-import {SearchQuery, SearchResponse} from "../shared/types/storage";
-import {SharedChan, ChanType} from "../shared/types/chan";
-import {SharedNetwork} from "../shared/types/network";
-import {ServerToClientEvents} from "../shared/types/socket-events";
+import inputs from "./plugins/inputs.js";
+import PublicClient from "./plugins/packages/publicClient.js";
+import SqliteMessageStorage from "./plugins/messageStorage/sqlite.js";
+import TextFileMessageStorage from "./plugins/messageStorage/text.js";
+import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network.js";
+import ClientManager from "./clientManager.js";
+import {MessageStorage} from "./plugins/messageStorage/types.js";
+import {StorageCleaner} from "./storageCleaner.js";
+import {SearchQuery, SearchResponse} from "../shared/types/storage.js";
+import {SharedChan, ChanType} from "../shared/types/chan.js";
+import {SharedNetwork} from "../shared/types/network.js";
+import {ServerToClientEvents} from "../shared/types/socket-events.js";
 
 const events = [
 	"away",

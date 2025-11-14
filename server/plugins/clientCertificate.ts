@@ -2,8 +2,8 @@ import path from "path";
 import fs from "fs";
 import crypto from "crypto";
 import {md, pki} from "node-forge";
-import log from "../log";
-import Config from "../config";
+import log from "../log.js";
+import Config from "../config.js";
 
 export default {
 	get,

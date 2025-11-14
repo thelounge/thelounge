@@ -1,7 +1,7 @@
-import {PluginInputHandler} from "./index";
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
-import {ChanType} from "../../../shared/types/chan";
+import {PluginInputHandler} from "./index.js";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {ChanType} from "../../../shared/types/chan.js";
 
 const commands = ["invite", "invitelist"];
 

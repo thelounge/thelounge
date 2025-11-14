@@ -1,10 +1,10 @@
 import _ from "lodash";
-import log from "../log";
+import log from "../log.js";
 import fs from "fs";
 import path from "path";
 import WebPushAPI from "web-push";
-import Config from "../config";
-import Client from "../client";
+import Config from "../config.js";
+import Client from "../client.js";
 import * as os from "os";
 class WebPush {
 	vapidKeys?: {

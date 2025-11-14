@@ -1,8 +1,8 @@
-import {PackageInfo} from "./index";
-import Client from "../../client";
-import Chan from "../../models/chan";
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
+import {PackageInfo} from "./index.js";
+import Client from "../../client.js";
+import Chan from "../../models/chan.js";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 export default class PublicClient {
 	private client: Client;

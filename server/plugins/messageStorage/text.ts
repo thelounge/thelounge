@@ -3,12 +3,12 @@ import fs from "fs/promises";
 import path from "path";
 import filenamify from "filenamify";
 
-import Config from "../../config";
-import {MessageStorage} from "./types";
-import Channel from "../../models/chan";
-import {Message} from "../../models/msg";
-import Network from "../../models/network";
-import {MessageType} from "../../../shared/types/msg";
+import Config from "../../config.js";
+import {MessageStorage} from "./types.js";
+import Channel from "../../models/chan.js";
+import {Message} from "../../models/msg.js";
+import Network from "../../models/network.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 class TextFileMessageStorage implements MessageStorage {
 	isEnabled: boolean;

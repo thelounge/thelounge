@@ -1,15 +1,15 @@
 import _ from "lodash";
-import log from "../../log";
+import log from "../../log.js";
 import colors from "chalk";
 import path from "path";
 import semver from "semver";
-import Helper from "../../helper";
-import Config from "../../config";
-import themes from "./themes";
-import inputs from "../inputs";
+import Helper from "../../helper.js";
+import Config from "../../config.js";
+import themes from "./themes.js";
+import inputs from "../inputs.js";
 import fs from "fs";
-import Utils from "../../command-line/utils";
-import Client from "../../client";
+import Utils from "../../command-line/utils.js";
+import Client from "../../client.js";
 
 type Package = {
 	onServerStart: (packageApis: any) => void;

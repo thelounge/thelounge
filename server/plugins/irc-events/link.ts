@@ -3,14 +3,14 @@ import got from "got";
 import {URL} from "url";
 import mime from "mime-types";
 
-import log from "../../log";
-import Config from "../../config";
-import {findLinksWithSchema} from "../../../shared/linkify";
-import {LinkPreview} from "../../../shared/types/msg";
-import storage from "../storage";
-import Client from "../../client";
-import Chan from "../../models/chan";
-import Msg from "../../models/msg";
+import log from "../../log.js";
+import Config from "../../config.js";
+import {findLinksWithSchema} from "../../../shared/linkify.js";
+import {LinkPreview} from "../../../shared/types/msg.js";
+import storage from "../storage.js";
+import Client from "../../client.js";
+import Chan from "../../models/chan.js";
+import Msg from "../../models/msg.js";
 
 type FetchRequest = {
 	data: Buffer;

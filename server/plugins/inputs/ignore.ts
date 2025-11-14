@@ -1,7 +1,7 @@
-import Msg from "../../models/msg";
-import Helper from "../../helper";
-import {PluginInputHandler} from "./index";
-import {MessageType} from "../../../shared/types/msg";
+import Msg from "../../models/msg.js";
+import Helper from "../../helper.js";
+import {PluginInputHandler} from "./index.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 const commands = ["ignore", "unignore"];
 

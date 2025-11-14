@@ -1,8 +1,8 @@
-import {Channel} from "../../models/channel";
-import {Message} from "../../models/message";
-import {Network} from "../../models/network";
-import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
-import type {MessageType} from "../../../shared/types/msg";
+import {Channel} from "../../models/channel.js";
+import {Message} from "../../models/message.js";
+import {Network} from "../../models/network.js";
+import {SearchQuery, SearchResponse} from "../../../shared/types/storage.js";
+import type {MessageType} from "../../../shared/types/msg.js";
 
 export type DeletionRequest = {
 	olderThanDays: number;
