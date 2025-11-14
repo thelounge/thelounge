@@ -229,7 +229,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		});
 		it("should ignore og:image if disableMediaPreview", function (done) {
 			app.get("/nonexistent-test-image.png", function () {
-				throw "Should not fetch image";
+				throw new Error("Should not fetch image");
 			});
 
 			const invalid_url = this._makeUrl("nonexistent-test-image.png");
@@ -251,7 +251,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		});
 		it("should ignore og:video if disableMediaPreview", function (done) {
 			app.get("/nonexistent-video.mp4", function () {
-				throw "Should not fetch video";
+				throw new Error("Should not fetch video");
 			});
 
 			const invalid_url = this._makeUrl("nonexistent-video.mp4");
