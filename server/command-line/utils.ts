@@ -193,7 +193,7 @@ class Utils {
 
 			add.on("close", (code) => {
 				if (!success || code !== 0) {
-					return reject(code);
+					return reject(new Error(`Process exited with code ${code}`));
 				}
 
 				resolve(true);
