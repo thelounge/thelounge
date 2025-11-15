@@ -1,21 +1,22 @@
-import got, {Response} from "got";
 import colors from "chalk";
-import log from "../log";
-import pkg from "../../package.json";
-import ClientManager from "../clientManager";
-import Config from "../config";
-import {SharedChangelogData} from "../../shared/types/changelog";
+import log from "../log.js";
+import pkg from "../../package.json" with {type: "json"};
+import ClientManager from "../clientManager.js";
+import Config from "../config.js";
+import {SharedChangelogData} from "../../shared/types/changelog.js";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
 let updateCheckTimeout: NodeJS.Timeout | null = null;
 
-export default {
+const changelog = {
 	isUpdateAvailable: false,
 	fetch,
 	checkForUpdates,
 	stopUpdateChecks,
 };
+
+export default changelog;
 const versions: SharedChangelogData = {
 	current: {
 		prerelease: false,
@@ -37,19 +38,24 @@ async function fetch() {
 	}
 
 	try {
-		const response = await got("https://api.github.com/repos/thelounge/thelounge/releases", {
+		const fetchOptions: RequestInit = {
 			headers: {
 				Accept: "application/vnd.github.v3.html", // Request rendered markdown
 				"User-Agent": pkg.name + "; +" + pkg.repository.url, // Identify the client
 			},
-			localAddress: Config.values.bind,
-		});
+		};
 
-		if (response.statusCode !== 200) {
+		const response = await globalThis.fetch(
+			"https://api.github.com/repos/thelounge/thelounge/releases",
+			fetchOptions
+		);
+
+		if (response.status !== 200) {
 			return versions;
 		}
 
-		updateVersions(response);
+		const body = await response.text();
+		updateVersions(body);
 
 		// Add expiration date to the data to send to the client for later refresh
 		versions.expiresAt = time + TIME_TO_LIVE;
@@ -61,12 +67,12 @@ async function fetch() {
 	return versions;
 }
 
-function updateVersions(response: Response<string>) {
+function updateVersions(responseBody: string) {
 	let i: number;
 	let release: {tag_name: string; body_html: any; prerelease: boolean; html_url: any};
 	let prerelease = false;
 
-	const body = JSON.parse(response.body);
+	const body = JSON.parse(responseBody);
 
 	// Find the current release among releases on GitHub
 	for (i = 0; i < body.length; i++) {
@@ -87,7 +93,7 @@ function updateVersions(response: Response<string>) {
 
 			// Find latest release or pre-release if current version is also a pre-release
 			if (!release.prerelease || release.prerelease === prerelease) {
-				module.exports.isUpdateAvailable = true;
+				changelog.isUpdateAvailable = true;
 
 				versions.latest = {
 					prerelease: release.prerelease,
@@ -104,7 +110,7 @@ function updateVersions(response: Response<string>) {
 function checkForUpdates(manager: ClientManager) {
 	fetch()
 		.then((versionData) => {
-			if (!module.exports.isUpdateAvailable) {
+			if (!changelog.isUpdateAvailable) {
 				// Check for updates every 24 hours + random jitter of <3 hours
 				updateCheckTimeout = setTimeout(
 					() => checkForUpdates(manager),

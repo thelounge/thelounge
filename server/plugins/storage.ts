@@ -1,8 +1,8 @@
-import log from "../log";
+import log from "../log.js";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import Config from "../config";
+import Config from "../config.js";
 
 class Storage {
 	references: Map<string, number>;

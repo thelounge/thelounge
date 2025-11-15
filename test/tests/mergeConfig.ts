@@ -1,9 +1,9 @@
 import {expect} from "chai";
 import sinon from "sinon";
 
-import log from "../../server/log";
-import Config from "../../server/config";
-import TestUtil from "../util";
+import log from "../../server/log.js";
+import Config from "../../server/config.js";
+import TestUtil from "../util.js";
 
 describe("mergeConfig", function () {
 	let sandbox: sinon.SinonSandbox;

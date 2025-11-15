@@ -1,12 +1,16 @@
 import _ from "lodash";
-import log from "../log";
+import log from "../log.js";
 import colors from "chalk";
-import fs from "fs";
-import Helper from "../helper";
-import Config from "../config";
-import path from "path";
-import {spawn} from "child_process";
+import fs from "node:fs";
+import Helper from "../helper.js";
+import Config from "../config.js";
+import path from "node:path";
+import {spawn} from "node:child_process";
+import {createRequire} from "node:module";
+import {getDirname} from "../path-helper.js";
 let home: string;
+
+const require = createRequire(import.meta.url);
 
 class Utils {
 	static extraHelp(this: void) {
@@ -33,6 +37,8 @@ class Utils {
 	}
 
 	static getFileFromRelativeToRoot(...fileName: string[]) {
+		const __dirname = getDirname(import.meta.url);
+
 		// e.g. /thelounge/server/command-line/utils.ts
 		if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
 			return path.resolve(path.join(__dirname, "..", "..", ...fileName));

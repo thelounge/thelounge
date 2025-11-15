@@ -1,30 +1,30 @@
 import _ from "lodash";
 import UAParser from "ua-parser-js";
 import {v4 as uuidv4} from "uuid";
-import escapeRegExp from "lodash/escapeRegExp";
+import escapeRegExp from "lodash/escapeRegExp.js";
 import crypto from "crypto";
 import colors from "chalk";
 
-import log from "./log";
-import Chan, {ChanConfig} from "./models/chan";
-import Msg from "./models/msg";
-import Config from "./config";
-import {condensedTypes} from "../shared/irc";
-import {MessageType} from "../shared/types/msg";
-import {SharedMention} from "../shared/types/mention";
+import log from "./log.js";
+import Chan, {ChanConfig} from "./models/chan.js";
+import Msg from "./models/msg.js";
+import Config from "./config.js";
+import {condensedTypes} from "../shared/irc.js";
+import {MessageType} from "../shared/types/msg.js";
+import {SharedMention} from "../shared/types/mention.js";
 
-import inputs from "./plugins/inputs";
-import PublicClient from "./plugins/packages/publicClient";
-import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
-import TextFileMessageStorage from "./plugins/messageStorage/text";
-import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
-import ClientManager from "./clientManager";
-import {MessageStorage} from "./plugins/messageStorage/types";
-import {StorageCleaner} from "./storageCleaner";
-import {SearchQuery, SearchResponse} from "../shared/types/storage";
-import {SharedChan, ChanType} from "../shared/types/chan";
-import {SharedNetwork} from "../shared/types/network";
-import {ServerToClientEvents} from "../shared/types/socket-events";
+import inputs from "./plugins/inputs/index.js";
+import PublicClient from "./plugins/packages/publicClient.js";
+import SqliteMessageStorage from "./plugins/messageStorage/sqlite.js";
+import TextFileMessageStorage from "./plugins/messageStorage/text.js";
+import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network.js";
+import ClientManager from "./clientManager.js";
+import {MessageStorage} from "./plugins/messageStorage/types.js";
+import {StorageCleaner} from "./storageCleaner.js";
+import {SearchQuery, SearchResponse} from "../shared/types/storage.js";
+import {SharedChan, ChanType} from "../shared/types/chan.js";
+import {SharedNetwork} from "../shared/types/network.js";
+import {ServerToClientEvents} from "../shared/types/socket-events.js";
 
 const events = [
 	"away",
@@ -352,7 +352,7 @@ class Client {
 		// TODO
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		events.forEach(async (plugin) => {
-			(await import(`./plugins/irc-events/${plugin}`)).default.apply(this, [
+			(await import(`./plugins/irc-events/${plugin}.js`)).default.apply(this, [
 				network.irc,
 				network,
 			]);

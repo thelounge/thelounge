@@ -1,15 +1,15 @@
- 
-import path from "path";
-import fs, {Stats} from "fs";
-import os from "os";
+import path from "node:path";
+import fs, {Stats} from "node:fs";
+import os from "node:os";
 import _ from "lodash";
 import colors from "chalk";
 import {SearchOptions} from "ldapts";
+import {pathToFileURL} from "node:url";
 
-import log from "./log";
-import Helper from "./helper";
-import Utils from "./command-line/utils";
-import Network from "./models/network";
+import log from "./log.js";
+import Helper from "./helper.js";
+import Utils from "./command-line/utils.js";
+import Network from "./models/network.js";
 
 // TODO: Type this
 export type WebIRC = {
@@ -112,10 +112,10 @@ export type ConfigType = {
 	themeColor: string;
 };
 
+import defaultConfig from "../defaults/config.js";
+
 class Config {
-	values = require(
-		path.resolve(path.join(__dirname, "..", "defaults", "config.js"))
-	) as ConfigType;
+	values = {..._.cloneDeep(defaultConfig), themeColor: ""} as unknown as ConfigType;
 	#homePath = "";
 
 	getHomePath() {
@@ -203,30 +203,37 @@ class Config {
 		});
 	}
 
-	setHome(newPath: string) {
+	async setHome(newPath: string) {
 		this.#homePath = Helper.expandHome(newPath);
 
 		// Reload config from new home location
 		const configPath = this.getConfigPath();
 
 		if (fs.existsSync(configPath)) {
-			const userConfig = require(configPath);
+			try {
+				const configUrl = pathToFileURL(configPath).href;
+				const userConfigModule = await import(configUrl);
+				const userConfig = userConfigModule.default || userConfigModule;
 
-			if (_.isEmpty(userConfig)) {
-				log.warn(
-					`The file located at ${colors.green(
-						configPath
-					)} does not appear to expose anything.`
-				);
-				log.warn(
-					`Make sure it is non-empty and the configuration is exported using ${colors.bold(
-						"module.exports = { ... }"
-					)}.`
-				);
+				if (_.isEmpty(userConfig)) {
+					log.warn(
+						`The file located at ${colors.green(
+							configPath
+						)} does not appear to expose anything.`
+					);
+					log.warn(
+						`Make sure it is non-empty and the configuration is exported using ${colors.bold(
+							"export default { ... }"
+						)}.`
+					);
+					log.warn("Using default configuration...");
+				}
+
+				this.merge(userConfig);
+			} catch (error) {
+				log.error(`Failed to load config from ${configPath}:`, String(error));
 				log.warn("Using default configuration...");
 			}
-
-			this.merge(userConfig);
 		}
 
 		if (this.values.fileUpload.baseUrl) {

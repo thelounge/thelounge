@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import localetime from "../../../../client/js/helpers/localetime";
+import localetime from "../../../../client/js/helpers/localetime.js";
 
 describe("localetime helper", () => {
 	it("should render a human-readable date", () => {

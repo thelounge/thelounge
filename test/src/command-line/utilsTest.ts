@@ -1,6 +1,6 @@
-import log from "../../../server/log";
+import log from "../../../server/log.js";
 import {expect} from "chai";
-import TestUtil from "../../util";
+import TestUtil from "../../util.js";
 import Utils from "../../../server/command-line/utils";
 import sinon from "sinon";
 

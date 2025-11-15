@@ -1,12 +1,11 @@
- 
-import log from "../log";
-import fs from "fs";
-import path from "path";
+import log from "../log.js";
+import fs from "node:fs";
+import path from "node:path";
 import colors from "chalk";
 import {Command} from "commander";
-import Helper from "../helper";
-import Config from "../config";
-import Utils from "./utils";
+import Helper from "../helper.js";
+import Config from "../config.js";
+import Utils from "./utils.js";
 
 const program = new Command("thelounge");
 program
@@ -21,7 +20,7 @@ program
 // Parse options from `argv` returning `argv` void of these options.
 const argvWithoutOptions = program.parseOptions(process.argv);
 
-Config.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
+await Config.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
 
 // Check config file owner and warn if we're running under a different user
 try {
@@ -37,15 +36,23 @@ createPackagesFolder();
 // Merge config key-values passed as CLI options into the main config
 Config.merge(program.opts().config);
 
-program.addCommand(require("./start").default);
-program.addCommand(require("./install").default);
-program.addCommand(require("./uninstall").default);
-program.addCommand(require("./upgrade").default);
-program.addCommand(require("./outdated").default);
-program.addCommand(require("./storage").default);
+const startCmd = await import("./start.js");
+const installCmd = await import("./install.js");
+const uninstallCmd = await import("./uninstall.js");
+const upgradeCmd = await import("./upgrade.js");
+const outdatedCmd = await import("./outdated.js");
+const storageCmd = await import("./storage.js");
+
+program.addCommand(startCmd.default);
+program.addCommand(installCmd.default);
+program.addCommand(uninstallCmd.default);
+program.addCommand(upgradeCmd.default);
+program.addCommand(outdatedCmd.default);
+program.addCommand(storageCmd.default);
 
 if (!Config.values.public) {
-	require("./users").default.forEach((command: Command) => {
+	const usersCmd = await import("./users/index.js");
+	usersCmd.default.forEach((command: Command) => {
 		if (command) {
 			program.addCommand(command);
 		}

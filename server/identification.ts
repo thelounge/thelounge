@@ -1,9 +1,9 @@
 import fs from "fs";
 import net, {Socket} from "net";
 import colors from "chalk";
-import Helper from "./helper";
-import Config from "./config";
-import log from "./log";
+import Helper from "./helper.js";
+import Config from "./config.js";
+import log from "./log.js";
 
 type Connection = {
 	socket: Socket;

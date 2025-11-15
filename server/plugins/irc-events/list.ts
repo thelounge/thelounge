@@ -1,7 +1,7 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Chan from "../../models/chan";
-import {ChanType, SpecialChanType} from "../../../shared/types/chan";
+import Chan from "../../models/chan.js";
+import {ChanType, SpecialChanType} from "../../../shared/types/chan.js";
 
 export default <IrcEventHandler>function (irc, network) {
 	const MAX_CHANS = 500;
@@ -55,10 +55,10 @@ export default <IrcEventHandler>function (irc, network) {
 				index: network.addChannel(chan!),
 			});
 		} else {
-			chan!.data = msg;
+			chan.data = msg;
 
 			this.emit("msg:special", {
-				chan: chan!.id,
+				chan: chan.id,
 				data: msg,
 			});
 		}

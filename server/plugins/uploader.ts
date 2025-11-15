@@ -1,13 +1,13 @@
-import Config from "../config";
+import Config from "../config.js";
 import busboy, {BusboyHeaders} from "@fastify/busboy";
 import {v4 as uuidv4} from "uuid";
-import path from "path";
-import fs from "fs";
-import fileType from "file-type";
-import readChunk from "read-chunk";
-import crypto from "crypto";
+import path from "node:path";
+import fs from "node:fs";
+import {fileTypeFromBuffer} from "file-type";
+import {readChunk} from "read-chunk";
+import crypto from "node:crypto";
 import isUtf8 from "is-utf8";
-import log from "../log";
+import log from "../log.js";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
 import {Request, Response} from "express";
@@ -291,10 +291,10 @@ class Uploader {
 	// Returns a string with the type otherwise
 	static async getFileType(filePath: string) {
 		try {
-			const buffer = await readChunk(filePath, 0, 5120);
+			const buffer = await readChunk(filePath, {length: 5120, startPosition: 0});
 
 			// returns {ext, mime} if found, null if not.
-			const file = await fileType.fromBuffer(buffer);
+			const file = await fileTypeFromBuffer(buffer);
 
 			// if a file type was detected correctly, return it
 			if (file) {

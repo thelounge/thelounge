@@ -1,9 +1,9 @@
-import Client from "../../client";
-import log from "../../log";
-import Chan, {Channel} from "../../models/chan";
-import Network, {NetworkWithIrcFramework} from "../../models/network";
-import {PackageInfo} from "../packages";
-import PublicClient from "../packages/publicClient";
+import Client from "../../client.js";
+import log from "../../log.js";
+import Chan, {Channel} from "../../models/chan.js";
+import Network, {NetworkWithIrcFramework} from "../../models/network.js";
+import {PackageInfo} from "../packages/index.js";
+import PublicClient from "../packages/publicClient.js";
 
 export type PluginInputHandler = (
 	this: Client,
@@ -73,7 +73,7 @@ const builtInInputs = [
 ];
 
 for (const input of builtInInputs) {
-	import(`./${input}`)
+	import(`./${input}.js`)
 		.then(
 			(plugin: {
 				default: {

@@ -1,7 +1,7 @@
 import {expect} from "chai";
 
 import {mount} from "@vue/test-utils";
-import ParsedMessage from "../../../../client/components/ParsedMessage.vue";
+import ParsedMessage from "../../../../client/components/ParsedMessage.vue.js";
 
 function getParsedMessageContents(text: string, message?: any) {
 	const wrapper = mount(ParsedMessage, {

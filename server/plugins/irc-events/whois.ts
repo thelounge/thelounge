@@ -1,16 +1,15 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
-import {ChanType} from "../../../shared/types/chan";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {ChanType} from "../../../shared/types/chan.js";
 
 export default <IrcEventHandler>function (this: any, irc, network) {
-
-	irc.on("whois", function(this: any, data: any) {
+	irc.on("whois", function (this: any, data: any) {
 		handleWhois.call(this, data);
 	});
 
-	irc.on("whowas", function(this: any, data: any) {
+	irc.on("whowas", function (this: any, data: any) {
 		data.whowas = true;
 
 		handleWhois.call(this, data);

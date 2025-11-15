@@ -1,8 +1,8 @@
 import {expect} from "chai";
 import sinon from "sinon";
-import Auth from "../../../client/js/auth";
-import localStorage from "../../../client/js/localStorage";
-import location from "../../../client/js/location";
+import Auth from "../../../client/js/auth.js";
+import localStorage from "../../../client/js/localStorage.js";
+import location from "../../../client/js/location.js";
 
 describe("Auth", function () {
 	describe(".signout", function () {

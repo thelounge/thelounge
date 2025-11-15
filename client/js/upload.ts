@@ -214,7 +214,7 @@ class Uploader {
 				}, file.type);
 			};
 
-				// readAsDataURL always returns a string (data: URL)
+			// readAsDataURL always returns a string (data: URL)
 			if (typeof fileReader.result === "string") {
 				img.src = fileReader.result;
 			} else {

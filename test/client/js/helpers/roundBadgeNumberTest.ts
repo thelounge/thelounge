@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import roundBadgeNumber from "../../../../client/js/helpers/roundBadgeNumber";
+import roundBadgeNumber from "../../../../client/js/helpers/roundBadgeNumber.js";
 
 describe("roundBadgeNumber helper", function () {
 	it("should return any number under 1000 as a string", function () {

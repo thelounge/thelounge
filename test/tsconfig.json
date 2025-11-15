@@ -16,8 +16,8 @@
     "files": true,
     "transpileOnly": true,
     "compilerOptions": {
-      "module": "commonjs",
-      "moduleResolution": "node10"
+      "module": "ESNext",
+      "moduleResolution": "bundler"
     }
   },
   "compilerOptions": {

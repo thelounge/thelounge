@@ -1,12 +1,12 @@
-import Msg from "../../models/msg";
-import LinkPrefetch from "./link";
-import {cleanIrcMessage} from "../../../shared/irc";
-import Helper from "../../helper";
-import {IrcEventHandler} from "../../client";
-import Chan from "../../models/chan";
-import User from "../../models/user";
-import {MessageType} from "../../../shared/types/msg";
-import {ChanType} from "../../../shared/types/chan";
+import Msg from "../../models/msg.js";
+import LinkPrefetch from "./link.js";
+import {cleanIrcMessage} from "../../../shared/irc.js";
+import Helper from "../../helper.js";
+import {IrcEventHandler} from "../../client.js";
+import Chan from "../../models/chan.js";
+import User from "../../models/user.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {ChanType} from "../../../shared/types/chan.js";
 import {MessageEventArgs} from "irc-framework";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
@@ -29,22 +29,21 @@ function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInpu
 }
 
 export default <IrcEventHandler>function (this: any, irc, network) {
-
 	irc.on("notice", (data) => {
-		handleMessage(convertForHandle(MessageType.NOTICE, data));
+		handleMessage.call(this, convertForHandle(MessageType.NOTICE, data));
 	});
 
 	irc.on("action", (data) => {
-		handleMessage(convertForHandle(MessageType.ACTION, data));
+		handleMessage.call(this, convertForHandle(MessageType.ACTION, data));
 	});
 
 	irc.on("privmsg", (data) => {
-		handleMessage(convertForHandle(MessageType.MESSAGE, data));
+		handleMessage.call(this, convertForHandle(MessageType.MESSAGE, data));
 	});
 
 	irc.on("wallops", (data) => {
 		data.from_server = true;
-		handleMessage(convertForHandle(MessageType.WALLOPS, data));
+		handleMessage.call(this, convertForHandle(MessageType.WALLOPS, data));
 	});
 
 	function handleMessage(this: any, data: HandleInput) {

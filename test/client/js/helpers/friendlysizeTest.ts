@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import friendlysize from "../../../../client/js/helpers/friendlysize";
+import friendlysize from "../../../../client/js/helpers/friendlysize.js";
 
 describe("friendlysize helper", function () {
 	it("should render human-readable version", function () {

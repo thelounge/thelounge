@@ -1,16 +1,16 @@
 import fs from "fs";
 import path from "path";
 import {expect, assert} from "chai";
-import util from "../util";
-import Msg from "../../server/models/msg";
-import {MessageType} from "../../shared/types/msg";
-import Config from "../../server/config";
+import util from "../util.js";
+import Msg from "../../server/models/msg.js";
+import {MessageType} from "../../shared/types/msg.js";
+import Config from "../../server/config.js";
 import MessageStorage, {
 	currentSchemaVersion,
 	migrations,
 	necessaryMigrations,
 	rollbacks,
-} from "../../server/plugins/messageStorage/sqlite";
+} from "../../server/plugins/messageStorage/sqlite.js";
 import sqlite3 from "sqlite3";
 import {DeletionRequest} from "../../server/plugins/messageStorage/types";
 

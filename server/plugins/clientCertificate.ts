@@ -1,9 +1,11 @@
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
-import {md, pki} from "node-forge";
-import log from "../log";
-import Config from "../config";
+import forge from "node-forge";
+import log from "../log.js";
+import Config from "../config.js";
+
+const {md, pki} = forge;
 
 export default {
 	get,

@@ -1,9 +1,8 @@
-import Msg from "../../models/msg";
-import {IrcEventHandler} from "../../client";
-import {MessageType} from "../../../shared/types/msg";
+import Msg from "../../models/msg.js";
+import {IrcEventHandler} from "../../client.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-
 	irc.on("info", (data) => {
 		const lobby = network.getLobby();
 

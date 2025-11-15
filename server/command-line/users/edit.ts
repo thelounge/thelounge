@@ -1,10 +1,10 @@
-import log from "../../log";
+import log from "../../log.js";
 import {Command} from "commander";
 import child from "child_process";
 import colors from "chalk";
 import fs from "fs";
-import Config from "../../config";
-import Utils from "../utils";
+import Config from "../../config.js";
+import Utils from "../utils.js";
 
 const program = new Command("edit");
 program
@@ -17,7 +17,6 @@ program
 			return;
 		}
 
-		 
 		const ClientManager = require("../../clientManager").default;
 		const users = new ClientManager().getUsers();
 

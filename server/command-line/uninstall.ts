@@ -1,8 +1,10 @@
-import log from "../log";
+import log from "../log.js";
 import colors from "chalk";
 import {Command} from "commander";
-import Config from "../config";
-import Utils from "./utils";
+import Config from "../config.js";
+import Utils from "./utils.js";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 const program = new Command("uninstall");
 program
@@ -10,11 +12,6 @@ program
 	.description("Uninstall a theme or a package")
 	.on("--help", Utils.extraHelp)
 	.action(async function (packageName: string) {
-		 
-		const fs = require("fs").promises;
-		 
-		const path = require("path");
-
 		const packagesConfig = path.join(Config.getPackagesPath(), "package.json");
 		// const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8"));
 		const packages = JSON.parse(await fs.readFile(packagesConfig, "utf-8"));

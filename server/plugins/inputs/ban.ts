@@ -1,7 +1,7 @@
-import Msg from "../../models/msg";
-import {PluginInputHandler} from "./index";
-import {MessageType} from "../../../shared/types/msg";
-import {ChanType} from "../../../shared/types/chan";
+import Msg from "../../models/msg.js";
+import {PluginInputHandler} from "./index.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {ChanType} from "../../../shared/types/chan.js";
 
 const commands = ["ban", "unban", "banlist", "kickban"];
 

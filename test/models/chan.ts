@@ -1,10 +1,10 @@
 import {expect} from "chai";
 
-import Chan from "../../server/models/chan";
-import Msg from "../../server/models/msg";
-import Network from "../../server/models/network";
-import Prefix from "../../server/models/prefix";
-import User from "../../server/models/user";
+import Chan from "../../server/models/chan.js";
+import Msg from "../../server/models/msg.js";
+import Network from "../../server/models/network.js";
+import Prefix from "../../server/models/prefix.js";
+import User from "../../server/models/user.js";
 describe("Chan", function () {
 	const network = {
 		network: {

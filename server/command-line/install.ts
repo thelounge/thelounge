@@ -1,17 +1,21 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-import log from "../log";
+import log from "../log.js";
 import colors from "chalk";
 import semver from "semver";
-import Helper from "../helper";
-import Config from "../config";
-import Utils from "./utils";
+import Helper from "../helper.js";
+import Config from "../config.js";
+import Utils from "./utils.js";
 import {Command} from "commander";
 import {FullMetadata} from "package-json";
+import fs from "node:fs";
+import fspromises from "node:fs/promises";
+import path from "node:path";
+import packageJsonImport from "package-json";
 
 type CustomMetadata = FullMetadata & {
-	thelounge: {
-		supports: string;
+	thelounge?: {
+		supports?: string;
 	};
+	version?: string;
 };
 
 const program = new Command("install");
@@ -23,11 +27,6 @@ program
 	.description("Install a theme or a package")
 	.on("--help", Utils.extraHelp)
 	.action(async function (packageName: string) {
-		const fs = await import("fs");
-		const fspromises = fs.promises;
-		const path = await import("path");
-		const packageJson = await import("package-json");
-
 		if (!fs.existsSync(Config.getConfigPath())) {
 			log.error(`${Config.getConfigPath()} does not exist.`);
 			return;
@@ -37,6 +36,7 @@ program
 		// TODO: type
 		let readFile: any = null;
 		let isLocalFile = false;
+		let packageVersion = "latest";
 
 		if (packageName.startsWith("file:")) {
 			isLocalFile = true;
@@ -45,11 +45,10 @@ program
 			packageName = expandTildeInLocalPath(packageName);
 			readFile = fspromises
 				.readFile(path.join(packageName.substring("file:".length), "package.json"), "utf-8")
-				.then((data) => JSON.parse(data) as typeof packageJson);
+				.then((data) => JSON.parse(data) as typeof packageJsonImport);
 		} else {
 			// properly split scoped and non-scoped npm packages
 			// into their name and version
-			let packageVersion = "latest";
 			const atIndex = packageName.indexOf("@", 1);
 
 			if (atIndex !== -1) {
@@ -57,7 +56,7 @@ program
 				packageName = packageName.slice(0, atIndex);
 			}
 
-			readFile = packageJson.default(packageName, {
+			readFile = packageJsonImport(packageName, {
 				fullMetadata: true,
 				version: packageVersion,
 			});
@@ -70,9 +69,10 @@ program
 
 		readFile
 			.then((json: CustomMetadata) => {
-				const humanVersion = isLocalFile ? packageName : `${json.name} v${json.version}`;
+				const version = json.version || packageVersion;
+				const humanVersion = isLocalFile ? packageName : `${json.name} v${version}`;
 
-				if (!("thelounge" in json)) {
+				if (!json.thelounge) {
 					log.error(`${colors.red(humanVersion)} does not have The Lounge metadata.`);
 
 					process.exit(1);
@@ -96,7 +96,7 @@ program
 				}
 
 				log.info(`Installing ${colors.green(humanVersion)}...`);
-				const yarnVersion = isLocalFile ? packageName : `${json.name}@${json.version}`;
+				const yarnVersion = isLocalFile ? packageName : `${json.name}@${version}`;
 				return Utils.executeYarnCommand("add", "--exact", yarnVersion)
 					.then(() => {
 						log.info(`${colors.green(humanVersion)} has been successfully installed.`);
@@ -106,12 +106,16 @@ program
 							// the lockfile properly. We need to run an install in that case
 							// even though that's supposed to be done by the add subcommand
 							return Utils.executeYarnCommand("install").catch((err) => {
-								throw new Error(`Failed to update lockfile after package install ${err}`);
+								throw new Error(
+									`Failed to update lockfile after package install ${err}`
+								);
 							});
 						}
 					})
 					.catch((code) => {
-						throw new Error(`Failed to install ${colors.red(humanVersion)}. Exit code: ${code}`);
+						throw new Error(
+							`Failed to install ${colors.red(humanVersion)}. Exit code: ${code}`
+						);
 					});
 			})
 			.catch((e) => {

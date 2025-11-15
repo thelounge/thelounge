@@ -1,21 +1,22 @@
 import type {Database} from "sqlite3";
 
-import log from "../../log";
+import log from "../../log.js";
 import path from "path";
 import fs from "fs/promises";
-import Config from "../../config";
-import Msg, {Message} from "../../models/msg";
-import Chan, {Channel} from "../../models/chan";
-import Helper from "../../helper";
-import type {SearchableMessageStorage, DeletionRequest} from "./types";
-import Network from "../../models/network";
-import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
+import Config from "../../config.js";
+import Msg, {Message} from "../../models/msg.js";
+import Chan, {Channel} from "../../models/chan.js";
+import Helper from "../../helper.js";
+import type {SearchableMessageStorage, DeletionRequest} from "./types.js";
+import Network from "../../models/network.js";
+import {SearchQuery, SearchResponse} from "../../../shared/types/storage.js";
 
 // TODO; type
 let sqlite3: any;
 
 try {
-	sqlite3 = require("sqlite3");
+	const sqlite3Module = await import("sqlite3");
+	sqlite3 = sqlite3Module.default;
 } catch {
 	Config.values.messageStorage = Config.values.messageStorage.filter((item) => item !== "sqlite");
 
@@ -220,7 +221,9 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const version = await this.current_version();
 
 		if (version > currentSchemaVersion) {
-			throw new Error(`sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is The Lounge out of date?`);
+			throw new Error(
+				`sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is The Lounge out of date?`
+			);
 		} else if (version === currentSchemaVersion) {
 			return; // nothing to do
 		}

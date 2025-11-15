@@ -5,7 +5,7 @@ import {findLinks, LinkPart} from "../../../shared/linkify";
 import findEmoji, {EmojiPart} from "./ircmessageparser/findEmoji";
 import findNames, {NamePart} from "./ircmessageparser/findNames";
 import merge, {MergedParts} from "./ircmessageparser/merge";
-import emojiMap from "./fullnamemap.json";
+import emojiMap from "./fullnamemap.json" with {type: "json"};
 import LinkPreviewToggle from "../../components/LinkPreviewToggle.vue";
 import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
 import InlineChannel from "../../components/InlineChannel.vue";
@@ -21,27 +21,31 @@ type FragmentType = {
 };
 
 // Type guards for proper type narrowing
-function isLinkPart(
-	part: {fragments: FragmentType[]; [key: string]: unknown}
-): part is LinkPart & {fragments: FragmentType[]} {
+function isLinkPart(part: {
+	fragments: FragmentType[];
+	[key: string]: unknown;
+}): part is LinkPart & {fragments: FragmentType[]} {
 	return "link" in part;
 }
 
-function isChannelPart(
-	part: {fragments: FragmentType[]; [key: string]: unknown}
-): part is ChannelPart & {fragments: FragmentType[]} {
+function isChannelPart(part: {
+	fragments: FragmentType[];
+	[key: string]: unknown;
+}): part is ChannelPart & {fragments: FragmentType[]} {
 	return "channel" in part;
 }
 
-function isEmojiPart(
-	part: {fragments: FragmentType[]; [key: string]: unknown}
-): part is EmojiPart & {fragments: FragmentType[]} {
+function isEmojiPart(part: {
+	fragments: FragmentType[];
+	[key: string]: unknown;
+}): part is EmojiPart & {fragments: FragmentType[]} {
 	return "emoji" in part;
 }
 
-function isNamePart(
-	part: {fragments: FragmentType[]; [key: string]: unknown}
-): part is NamePart & {fragments: FragmentType[]} {
+function isNamePart(part: {
+	fragments: FragmentType[];
+	[key: string]: unknown;
+}): part is NamePart & {fragments: FragmentType[]} {
 	return "nick" in part;
 }
 
