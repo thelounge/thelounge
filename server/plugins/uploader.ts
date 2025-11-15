@@ -6,7 +6,6 @@ import fs from "node:fs";
 import {fileTypeFromBuffer} from "file-type";
 import {readChunk} from "read-chunk";
 import crypto from "node:crypto";
-import isUtf8 from "is-utf8";
 import log from "../log.js";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
@@ -302,8 +301,11 @@ class Uploader {
 			}
 
 			// if the buffer is a valid UTF-8 buffer, use text/plain
-			if (isUtf8(buffer)) {
+			try {
+				new TextDecoder("utf-8", {fatal: true}).decode(buffer);
 				return "text/plain";
+			} catch {
+				// Not valid UTF-8, continue to detect as binary
 			}
 
 			// otherwise assume it's random binary data
