@@ -4,7 +4,6 @@ import pkg from "../../package.json" assert {type: "json"};
 import ClientManager from "../clientManager.js";
 import Config from "../config.js";
 import {SharedChangelogData} from "../../shared/types/changelog.js";
-import {Agent as UndiciAgent} from "undici";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -39,22 +38,12 @@ async function fetch() {
     }
 
     try {
-        const fetchOptions: any = {
+        const fetchOptions: RequestInit = {
             headers: {
                 Accept: "application/vnd.github.v3.html", // Request rendered markdown
                 "User-Agent": pkg.name + "; +" + pkg.repository.url, // Identify the client
             },
         };
-
-        // Add custom agent for local binding if configured
-        if (Config.values.bind) {
-            const agent = new UndiciAgent({
-                connect: {
-                    localAddress: Config.values.bind,
-                },
-            });
-            fetchOptions.dispatcher = agent;
-        }
 
         const response = await globalThis.fetch(
             "https://api.github.com/repos/thelounge/thelounge/releases",

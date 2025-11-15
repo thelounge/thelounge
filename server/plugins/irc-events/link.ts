@@ -1,7 +1,6 @@
 import * as cheerio from "cheerio";
 import {URL} from "url";
 import mime from "mime-types";
-import {Agent as UndiciAgent, stream as undiciStream} from "undici";
 
 import log from "../../log.js";
 import Config from "../../config.js";
@@ -417,61 +416,58 @@ function fetch(uri: string, headers: Record<string, string>) {
         let limit = Config.values.prefetchMaxImageSize * 1024;
 
         try {
-            const requestOptions: any = {
+            const requestOptions: RequestInit = {
                 method: "GET",
-                headers: getRequestHeaders(headers),
+                headers: getRequestHeaders(headers) as any,
                 signal: AbortSignal.timeout(prefetchTimeout || 5000),
             };
 
-            if (Config.values.bind) {
-                const agent = new UndiciAgent({
-                    connect: {
-                        localAddress: Config.values.bind,
-                    },
-                });
-                requestOptions.dispatcher = agent;
-            }
+            globalThis
+                .fetch(uri, requestOptions)
+                .then(async (response) => {
+                    contentLength = parseInt(response.headers.get("content-length") || "0", 10);
+                    contentType = response.headers.get("content-type") || undefined;
 
-            undiciStream(
-                uri,
-                requestOptions,
-                (factory) => {
-                    return factory.onHeaders((statusCode, headers) => {
-                        const headerObj: Record<string, string> = {};
-                        for (let i = 0; i < headers.length; i += 2) {
-                            headerObj[headers[i].toString().toLowerCase()] = headers[i + 1].toString();
+                    if (contentType && imageTypeRegex.test(contentType)) {
+                        // response is an image
+                        if (contentLength > limit || !Config.values.prefetchStorage) {
+                            resolve({data: Buffer.alloc(0), type: contentType, size: contentLength});
+                            return;
+                        }
+                    } else if (contentType && mediaTypeRegex.test(contentType)) {
+                        // We don't need to download the file any further
+                        resolve({data: Buffer.alloc(0), type: contentType, size: contentLength});
+                        return;
+                    } else {
+                        // if not image, limit download to the max search size
+                        limit =
+                            "prefetchMaxSearchSize" in Config.values
+                                ? Config.values.prefetchMaxSearchSize * 1024
+                                : 50 * 1024;
+                    }
+
+                    if (!response.body) {
+                        throw new Error("Response body is null");
+                    }
+
+                    const reader = response.body.getReader();
+
+                    while (true) {
+                        const {done, value} = await reader.read();
+
+                        if (done) {
+                            break;
                         }
 
-                        contentLength = parseInt(headerObj["content-length"], 10) || 0;
-                        contentType = headerObj["content-type"];
+                        const chunkBuffer = Buffer.from(value);
+                        buffer = Buffer.concat([buffer, chunkBuffer]);
 
-                        if (contentType && imageTypeRegex.test(contentType)) {
-                            // response is an image
-                            if (contentLength > limit || !Config.values.prefetchStorage) {
-                                return null; // abort
-                            }
-                        } else if (contentType && mediaTypeRegex.test(contentType)) {
-                            // We don't need to download the file any further
-                            return null; // abort
-                        } else {
-                            // if not image, limit download to the max search size
-                            limit =
-                                "prefetchMaxSearchSize" in Config.values
-                                    ? Config.values.prefetchMaxSearchSize * 1024
-                                    : 50 * 1024;
+                        if (buffer.length >= limit) {
+                            reader.cancel();
+                            break;
                         }
+                    }
 
-                        return factory.onData((chunk) => {
-                            buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length);
-
-                            if (buffer.length >= limit) {
-                                return null; // abort
-                            }
-                        });
-                    });
-                }
-            )
-                .then(() => {
                     let type = "";
                     const size = contentLength > buffer.length ? contentLength : buffer.length;
 
