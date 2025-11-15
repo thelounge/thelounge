@@ -1,5 +1,5 @@
 import LinkifyIt, {Match} from "linkify-it";
-import tlds from "tlds";
+import tlds from "tlds/index.json" with {type: "json"};
 
 export type LinkPart = {
 	start: number;

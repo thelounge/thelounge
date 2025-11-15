@@ -1,6 +1,6 @@
-import log from "../../../server/log";
+import log from "../../../server/log.js";
 import {expect, assert} from "chai";
-import TestUtil from "../../util";
+import TestUtil from "../../util.js";
 import sinon from "sinon";
 import packagePlugin from "../../../server/plugins/packages";
 
@@ -13,7 +13,7 @@ describe("packages", function () {
 		logInfoStub = sinon.stub(log, "info");
 
 		delete require.cache[require.resolve("../../../server/plugins/packages")];
-		 
+
 		packages = require("../../../server/plugins/packages").default;
 	});
 

@@ -3,7 +3,6 @@ import {IrcEventHandler} from "../../client.js";
 import Msg from "../../models/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-
 	irc.on("registered", (data) => {
 		network.setNick(data.nick);
 

@@ -5,7 +5,6 @@ import {MessageType} from "../../../shared/types/msg.js";
 import {ChanState} from "../../../shared/types/chan.js";
 
 export default <IrcEventHandler>function (irc, network) {
-
 	irc.on("join", (data) => {
 		let chan = network.getChannel(data.channel);
 

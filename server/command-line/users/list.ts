@@ -8,7 +8,7 @@ program
 	.description("List all users")
 	.on("--help", Utils.extraHelp)
 	.action(async function () {
-		const ClientManager = (await import("../../clientManager")).default;
+		const ClientManager = (await import("../../clientManager.js")).default;
 		const users = new ClientManager().getUsers();
 
 		if (users === undefined) {

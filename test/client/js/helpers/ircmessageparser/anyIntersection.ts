@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import anyIntersection from "../../../../../client/js/helpers/ircmessageparser/anyIntersection";
+import anyIntersection from "../../../../../client/js/helpers/ircmessageparser/anyIntersection.js";
 
 describe("anyIntersection", () => {
 	it("should not intersect on edges", () => {

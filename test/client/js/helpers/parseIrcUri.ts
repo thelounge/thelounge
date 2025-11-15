@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import parseIrcUri from "../../../../client/js/helpers/parseIrcUri";
+import parseIrcUri from "../../../../client/js/helpers/parseIrcUri.js";
 
 describe("parseIrcUri helper", function () {
 	it("should parse irc:// without port", function () {

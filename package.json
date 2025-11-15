@@ -24,8 +24,8 @@
     "lint": "run-p --aggregate-output --continue-on-error lint:eslint lint:prettier lint:stylelint",
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:eslint lint:prettier lint:stylelint test:mocha",
-    "test:mocha": "webpack --mode=development && cross-env NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' mocha --config=test/.mocharc.yml 'test/**/*.ts'",
-    "test:nospec": "webpack --mode=development && cross-env NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' mocha --config=test/.mocharc.yml",
+    "test:mocha": "webpack --mode=development && cross-env NODE_ENV=test tsx node_modules/.bin/mocha --config=test/.mocharc.yml 'test/**/*.ts'",
+    "test:nospec": "webpack --mode=development && cross-env NODE_ENV=test tsx node_modules/.bin/mocha --config=test/.mocharc.yml",
     "watch": "webpack --watch",
     "githooks-install": "git config core.hooksPath scripts/git-hooks"
   },

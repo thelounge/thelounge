@@ -15,7 +15,8 @@ import {SearchQuery, SearchResponse} from "../../../shared/types/storage.js";
 let sqlite3: any;
 
 try {
-	sqlite3 = require("sqlite3");
+	const sqlite3Module = await import("sqlite3");
+	sqlite3 = sqlite3Module.default;
 } catch {
 	Config.values.messageStorage = Config.values.messageStorage.filter((item) => item !== "sqlite");
 
@@ -220,7 +221,9 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const version = await this.current_version();
 
 		if (version > currentSchemaVersion) {
-			throw new Error(`sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is The Lounge out of date?`);
+			throw new Error(
+				`sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is The Lounge out of date?`
+			);
 		} else if (version === currentSchemaVersion) {
 			return; // nothing to do
 		}

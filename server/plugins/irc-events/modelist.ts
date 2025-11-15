@@ -5,7 +5,6 @@ import {MessageType} from "../../../shared/types/msg.js";
 import {SpecialChanType, ChanType} from "../../../shared/types/chan.js";
 
 export default <IrcEventHandler>function (this: any, irc, network) {
-
 	irc.on("banlist", (list) => {
 		const data = list.bans.map((ban) => ({
 			hostmask: ban.banned,
@@ -26,7 +25,8 @@ export default <IrcEventHandler>function (this: any, irc, network) {
 		handleList(SpecialChanType.INVITELIST, "Invite list", list.channel, data);
 	});
 
-	function handleList(this: any,
+	function handleList(
+		this: any,
 		type: SpecialChanType,
 		name: string,
 		channel: string,
@@ -75,7 +75,7 @@ export default <IrcEventHandler>function (this: any, irc, network) {
 			chan.data = data;
 
 			this.emit("msg:special", {
-				chan: chan!.id,
+				chan: chan.id,
 				data: data,
 			});
 		}

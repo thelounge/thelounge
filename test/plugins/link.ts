@@ -1,9 +1,12 @@
 import path from "path";
 import {expect, assert} from "chai";
-import util from "../util";
-import Config from "../../server/config";
-import link from "../../server/plugins/irc-events/link";
-import {LinkPreview} from "../../shared/types/msg";
+import {fileURLToPath} from "url";
+import util from "../util.js";
+import Config from "../../server/config.js";
+import link from "../../server/plugins/irc-events/link.js";
+import {LinkPreview} from "../../shared/types/msg.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe("Link plugin", function () {
 	// Increase timeout due to unpredictable I/O on CI services

@@ -1,13 +1,13 @@
 import {expect, assert} from "chai";
 import sinon from "sinon";
-import Chan from "../../server/models/chan";
-import {ChanType} from "../../shared/types/chan";
-import Msg from "../../server/models/msg";
-import User from "../../server/models/user";
-import Network from "../../server/models/network";
-import Config from "../../server/config";
+import Chan from "../../server/models/chan.js";
+import {ChanType} from "../../shared/types/chan.js";
+import Msg from "../../server/models/msg.js";
+import User from "../../server/models/user.js";
+import Network from "../../server/models/network.js";
+import Config from "../../server/config.js";
 import STSPolicies from "../../server/plugins/sts";
-import ClientCertificate from "../../server/plugins/clientCertificate";
+import ClientCertificate from "../../server/plugins/clientCertificate.js";
 
 describe("Network", function () {
 	let stsPoliciesRefreshStub: sinon.SinonStub<unknown[], void>;

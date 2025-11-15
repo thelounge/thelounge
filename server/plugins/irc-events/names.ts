@@ -1,7 +1,6 @@
 import {IrcEventHandler} from "../../client.js";
 
 export default <IrcEventHandler>function (irc, network) {
-
 	irc.on("userlist", (data) => {
 		const chan = network.getChannel(data.channel);
 

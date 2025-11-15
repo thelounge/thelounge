@@ -1,9 +1,9 @@
 import _ from "lodash";
 import express from "express";
-import Network from "../server/models/network";
-import Chan from "../server/models/chan";
+import Network from "../server/models/network.js";
+import Chan from "../server/models/chan.js";
 import {EventEmitter} from "events";
-import {Message} from "../server/models/msg";
+import {Message} from "../server/models/msg.js";
 
 class MockClient extends EventEmitter {
 	config: {

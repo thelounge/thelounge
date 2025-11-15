@@ -543,7 +543,6 @@ export default defineComponent({
 			Mousetrap.unbind("alt+j");
 		});
 
-
 		return {
 			store,
 			networklist,

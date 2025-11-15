@@ -4,7 +4,6 @@ import Msg from "../../models/msg.js";
 import {MessageType} from "../../../shared/types/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-
 	irc.on("invite", (data) => {
 		let chan = network.getChannel(data.channel);
 

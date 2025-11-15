@@ -3,7 +3,6 @@ import {IrcEventHandler} from "../../client.js";
 import {MessageType} from "../../../shared/types/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-
 	irc.on("info", (data) => {
 		const lobby = network.getLobby();
 

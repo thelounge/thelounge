@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import Helper from "../../server/helper";
+import Helper from "../../server/helper.js";
 
 describe("Hostmask", function () {
 	it(".parseHostmask", function () {

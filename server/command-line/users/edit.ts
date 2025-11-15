@@ -17,7 +17,6 @@ program
 			return;
 		}
 
-		 
 		const ClientManager = require("../../clientManager").default;
 		const users = new ClientManager().getUsers();
 

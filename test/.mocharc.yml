@@ -8,10 +8,12 @@ reporter: dot
 # Candidates: file watchers (fs.watch with persistent:false), pending timers, or
 # Socket.IO internal state in v4.8.1. Further investigation needed.
 exit: true
-ignore: "test/client/**"
+ignore:
+  - "test/client/**"
+  - "test/server.ts"
+  - "test/util.ts"
 spec: ["test/**/*.ts"]
 require:
-  - "ts-node/register"
   - "test/fixtures/env.ts"
 globals:
   - "__VUE_PROD_DEVTOOLS__"

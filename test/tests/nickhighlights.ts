@@ -1,6 +1,6 @@
 import {expect} from "chai";
 
-import Network from "../../server/models/network";
+import Network from "../../server/models/network.js";
 
 const network = new Network({name: "networkName"});
 

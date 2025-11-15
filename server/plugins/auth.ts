@@ -13,7 +13,7 @@ export type AuthHandler = (
 
 // The order defines priority: the first available plugin is used.
 // Always keep 'local' auth plugin at the end of the list; it should always be enabled.
-const plugins = [import("./auth/ldap"), import("./auth/local")];
+const plugins = [import("./auth/ldap.js"), import("./auth/local.js")];
 
 const toExport = {
 	moduleName: "<module with no name>",

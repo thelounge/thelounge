@@ -187,7 +187,9 @@ class ClientManager {
 			});
 			fs.renameSync(tmpPath, userPath);
 		} catch (e) {
-			log.error(`Failed to create user ${colors.green(name)} (${e instanceof Error ? e.message : String(e)})`);
+			log.error(
+				`Failed to create user ${colors.green(name)} (${e instanceof Error ? e.message : String(e)})`
+			);
 			throw e;
 		}
 

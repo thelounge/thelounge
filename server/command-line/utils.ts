@@ -13,198 +13,199 @@ let home: string;
 const require = createRequire(import.meta.url);
 
 class Utils {
-    static extraHelp(this: void) {
-        [
-            "",
-            "Environment variable:",
-            `  THELOUNGE_HOME            Path for all configuration files and folders. Defaults to ${colors.green(
-                Helper.expandHome(Utils.defaultHome())
-            )}`,
-            "",
-        ].forEach((e) => log.raw(e));
-    }
+	static extraHelp(this: void) {
+		[
+			"",
+			"Environment variable:",
+			`  THELOUNGE_HOME            Path for all configuration files and folders. Defaults to ${colors.green(
+				Helper.expandHome(Utils.defaultHome())
+			)}`,
+			"",
+		].forEach((e) => log.raw(e));
+	}
 
-    static defaultHome() {
-        if (home) {
-            return home;
-        }
+	static defaultHome() {
+		if (home) {
+			return home;
+		}
 
-        const distConfig = Utils.getFileFromRelativeToRoot(".thelounge_home");
+		const distConfig = Utils.getFileFromRelativeToRoot(".thelounge_home");
 
-        home = fs.readFileSync(distConfig, "utf-8").trim();
+		home = fs.readFileSync(distConfig, "utf-8").trim();
 
-        return home;
-    }
+		return home;
+	}
 
-    static getFileFromRelativeToRoot(...fileName: string[]) {
-        const __dirname = getDirname(import.meta.url);
-        // e.g. /thelounge/server/command-line/utils.ts
-        if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
-            return path.resolve(path.join(__dirname, "..", "..", ...fileName));
-        }
+	static getFileFromRelativeToRoot(...fileName: string[]) {
+		const __dirname = getDirname(import.meta.url);
 
-        // e.g. /thelounge/dist/server/command-line/utils.ts
-        return path.resolve(path.join(__dirname, "..", "..", "..", ...fileName));
-    }
+		// e.g. /thelounge/server/command-line/utils.ts
+		if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
+			return path.resolve(path.join(__dirname, "..", "..", ...fileName));
+		}
 
-    // Parses CLI options such as `-c public=true`, `-c debug.raw=true`, etc.
-    static parseConfigOptions(this: void, val: string, memo?: any) {
-        // Invalid option that is not of format `key=value`, do nothing
-        if (!val.includes("=")) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            return memo;
-        }
+		// e.g. /thelounge/dist/server/command-line/utils.ts
+		return path.resolve(path.join(__dirname, "..", "..", "..", ...fileName));
+	}
 
-        const parseValue = (value: string) => {
-            switch (value) {
-                case "true":
-                    return true;
-                case "false":
-                    return false;
-                case "undefined":
-                    return undefined;
-                case "null":
-                    return null;
-                default:
-                    if (/^-?[0-9]+$/.test(value)) {
-                        // Numbers like port
-                        return parseInt(value, 10);
-                    } else if (/^\[.*\]$/.test(value)) {
-                        // Arrays
-                        // Supporting arrays `[a,b]` and `[a, b]`
-                        const array = value.slice(1, -1).split(/,\s*/);
+	// Parses CLI options such as `-c public=true`, `-c debug.raw=true`, etc.
+	static parseConfigOptions(this: void, val: string, memo?: any) {
+		// Invalid option that is not of format `key=value`, do nothing
+		if (!val.includes("=")) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+			return memo;
+		}
 
-                        // If [] is given, it will be parsed as `[ "" ]`, so treat this as empty
-                        if (array.length === 1 && array[0] === "") {
-                            return [];
-                        }
+		const parseValue = (value: string) => {
+			switch (value) {
+				case "true":
+					return true;
+				case "false":
+					return false;
+				case "undefined":
+					return undefined;
+				case "null":
+					return null;
+				default:
+					if (/^-?[0-9]+$/.test(value)) {
+						// Numbers like port
+						return parseInt(value, 10);
+					} else if (/^\[.*\]$/.test(value)) {
+						// Arrays
+						// Supporting arrays `[a,b]` and `[a, b]`
+						const array = value.slice(1, -1).split(/,\s*/);
 
-                        return array.map(parseValue) as Array<Record<string, string>>; // Re-parses all values of the array
-                    }
+						// If [] is given, it will be parsed as `[ "" ]`, so treat this as empty
+						if (array.length === 1 && array[0] === "") {
+							return [];
+						}
 
-                    return value;
-            }
-        };
+						return array.map(parseValue) as Array<Record<string, string>>; // Re-parses all values of the array
+					}
 
-        // First time the option is parsed, memo is not set
-        if (memo === undefined) {
-            memo = {};
-        }
+					return value;
+			}
+		};
 
-        // Note: If passed `-c foo="bar=42"` (with single or double quotes), `val`
-        //       will always be passed as `foo=bar=42`, never with quotes.
-        const position = val.indexOf("="); // Only split on the first = found
-        const key = val.slice(0, position);
-        const value = val.slice(position + 1);
-        const parsedValue = parseValue(value);
+		// First time the option is parsed, memo is not set
+		if (memo === undefined) {
+			memo = {};
+		}
 
-        if (_.has(memo, key)) {
-            log.warn(`Configuration key ${colors.bold(key)} was already specified, ignoring...`);
-        } else {
-            memo = _.set(memo, key, parsedValue);
-        }
+		// Note: If passed `-c foo="bar=42"` (with single or double quotes), `val`
+		//       will always be passed as `foo=bar=42`, never with quotes.
+		const position = val.indexOf("="); // Only split on the first = found
+		const key = val.slice(0, position);
+		const value = val.slice(position + 1);
+		const parsedValue = parseValue(value);
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return memo;
-    }
+		if (_.has(memo, key)) {
+			log.warn(`Configuration key ${colors.bold(key)} was already specified, ignoring...`);
+		} else {
+			memo = _.set(memo, key, parsedValue);
+		}
 
-    static executeYarnCommand(command: string, ...parameters: string[]) {
-        const yarn = require.resolve("yarn/bin/yarn.js");
-        const packagesPath = Config.getPackagesPath();
-        const cachePath = path.join(packagesPath, "package_manager_cache");
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+		return memo;
+	}
 
-        const staticParameters = [
-            "--cache-folder",
-            cachePath,
-            "--cwd",
-            packagesPath,
-            "--json",
-            "--ignore-scripts",
-            "--non-interactive",
-        ];
+	static executeYarnCommand(command: string, ...parameters: string[]) {
+		const yarn = require.resolve("yarn/bin/yarn.js");
+		const packagesPath = Config.getPackagesPath();
+		const cachePath = path.join(packagesPath, "package_manager_cache");
 
-        const env = {
-            // We only ever operate in production mode
-            NODE_ENV: "production",
+		const staticParameters = [
+			"--cache-folder",
+			cachePath,
+			"--cwd",
+			packagesPath,
+			"--json",
+			"--ignore-scripts",
+			"--non-interactive",
+		];
 
-            // If The Lounge runs from a user that does not have a home directory,
-            // yarn may fail when it tries to read certain folders,
-            // we give it an existing folder so the reads do not throw a permission error.
-            // Yarn uses os.homedir() to figure out the path, which internally reads
-            // from the $HOME env on unix. On Windows it uses $USERPROFILE, but
-            // the user folder should always exist on Windows, so we don't set it.
-            HOME: cachePath,
-        };
+		const env = {
+			// We only ever operate in production mode
+			NODE_ENV: "production",
 
-        return new Promise((resolve, reject) => {
-            let success = false;
-            const add = spawn(
-                process.execPath,
-                [yarn, command, ...staticParameters, ...parameters],
-                {env: env}
-            );
+			// If The Lounge runs from a user that does not have a home directory,
+			// yarn may fail when it tries to read certain folders,
+			// we give it an existing folder so the reads do not throw a permission error.
+			// Yarn uses os.homedir() to figure out the path, which internally reads
+			// from the $HOME env on unix. On Windows it uses $USERPROFILE, but
+			// the user folder should always exist on Windows, so we don't set it.
+			HOME: cachePath,
+		};
 
-            add.stdout.on("data", (data) => {
-                data.toString()
-                    .trim()
-                    .split("\n")
-                    .forEach((line: string) => {
-                        try {
-                            const json = JSON.parse(line);
+		return new Promise((resolve, reject) => {
+			let success = false;
+			const add = spawn(
+				process.execPath,
+				[yarn, command, ...staticParameters, ...parameters],
+				{env: env}
+			);
 
-                            if (json.type === "success") {
-                                success = true;
-                            }
-                        } catch {
-                            // Stdout buffer has limitations and yarn may print
-                            // big package trees, for example in the upgrade command
-                            // See https://github.com/thelounge/thelounge/issues/3679
-                        }
-                    });
-            });
+			add.stdout.on("data", (data) => {
+				data.toString()
+					.trim()
+					.split("\n")
+					.forEach((line: string) => {
+						try {
+							const json = JSON.parse(line);
 
-            add.stderr.on("data", (data) => {
-                data.toString()
-                    .trim()
-                    .split("\n")
-                    .forEach((line: string) => {
-                        try {
-                            const json = JSON.parse(line);
+							if (json.type === "success") {
+								success = true;
+							}
+						} catch {
+							// Stdout buffer has limitations and yarn may print
+							// big package trees, for example in the upgrade command
+							// See https://github.com/thelounge/thelounge/issues/3679
+						}
+					});
+			});
 
-                            switch (json.type) {
-                                case "error":
-                                    log.error(json.data);
-                                    break;
-                                case "warning":
-                                    // this includes pointless things like "ignored scripts due to flag"
-                                    // so let's hide it
-                                    break;
-                            }
+			add.stderr.on("data", (data) => {
+				data.toString()
+					.trim()
+					.split("\n")
+					.forEach((line: string) => {
+						try {
+							const json = JSON.parse(line);
 
-                            return;
-                        } catch {
-                            // we simply fall through and log at debug... chances are there's nothing the user can do about it
-                            // as it includes things like deprecation warnings, but we might want to know as developers
-                        }
+							switch (json.type) {
+								case "error":
+									log.error(json.data);
+									break;
+								case "warning":
+									// this includes pointless things like "ignored scripts due to flag"
+									// so let's hide it
+									break;
+							}
 
-                        log.debug(line);
-                    });
-            });
+							return;
+						} catch {
+							// we simply fall through and log at debug... chances are there's nothing the user can do about it
+							// as it includes things like deprecation warnings, but we might want to know as developers
+						}
 
-            add.on("error", (e) => {
-                log.error(`${e.message}:`, e.stack || "");
-                process.exit(1);
-            });
+						log.debug(line);
+					});
+			});
 
-            add.on("close", (code) => {
-                if (!success || code !== 0) {
-                    return reject(new Error(`Process exited with code ${code}`));
-                }
+			add.on("error", (e) => {
+				log.error(`${e.message}:`, e.stack || "");
+				process.exit(1);
+			});
 
-                resolve(true);
-            });
-        });
-    }
+			add.on("close", (code) => {
+				if (!success || code !== 0) {
+					return reject(new Error(`Process exited with code ${code}`));
+				}
+
+				resolve(true);
+			});
+		});
+	}
 }
 
 export default Utils;

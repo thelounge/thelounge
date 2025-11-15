@@ -47,11 +47,7 @@ type MergedPart = (TextPart | NamePart | EmojiPart | ChannelPart | LinkPart) & {
 // different styles, the first resulting part will contain fragments "fo" and
 // "o", and the second resulting part will contain "b" and "ar". "o" and "b"
 // fragments will contain duplicate styling attributes.
-function merge(
-	parts: MergedParts,
-	styleFragments: Fragment[],
-	cleanText: string
-): MergedPart[] {
+function merge(parts: MergedParts, styleFragments: Fragment[], cleanText: string): MergedPart[] {
 	// Remove overlapping parts
 	parts = parts.sort(sortParts).reduce<MergedParts>((prev, curr) => {
 		const intersection = prev.some((p) => anyIntersection(p, curr));

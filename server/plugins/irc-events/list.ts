@@ -55,10 +55,10 @@ export default <IrcEventHandler>function (irc, network) {
 				index: network.addChannel(chan!),
 			});
 		} else {
-			chan!.data = msg;
+			chan.data = msg;
 
 			this.emit("msg:special", {
-				chan: chan!.id,
+				chan: chan.id,
 				data: msg,
 			});
 		}

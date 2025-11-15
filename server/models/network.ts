@@ -52,9 +52,7 @@ type IgnoreList = IgnoreListItem[];
 
 type NonNullableIRCWithOptions = NonNullable<IRCClient & {options: NetworkIrcOptions}>;
 
- 
 export type NetworkWithIrcFramework = Network & {
-	 
 	irc: NonNullable<Network["irc"]> & {
 		options: NonNullableIRCWithOptions;
 	};

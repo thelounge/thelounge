@@ -127,8 +127,12 @@ export default <IrcEventHandler>function (irc, network) {
 				new Msg({
 					type: MessageType.ERROR,
 					text: `Connection closed unexpectedly: ${
-			error instanceof Error ? error.message : typeof error === "string" ? error : "Unknown error"
-		}`,
+						error instanceof Error
+							? error.message
+							: typeof error === "string"
+								? error
+								: "Unknown error"
+					}`,
 				}),
 				true
 			);
@@ -152,10 +156,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 	if (Config.values.debug.ircFramework) {
 		irc.on("debug", (message) => {
-			log.debug(
-				`[${this.name} (${this.id}) on ${network.name} (${network.uuid}]`,
-				message
-			);
+			log.debug(`[${this.name} (${this.id}) on ${network.name} (${network.uuid}]`, message);
 		});
 	}
 

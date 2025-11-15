@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import merge from "../../../../../client/js/helpers/ircmessageparser/merge";
+import merge from "../../../../../client/js/helpers/ircmessageparser/merge.js";
 
 describe("merge", () => {
 	it("should split style information", () => {

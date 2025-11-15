@@ -1,5 +1,5 @@
 import {expect, assert} from "chai";
-import fill from "../../../../../client/js/helpers/ircmessageparser/fill";
+import fill from "../../../../../client/js/helpers/ircmessageparser/fill.js";
 
 describe("fill", () => {
 	const text = "01234567890123456789";

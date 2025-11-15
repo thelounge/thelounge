@@ -6,7 +6,6 @@ import {MessageType} from "../../../shared/types/msg.js";
 const commands = ["ignorelist"];
 
 const input: PluginInputHandler = function (this: any, network, chan) {
-
 	if (network.ignoreList.length === 0) {
 		chan.pushMessage(
 			this,
@@ -42,10 +41,10 @@ const input: PluginInputHandler = function (this: any, network, chan) {
 	}
 
 	// TODO: add type for this chan/event
-	newChan!.data = ignored;
+	newChan.data = ignored;
 
 	this.emit("msg:special", {
-		chan: newChan!.id,
+		chan: newChan.id,
 		data: ignored,
 	});
 };

@@ -16,7 +16,6 @@ program
 			return;
 		}
 
-		 
 		const ClientManager = require("../../clientManager").default;
 		const manager = new ClientManager();
 
