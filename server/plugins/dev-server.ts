@@ -33,7 +33,7 @@ export default (app: express.Application) => {
 	}
 
 	app.use(
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
+		 
 		webpackDevMiddleware(compiler, {
 			index: "/",
 			publicPath: webpackConfig.output?.publicPath,
