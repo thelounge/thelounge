@@ -52,9 +52,11 @@ program.addCommand(storageCmd.default);
 
 if (!Config.values.public) {
 	const usersCmd = await import("./users/index.js");
-	usersCmd.default.filter((command): command is Command => command !== undefined).forEach((command) => {
-		program.addCommand(command);
-	});
+	usersCmd.default
+		.filter((command): command is Command => command !== undefined)
+		.forEach((command) => {
+			program.addCommand(command);
+		});
 }
 
 // `parse` expects to be passed `process.argv`, but we need to remove to give it
