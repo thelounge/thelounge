@@ -2128,12 +2128,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/busboy@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@fastify/busboy@npm:1.0.0"
-  dependencies:
-    text-decoding: "npm:^1.0.0"
-  checksum: 10c0/ba5bae5570d79a9d7f6557fea6eaf162fc34bbefbb03d72f81e2ef2a22ca4ff5f739cd7891cbf88353c17d2a8e9d51de32d7c0e8bba6d2adbe2917e1515c0cf5
+"@fastify/busboy@npm:3.2.0":
+  version: 3.2.0
+  resolution: "@fastify/busboy@npm:3.2.0"
+  checksum: 10c0/3e4fb00a27e3149d1c68de8ff14007d2bbcbbc171a9d050d0a8772e836727329d4d3f130995ebaa19cf537d5d2f5ce2a88000366e6192e751457bfcc2125f351
   languageName: node
   linkType: hard
 
@@ -2829,10 +2827,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mime-types@npm:2.1.4":
-  version: 2.1.4
-  resolution: "@types/mime-types@npm:2.1.4"
-  checksum: 10c0/a10d57881d14a053556b3d09292de467968d965b0a06d06732c748da39b3aa569270b5b9f32529fd0e9ac1e5f3b91abb894f5b1996373254a65cb87903c86622
+"@types/mime-types@npm:3.0.1":
+  version: 3.0.1
+  resolution: "@types/mime-types@npm:3.0.1"
+  checksum: 10c0/61c2056529dc5bc73c25b2a053e21f063fd547c21e12a2be94ca78b89b0f83c9a75afed9a8bda3c78592ee880acc82778302651527f7882cf5ba8e58ab320e29
   languageName: node
   linkType: hard
 
@@ -3985,10 +3983,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bcryptjs@npm:2.4.3":
-  version: 2.4.3
-  resolution: "bcryptjs@npm:2.4.3"
-  checksum: 10c0/b969467087ed7a01ff905a1c6a0c45014ec586248a448ea08370c8ed8bb314bda16a870ca23e0961d7d23bdce1a04c76fa70a9d680be814fa9ac7d8fc61870a3
+"bcryptjs@npm:3.0.3":
+  version: 3.0.3
+  resolution: "bcryptjs@npm:3.0.3"
+  bin:
+    bcrypt: bin/bcrypt
+  checksum: 10c0/127c94699f07eab5fbbb89d600c3f0e36ae6fd001e028139740b41fffb62a23a2743523fb88f442ae3308a27d4843b97ccb9e436d78f5c5899be187d0972c6d5
   languageName: node
   linkType: hard
 
@@ -4477,10 +4477,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:9.0.0":
-  version: 9.0.0
-  resolution: "commander@npm:9.0.0"
-  checksum: 10c0/527e1aa27be7db7e8f543e9f6c7a8cd8e82290dd2319eef65537b4e49efa7b53c503fc3353aea89686b220dde78892d3ba855e663a4e15b771d5f2241660e9f0
+"commander@npm:14.0.2":
+  version: 14.0.2
+  resolution: "commander@npm:14.0.2"
+  checksum: 10c0/245abd1349dbad5414cb6517b7b5c584895c02c4f7836ff5395f301192b8566f9796c82d7bd6c92d07eba8775fe4df86602fca5d86d8d10bcc2aded1e21c2aeb
   languageName: node
   linkType: hard
 
@@ -5076,6 +5076,13 @@ __metadata:
   version: 2.0.0
   resolution: "depd@npm:2.0.0"
   checksum: 10c0/58bd06ec20e19529b06f7ad07ddab60e504d9e0faca4bd23079fac2d279c3594334d736508dc350e06e510aba5e22e4594483b3a6562ce7c17dd797f4cc4ad2c
+  languageName: node
+  linkType: hard
+
+"detect-europe-js@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "detect-europe-js@npm:0.1.2"
+  checksum: 10c0/46fccf2a9ddeec8ecb7a369be1452f84856cbd0ccdeb3c47e41fe6c9d69f63d6bd75f91b5aa1ae310e56d8fbcbff0e802b1504cdcc3a92f3327c94408e6d07a2
   languageName: node
   linkType: hard
 
@@ -7260,6 +7267,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-standalone-pwa@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "is-standalone-pwa@npm:0.1.1"
+  checksum: 10c0/af1a11edef4a8f00c24014576285070fb73eebb3583cae790c0a825e338e19f05048a26e5fd5ef10f6056032d6a4520054ff824532c15df784933c0fcc5e13fd
+  languageName: node
+  linkType: hard
+
 "is-stream@npm:^2.0.0":
   version: 2.0.1
   resolution: "is-stream@npm:2.0.1"
@@ -8094,21 +8108,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:2.1.35, mime-types@npm:^2.1.27, mime-types@npm:^2.1.31, mime-types@npm:~2.1.34":
-  version: 2.1.35
-  resolution: "mime-types@npm:2.1.35"
-  dependencies:
-    mime-db: "npm:1.52.0"
-  checksum: 10c0/82fb07ec56d8ff1fc999a84f2f217aa46cb6ed1033fefaabd5785b9a974ed225c90dc72fff460259e66b95b73648596dbcc50d51ed69cdf464af2d237d3149b2
-  languageName: node
-  linkType: hard
-
-"mime-types@npm:^3.0.0, mime-types@npm:^3.0.1":
+"mime-types@npm:3.0.1, mime-types@npm:^3.0.0, mime-types@npm:^3.0.1":
   version: 3.0.1
   resolution: "mime-types@npm:3.0.1"
   dependencies:
     mime-db: "npm:^1.54.0"
   checksum: 10c0/bd8c20d3694548089cf229016124f8f40e6a60bbb600161ae13e45f793a2d5bb40f96bbc61f275836696179c77c1d6bf4967b2a75e0a8ad40fe31f4ed5be4da5
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:^2.1.27, mime-types@npm:^2.1.31, mime-types@npm:~2.1.34":
+  version: 2.1.35
+  resolution: "mime-types@npm:2.1.35"
+  dependencies:
+    mime-db: "npm:1.52.0"
+  checksum: 10c0/82fb07ec56d8ff1fc999a84f2f217aa46cb6ed1033fefaabd5785b9a974ed225c90dc72fff460259e66b95b73648596dbcc50d51ed69cdf464af2d237d3149b2
   languageName: node
   linkType: hard
 
@@ -11476,13 +11490,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"text-decoding@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "text-decoding@npm:1.0.0"
-  checksum: 10c0/290dbd6111f39a4020b3e2384de614f90051eff3cd11176329fda0a40ac0b0a07e6820b9aeb4b0b7c2cc7869b62cd3b25944c71e9e16b628bcf57299ab84e311
-  languageName: node
-  linkType: hard
-
 "textarea-caret@npm:^3.1.0":
   version: 3.1.0
   resolution: "textarea-caret@npm:3.1.0"
@@ -11497,7 +11504,7 @@ __metadata:
     "@babel/core": "npm:7.17.10"
     "@babel/plugin-transform-runtime": "npm:7.18.2"
     "@babel/preset-env": "npm:7.17.10"
-    "@fastify/busboy": "npm:1.0.0"
+    "@fastify/busboy": "npm:3.2.0"
     "@fortawesome/fontawesome-free": "npm:5.15.4"
     "@istanbuljs/nyc-config-typescript": "npm:1.0.2"
     "@stylistic/stylelint-plugin": "npm:^4.0.0"
@@ -11510,7 +11517,7 @@ __metadata:
     "@types/express": "npm:5.0.5"
     "@types/linkify-it": "npm:3.0.5"
     "@types/lodash": "npm:4.14.202"
-    "@types/mime-types": "npm:2.1.4"
+    "@types/mime-types": "npm:3.0.1"
     "@types/mocha": "npm:^10.0.10"
     "@types/mousetrap": "npm:1.6.15"
     "@types/node": "npm:24.10.1"
@@ -11533,11 +11540,11 @@ __metadata:
     babel-loader: "npm:10.0.0"
     babel-plugin-istanbul: "npm:6.1.1"
     babel-preset-typescript-vue3: "npm:2.0.17"
-    bcryptjs: "npm:2.4.3"
+    bcryptjs: "npm:3.0.3"
     chai: "npm:6.2.1"
     chalk: "npm:5.6.2"
     cheerio: "npm:1.1.2"
-    commander: "npm:9.0.0"
+    commander: "npm:14.0.2"
     content-disposition: "npm:0.5.4"
     copy-webpack-plugin: "npm:10.2.4"
     cross-env: "npm:7.0.3"
@@ -11558,7 +11565,7 @@ __metadata:
     ldapts: "npm:8.0.9"
     linkify-it: "npm:5.0.0"
     lodash: "npm:4.17.21"
-    mime-types: "npm:2.1.35"
+    mime-types: "npm:3.0.1"
     mini-css-extract-plugin: "npm:2.9.4"
     mocha: "npm:^11.7.5"
     mousetrap: "npm:1.6.5"
@@ -11590,7 +11597,7 @@ __metadata:
     ts-sinon: "npm:2.0.2"
     tsx: "npm:^4.20.6"
     typescript: "npm:5.9.3"
-    ua-parser-js: "npm:1.0.39"
+    ua-parser-js: "npm:2.0.6"
     undate: "npm:0.3.0"
     undici: "npm:7.16.0"
     uuid: "npm:13.0.0"
@@ -11923,12 +11930,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ua-parser-js@npm:1.0.39":
-  version: 1.0.39
-  resolution: "ua-parser-js@npm:1.0.39"
+"ua-is-frozen@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "ua-is-frozen@npm:0.1.2"
+  checksum: 10c0/fb41929bd4924c9676391e6d7197d30580749a96697a83c8b6e77fb137e3ff8492dcd1e6f871f6a9517848651a93af37bfefb25385f16d90e19678ade22d30b7
+  languageName: node
+  linkType: hard
+
+"ua-parser-js@npm:2.0.6":
+  version: 2.0.6
+  resolution: "ua-parser-js@npm:2.0.6"
+  dependencies:
+    detect-europe-js: "npm:^0.1.2"
+    is-standalone-pwa: "npm:^0.1.1"
+    ua-is-frozen: "npm:^0.1.2"
   bin:
     ua-parser-js: script/cli.js
-  checksum: 10c0/c6452b0c683000f10975cb0a7e74cb1119ea95d4522ae85f396fa53b0b17884358a24ffdd86a66030c6b2981bdc502109a618c79fdaa217ee9032c9e46fcc78a
+  checksum: 10c0/b57b3bd81a3d6b5f76df9c91090bcd5b778a2479dfc0eb4720eced724a55395691a4816a0cc899e0bf60fa2ab6472d045622e368b2cb697cdb431930e12a9c92
   languageName: node
   linkType: hard
 

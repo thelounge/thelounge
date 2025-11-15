@@ -1,5 +1,5 @@
 import _ from "lodash";
-import UAParser from "ua-parser-js";
+import {UAParser} from "ua-parser-js";
 import {v4 as uuidv4} from "uuid";
 import escapeRegExp from "lodash/escapeRegExp.js";
 import crypto from "crypto";
@@ -393,7 +393,8 @@ class Client {
 	}
 
 	updateSession(token: string, ip: string, request: any) {
-		const agent = UAParser(request.headers["user-agent"] || "");
+		const parser = new UAParser(request.headers["user-agent"] || "");
+		const agent = parser.getResult();
 		let friendlyAgent = "";
 
 		if (agent.browser.name) {
