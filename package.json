@@ -89,7 +89,7 @@
     "@fortawesome/fontawesome-free": "5.15.4",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@stylistic/stylelint-plugin": "^4.0.0",
-    "@textcomplete/core": "0.1.10",
+    "@textcomplete/core": "0.1.13",
     "@textcomplete/textarea": "0.1.13",
     "@types/bcryptjs": "2.4.6",
     "@types/chai": "5.2.3",
@@ -168,6 +168,9 @@
     "webpack-dev-middleware": "7.4.2",
     "webpack-hot-middleware": "2.26.1",
     "wtfnode": "^0.10.1"
+  },
+  "resolutions": {
+    "js-yaml": "^4.1.1"
   },
   "packageManager": "yarn@4.11.0"
 }
