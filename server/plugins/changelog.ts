@@ -39,7 +39,7 @@ async function fetch() {
     }
 
     try {
-        const fetchOptions: RequestInit = {
+        const fetchOptions: any = {
             headers: {
                 Accept: "application/vnd.github.v3.html", // Request rendered markdown
                 "User-Agent": pkg.name + "; +" + pkg.repository.url, // Identify the client

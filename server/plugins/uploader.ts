@@ -291,7 +291,7 @@ class Uploader {
     // Returns a string with the type otherwise
     static async getFileType(filePath: string) {
         try {
-            const buffer = await readChunk(filePath, 0, 5120);
+            const buffer = await readChunk(filePath, {startPosition: 0, length: 5120});
 
             // returns {ext, mime} if found, null if not.
             const file = await fileTypeFromBuffer(buffer);

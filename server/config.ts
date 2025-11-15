@@ -116,7 +116,7 @@ export type ConfigType = {
 import defaultConfig from "../defaults/config.js";
 
 class Config {
-    values: ConfigType = _.cloneDeep(defaultConfig) as ConfigType;
+    values: ConfigType = {..._.cloneDeep(defaultConfig), themeColor: ""} as ConfigType;
     #homePath = "";
 
     getHomePath() {
@@ -232,7 +232,7 @@ class Config {
 
                 this.merge(userConfig);
             } catch (error) {
-                log.error(`Failed to load config from ${configPath}:`, error);
+                log.error(`Failed to load config from ${configPath}:`, String(error));
                 log.warn("Using default configuration...");
             }
         }
