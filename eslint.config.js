@@ -85,16 +85,6 @@ const tsRules = {
     "@typescript-eslint/no-redundant-type-constituents": "off",
 };
 
-// ESM Migration workaround (temporary - will be removed in FAZA 8)
-// After FAZA 8 completion (require → import conversion),
-// this entire tsRulesTemp section MUST be deleted
-const tsRulesTemp = {
-    // ONLY ESM-related rule disabled (waiting for FAZA 8: ESM Migration)
-    // This rule will cause ~20-30 errors in server/command-line/*.ts and other files
-    // All of these use require() which will be converted to import in FAZA 8
-    "@typescript-eslint/no-require-imports": "off", // TODO: Remove after FAZA 8
-};
-
 // Type Safety - deferred to FAZA 10: TypeScript Strict Mode
 // These rules require extensive manual refactoring of type definitions
 // across the codebase (~2000+ errors). Deferring to dedicated phase after
@@ -117,7 +107,7 @@ export default [
             "dist/**",
             "public/**",
             "coverage/**",
-            "webpack.config.ts",
+            "webpack.config.mjs",
             "*.min.js",
         ],
     },
@@ -167,7 +157,6 @@ export default [
         rules: {
             ...baseRules,
             ...tsRules,
-            ...tsRulesTemp,
             ...tsRulesTypeStrictness,
         },
     },
@@ -204,7 +193,6 @@ export default [
         rules: {
             ...baseRules,
             ...tsRules,
-            ...tsRulesTemp,
             ...tsRulesTypeStrictness,
             ...vueRules,
         },
