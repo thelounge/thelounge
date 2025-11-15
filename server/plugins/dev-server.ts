@@ -33,7 +33,6 @@ export default (app: express.Application) => {
 	}
 
 	app.use(
-		 
 		webpackDevMiddleware(compiler, {
 			index: "/",
 			publicPath: webpackConfig.output?.publicPath,
