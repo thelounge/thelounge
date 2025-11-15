@@ -50,8 +50,8 @@ The Lounge is the official and community-managed fork of [Shout](https://github.
 
 ## Installation and usage
 
-The Lounge requires latest [Node.js](https://nodejs.org/) LTS version or more recent.
-The [Yarn package manager](https://yarnpkg.com/) is also recommended.
+The Lounge requires [Node.js](https://nodejs.org/) v24.11.1 or newer (Node.js v24 LTS or v25+ recommended).
+The [Yarn package manager](https://yarnpkg.com/) v4.11.0+ is also recommended.
 If you want to install with npm, `--unsafe-perm` is required for a correct install.
 
 ### Running stable releases
