@@ -2824,15 +2824,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ldapjs@npm:2.2.5":
-  version: 2.2.5
-  resolution: "@types/ldapjs@npm:2.2.5"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/a7b5b8da86a02616914e33246f39bacec7149196c84cb2d1c9d0af1fbcd204d475e6a8068f07586397a44142c729751d1d4f7f77bf9aba1f1d5104f27f113331
-  languageName: node
-  linkType: hard
-
 "@types/linkify-it@npm:3.0.5":
   version: 3.0.5
   resolution: "@types/linkify-it@npm:3.0.5"
@@ -3530,13 +3521,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"abstract-logging@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "abstract-logging@npm:2.0.1"
-  checksum: 10c0/304879d9babcf6772260e5ddde632e6428e1f42f7a7a116d4689e97ad813a20e0ec2dd1e0a122f3617557f40091b9ca85735de4b48c17a2041268cb47b3f8ef1
-  languageName: node
-  linkType: hard
-
 "accepts@npm:^2.0.0":
   version: 2.0.0
   resolution: "accepts@npm:2.0.0"
@@ -3841,19 +3825,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asn1@npm:0.2.6, asn1@npm:^0.2.4":
+"asn1@npm:0.2.6":
   version: 0.2.6
   resolution: "asn1@npm:0.2.6"
   dependencies:
     safer-buffer: "npm:~2.1.0"
   checksum: 10c0/00c8a06c37e548762306bcb1488388d2f76c74c36f70c803f0c081a01d3bdf26090fc088cd812afc5e56a6d49e33765d451a5f8a68ab9c2b087eba65d2e980e0
-  languageName: node
-  linkType: hard
-
-"assert-plus@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "assert-plus@npm:1.0.0"
-  checksum: 10c0/b194b9d50c3a8f872ee85ab110784911e696a4d49f7ee6fc5fb63216dedbefd2c55999c70cb2eaeb4cf4a0e0338b44e9ace3627117b5bf0d42460e9132f21b91
   languageName: node
   linkType: hard
 
@@ -3977,15 +3954,6 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 10c0/75090e2577e941a135517b75718fcfa0482fceaad000ac6f6eb7f1836a8841911ba71d55dc091e51039efdc648dc1b82fb74225cf8bbc3669cb1c34471bdd929
-  languageName: node
-  linkType: hard
-
-"backoff@npm:^2.5.0":
-  version: 2.5.0
-  resolution: "backoff@npm:2.5.0"
-  dependencies:
-    precond: "npm:0.2"
-  checksum: 10c0/57afcd07c08e9174d78f79643ebca1e8da752143ef6675e6b4a0b08ec6b497db3317089350c02fb747ae54c53f485c4d8b0742130b78028bb8a8cd96dd69ce0f
   languageName: node
   linkType: hard
 
@@ -4659,13 +4627,6 @@ __metadata:
   version: 3.46.0
   resolution: "core-js@npm:3.46.0"
   checksum: 10c0/12d559d39a58227881bc6c86c36d24dcfbe2d56e52dac42e35e8643278172596ab67f57ede98baf40b153ca1b830f37420ea32c3f7417c0c5a1fed46438ae187
-  languageName: node
-  linkType: hard
-
-"core-util-is@npm:1.0.2":
-  version: 1.0.2
-  resolution: "core-util-is@npm:1.0.2"
-  checksum: 10c0/980a37a93956d0de8a828ce508f9b9e3317039d68922ca79995421944146700e4aaf490a6dbfebcb1c5292a7184600c7710b957d724be1e37b8254c6bc0fe246
   languageName: node
   linkType: hard
 
@@ -5929,13 +5890,6 @@ __metadata:
     type-is: "npm:^2.0.1"
     vary: "npm:^1.1.2"
   checksum: 10c0/80ce7c53c5f56887d759b94c3f2283e2e51066c98d4b72a4cc1338e832b77f1e54f30d0239cc10815a0f849bdb753e6a284d2fa48d4ab56faf9c501f55d751d6
-  languageName: node
-  linkType: hard
-
-"extsprintf@npm:^1.2.0":
-  version: 1.4.1
-  resolution: "extsprintf@npm:1.4.1"
-  checksum: 10c0/e10e2769985d0e9b6c7199b053a9957589d02e84de42832c295798cb422a025e6d4a92e0259c1fb4d07090f5bfde6b55fd9f880ac5855bd61d775f8ab75a7ab0
   languageName: node
   linkType: hard
 
@@ -7772,31 +7726,6 @@ __metadata:
   version: 1.14.0
   resolution: "ky@npm:1.14.0"
   checksum: 10c0/ae30950feaa863fd95854bc0f528a04a36fa04828c119b098c5a0933a46126ccaee829ec0d6d6fc968faa4d0a23501c3203534d024d60540541d322d9772983d
-  languageName: node
-  linkType: hard
-
-"ldap-filter@npm:^0.3.3":
-  version: 0.3.3
-  resolution: "ldap-filter@npm:0.3.3"
-  dependencies:
-    assert-plus: "npm:^1.0.0"
-  checksum: 10c0/5f3e6207c508d9720cb7ff93626406b0a096444abb2fe58e0d95db27e3bacebb232e4c298bdc119ed3ac5ec6ee8a042294e633a5e71b484f0dc59af8f1cd14f7
-  languageName: node
-  linkType: hard
-
-"ldapjs@npm:2.3.3":
-  version: 2.3.3
-  resolution: "ldapjs@npm:2.3.3"
-  dependencies:
-    abstract-logging: "npm:^2.0.0"
-    asn1: "npm:^0.2.4"
-    assert-plus: "npm:^1.0.0"
-    backoff: "npm:^2.5.0"
-    ldap-filter: "npm:^0.3.3"
-    once: "npm:^1.4.0"
-    vasync: "npm:^2.2.0"
-    verror: "npm:^1.8.1"
-  checksum: 10c0/ca1128671c5a653017c705a3f6cd044eae27e39d235c7a37a7d6f58227341106af583982f07a8b980a420e18418670b99c4d5679c77e46f826520c424c4f14bf
   languageName: node
   linkType: hard
 
@@ -10009,13 +9938,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"precond@npm:0.2":
-  version: 0.2.3
-  resolution: "precond@npm:0.2.3"
-  checksum: 10c0/289b71202c090286fab340acafc96bc1d719e6f2d2484a868ef5dff28efd5953bafda78aebe4416ebf907992aa88942e68cd53ed7e2ab9eaf0709a6b5ac72340
-  languageName: node
-  linkType: hard
-
 "prelude-ls@npm:^1.2.1":
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
@@ -11605,7 +11527,6 @@ __metadata:
     "@types/content-disposition": "npm:0.5.8"
     "@types/express": "npm:5.0.5"
     "@types/is-utf8": "npm:0.2.3"
-    "@types/ldapjs": "npm:2.2.5"
     "@types/linkify-it": "npm:3.0.5"
     "@types/lodash": "npm:4.14.202"
     "@types/mime-types": "npm:2.1.4"
@@ -11654,7 +11575,6 @@ __metadata:
     globals: "npm:15.12.0"
     irc-framework: "npm:4.14.0"
     is-utf8: "npm:0.2.1"
-    ldapjs: "npm:2.3.3"
     ldapts: "npm:8.0.9"
     linkify-it: "npm:5.0.0"
     lodash: "npm:4.17.21"
@@ -12265,37 +12185,6 @@ __metadata:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: 10c0/f15d588d79f3675135ba783c91a4083dcd290a2a5be9fcb6514220a1634e23df116847b1cc51f66bfb0644cf9353b2abb7815ae499bab06e46dd33c1a6bf1f4f
-  languageName: node
-  linkType: hard
-
-"vasync@npm:^2.2.0":
-  version: 2.2.1
-  resolution: "vasync@npm:2.2.1"
-  dependencies:
-    verror: "npm:1.10.0"
-  checksum: 10c0/2287b24dc12a982230fd41950979c0ee38f5df4802f9db6332b4af85b21eed12195706cdfbeb527480379783f5d11fe26a0b6a6ed114ee9fc102822a4c96e143
-  languageName: node
-  linkType: hard
-
-"verror@npm:1.10.0":
-  version: 1.10.0
-  resolution: "verror@npm:1.10.0"
-  dependencies:
-    assert-plus: "npm:^1.0.0"
-    core-util-is: "npm:1.0.2"
-    extsprintf: "npm:^1.2.0"
-  checksum: 10c0/37ccdf8542b5863c525128908ac80f2b476eed36a32cb944de930ca1e2e78584cc435c4b9b4c68d0fc13a47b45ff364b4be43aa74f8804f9050140f660fb660d
-  languageName: node
-  linkType: hard
-
-"verror@npm:^1.8.1":
-  version: 1.10.1
-  resolution: "verror@npm:1.10.1"
-  dependencies:
-    assert-plus: "npm:^1.0.0"
-    core-util-is: "npm:1.0.2"
-    extsprintf: "npm:^1.2.0"
-  checksum: 10c0/293fb060a4c9b07965569a0c3e45efa954127818707995a8a4311f691b5d6687be99f972c759838ba6eecae717f9af28e3c49d2afc7bbdf5f0b675238f1426e8
   languageName: node
   linkType: hard
 

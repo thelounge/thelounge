@@ -174,7 +174,7 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 		await safeUnbind(ldapclient);
 
 		if (!searchResult.searchEntries.length) {
-			log.warn(`LDAP Search did not find anything for: ${userDN} (0)`);
+			log.warn(`LDAP Search did not find anything for: ${userDN}`);
 			callback(false);
 			return;
 		}

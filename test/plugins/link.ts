@@ -601,6 +601,11 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 	it("should de-duplicate links", function (done) {
 		const port = this.port;
 		const host = this.host;
+
+		app.get("/", function (req, res) {
+			res.send("<!DOCTYPE html><html><head><title>test</title></head><body></body></html>");
+		});
+
 		const message = this.irc.createMessage({
 			text: `//${host}:${port}/ http://${host}:${port}/ http://${host}:${port}/`,
 		});
@@ -622,7 +627,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.link).to.equal(root_url);
-			expect(data.preview.type).to.equal("error");
+			expect(data.preview.type).to.equal("link");
 			done();
 		});
 	});
