@@ -116,7 +116,7 @@ export type ConfigType = {
 import defaultConfig from "../defaults/config.js";
 
 class Config {
-    values: ConfigType = {..._.cloneDeep(defaultConfig), themeColor: ""} as ConfigType;
+    values = {..._.cloneDeep(defaultConfig), themeColor: ""} as unknown as ConfigType;
     #homePath = "";
 
     getHomePath() {
