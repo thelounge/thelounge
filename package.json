@@ -80,7 +80,7 @@
     "web-push": "3.6.7"
   },
   "optionalDependencies": {
-    "sqlite3": "5.1.7"
+    "better-sqlite3": "12.4.1"
   },
   "devDependencies": {
     "@babel/core": "7.28.5",
@@ -92,6 +92,7 @@
     "@textcomplete/core": "0.1.13",
     "@textcomplete/textarea": "0.1.13",
     "@types/bcryptjs": "2.4.6",
+    "@types/better-sqlite3": "7.6.11",
     "@types/chai": "5.2.3",
     "@types/cheerio": "0.22.35",
     "@types/content-disposition": "0.5.8",
@@ -106,7 +107,6 @@
     "@types/semver": "7.7.1",
     "@types/sinon": "^20.0.0",
     "@types/sortablejs": "1.15.8",
-    "@types/sqlite3": "3.1.11",
     "@types/ua-parser-js": "0.7.39",
     "@types/uuid": "8.3.4",
     "@types/web-push": "3.6.4",

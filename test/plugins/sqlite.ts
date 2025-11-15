@@ -1,18 +1,18 @@
 import fs from "fs";
 import path from "path";
-import {expect, assert} from "chai";
-import util from "../util.js";
-import Msg from "../../server/models/msg.js";
-import {MessageType} from "../../shared/types/msg.js";
-import Config from "../../server/config.js";
+import {expect} from "chai";
+import util from "../util.ts";
+import Msg from "../../dist/server/models/msg.js";
+import {MessageType} from "../../dist/shared/types/msg.js";
+import Config from "../../dist/server/config.js";
 import MessageStorage, {
 	currentSchemaVersion,
 	migrations,
 	necessaryMigrations,
 	rollbacks,
-} from "../../server/plugins/messageStorage/sqlite.js";
-import sqlite3 from "sqlite3";
-import {DeletionRequest} from "../../server/plugins/messageStorage/types";
+} from "../../dist/server/plugins/messageStorage/sqlite.js";
+import Database from "better-sqlite3";
+import type {DeletionRequest} from "../../server/plugins/messageStorage/types.js";
 
 const orig_schema = [
 	// Schema version #1
@@ -50,25 +50,19 @@ const v1_dummy_messages = [
 ];
 
 describe("SQLite migrations", function () {
-	let db: sqlite3.Database;
+	let db: Database.Database;
 
 	function serialize_run(stmt: string, ...params: any[]): Promise<void> {
-		return new Promise((resolve, reject) => {
-			db.serialize(() => {
-				db.run(stmt, params, (err) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve();
-				});
-			});
-		});
+		try {
+			db.prepare(stmt).run(...params);
+			return Promise.resolve();
+		} catch (err) {
+			return Promise.reject(err);
+		}
 	}
 
 	before(async function () {
-		db = new sqlite3.Database(":memory:");
+		db = new Database(":memory:");
 
 		for (const stmt of orig_schema) {
 			await serialize_run(stmt);
@@ -86,8 +80,8 @@ describe("SQLite migrations", function () {
 		}
 	});
 
-	after(function (done) {
-		db.close(done);
+	after(function () {
+		db.close();
 	});
 
 	it("has a down migration for every migration", function () {
@@ -170,7 +164,7 @@ describe("SQLite unit tests", function () {
 
 		let id = 0;
 		let messages = await store.getMessages(net, chan, () => id++);
-		expect(messages.find((m) => m.text === "msg 13")).to.equal(undefined); // oldest gets deleted first
+		expect(messages.find((m) => m.text === "msg 13")).to.be.undefined; // oldest gets deleted first
 
 		// let's test if it properly cleans now
 		delReq.limit = 100;
@@ -243,18 +237,21 @@ describe("SQLite Message Storage", function () {
 	let store: MessageStorage;
 
 	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.get(stmt, params, (err, row) => {
-					if (err) {
-						reject(err);
-						return;
-					}
+		try {
+			const row = store.database.prepare(stmt).get(...params);
+			return Promise.resolve(row);
+		} catch (err) {
+			return Promise.reject(err);
+		}
+	}
 
-					resolve(row);
-				});
-			});
-		});
+	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
+		try {
+			const rows = store.database.prepare(stmt).all(...params);
+			return Promise.resolve(rows);
+		} catch (err) {
+			return Promise.reject(err);
+		}
 	}
 
 	before(function (done) {
@@ -276,17 +273,17 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should create database file", async function () {
-		expect(store.isEnabled).to.equal(false);
-		expect(fs.existsSync(expectedPath)).to.equal(false);
+		expect(store.isEnabled).to.be.false;
+		expect(fs.existsSync(expectedPath)).to.be.false;
 
 		await store.enable();
-		expect(store.isEnabled).to.equal(true);
+		expect(store.isEnabled).to.be.true;
 	});
 
 	it("should resolve an empty array when disabled", async function () {
 		store.isEnabled = false;
 		const messages = await store.getMessages(null as any, null as any, null as any);
-		assert.isEmpty(messages);
+		expect(messages).to.be.empty;
 		store.isEnabled = true;
 	});
 
@@ -300,7 +297,7 @@ describe("SQLite Message Storage", function () {
 			"SELECT id, version FROM migrations WHERE version = ?",
 			currentSchemaVersion
 		);
-		assert.isDefined(row);
+		expect(row).to.not.be.undefined;
 	});
 
 	it("should store a message", async function () {
@@ -462,7 +459,7 @@ describe("SQLite Message Storage", function () {
 
 	it("should close database", async function () {
 		await store.close();
-		expect(fs.existsSync(expectedPath)).to.equal(true);
+		expect(fs.existsSync(expectedPath)).to.be.true;
 	});
 });
 
