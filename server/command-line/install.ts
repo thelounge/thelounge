@@ -13,9 +13,10 @@ import path from "node:path";
 import packageJsonImport from "package-json";
 
 type CustomMetadata = FullMetadata & {
-    thelounge: {
-        supports: string;
+    thelounge?: {
+        supports?: string;
     };
+    version?: string;
 };
 
 const program = new Command("install");
@@ -36,6 +37,7 @@ program
         // TODO: type
         let readFile: any = null;
         let isLocalFile = false;
+        let packageVersion = "latest";
 
         if (packageName.startsWith("file:")) {
             isLocalFile = true;
@@ -48,7 +50,6 @@ program
         } else {
             // properly split scoped and non-scoped npm packages
             // into their name and version
-            let packageVersion = "latest";
             const atIndex = packageName.indexOf("@", 1);
 
             if (atIndex !== -1) {
@@ -69,9 +70,10 @@ program
 
         readFile
             .then((json: CustomMetadata) => {
-                const humanVersion = isLocalFile ? packageName : `${json.name} v${json.version}`;
+                const version = json.version || packageVersion;
+                const humanVersion = isLocalFile ? packageName : `${json.name} v${version}`;
 
-                if (!("thelounge" in json)) {
+                if (!json.thelounge) {
                     log.error(`${colors.red(humanVersion)} does not have The Lounge metadata.`);
 
                     process.exit(1);
@@ -95,7 +97,7 @@ program
                 }
 
                 log.info(`Installing ${colors.green(humanVersion)}...`);
-                const yarnVersion = isLocalFile ? packageName : `${json.name}@${json.version}`;
+                const yarnVersion = isLocalFile ? packageName : `${json.name}@${version}`;
                 return Utils.executeYarnCommand("add", "--exact", yarnVersion)
                     .then(() => {
                         log.info(`${colors.green(humanVersion)} has been successfully installed.`);

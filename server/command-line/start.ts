@@ -14,7 +14,7 @@ program
     .on("--help", Utils.extraHelp)
     .action(async function (options) {
         await initalizeConfig();
-        const serverModule = await import("../server/index.js");
+        const serverModule = await import("../server.js");
         serverModule.default(options);
     });
 

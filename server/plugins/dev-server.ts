@@ -5,42 +5,42 @@ import express from "express";
 import log from "../log.js";
 
 import webpack from "webpack";
-import config from "../../webpack.config.js";
+import config from "../../webpack.config.mjs";
 
 export default (app: express.Application) => {
-	log.debug("Starting server in development mode");
+    log.debug("Starting server in development mode");
 
-	const webpackConfig = config(undefined, {mode: "production"});
+    const webpackConfig = config(undefined, {mode: "production"});
 
-	if (
-		!webpackConfig ||
-		!webpackConfig.plugins?.length ||
-		!webpackConfig.entry ||
-		!webpackConfig.entry["js/bundle.js"]
-	) {
-		throw new Error("No valid production webpack config found");
-	}
+    if (
+        !webpackConfig ||
+        !webpackConfig.plugins?.length ||
+        !webpackConfig.entry ||
+        !webpackConfig.entry["js/bundle.js"]
+    ) {
+        throw new Error("No valid production webpack config found");
+    }
 
-	webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-	webpackConfig.entry["js/bundle.js"].push(
-		"webpack-hot-middleware/client?path=storage/__webpack_hmr"
-	);
+    webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+    webpackConfig.entry["js/bundle.js"].push(
+        "webpack-hot-middleware/client?path=storage/__webpack_hmr"
+    );
 
-	const compiler = webpack(webpackConfig);
+    const compiler = webpack(webpackConfig);
 
-	if (!compiler) {
-		throw new Error("Failed to create webpack compiler");
-	}
+    if (!compiler) {
+        throw new Error("Failed to create webpack compiler");
+    }
 
-	app.use(
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		webpackDevMiddleware(compiler, {
-			index: "/",
-			publicPath: webpackConfig.output?.publicPath,
-		})
-	).use(
-		webpackHotMiddleware(compiler, {
-			path: "/storage/__webpack_hmr",
-		})
-	);
+    app.use(
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        webpackDevMiddleware(compiler, {
+            index: "/",
+            publicPath: webpackConfig.output?.publicPath,
+        })
+    ).use(
+        webpackHotMiddleware(compiler, {
+            path: "/storage/__webpack_hmr",
+        })
+    );
 };
