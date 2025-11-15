@@ -52,10 +52,8 @@ program.addCommand(storageCmd.default);
 
 if (!Config.values.public) {
 	const usersCmd = await import("./users/index.js");
-	usersCmd.default.forEach((command: Command) => {
-		if (command) {
-			program.addCommand(command);
-		}
+	usersCmd.default.filter((command): command is Command => command !== undefined).forEach((command) => {
+		program.addCommand(command);
 	});
 }
 

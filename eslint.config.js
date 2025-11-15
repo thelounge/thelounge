@@ -65,7 +65,7 @@ const vueRules = {
 	"import/no-default-export": 0,
 	"import/unambiguous": 0, // vue SFC can miss script tags
 	"@typescript-eslint/prefer-readonly": 0, // can be used in template
-	"vue/component-tags-order": [
+	"vue/block-order": [
 		"error",
 		{
 			order: ["template", "style", "script"],
