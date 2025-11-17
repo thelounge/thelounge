@@ -5887,7 +5887,7 @@ ldapauth-fork@^5.0.1:
     ldapjs "^2.2.1"
     lru-cache "^7.10.1"
 
-ldapjs@2.3.3, ldapjs@^2.2.1:
+ldapjs@^2.2.1:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/ldapjs/-/ldapjs-2.3.3.tgz#06c317d3cbb5ac42fbba741e1a8b130ffcf997ab"
   integrity sha512-75QiiLJV/PQqtpH+HGls44dXweviFwQ6SiIK27EqzKQ5jU/7UFrl2E5nLdQ3IYRBzJ/AVFJI66u0MZ0uofKYwg==

@@ -72,7 +72,6 @@
     "got": "11.8.6",
     "irc-framework": "4.14.0",
     "is-utf8": "0.2.1",
-    "ldapjs": "2.3.3",
     "linkify-it": "3.0.3",
     "lodash": "4.17.21",
     "mime-types": "2.1.35",
