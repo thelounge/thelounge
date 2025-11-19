@@ -467,7 +467,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 						buffer = Buffer.concat([buffer, chunkBuffer]);
 
 						if (buffer.length >= limit) {
-							reader.cancel();
+							await reader.cancel();
 							break;
 						}
 					}
