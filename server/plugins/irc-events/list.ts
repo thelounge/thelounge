@@ -3,13 +3,13 @@ import {IrcEventHandler} from "../../client.js";
 import Chan from "../../models/chan.js";
 import {ChanType, SpecialChanType} from "../../../shared/types/chan.js";
 
-export default <IrcEventHandler>function (irc, network) {
+export default <IrcEventHandler>function (this: any, irc, network) {
 	const MAX_CHANS = 500;
 
 	irc.on("channel list start", () => {
 		network.chanCache = [];
 
-		updateListStatus({
+		updateListStatus.call(this, {
 			text: "Loading channel list, this can take a moment...",
 		});
 	});
@@ -17,13 +17,14 @@ export default <IrcEventHandler>function (irc, network) {
 	irc.on("channel list", (channels) => {
 		Array.prototype.push.apply(network.chanCache, channels);
 
-		updateListStatus({
+		updateListStatus.call(this, {
 			text: `Loaded ${network.chanCache.length} channels...`,
 		});
 	});
 
 	irc.on("channel list end", () => {
-		updateListStatus(
+		updateListStatus.call(
+			this,
 			network.chanCache.sort((a, b) => b.num_users! - a.num_users!).slice(0, MAX_CHANS)
 		);
 

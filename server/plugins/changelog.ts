@@ -2,7 +2,6 @@ import colors from "chalk";
 import log from "../log.js";
 import pkg from "../../package.json" with {type: "json"};
 import ClientManager from "../clientManager.js";
-import Config from "../config.js";
 import {SharedChangelogData} from "../../shared/types/changelog.js";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds

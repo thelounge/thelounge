@@ -256,7 +256,9 @@ class ClientManager {
 
 			return callback ? callback() : true;
 		} catch (e) {
-			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
+			log.error(
+				`Failed to update user ${colors.green(client.name)} (${e instanceof Error ? e.message : String(e)})`
+			);
 
 			if (callback) {
 				callback(e);
@@ -289,7 +291,9 @@ class ClientManager {
 			const data = fs.readFileSync(userPath, "utf-8");
 			return JSON.parse(data) as UserConfig;
 		} catch (e) {
-			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
+			log.error(
+				`Failed to read user ${colors.bold(name)}: ${e instanceof Error ? e.message : String(e)}`
+			);
 		}
 
 		return false;

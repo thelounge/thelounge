@@ -226,7 +226,9 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const version = await this.current_version();
 
 		if (version > currentSchemaVersion) {
-			throw `sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is NexusIRC out of date?`;
+			throw new Error(
+				`sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is NexusIRC out of date?`
+			);
 		} else if (version === currentSchemaVersion) {
 			return; // nothing to do
 		}
@@ -283,12 +285,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	 */
 	private async flushBatch(): Promise<void> {
 		if (this.batchQueue.length === 0) {
-			return;
+			return Promise.resolve();
 		}
 
 		if (!this.insertStmt) {
 			log.error("Cannot flush batch: insert statement not prepared");
-			return;
+			return Promise.resolve();
 		}
 
 		const messages = this.batchQueue.splice(0); // Take all messages and clear queue
@@ -303,7 +305,9 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 			transaction(messages);
 		} catch (err) {
-			log.error(`Failed to flush message batch: ${err}`);
+			log.error(
+				`Failed to flush message batch: ${err instanceof Error ? err.message : String(err)}`
+			);
 			// Re-add messages to queue on failure
 			this.batchQueue.unshift(...messages);
 			throw err;
@@ -687,7 +691,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			const result = this.database.prepare(stmt).run(...params);
 			return Promise.resolve(result.changes);
 		} catch (err) {
-			return Promise.reject(err);
+			return Promise.reject(err instanceof Error ? err : new Error(String(err)));
 		}
 	}
 
@@ -696,7 +700,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			const rows = this.database.prepare(stmt).all(...params);
 			return Promise.resolve(rows);
 		} catch (err) {
-			return Promise.reject(err);
+			return Promise.reject(err instanceof Error ? err : new Error(String(err)));
 		}
 	}
 
@@ -705,7 +709,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			const row = this.database.prepare(stmt).get(...params);
 			return Promise.resolve(row);
 		} catch (err) {
-			return Promise.reject(err);
+			return Promise.reject(err instanceof Error ? err : new Error(String(err)));
 		}
 	}
 }

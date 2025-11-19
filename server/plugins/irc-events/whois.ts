@@ -5,11 +5,11 @@ import {MessageType} from "../../../shared/types/msg.js";
 import {ChanType} from "../../../shared/types/chan.js";
 
 export default <IrcEventHandler>function (this: any, irc, network) {
-	irc.on("whois", function (this: any, data: any) {
+	irc.on("whois", (data: any) => {
 		handleWhois.call(this, data);
 	});
 
-	irc.on("whowas", function (this: any, data: any) {
+	irc.on("whowas", (data: any) => {
 		data.whowas = true;
 
 		handleWhois.call(this, data);

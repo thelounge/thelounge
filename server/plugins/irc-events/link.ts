@@ -481,7 +481,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 
 					resolve({data: buffer, type, size});
 				})
-				.catch((e) => reject(e));
+				.catch((e) => reject(e instanceof Error ? e : new Error(String(e))));
 		} catch (e) {
 			return reject(e instanceof Error ? e : new Error(String(e)));
 		}
