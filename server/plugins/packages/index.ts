@@ -49,6 +49,7 @@ export default {
 	loadPackages,
 	outdated,
 	stopWatching,
+	clearPackages,
 };
 
 // TODO: verify binds worked. Used to be 'this' instead of 'packageApis'
@@ -101,6 +102,12 @@ function getPackage(name: string) {
 	return packageMap.get(name);
 }
 
+function clearPackages() {
+	packageMap.clear();
+	stylesheets.length = 0;
+	files.length = 0;
+}
+
 function getEnabledPackages(packageJson: string) {
 	try {
 		const json = JSON.parse(fs.readFileSync(packageJson, "utf-8"));
@@ -118,7 +125,7 @@ function getPersistentStorageDir(packageName: string) {
 	return dir;
 }
 
-function loadPackage(packageName: string) {
+async function loadPackage(packageName: string) {
 	let packageInfo: PackageInfo;
 	// TODO: type
 	let packageFile: Package;
@@ -143,7 +150,7 @@ function loadPackage(packageName: string) {
 			);
 		}
 
-		packageFile = require(packagePath);
+		packageFile = await import(packagePath);
 	} catch (e: any) {
 		log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
 
@@ -188,11 +195,11 @@ function loadPackage(packageName: string) {
 	}
 }
 
-function loadPackages() {
+async function loadPackages() {
 	const packageJson = path.join(Config.getPackagesPath(), "package.json");
 	const packages = getEnabledPackages(packageJson);
 
-	packages.forEach(loadPackage);
+	await Promise.all(packages.map((pkg) => loadPackage(pkg)));
 
 	watchPackages(packageJson);
 }
@@ -205,15 +212,17 @@ function watchPackages(packageJson: string) {
 		},
 		_.debounce(
 			() => {
-				const updated = getEnabledPackages(packageJson);
+				void (async () => {
+					const updated = getEnabledPackages(packageJson);
 
-				for (const packageName of updated) {
-					if (packageMap.has(packageName)) {
-						continue;
+					for (const packageName of updated) {
+						if (packageMap.has(packageName)) {
+							continue;
+						}
+
+						await loadPackage(packageName);
 					}
-
-					loadPackage(packageName);
-				}
+				})();
 			},
 			1000,
 			{maxWait: 10000}

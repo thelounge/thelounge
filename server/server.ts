@@ -251,7 +251,7 @@ export default async function (
 			});
 
 			manager = new ClientManager();
-			packages.loadPackages();
+			await packages.loadPackages();
 
 			const defaultTheme = themes.getByName(Config.values.theme);
 
