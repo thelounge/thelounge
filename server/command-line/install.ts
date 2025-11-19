@@ -5,11 +5,10 @@ import Helper from "../helper.js";
 import Config from "../config.js";
 import Utils from "./utils.js";
 import {Command} from "commander";
-import {FullMetadata} from "package-json";
+import packageJsonImport, {FullMetadata} from "package-json";
 import fs from "node:fs";
 import fspromises from "node:fs/promises";
 import path from "node:path";
-import packageJsonImport from "package-json";
 
 type CustomMetadata = FullMetadata & {
 	thelounge?: {
@@ -26,7 +25,7 @@ program
 	)
 	.description("Install a theme or a package")
 	.on("--help", Utils.extraHelp)
-	.action(async function (packageName: string) {
+	.action(function (packageName: string) {
 		if (!fs.existsSync(Config.getConfigPath())) {
 			log.error(`${Config.getConfigPath()} does not exist.`);
 			return;
@@ -125,8 +124,8 @@ program
 	});
 
 function expandTildeInLocalPath(packageName: string): string {
-	const path = packageName.substring("file:".length);
-	return "file:" + Helper.expandHome(path);
+	const localPath = packageName.substring("file:".length);
+	return "file:" + Helper.expandHome(localPath);
 }
 
 export default program;
