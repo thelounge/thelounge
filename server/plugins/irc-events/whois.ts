@@ -58,9 +58,9 @@ export default <IrcEventHandler>function (this: Client, irc, network) {
 			});
 		} else {
 			// Absolute datetime in milliseconds since nick is idle
-			data.idleTime = Date.now() - data.idle * 1000;
+			data.idleTime = Date.now() - (data.idle ?? 0) * 1000;
 			// Absolute datetime in milliseconds when nick logged on.
-			data.logonTime = data.logon * 1000;
+			data.logonTime = (data.logon ?? 0) * 1000;
 			msg = new Msg({
 				type: MessageType.WHOIS,
 				whois: data,

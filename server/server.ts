@@ -200,7 +200,7 @@ export default async function (
 	let identd: Identification | null = null;
 
 	return new Promise<ServerInstance>((resolve) => {
-		server.listen(listenParams, () => {
+		server.listen(listenParams, async () => {
 			if (typeof listenParams === "string") {
 				log.info("Available on socket " + colors.green(listenParams));
 			} else {
