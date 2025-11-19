@@ -1,21 +1,31 @@
 import {IrcEventHandler} from "../../client.js";
+import type Client from "../../client.js";
 
 import Msg from "../../models/msg.js";
 import {MessageType} from "../../../shared/types/msg.js";
 import {ChanType} from "../../../shared/types/chan.js";
 
-export default <IrcEventHandler>function (this: any, irc, network) {
-	irc.on("whois", (data: any) => {
+interface WhoisData {
+	nick: string;
+	error?: boolean;
+	idle?: number;
+	logon?: number;
+	whowas?: boolean;
+	[key: string]: unknown;
+}
+
+export default <IrcEventHandler>function (this: Client, irc, network) {
+	irc.on("whois", (data: WhoisData) => {
 		handleWhois.call(this, data);
 	});
 
-	irc.on("whowas", (data: any) => {
+	irc.on("whowas", (data: WhoisData) => {
 		data.whowas = true;
 
 		handleWhois.call(this, data);
 	});
 
-	function handleWhois(this: any, data: any) {
+	function handleWhois(this: Client, data: WhoisData) {
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
