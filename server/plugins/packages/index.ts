@@ -139,6 +139,7 @@ function clearPackages() {
 	packageMap.clear();
 	stylesheets.length = 0;
 	files.length = 0;
+	experimentalWarningPrinted = false;
 }
 
 function getEnabledPackages(packageJson: string) {
