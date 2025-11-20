@@ -68,7 +68,7 @@ export type NetworkConfig = {
 	rejectUnauthorized: boolean;
 	password: string;
 	awayMessage: string;
-	commands: any[];
+	commands: string;
 	username: string;
 	realname: string;
 	leaveMessage: string;
@@ -83,7 +83,7 @@ export type NetworkConfig = {
 	proxyPassword: string;
 	proxyEnabled: boolean;
 	highlightRegex?: string;
-	ignoreList: any[];
+	ignoreList: IgnoreListItem[];
 };
 
 class Network {
@@ -381,22 +381,22 @@ class Network {
 		if (typeof Config.values.webirc[this.host] === "function") {
 			webircObject.password = null;
 
-			return Config.values.webirc[this.host](webircObject, this) as typeof webircObject;
+			return (Config.values.webirc[this.host] as (obj: typeof webircObject, network: Network) => typeof webircObject)(webircObject, this);
 		}
 
 		return webircObject;
 	}
 
-	edit(this: NetworkWithIrcFramework, client: Client, args: any) {
+	edit(this: NetworkWithIrcFramework, client: Client, args: Record<string, unknown>) {
 		const oldNetworkName = this.name;
 		const oldNick = this.nick;
 		const oldRealname = this.realname;
 
 		this.keepNick = null;
-		this.nick = args.nick;
+		this.nick = args.nick as string;
 		this.host = String(args.host || "");
 		this.name = String(args.name || "") || this.host;
-		this.port = parseInt(args.port, 10);
+		this.port = parseInt(String(args.port), 10);
 		this.tls = !!args.tls;
 		this.rejectUnauthorized = !!args.rejectUnauthorized;
 		this.password = String(args.password || "");
@@ -408,7 +408,7 @@ class Network {
 		this.saslPassword = String(args.saslPassword || "");
 
 		this.proxyHost = String(args.proxyHost || "");
-		this.proxyPort = parseInt(args.proxyPort, 10);
+		this.proxyPort = parseInt(String(args.proxyPort), 10);
 		this.proxyUsername = String(args.proxyUsername || "");
 		this.proxyPassword = String(args.proxyPassword || "");
 		this.proxyEnabled = !!args.proxyEnabled;

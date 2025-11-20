@@ -11,8 +11,27 @@ import fs from "fs";
 import Utils from "../../command-line/utils.js";
 import Client from "../../client.js";
 
+type PackageAPI = {
+	Stylesheets: {addFile: (filename: string) => void};
+	PublicFiles: {add: (filename: string) => void};
+	Commands: {
+		add: (command: string, callback: unknown) => void;
+		runAsUser: (command: string, targetId: number, client: Client) => void;
+	};
+	Config: {
+		getConfig: () => typeof Config.values;
+		getPersistentStorageDir: () => string;
+	};
+	Logger: {
+		error: (...args: string[]) => void;
+		warn: (...args: string[]) => void;
+		info: (...args: string[]) => void;
+		debug: (...args: string[]) => void;
+	};
+};
+
 type Package = {
-	onServerStart: (packageApis: any) => void;
+	onServerStart: (packageApis: PackageAPI) => void;
 };
 
 const packageMap = new Map<string, Package>();
@@ -112,7 +131,7 @@ function getEnabledPackages(packageJson: string) {
 	try {
 		const json = JSON.parse(fs.readFileSync(packageJson, "utf-8"));
 		return Object.keys(json.dependencies);
-	} catch (e: any) {
+	} catch (e: unknown) {
 		log.error(`Failed to read packages/package.json: ${colors.red(e)}`);
 	}
 
@@ -151,7 +170,7 @@ async function loadPackage(packageName: string) {
 		}
 
 		packageFile = await import(packagePath);
-	} catch (e: any) {
+	} catch (e: unknown) {
 		log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
 
 		if (e instanceof Error) {
@@ -172,7 +191,7 @@ async function loadPackage(packageName: string) {
 
 	if (packageInfo.type === "theme") {
 		// PackageInfo includes theme-specific fields when type === "theme"
-		themes.addTheme(packageName, packageInfo as any);
+		themes.addTheme(packageName, packageInfo as PackageInfo & {type: "theme"; themeColor: string; css: string});
 
 		if (packageInfo.files) {
 			packageInfo.files.forEach((file) => addFile(packageName, file));
