@@ -3,6 +3,7 @@ import LinkPrefetch from "./link.js";
 import {cleanIrcMessage} from "../../../shared/irc.js";
 import Helper from "../../helper.js";
 import {IrcEventHandler} from "../../client.js";
+import type Client from "../../client.js";
 import Chan from "../../models/chan.js";
 import User from "../../models/user.js";
 import {MessageType} from "../../../shared/types/msg.js";
@@ -28,7 +29,7 @@ function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInpu
 	return {...data, type: type};
 }
 
-export default <IrcEventHandler>function (this: any, irc, network) {
+export default <IrcEventHandler>function (this: Client, irc, network) {
 	irc.on("notice", (data) => {
 		handleMessage.call(this, convertForHandle(MessageType.NOTICE, data));
 	});
@@ -46,7 +47,7 @@ export default <IrcEventHandler>function (this: any, irc, network) {
 		handleMessage.call(this, convertForHandle(MessageType.WALLOPS, data));
 	});
 
-	function handleMessage(this: any, data: HandleInput) {
+	function handleMessage(this: Client, data: HandleInput) {
 		let chan: Chan | undefined;
 		let from: User;
 		let highlight = false;

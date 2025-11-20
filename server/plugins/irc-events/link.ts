@@ -73,7 +73,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 	}, []);
 }
 
-function parseHtml(preview, res, client: Client) {
+function parseHtml(preview: LinkPreview, res: FetchRequest, client: Client) {
 	// TODO:
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	return new Promise((resolve: (preview: FetchRequest | null) => void) => {
@@ -138,8 +138,7 @@ function parseHtml(preview, res, client: Client) {
 	});
 }
 
-// TODO: type $
-function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> {
+function parseHtmlMedia($: ReturnType<typeof cheerio.load>, preview: LinkPreview, client: Client): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject(new Error("Media preview is disabled"));
@@ -316,12 +315,16 @@ function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, cl
 	void promise.then((newRes) => handlePreview(client, chan, msg, preview, newRes));
 }
 
-function handlePreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview, res) {
+function handlePreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview, res: FetchRequest | null) {
 	const thumb = preview.thumbActualUrl || "";
 	delete preview.thumbActualUrl;
 
 	if (!thumb.length || !Config.values.prefetchStorage) {
 		preview.thumb = thumb;
+		return emitPreview(client, chan, msg, preview);
+	}
+
+	if (!res) {
 		return emitPreview(client, chan, msg, preview);
 	}
 

@@ -1,9 +1,10 @@
 import {IrcEventHandler} from "../../client.js";
+import type Client from "../../client.js";
 
 import Chan from "../../models/chan.js";
 import {ChanType, SpecialChanType} from "../../../shared/types/chan.js";
 
-export default <IrcEventHandler>function (this: any, irc, network) {
+export default <IrcEventHandler>function (this: Client, irc, network) {
 	const MAX_CHANS = 500;
 
 	irc.on("channel list start", () => {
@@ -32,7 +33,7 @@ export default <IrcEventHandler>function (this: any, irc, network) {
 	});
 
 	function updateListStatus(
-		this: any,
+		this: Client,
 		msg:
 			| {
 					text: string;

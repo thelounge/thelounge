@@ -10,7 +10,7 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		const isSecure = irc.connection.transport.socket.encrypted;
-		const values = {} as any;
+		const values: {duration?: string; port?: string; [key: string]: string | undefined} = {};
 
 		data.capabilities.sts.split(",").map((value) => {
 			value = value.split("=", 2);
@@ -18,7 +18,7 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 
 		if (isSecure) {
-			const duration = parseInt(values.duration, 10);
+			const duration = parseInt(values.duration ?? "", 10);
 
 			if (isNaN(duration)) {
 				return;
@@ -26,7 +26,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 			STSPolicies.update(network.host, network.port, duration);
 		} else {
-			const port = parseInt(values.port, 10);
+			const port = parseInt(values.port ?? "", 10);
 
 			if (isNaN(port)) {
 				return;
