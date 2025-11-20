@@ -9,7 +9,7 @@ import crypto from "node:crypto";
 import log from "../log.js";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
-import {Request, Response} from "express";
+import {Application, Request, Response} from "express";
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -70,8 +70,7 @@ class Uploader {
 		return setTimeout(() => uploadTokens.delete(token), 60 * 1000);
 	}
 
-	// TODO: type
-	static router(this: void, express: any) {
+	static router(this: void, express: Application) {
 		express.get("/uploads/:name/:slug*?", Uploader.routeGetFile);
 		express.post("/uploads/new/:token", Uploader.routeUploadFile);
 	}
@@ -155,7 +154,7 @@ class Uploader {
 			}
 		};
 
-		const abortWithError = (err: any) => {
+		const abortWithError = (err: unknown) => {
 			doneCallback();
 
 			// if we ended up erroring out, delete the output file from disk
@@ -164,7 +163,7 @@ class Uploader {
 				destPath = null;
 			}
 
-			return res.status(400).json({error: err.message});
+			return res.status(400).json({error: err instanceof Error ? err.message : String(err)});
 		};
 
 		// if the authentication token is incorrect, bail out
@@ -221,8 +220,8 @@ class Uploader {
 		// too many files on one folder
 		try {
 			fs.mkdirSync(destDir, {recursive: true});
-		} catch (err: any) {
-			log.error(`Error ensuring ${destDir} exists for uploads: ${err.message}`);
+		} catch (err: unknown) {
+			log.error(`Error ensuring ${destDir} exists for uploads: ${err instanceof Error ? err.message : String(err)}`);
 
 			return abortWithError(err);
 		}
@@ -310,9 +309,9 @@ class Uploader {
 
 			// otherwise assume it's random binary data
 			return "application/octet-stream";
-		} catch (e: any) {
-			if (e.code !== "ENOENT") {
-				log.warn(`Failed to read ${filePath}: ${e.message}`);
+		} catch (e: unknown) {
+			if (e && typeof e === "object" && "code" in e && e.code !== "ENOENT") {
+				log.warn(`Failed to read ${filePath}: ${e instanceof Error ? e.message : String(e)}`);
 			}
 		}
 

@@ -193,7 +193,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			return 0;
 		}
 
-		const storedSchemaVersion = parseInt(version.value, 10);
+		const storedSchemaVersion = parseInt((version as Record<string, unknown>)["value"] as string, 10);
 		return storedSchemaVersion;
 	}
 
@@ -275,8 +275,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		try {
 			this.database.close();
-		} catch (err: any) {
-			throw new Error(`Failed to close sqlite database: ${err.message}`);
+		} catch (err: unknown) {
+			throw new Error(`Failed to close sqlite database: ${err instanceof Error ? err.message : String(err)}`);
 		}
 	}
 
@@ -344,14 +344,16 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		for (const raw of res) {
 			const last = result.at(-1);
 
-			if (!last || raw.version !== last.version) {
+			const r = raw as Record<string, unknown>;
+
+		if (!last || r["version"] !== last.version) {
 				result.push({
-					version: raw.version,
-					rollback_forbidden: Boolean(raw.rollback_forbidden),
-					stmts: [raw.statement],
+					version: r["version"] as number,
+					rollback_forbidden: Boolean(r["rollback_forbidden"]),
+					stmts: [r["statement"] as string],
 				});
 			} else {
-				last.stmts.push(raw.statement);
+				last.stmts.push(r["statement"] as string);
 			}
 		}
 
@@ -431,7 +433,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 					`insert into rollback_steps
                     (migration_id, step, statement)
                     values (?, ?, ?)`,
-					migration.id,
+					(migration as Record<string, unknown>)["id"],
 					step,
 					stmt
 				);
@@ -514,10 +516,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			limit
 		);
 
-		return rows.reverse().map((row: any): Message => {
-			const msg = JSON.parse(row.msg);
-			msg.time = row.time;
-			msg.type = row.type;
+		return rows.reverse().map((row): Message => {
+		const r = row as Record<string, unknown>;
+			const msg = JSON.parse(r["msg"] as string);
+			msg.time = r["time"];
+			msg.type = r["type"];
 
 			const newMsg = new Msg(msg);
 			newMsg.id = nextID();
@@ -544,7 +547,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		let select =
 			"SELECT msg, type, time, network, channel FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
-		const params: any[] = [`%${escapedSearchTerm}%`];
+		const params: unknown[] = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
 			select += " AND network = ? ";
@@ -624,10 +627,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			limit
 		);
 
-		return rows.reverse().map((row: any): Message => {
-			const msg = JSON.parse(row.msg);
-			msg.time = row.time;
-			msg.type = row.type;
+		return rows.reverse().map((row): Message => {
+		const r = row as Record<string, unknown>;
+			const msg = JSON.parse(r["msg"] as string);
+			msg.time = r["time"];
+			msg.type = r["type"];
 			return new Msg(msg);
 		});
 	}
@@ -655,10 +659,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			limit
 		);
 
-		return rows.reverse().map((row: any): Message => {
-			const msg = JSON.parse(row.msg);
-			msg.time = row.time;
-			msg.type = row.type;
+		return rows.reverse().map((row): Message => {
+		const r = row as Record<string, unknown>;
+			const msg = JSON.parse(r["msg"] as string);
+			msg.time = r["time"];
+			msg.type = r["type"];
 			return new Msg(msg);
 		});
 	}
@@ -679,14 +684,14 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			channelName.toLowerCase()
 		);
 
-		return row ? (row.count as number) : 0;
+		return row ? ((row as Record<string, unknown>)["count"] as number) : 0;
 	}
 
 	canProvideMessages() {
 		return this.isEnabled;
 	}
 
-	private serialize_run(stmt: string, ...params: any[]): Promise<number> {
+	private serialize_run(stmt: string, ...params: unknown[]): Promise<number> {
 		try {
 			const result = this.database.prepare(stmt).run(...params);
 			return Promise.resolve(result.changes);
@@ -695,7 +700,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 	}
 
-	private serialize_fetchall(stmt: string, ...params: any[]): Promise<any[]> {
+	private serialize_fetchall(stmt: string, ...params: unknown[]): Promise<unknown[]> {
 		try {
 			const rows = this.database.prepare(stmt).all(...params);
 			return Promise.resolve(rows);
@@ -704,7 +709,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 	}
 
-	private serialize_get(stmt: string, ...params: any[]): Promise<any> {
+	private serialize_get(stmt: string, ...params: unknown[]): Promise<unknown> {
 		try {
 			const row = this.database.prepare(stmt).get(...params);
 			return Promise.resolve(row);
@@ -714,16 +719,16 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 }
 
-// TODO: type any
-function parseSearchRowsToMessages(id: number, rows: any[]) {
+function parseSearchRowsToMessages(id: number, rows: unknown[]) {
 	const messages: Msg[] = [];
 
 	for (const row of rows) {
-		const msg = JSON.parse(row.msg);
-		msg.time = row.time;
-		msg.type = row.type;
-		msg.networkUuid = row.network;
-		msg.channelName = row.channel;
+		const r = row as Record<string, unknown>;
+		const msg = JSON.parse(r["msg"] as string);
+		msg.time = r["time"];
+		msg.type = r["type"];
+		msg.networkUuid = r["network"];
+		msg.channelName = r["channel"];
 		msg.id = id;
 		messages.push(new Msg(msg));
 		id += 1;
