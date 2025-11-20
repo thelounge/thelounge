@@ -1,5 +1,4 @@
-import {IrcEventHandler} from "../../client.js";
-import type Client from "../../client.js";
+import Client, {IrcEventHandler} from "../../client.js";
 
 import Msg from "../../models/msg.js";
 import {MessageType} from "../../../shared/types/msg.js";
