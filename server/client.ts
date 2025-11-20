@@ -392,7 +392,11 @@ class Client {
 		return crypto.createHash("sha512").update(token).digest("hex");
 	}
 
-	updateSession(token: string, ip: string, request: {headers: Record<string, string | string[] | undefined>}) {
+	updateSession(
+		token: string,
+		ip: string,
+		request: {headers: Record<string, string | string[] | undefined>}
+	) {
 		const userAgent = request.headers["user-agent"];
 		const parser = new UAParser(typeof userAgent === "string" ? userAgent : "");
 		const agent = parser.getResult();
@@ -551,7 +555,9 @@ class Client {
 			);
 		}
 
-		this.highlightRegex = compileHighlightRegex(this.config.clientSettings.highlights as string);
+		this.highlightRegex = compileHighlightRegex(
+			this.config.clientSettings.highlights as string
+		);
 		this.highlightExceptionRegex = compileHighlightRegex(
 			this.config.clientSettings.highlightExceptions as string
 		);
@@ -796,7 +802,16 @@ class Client {
 		}
 	}
 
-	registerPushSubscription(session: {lastUse: number; ip: string; agent: string; pushSubscription?: ClientPushSubscription}, subscription: PushSubscriptionJSON, noSave = false) {
+	registerPushSubscription(
+		session: {
+			lastUse: number;
+			ip: string;
+			agent: string;
+			pushSubscription?: ClientPushSubscription;
+		},
+		subscription: PushSubscriptionJSON,
+		noSave = false
+	) {
 		if (
 			!_.isPlainObject(subscription) ||
 			typeof subscription.endpoint !== "string" ||

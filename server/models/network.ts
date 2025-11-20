@@ -381,7 +381,12 @@ class Network {
 		if (typeof Config.values.webirc[this.host] === "function") {
 			webircObject.password = null;
 
-			return (Config.values.webirc[this.host] as (obj: typeof webircObject, network: Network) => typeof webircObject)(webircObject, this);
+			return (
+				Config.values.webirc[this.host] as (
+					obj: typeof webircObject,
+					network: Network
+				) => typeof webircObject
+			)(webircObject, this);
 		}
 
 		return webircObject;

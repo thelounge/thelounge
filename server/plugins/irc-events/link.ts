@@ -138,7 +138,11 @@ function parseHtml(preview: LinkPreview, res: FetchRequest, client: Client) {
 	});
 }
 
-function parseHtmlMedia($: ReturnType<typeof cheerio.load>, preview: LinkPreview, client: Client): Promise<FetchRequest> {
+function parseHtmlMedia(
+	$: ReturnType<typeof cheerio.load>,
+	preview: LinkPreview,
+	client: Client
+): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject(new Error("Media preview is disabled"));
@@ -315,7 +319,13 @@ function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, cl
 	void promise.then((newRes) => handlePreview(client, chan, msg, preview, newRes));
 }
 
-function handlePreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview, res: FetchRequest | null) {
+function handlePreview(
+	client: Client,
+	chan: Chan,
+	msg: Msg,
+	preview: LinkPreview,
+	res: FetchRequest | null
+) {
 	const thumb = preview.thumbActualUrl || "";
 	delete preview.thumbActualUrl;
 

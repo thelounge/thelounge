@@ -191,7 +191,10 @@ async function loadPackage(packageName: string) {
 
 	if (packageInfo.type === "theme") {
 		// PackageInfo includes theme-specific fields when type === "theme"
-		themes.addTheme(packageName, packageInfo as PackageInfo & {type: "theme"; themeColor: string; css: string});
+		themes.addTheme(
+			packageName,
+			packageInfo as PackageInfo & {type: "theme"; themeColor: string; css: string}
+		);
 
 		if (packageInfo.files) {
 			packageInfo.files.forEach((file) => addFile(packageName, file));

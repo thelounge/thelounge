@@ -221,7 +221,9 @@ class Uploader {
 		try {
 			fs.mkdirSync(destDir, {recursive: true});
 		} catch (err: unknown) {
-			log.error(`Error ensuring ${destDir} exists for uploads: ${err instanceof Error ? err.message : String(err)}`);
+			log.error(
+				`Error ensuring ${destDir} exists for uploads: ${err instanceof Error ? err.message : String(err)}`
+			);
 
 			return abortWithError(err);
 		}
@@ -311,7 +313,9 @@ class Uploader {
 			return "application/octet-stream";
 		} catch (e: unknown) {
 			if (e && typeof e === "object" && "code" in e && e.code !== "ENOENT") {
-				log.warn(`Failed to read ${filePath}: ${e instanceof Error ? e.message : String(e)}`);
+				log.warn(
+					`Failed to read ${filePath}: ${e instanceof Error ? e.message : String(e)}`
+				);
 			}
 		}
 

@@ -1,6 +1,6 @@
 import storage from "./localStorage";
 import socket from "./socket";
-import {config, createState} from "./settings";
+import {config, createState, SettingsState} from "./settings";
 import {Store} from "vuex";
 import {State} from "./store";
 
@@ -71,7 +71,7 @@ export function createSettingsStore(store: Store<State>) {
 }
 
 function loadFromLocalStorage() {
-	let storedSettings: Record<string, any> = {};
+	let storedSettings: Partial<SettingsState> = {};
 
 	try {
 		storedSettings = JSON.parse(storage.get("settings") || "{}");
@@ -99,8 +99,8 @@ function loadFromLocalStorage() {
  * @param {object} storedSettings
  */
 function assignStoredSettings(
-	defaultSettings: Record<string, any>,
-	storedSettings: Record<string, any>
+	defaultSettings: SettingsState,
+	storedSettings: Partial<SettingsState>
 ) {
 	const newSettings = {...defaultSettings};
 

@@ -61,7 +61,10 @@ function remove(uuid: string) {
 	}
 }
 
-function generateAndWrite(folderPath: string, paths: {privateKeyPath: string; certificatePath: string}) {
+function generateAndWrite(
+	folderPath: string,
+	paths: {privateKeyPath: string; certificatePath: string}
+) {
 	const certificate = generate();
 
 	try {

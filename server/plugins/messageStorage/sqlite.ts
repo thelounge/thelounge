@@ -193,7 +193,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			return 0;
 		}
 
-		const storedSchemaVersion = parseInt((version as Record<string, unknown>)["value"] as string, 10);
+		const storedSchemaVersion = parseInt(
+			(version as Record<string, unknown>).value as string,
+			10
+		);
 		return storedSchemaVersion;
 	}
 
@@ -276,7 +279,9 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		try {
 			this.database.close();
 		} catch (err: unknown) {
-			throw new Error(`Failed to close sqlite database: ${err instanceof Error ? err.message : String(err)}`);
+			throw new Error(
+				`Failed to close sqlite database: ${err instanceof Error ? err.message : String(err)}`
+			);
 		}
 	}
 
@@ -346,14 +351,14 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 			const r = raw as Record<string, unknown>;
 
-		if (!last || r["version"] !== last.version) {
+			if (!last || r.version !== last.version) {
 				result.push({
-					version: r["version"] as number,
-					rollback_forbidden: Boolean(r["rollback_forbidden"]),
-					stmts: [r["statement"] as string],
+					version: r.version as number,
+					rollback_forbidden: Boolean(r.rollback_forbidden),
+					stmts: [r.statement as string],
 				});
 			} else {
-				last.stmts.push(r["statement"] as string);
+				last.stmts.push(r.statement as string);
 			}
 		}
 
@@ -433,7 +438,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 					`insert into rollback_steps
                     (migration_id, step, statement)
                     values (?, ?, ?)`,
-					(migration as Record<string, unknown>)["id"],
+					(migration as Record<string, unknown>).id,
 					step,
 					stmt
 				);
@@ -517,10 +522,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		);
 
 		return rows.reverse().map((row): Message => {
-		const r = row as Record<string, unknown>;
-			const msg = JSON.parse(r["msg"] as string);
-			msg.time = r["time"];
-			msg.type = r["type"];
+			const r = row as Record<string, unknown>;
+			const msg = JSON.parse(r.msg as string);
+			msg.time = r.time;
+			msg.type = r.type;
 
 			const newMsg = new Msg(msg);
 			newMsg.id = nextID();
@@ -628,10 +633,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		);
 
 		return rows.reverse().map((row): Message => {
-		const r = row as Record<string, unknown>;
-			const msg = JSON.parse(r["msg"] as string);
-			msg.time = r["time"];
-			msg.type = r["type"];
+			const r = row as Record<string, unknown>;
+			const msg = JSON.parse(r.msg as string);
+			msg.time = r.time;
+			msg.type = r.type;
 			return new Msg(msg);
 		});
 	}
@@ -660,10 +665,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		);
 
 		return rows.reverse().map((row): Message => {
-		const r = row as Record<string, unknown>;
-			const msg = JSON.parse(r["msg"] as string);
-			msg.time = r["time"];
-			msg.type = r["type"];
+			const r = row as Record<string, unknown>;
+			const msg = JSON.parse(r.msg as string);
+			msg.time = r.time;
+			msg.type = r.type;
 			return new Msg(msg);
 		});
 	}
@@ -684,7 +689,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			channelName.toLowerCase()
 		);
 
-		return row ? ((row as Record<string, unknown>)["count"] as number) : 0;
+		return row ? ((row as Record<string, unknown>).count as number) : 0;
 	}
 
 	canProvideMessages() {
@@ -724,11 +729,11 @@ function parseSearchRowsToMessages(id: number, rows: unknown[]) {
 
 	for (const row of rows) {
 		const r = row as Record<string, unknown>;
-		const msg = JSON.parse(r["msg"] as string);
-		msg.time = r["time"];
-		msg.type = r["type"];
-		msg.networkUuid = r["network"];
-		msg.channelName = r["channel"];
+		const msg = JSON.parse(r.msg as string);
+		msg.time = r.time;
+		msg.type = r.type;
+		msg.networkUuid = r.network;
+		msg.channelName = r.channel;
 		msg.id = id;
 		messages.push(new Msg(msg));
 		id += 1;

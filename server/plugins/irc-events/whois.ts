@@ -40,11 +40,11 @@ export default <IrcEventHandler>function (this: Client, irc, network) {
 
 				this.emit("join", {
 					network: network.uuid,
-					chan: chan!.getFilteredClone(true),
+					chan: chan.getFilteredClone(true),
 					shouldOpen: true,
-					index: network.addChannel(chan!),
+					index: network.addChannel(chan),
 				});
-				chan!.loadMessages(this, network);
+				chan.loadMessages(this, network);
 				this.save();
 			}
 		}
@@ -67,6 +67,6 @@ export default <IrcEventHandler>function (this: Client, irc, network) {
 			});
 		}
 
-		chan!.pushMessage(this, msg);
+		chan.pushMessage(this, msg);
 	}
 };
