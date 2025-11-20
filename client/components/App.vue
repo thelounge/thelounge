@@ -77,7 +77,7 @@ export default defineComponent({
 		});
 
 		const debouncedResize = ref<DebouncedFunc<() => void>>();
-		const dayChangeTimeout = ref<any>();
+		const dayChangeTimeout = ref<ReturnType<typeof setTimeout>>();
 
 		const escapeKey = () => {
 			eventbus.emit("escapekey");
