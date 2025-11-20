@@ -96,7 +96,7 @@ class Network {
 	rejectUnauthorized!: boolean;
 	password!: string;
 	awayMessage!: string;
-	commands!: any[];
+	commands!: string[];
 	username!: string;
 	realname!: string;
 	leaveMessage!: string;

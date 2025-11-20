@@ -34,9 +34,9 @@ const input: PluginInputHandler = function (this: Client, network, chan) {
 		});
 		this.emit("join", {
 			network: network.uuid,
-			chan: newChan!.getFilteredClone(true),
+			chan: newChan.getFilteredClone(true),
 			shouldOpen: false,
-			index: network.addChannel(newChan!),
+			index: network.addChannel(newChan),
 		});
 		return;
 	}

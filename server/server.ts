@@ -789,7 +789,7 @@ function initializeClient(
 						newSetting.value = "";
 					}
 
-					client.awayMessage = newSetting.value;
+					client.awayMessage = newSetting.value as string;
 				}
 			}
 		});

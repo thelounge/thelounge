@@ -31,7 +31,7 @@ interface ServerToClientEvents {
 
 	"channel:state": EventHandler<{chan: number; state: ChanState}>;
 
-	"change-password": EventHandler<{success: boolean; error?: any}>;
+	"change-password": EventHandler<{success: boolean; error?: unknown}>;
 
 	commands: EventHandler<string[]>;
 
@@ -44,8 +44,8 @@ interface ServerToClientEvents {
 
 	"mentions:list": EventHandler<SharedMention[]>;
 
-	"setting:new": EventHandler<{name: string; value: any}>;
-	"setting:all": EventHandler<{[key: string]: any}>;
+	"setting:new": EventHandler<{name: string; value: unknown}>;
+	"setting:all": EventHandler<{[key: string]: unknown}>;
 
 	"history:clear": EventHandler<{target: number}>;
 
@@ -80,7 +80,7 @@ interface ServerToClientEvents {
 	more: EventHandler<{chan: number; messages: SharedMsg[]; totalMessages: number}>;
 
 	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;
-	"msg:special": EventHandler<{chan: number; data?: Record<string, any>}>;
+	"msg:special": EventHandler<{chan: number; data?: unknown}>;
 	msg: EventHandler<{msg: SharedMsg; chan: number; highlight?: number; unread?: number}>;
 
 	init: EventHandler<{active: number; networks: SharedNetwork[]; token?: string}>;
@@ -89,7 +89,7 @@ interface ServerToClientEvents {
 
 	quit: EventHandler<{network: string}>;
 
-	error: (error: any) => void;
+	error: (error: unknown) => void;
 
 	connecting: NoPayloadEventHandler;
 
@@ -138,7 +138,7 @@ interface ClientToServerEvents {
 	"push:unregister": NoPayloadEventHandler;
 
 	"setting:get": NoPayloadEventHandler;
-	"setting:set": EventHandler<{name: string; value: any}>;
+	"setting:set": EventHandler<{name: string; value: unknown}>;
 
 	"sessions:get": NoPayloadEventHandler;
 
@@ -164,8 +164,8 @@ interface ClientToServerEvents {
 
 	"network:get": (uuid: string) => void;
 	// TODO typing
-	"network:edit": (data: Record<string, any>) => void;
-	"network:new": (data: Record<string, any>) => void;
+	"network:edit": (data: Record<string, unknown>) => void;
+	"network:new": (data: Record<string, unknown>) => void;
 
 	"sign-out": (token?: string) => void;
 

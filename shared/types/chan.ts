@@ -34,7 +34,7 @@ export type SharedChan = {
 	state: ChanState;
 
 	special?: SpecialChanType;
-	data?: any;
+	data?: unknown;
 	closed?: boolean;
 	num_users?: number;
 };
