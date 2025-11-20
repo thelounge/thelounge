@@ -91,9 +91,9 @@ export class StorageCleaner {
 		try {
 			num_deleted = await this.db.deleteMessages(req);
 			this.errCount = 0; // reset when it works
-		} catch (err: any) {
+		} catch (err: unknown) {
 			this.errCount++;
-			log.error("can't clean messages", err.message);
+			log.error("can't clean messages", err instanceof Error ? err.message : String(err));
 
 			if (this.errCount === 2) {
 				log.error("Cleaning failed too many times, will not retry");

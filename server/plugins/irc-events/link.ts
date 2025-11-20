@@ -387,7 +387,7 @@ function removePreview(msg: Msg, preview: LinkPreview) {
 	}
 }
 
-function getRequestHeaders(headers: Record<string, string>) {
+function getRequestHeaders(headers: Record<string, string>): HeadersInit {
 	const formattedHeaders = {
 		// Certain websites like Amazon only add <meta> tags to known bots,
 		// lets pretend to be them to get the metadata
@@ -431,7 +431,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 		try {
 			const requestOptions: RequestInit = {
 				method: "GET",
-				headers: getRequestHeaders(headers) as any,
+				headers: getRequestHeaders(headers),
 				signal: AbortSignal.timeout(prefetchTimeout || 5000),
 			};
 
