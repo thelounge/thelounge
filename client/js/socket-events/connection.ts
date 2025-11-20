@@ -46,7 +46,10 @@ function handleDisconnect(data) {
 	// and we have to manually call connect to start the process
 	// However, do not reconnect if TL client manually closed the connection
 	// Access private skipReconnect property through double type assertion
-	if ((socket.io as unknown as {skipReconnect?: boolean}).skipReconnect && message !== "io client disconnect") {
+	if (
+		(socket.io as unknown as {skipReconnect?: boolean}).skipReconnect &&
+		message !== "io client disconnect"
+	) {
 		requestIdleCallback(() => socket.connect(), 2000);
 	}
 }

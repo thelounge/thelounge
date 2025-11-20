@@ -15,7 +15,7 @@ type PolicyMap = Map<string, Omit<PolicyOption, "host">>;
 
 class STSPolicies {
 	stsFile: string;
-	refresh: _.DebouncedFunc<any>;
+	refresh: _.DebouncedFunc<() => void>;
 
 	private policies: PolicyMap;
 
