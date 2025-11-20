@@ -10,12 +10,26 @@ import inputs from "../inputs/index.js";
 import fs from "fs";
 import Utils from "../../command-line/utils.js";
 import Client from "../../client.js";
+import PublicClient from "./publicClient.js";
+import Network from "../../models/network.js";
+import Chan from "../../models/chan.js";
 
 type PackageAPI = {
 	Stylesheets: {addFile: (filename: string) => void};
 	PublicFiles: {add: (filename: string) => void};
 	Commands: {
-		add: (command: string, callback: unknown) => void;
+		add: (
+			command: string,
+			callback: {
+				input: (
+					pub: PublicClient,
+					netChan: {network: Network; chan: Chan},
+					cmd: string,
+					args: string[]
+				) => void;
+				allowDisconnected?: boolean;
+			}
+		) => void;
 		runAsUser: (command: string, targetId: number, client: Client) => void;
 	};
 	Config: {
