@@ -7,6 +7,7 @@ import path from "path";
 import Auth from "./plugins/auth.js";
 import Client, {UserConfig} from "./client.js";
 import Config from "./config.js";
+import Identification from "./identification.js";
 import WebPush from "./plugins/webpush.js";
 import log from "./log.js";
 import {Server} from "./server.js";
@@ -14,7 +15,7 @@ import {Server} from "./server.js";
 class ClientManager {
 	clients: Client[];
 	sockets!: Server;
-	identHandler: any;
+	identHandler!: Identification;
 	webPush!: WebPush;
 	userWatcher: fs.FSWatcher | null = null;
 
@@ -22,7 +23,7 @@ class ClientManager {
 		this.clients = [];
 	}
 
-	init(identHandler, sockets: Server) {
+	init(identHandler: Identification, sockets: Server) {
 		this.sockets = sockets;
 		this.identHandler = identHandler;
 		this.webPush = new WebPush();
@@ -235,7 +236,7 @@ class ClientManager {
 		return {newUser, newHash};
 	}
 
-	saveUser(client: Client, callback?: (err?: any) => void) {
+	saveUser(client: Client, callback?: (err?: Error) => void) {
 		const {newUser, newHash} = this.getDataToSave(client);
 
 		// Do not write to disk if the exported data hasn't actually changed
@@ -261,7 +262,7 @@ class ClientManager {
 			);
 
 			if (callback) {
-				callback(e);
+				callback(e instanceof Error ? e : new Error(String(e)));
 			}
 		}
 	}
