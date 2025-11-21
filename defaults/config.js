@@ -18,6 +18,17 @@ module.exports = {
 	// This value is set to `false` by default.
 	public: false,
 
+	// ### `selfRegister`
+	//
+	// When set to `true`, users can create their own accounts via a sign-up form
+	// on the login page. This only applies in private mode (when `public` is
+	// `false`). The server admin is responsible for rate limiting via reverse
+	// proxy (nginx, Apache, Cloudflare, fail2ban, etc.) since The Lounge does
+	// not implement built-in protection against registration abuse.
+	//
+	// This value is set to `false` by default.
+	selfRegister: false,
+
 	// ### `host`
 	//
 	// IP address or hostname for the web server to listen to. For example, set it

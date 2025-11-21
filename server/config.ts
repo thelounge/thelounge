@@ -85,6 +85,7 @@ type StoragePolicy = {
 
 export type ConfigType = {
 	public: boolean;
+	selfRegister: boolean;
 	host: string | undefined;
 	port: number;
 	bind: string | undefined;
