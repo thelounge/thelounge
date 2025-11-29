@@ -1,32 +1,11 @@
-import {IrcEventHandler} from "../../client.js";
+import Client, {IrcEventHandler} from "../../client.js";
 
 import Msg from "../../models/msg.js";
 import {MessageType} from "../../../shared/types/msg.js";
 import {SpecialChanType, ChanType} from "../../../shared/types/chan.js";
 
-export default <IrcEventHandler>function (this: any, irc, network) {
-	irc.on("banlist", (list) => {
-		const data = list.bans.map((ban) => ({
-			hostmask: ban.banned,
-			banned_by: ban.banned_by,
-			banned_at: ban.banned_at * 1000,
-		}));
-
-		handleList(SpecialChanType.BANLIST, "Ban list", list.channel, data);
-	});
-
-	irc.on("inviteList", (list) => {
-		const data = list.invites.map((invite) => ({
-			hostmask: invite.invited,
-			invited_by: invite.invited_by,
-			invited_at: invite.invited_at * 1000,
-		}));
-
-		handleList(SpecialChanType.INVITELIST, "Invite list", list.channel, data);
-	});
-
-	function handleList(
-		this: any,
+export default <IrcEventHandler>function (this: Client, irc, network) {
+	const handleList = (
 		type: SpecialChanType,
 		name: string,
 		channel: string,
@@ -35,7 +14,7 @@ export default <IrcEventHandler>function (this: any, irc, network) {
 			invited_by?: string;
 			inivted_at?: number;
 		}[]
-	) {
+	) => {
 		if (data.length === 0) {
 			const msg = new Msg({
 				time: new Date(),
@@ -67,9 +46,9 @@ export default <IrcEventHandler>function (this: any, irc, network) {
 			});
 			this.emit("join", {
 				network: network.uuid,
-				chan: chan!.getFilteredClone(true),
+				chan: chan.getFilteredClone(true),
 				shouldOpen: false,
-				index: network.addChannel(chan!),
+				index: network.addChannel(chan),
 			});
 		} else {
 			chan.data = data;
@@ -79,5 +58,25 @@ export default <IrcEventHandler>function (this: any, irc, network) {
 				data: data,
 			});
 		}
-	}
+	};
+
+	irc.on("banlist", (list) => {
+		const data = list.bans.map((ban) => ({
+			hostmask: ban.banned,
+			banned_by: ban.banned_by,
+			banned_at: ban.banned_at * 1000,
+		}));
+
+		handleList(SpecialChanType.BANLIST, "Ban list", list.channel, data);
+	});
+
+	irc.on("inviteList", (list) => {
+		const data = list.invites.map((invite) => ({
+			hostmask: invite.invited,
+			invited_by: invite.invited_by,
+			invited_at: invite.invited_at * 1000,
+		}));
+
+		handleList(SpecialChanType.INVITELIST, "Invite list", list.channel, data);
+	});
 };

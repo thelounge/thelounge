@@ -102,7 +102,19 @@ const getCommands = () =>
 		.concat(passThroughCommands)
 		.sort();
 
-const addPluginCommand = (packageInfo: PackageInfo, command: any, obj: any) => {
+const addPluginCommand = (
+	packageInfo: PackageInfo,
+	command: string,
+	obj: {
+		input: (
+			pub: PublicClient,
+			netChan: {network: Network; chan: Chan},
+			cmd: string,
+			args: string[]
+		) => void;
+		allowDisconnected?: boolean;
+	}
+) => {
 	if (typeof command !== "string") {
 		log.error(`plugin {packageInfo.packageName} tried to register a bad command`);
 		return;

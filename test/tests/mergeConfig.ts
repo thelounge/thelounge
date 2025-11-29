@@ -5,6 +5,12 @@ import log from "../../server/log.js";
 import Config from "../../server/config.js";
 import TestUtil from "../util.js";
 
+// Test-specific type for config merge testing (arbitrary nested config objects)
+type TestConfigValue = string | number | boolean | null | (() => unknown) | string[] | TestConfig;
+interface TestConfig {
+	[key: string]: TestConfigValue | TestConfig;
+}
+
 describe("mergeConfig", function () {
 	let sandbox: sinon.SinonSandbox;
 
@@ -19,12 +25,12 @@ describe("mergeConfig", function () {
 	it("should mutate object", function () {
 		const config = {
 			ip: "default",
-		} as any;
+		} as TestConfig;
 
 		expect(
 			Config._merge_config_objects(config, {
 				ip: "overridden",
-			} as any)
+			} as TestConfig)
 		).to.deep.equal({
 			ip: "overridden",
 		});
@@ -40,10 +46,10 @@ describe("mergeConfig", function () {
 				{
 					ip: "default",
 					newProp: "this should appear too",
-				} as any,
+				} as TestConfig,
 				{
 					ip: "overridden",
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			ip: "overridden",
@@ -56,13 +62,13 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					tlsOptions: {},
-				} as any,
+				} as TestConfig,
 				{
 					tlsOptions: {
 						user: "test",
 						thing: 123,
 					},
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			tlsOptions: {
@@ -80,11 +86,11 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					optionOne: 123,
-				} as any,
+				} as TestConfig,
 				{
 					optionOne: 456,
 					optionTwo: 789,
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			optionOne: 456,
@@ -101,13 +107,13 @@ describe("mergeConfig", function () {
 					optionOne: {
 						subOne: 123,
 					},
-				} as any,
+				} as TestConfig,
 				{
 					optionOne: {
 						subOne: 123,
 						subTwo: 123,
 					},
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			optionOne: {
@@ -122,10 +128,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					oidentd: null,
-				} as any,
+				} as TestConfig,
 				{
 					oidentd: "some path",
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			oidentd: "some path",
@@ -137,13 +143,13 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					webirc: null,
-				} as any,
+				} as TestConfig,
 				{
 					webirc: {
 						serverone: "password",
 						servertwo: "password2",
 					},
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			webirc: {
@@ -160,12 +166,12 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					webirc: null,
-				} as any,
+				} as TestConfig,
 				{
 					webirc: {
 						servercb: callbackFunction,
 					},
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			webirc: {
@@ -188,7 +194,7 @@ describe("mergeConfig", function () {
 							newThing: "but also this",
 						},
 					},
-				} as any,
+				} as TestConfig,
 				{
 					nestedOnce: {},
 					nestedTwice: {
@@ -196,7 +202,7 @@ describe("mergeConfig", function () {
 							otherThing: "overridden",
 						},
 					},
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			nestedOnce: {
@@ -217,10 +223,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
-				} as any,
+				} as TestConfig,
 				{
 					test: ["sqlite"],
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			test: ["sqlite"],
@@ -230,10 +236,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
-				} as any,
+				} as TestConfig,
 				{
 					test: [],
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			test: [],
@@ -245,10 +251,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
-				} as any,
+				} as TestConfig,
 				{
 					test: ["text", "sqlite"],
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			test: ["text", "sqlite"],
@@ -264,10 +270,10 @@ describe("mergeConfig", function () {
 					shouldBeObject: {
 						thing: "yes",
 					},
-				} as any,
+				} as TestConfig,
 				{
 					shouldBeObject: "bad type",
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			shouldBeObject: {
@@ -279,10 +285,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					shouldBeString: "string",
-				} as any,
+				} as TestConfig,
 				{
 					shouldBeString: 1234567,
-				} as any
+				} as TestConfig
 			)
 		).to.deep.equal({
 			shouldBeString: "string",

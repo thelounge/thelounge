@@ -35,7 +35,7 @@ describe("Server", function () {
 		});
 
 		checkForUpdatesStub = sinon.stub(changelog, "checkForUpdates");
-		serverInstance = await (await import("../server/server")).default({} as any);
+		serverInstance = await (await import("../server/server")).default({dev: false});
 	});
 
 	after(function (done) {

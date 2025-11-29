@@ -183,7 +183,7 @@ function compareWithWildcard(a: string, b: string) {
 	return re.test(b);
 }
 
-function catch_to_error(prefix: string, err: any): Error {
+function catch_to_error(prefix: string, err: unknown): Error {
 	let msg: string;
 
 	if (err instanceof Error) {
@@ -191,7 +191,7 @@ function catch_to_error(prefix: string, err: any): Error {
 	} else if (typeof err === "string") {
 		msg = err;
 	} else {
-		msg = err.toString();
+		msg = String(err);
 	}
 
 	return new Error(`${prefix}: ${msg}`);

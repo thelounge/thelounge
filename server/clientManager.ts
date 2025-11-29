@@ -7,6 +7,7 @@ import path from "path";
 import Auth from "./plugins/auth.js";
 import Client, {UserConfig} from "./client.js";
 import Config from "./config.js";
+import Identification from "./identification.js";
 import WebPush from "./plugins/webpush.js";
 import log from "./log.js";
 import {Server} from "./server.js";
@@ -14,7 +15,7 @@ import {Server} from "./server.js";
 class ClientManager {
 	clients: Client[];
 	sockets!: Server;
-	identHandler: any;
+	identHandler!: Identification;
 	webPush!: WebPush;
 	userWatcher: fs.FSWatcher | null = null;
 
@@ -22,7 +23,7 @@ class ClientManager {
 		this.clients = [];
 	}
 
-	init(identHandler, sockets: Server) {
+	init(identHandler: Identification, sockets: Server) {
 		this.sockets = sockets;
 		this.identHandler = identHandler;
 		this.webPush = new WebPush();
@@ -235,7 +236,7 @@ class ClientManager {
 		return {newUser, newHash};
 	}
 
-	saveUser(client: Client, callback?: (err?: any) => void) {
+	saveUser(client: Client, callback?: (err?: Error) => void) {
 		const {newUser, newHash} = this.getDataToSave(client);
 
 		// Do not write to disk if the exported data hasn't actually changed
@@ -256,10 +257,12 @@ class ClientManager {
 
 			return callback ? callback() : true;
 		} catch (e) {
-			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
+			log.error(
+				`Failed to update user ${colors.green(client.name)} (${e instanceof Error ? e.message : String(e)})`
+			);
 
 			if (callback) {
-				callback(e);
+				callback(e instanceof Error ? e : new Error(String(e)));
 			}
 		}
 	}
@@ -289,7 +292,9 @@ class ClientManager {
 			const data = fs.readFileSync(userPath, "utf-8");
 			return JSON.parse(data) as UserConfig;
 		} catch (e) {
-			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
+			log.error(
+				`Failed to read user ${colors.bold(name)}: ${e instanceof Error ? e.message : String(e)}`
+			);
 		}
 
 		return false;

@@ -3,6 +3,7 @@ import Client from "../../client.js";
 import Chan from "../../models/chan.js";
 import Msg from "../../models/msg.js";
 import {MessageType} from "../../../shared/types/msg.js";
+import {ServerToClientEvents} from "../../../shared/types/socket-events.js";
 
 export default class PublicClient {
 	private client: Client;
@@ -36,11 +37,11 @@ export default class PublicClient {
 	 * @param {String} event - Name of the event, must be something the browser will recognise
 	 * @param {Object} data - Body of the event, can be anything, but will need to be properly interpreted by the client
 	 */
-	// FIXME: this is utterly bonkers
-	// This needs to get wrapped into its own, typed plugin event
-	// Plus it is completely insane to let a plugin inject arbitrary events like that
-	sendToBrowser(event: string, data: any) {
-		this.client.emit(event as any, data);
+	sendToBrowser<Ev extends keyof ServerToClientEvents>(
+		event: Ev,
+		...args: Parameters<ServerToClientEvents[Ev]>
+	) {
+		this.client.emit(event, ...args);
 	}
 
 	/**

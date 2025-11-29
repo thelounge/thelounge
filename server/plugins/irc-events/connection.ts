@@ -1,5 +1,6 @@
 import _ from "lodash";
 import {IrcEventHandler} from "../../client.js";
+import {Socket} from "net";
 
 import log from "../../log.js";
 import Msg from "../../models/msg.js";
@@ -100,7 +101,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 	let identSocketId;
 
-	irc.on("raw socket connected", (socket) => {
+	irc.on("raw socket connected", (socket: Socket) => {
 		let ident = this.name || network.username;
 
 		if (Config.values.useHexIp) {

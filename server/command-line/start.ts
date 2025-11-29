@@ -13,12 +13,16 @@ program
 	.option("--dev", "Development mode with hot module reloading")
 	.on("--help", Utils.extraHelp)
 	.action(async function (options) {
-		await initalizeConfig();
+		initalizeConfig();
 		const serverModule = await import("../server.js");
-		serverModule.default(options);
+
+		serverModule.default(options).catch((err) => {
+			log.error("Server startup failed:", err);
+			process.exit(1);
+		});
 	});
 
-async function initalizeConfig() {
+function initalizeConfig() {
 	if (!fs.existsSync(Config.getConfigPath())) {
 		fs.mkdirSync(Config.getHomePath(), {recursive: true});
 		fs.chmodSync(Config.getHomePath(), "0700");

@@ -2,7 +2,6 @@ import colors from "chalk";
 import log from "../log.js";
 import pkg from "../../package.json" with {type: "json"};
 import ClientManager from "../clientManager.js";
-import Config from "../config.js";
 import {SharedChangelogData} from "../../shared/types/changelog.js";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
@@ -69,7 +68,7 @@ async function fetch() {
 
 function updateVersions(responseBody: string) {
 	let i: number;
-	let release: {tag_name: string; body_html: any; prerelease: boolean; html_url: any};
+	let release: {tag_name: string; body_html: string; prerelease: boolean; html_url: string};
 	let prerelease = false;
 
 	const body = JSON.parse(responseBody);

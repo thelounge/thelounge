@@ -216,7 +216,7 @@ export default defineComponent({
 			}
 		};
 
-		const openContextMenu = (event: any) => {
+		const openContextMenu = (event: MouseEvent) => {
 			eventbus.emit("contextmenu:channel", {
 				event: event,
 				channel: props.channel,
@@ -224,7 +224,7 @@ export default defineComponent({
 			});
 		};
 
-		const openMentions = (event: any) => {
+		const openMentions = (event: MouseEvent) => {
 			eventbus.emit("mentions:toggle", {
 				event: event,
 			});

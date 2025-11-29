@@ -17,7 +17,11 @@ import inputs from "./plugins/inputs/index.js";
 import PublicClient from "./plugins/packages/publicClient.js";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite.js";
 import TextFileMessageStorage from "./plugins/messageStorage/text.js";
-import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network.js";
+import Network, {
+	NetworkConfig,
+	NetworkFormData,
+	NetworkWithIrcFramework,
+} from "./models/network.js";
 import ClientManager from "./clientManager.js";
 import {MessageStorage} from "./plugins/messageStorage/types.js";
 import {StorageCleaner} from "./storageCleaner.js";
@@ -74,7 +78,7 @@ export type UserConfig = {
 		};
 	};
 	clientSettings: {
-		[key: string]: any;
+		[key: string]: unknown;
 	};
 	browser?: {
 		language?: string;
@@ -165,7 +169,7 @@ class Client {
 		}
 
 		if (this.config.clientSettings.awayMessage) {
-			this.awayMessage = this.config.clientSettings.awayMessage;
+			this.awayMessage = this.config.clientSettings.awayMessage as string;
 		}
 
 		this.config.clientSettings.searchEnabled = this.messageProvider !== undefined;
@@ -248,7 +252,7 @@ class Client {
 		return false;
 	}
 
-	networkFromConfig(args: Record<string, any>): Network {
+	networkFromConfig(args: NetworkFormData): Network {
 		let channels: Chan[] = [];
 
 		if (Array.isArray(args.channels)) {
@@ -277,14 +281,14 @@ class Client {
 					"User '" +
 						this.name +
 						"' on network '" +
-						String(args.name) +
+						(args.name || "") +
 						"' has an invalid channel which has been ignored"
 				);
 			}
 			// `join` is kept for backwards compatibility when updating from versions <2.0
 			// also used by the "connect" window
 		} else if (args.join) {
-			channels = args.join
+			channels = (args.join || "")
 				.replace(/,/g, " ")
 				.split(/\s+/g)
 				.map((chan: string) => {
@@ -298,38 +302,38 @@ class Client {
 				});
 		}
 
-		// TODO; better typing for args
+		// Handle commands - can be string[] or string
+		const commands = Array.isArray(args.commands) ? args.commands : [];
+
 		return new Network({
 			uuid: args.uuid,
-			name: String(
-				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
-			),
-			host: String(args.host || ""),
-			port: parseInt(String(args.port), 10),
+			name: args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || "",
+			host: args.host || "",
+			port: parseInt(String(args.port ?? 6667), 10),
 			tls: !!args.tls,
 			userDisconnected: !!args.userDisconnected,
 			rejectUnauthorized: !!args.rejectUnauthorized,
-			password: String(args.password || ""),
-			nick: String(args.nick || ""),
-			username: String(args.username || ""),
-			realname: String(args.realname || ""),
-			leaveMessage: String(args.leaveMessage || ""),
-			sasl: String(args.sasl || ""),
-			saslAccount: String(args.saslAccount || ""),
-			saslPassword: String(args.saslPassword || ""),
-			commands: (args.commands as string[]) || [],
+			password: args.password || "",
+			nick: args.nick || "",
+			username: args.username || "",
+			realname: args.realname || "",
+			leaveMessage: args.leaveMessage || "",
+			sasl: args.sasl || "",
+			saslAccount: args.saslAccount || "",
+			saslPassword: args.saslPassword || "",
+			commands: commands,
 			channels: channels,
-			ignoreList: args.ignoreList ? (args.ignoreList as IgnoreListItem[]) : [],
+			ignoreList: args.ignoreList || [],
 
 			proxyEnabled: !!args.proxyEnabled,
-			proxyHost: String(args.proxyHost || ""),
-			proxyPort: parseInt(args.proxyPort, 10),
-			proxyUsername: String(args.proxyUsername || ""),
-			proxyPassword: String(args.proxyPassword || ""),
+			proxyHost: args.proxyHost || "",
+			proxyPort: parseInt(String(args.proxyPort ?? 1080), 10),
+			proxyUsername: args.proxyUsername || "",
+			proxyPassword: args.proxyPassword || "",
 		});
 	}
 
-	connectToNetwork(args: Record<string, any>, isStartup = false) {
+	connectToNetwork(args: NetworkFormData, isStartup = false) {
 		// Get channel id for lobby before creating other channels for nicer ids
 		const lobbyChannelId = this.idChan++;
 
@@ -392,8 +396,13 @@ class Client {
 		return crypto.createHash("sha512").update(token).digest("hex");
 	}
 
-	updateSession(token: string, ip: string, request: any) {
-		const parser = new UAParser(request.headers["user-agent"] || "");
+	updateSession(
+		token: string,
+		ip: string,
+		request: {headers: Record<string, string | string[] | undefined>}
+	) {
+		const userAgent = request.headers["user-agent"];
+		const parser = new UAParser(typeof userAgent === "string" ? userAgent : "");
 		const agent = parser.getResult();
 		let friendlyAgent = "";
 
@@ -550,9 +559,11 @@ class Client {
 			);
 		}
 
-		this.highlightRegex = compileHighlightRegex(this.config.clientSettings.highlights);
+		this.highlightRegex = compileHighlightRegex(
+			this.config.clientSettings.highlights as string
+		);
 		this.highlightExceptionRegex = compileHighlightRegex(
-			this.config.clientSettings.highlightExceptions
+			this.config.clientSettings.highlightExceptions as string
 		);
 	}
 
@@ -795,8 +806,16 @@ class Client {
 		}
 	}
 
-	// TODO: type session to this.attachedClients
-	registerPushSubscription(session: any, subscription: PushSubscriptionJSON, noSave = false) {
+	registerPushSubscription(
+		session: {
+			lastUse: number;
+			ip: string;
+			agent: string;
+			pushSubscription?: ClientPushSubscription;
+		},
+		subscription: PushSubscriptionJSON,
+		noSave = false
+	) {
 		if (
 			!_.isPlainObject(subscription) ||
 			typeof subscription.endpoint !== "string" ||
@@ -806,7 +825,7 @@ class Client {
 			typeof subscription.keys.p256dh !== "string" ||
 			typeof subscription.keys.auth !== "string"
 		) {
-			session.pushSubscription = null;
+			session.pushSubscription = undefined;
 			return;
 		}
 

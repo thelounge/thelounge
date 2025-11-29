@@ -106,6 +106,7 @@ export default [
 			"node_modules/**",
 			"dist/**",
 			"public/**",
+			"test/public/**",
 			"coverage/**",
 			"webpack.config.mjs",
 			"*.min.js",
@@ -116,7 +117,7 @@ export default [
 	{
 		files: ["**/*.js", "**/*.cjs", "**/*.mjs"],
 		languageOptions: {
-			ecmaVersion: 2022,
+			ecmaVersion: "latest",
 			sourceType: "module",
 			globals: {
 				...globals.es2021,

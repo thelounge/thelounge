@@ -11,13 +11,13 @@ program
 	.description(`Edit user file located at ${colors.green(Config.getUserConfigPath("<name>"))}`)
 	.argument("<name>", "name of the user")
 	.on("--help", Utils.extraHelp)
-	.action(function (name) {
+	.action(async function (name) {
 		if (!fs.existsSync(Config.getUsersPath())) {
 			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
 		}
 
-		const ClientManager = require("../../clientManager").default;
+		const ClientManager = (await import("../../clientManager.js")).default;
 		const users = new ClientManager().getUsers();
 
 		if (users === undefined) {

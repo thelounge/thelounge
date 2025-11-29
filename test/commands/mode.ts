@@ -2,6 +2,13 @@ import {expect} from "chai";
 import Chan from "../../server/models/chan.js";
 import {ChanType} from "../../shared/types/chan.js";
 import ModeCommand from "../../server/plugins/inputs/mode.js";
+import type Client from "../../server/client.js";
+import type {NetworkWithIrcFramework} from "../../server/models/network.js";
+
+// Mode command tests only test paths where 'this' (Client) is not used,
+// so we can pass an empty object. TypeScript requires the type assertion.
+// This is acceptable for test mocks where the mocked context is unused.
+const unusedClientContext = {} as Client;
 
 describe("Commands", function () {
 	describe("/mode", function () {
@@ -57,8 +64,13 @@ describe("Commands", function () {
 			},
 		});
 
-		function modeCommandInputCall(net, chan, cmd, args) {
-			ModeCommand.input.call({} as any, net, chan, cmd, Array.from(args));
+		function modeCommandInputCall(
+			net: NetworkWithIrcFramework,
+			chan: Chan,
+			cmd: string,
+			args: string[]
+		) {
+			ModeCommand.input.call(unusedClientContext, net, chan, cmd, Array.from(args));
 		}
 
 		it("should not mess with the given target", function () {

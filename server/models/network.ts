@@ -68,7 +68,7 @@ export type NetworkConfig = {
 	rejectUnauthorized: boolean;
 	password: string;
 	awayMessage: string;
-	commands: any[];
+	commands: string;
 	username: string;
 	realname: string;
 	leaveMessage: string;
@@ -83,7 +83,36 @@ export type NetworkConfig = {
 	proxyPassword: string;
 	proxyEnabled: boolean;
 	highlightRegex?: string;
-	ignoreList: any[];
+	ignoreList: IgnoreListItem[];
+};
+
+// Form data coming from network create/edit forms
+// All fields are optional as forms may not submit all fields
+export type NetworkFormData = {
+	uuid?: string;
+	name?: string;
+	host?: string;
+	port?: string | number;
+	tls?: boolean;
+	userDisconnected?: boolean;
+	rejectUnauthorized?: boolean;
+	password?: string;
+	nick?: string;
+	username?: string;
+	realname?: string;
+	leaveMessage?: string;
+	sasl?: string;
+	saslAccount?: string;
+	saslPassword?: string;
+	commands?: string[] | string;
+	channels?: ChanConfig[];
+	ignoreList?: IgnoreListItem[];
+	proxyEnabled?: boolean;
+	proxyHost?: string;
+	proxyPort?: string | number;
+	proxyUsername?: string;
+	proxyPassword?: string;
+	join?: string; // backwards compatibility
 };
 
 class Network {
@@ -96,7 +125,7 @@ class Network {
 	rejectUnauthorized!: boolean;
 	password!: string;
 	awayMessage!: string;
-	commands!: any[];
+	commands!: string[];
 	username!: string;
 	realname!: string;
 	leaveMessage!: string;
@@ -381,40 +410,48 @@ class Network {
 		if (typeof Config.values.webirc[this.host] === "function") {
 			webircObject.password = null;
 
-			return Config.values.webirc[this.host](webircObject, this) as typeof webircObject;
+			return (
+				Config.values.webirc[this.host] as (
+					obj: typeof webircObject,
+					network: Network
+				) => typeof webircObject
+			)(webircObject, this);
 		}
 
 		return webircObject;
 	}
 
-	edit(this: NetworkWithIrcFramework, client: Client, args: any) {
+	edit(this: NetworkWithIrcFramework, client: Client, args: NetworkFormData) {
 		const oldNetworkName = this.name;
 		const oldNick = this.nick;
 		const oldRealname = this.realname;
 
 		this.keepNick = null;
-		this.nick = args.nick;
-		this.host = String(args.host || "");
-		this.name = String(args.name || "") || this.host;
-		this.port = parseInt(args.port, 10);
+		this.nick = String(args.nick ?? "");
+		this.host = String(args.host ?? "");
+		this.name = String(args.name ?? "") || this.host;
+		this.port = parseInt(String(args.port ?? 6667), 10);
 		this.tls = !!args.tls;
 		this.rejectUnauthorized = !!args.rejectUnauthorized;
-		this.password = String(args.password || "");
-		this.username = String(args.username || "");
-		this.realname = String(args.realname || "");
-		this.leaveMessage = String(args.leaveMessage || "");
-		this.sasl = String(args.sasl || "");
-		this.saslAccount = String(args.saslAccount || "");
-		this.saslPassword = String(args.saslPassword || "");
+		this.password = String(args.password ?? "");
+		this.username = String(args.username ?? "");
+		this.realname = String(args.realname ?? "");
+		this.leaveMessage = String(args.leaveMessage ?? "");
+		this.sasl = String(args.sasl ?? "");
+		this.saslAccount = String(args.saslAccount ?? "");
+		this.saslPassword = String(args.saslPassword ?? "");
 
-		this.proxyHost = String(args.proxyHost || "");
-		this.proxyPort = parseInt(args.proxyPort, 10);
-		this.proxyUsername = String(args.proxyUsername || "");
-		this.proxyPassword = String(args.proxyPassword || "");
+		this.proxyHost = String(args.proxyHost ?? "");
+		this.proxyPort = parseInt(String(args.proxyPort ?? 1080), 10);
+		this.proxyUsername = String(args.proxyUsername ?? "");
+		this.proxyPassword = String(args.proxyPassword ?? "");
 		this.proxyEnabled = !!args.proxyEnabled;
 
 		// Split commands into an array
-		this.commands = String(args.commands || "")
+		const commandsStr = Array.isArray(args.commands)
+			? args.commands.join("\n")
+			: String(args.commands ?? "");
+		this.commands = commandsStr
 			.replace(/\r\n|\r|\n/g, "\n")
 			.split("\n")
 			.filter((command) => command.length > 0);

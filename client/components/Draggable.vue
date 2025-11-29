@@ -66,7 +66,7 @@ const Props = {
 		required: true,
 	},
 	list: {
-		type: Array as PropType<any[]>,
+		type: Array as PropType<Record<string, unknown>[]>,
 		default: [],
 		required: true,
 	},

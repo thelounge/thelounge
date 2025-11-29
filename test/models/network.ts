@@ -4,10 +4,20 @@ import Chan from "../../server/models/chan.js";
 import {ChanType} from "../../shared/types/chan.js";
 import Msg from "../../server/models/msg.js";
 import User from "../../server/models/user.js";
-import Network from "../../server/models/network.js";
+import Network, {NetworkWithIrcFramework} from "../../server/models/network.js";
 import Config from "../../server/config.js";
 import STSPolicies from "../../server/plugins/sts";
 import ClientCertificate from "../../server/plugins/clientCertificate.js";
+import Client from "../../server/client.js";
+import {MessageStorage} from "../../server/plugins/messageStorage/types.js";
+
+// Minimal interface for test client that satisfies Network.validate() requirements
+interface TestClient {
+	idMsg?: number;
+	emit?: (name: string, data?: unknown) => void;
+	save?: () => void;
+	messageStorage?: MessageStorage[];
+}
 
 describe("Network", function () {
 	let stsPoliciesRefreshStub: sinon.SinonStub<unknown[], void>;
@@ -142,7 +152,7 @@ describe("Network", function () {
 				host: "localhost",
 			});
 
-			expect(network.validate({} as any)).to.equal(true);
+			expect(network.validate({} as Client)).to.equal(true);
 			expect(network.nick).to.equal("thelounge");
 			expect(network.username).to.equal("thelounge");
 			expect(network.realname).to.equal("thelounge");
@@ -152,7 +162,7 @@ describe("Network", function () {
 				host: "localhost",
 				nick: "@Invalid Nick?",
 			});
-			expect(network2.validate({} as any)).to.equal(true);
+			expect(network2.validate({} as Client)).to.equal(true);
 			expect(network2.username).to.equal("InvalidNick");
 		});
 
@@ -168,7 +178,7 @@ describe("Network", function () {
 				tls: false,
 				rejectUnauthorized: false,
 			});
-			expect(network.validate({} as any)).to.equal(true);
+			expect(network.validate({} as Client)).to.equal(true);
 			expect(network.host).to.equal("irc.example.com");
 			expect(network.port).to.equal(6697);
 			expect(network.tls).to.equal(true);
@@ -180,7 +190,7 @@ describe("Network", function () {
 			const network2 = new Network({
 				host: "some.fake.tld",
 			});
-			expect(network2.validate({} as any)).to.equal(true);
+			expect(network2.validate({} as Client)).to.equal(true);
 			expect(network2.host).to.equal("irc.example.com");
 
 			Config.values.lockNetwork = false;
@@ -192,7 +202,7 @@ describe("Network", function () {
 				nick: "dummy",
 			});
 
-			expect(network.validate({} as any)).to.equal(true);
+			expect(network.validate({} as Client)).to.equal(true);
 			expect(network.nick).to.equal("dummy");
 			expect(network.realname).to.equal("dummy");
 
@@ -202,13 +212,13 @@ describe("Network", function () {
 				realname: "notdummy",
 			});
 
-			expect(network2.validate({} as any)).to.equal(true);
+			expect(network2.validate({} as Client)).to.equal(true);
 			expect(network2.nick).to.equal("dummy");
 			expect(network2.realname).to.equal("notdummy");
 		});
 
 		it("should apply STS policies iff they match", function () {
-			const client = {idMsg: 1, emit() {}} as any;
+			const client: TestClient = {idMsg: 1, emit() {}};
 			STSPolicies.update("irc.example.com", 7000, 3600);
 			assert.isNotNull(STSPolicies.get("irc.example.com"));
 
@@ -218,7 +228,7 @@ describe("Network", function () {
 				tls: false,
 			});
 
-			expect(network.validate(client)).to.equal(true);
+			expect(network.validate(client as Client)).to.equal(true);
 			expect(network.port).to.equal(7000);
 			expect(network.tls).to.equal(true);
 
@@ -228,7 +238,7 @@ describe("Network", function () {
 				tls: false,
 			});
 
-			expect(network.validate(client)).to.equal(true);
+			expect(network.validate(client as Client)).to.equal(true);
 			expect(network.port).to.equal(1337);
 			expect(network.tls).to.equal(false);
 
@@ -239,17 +249,17 @@ describe("Network", function () {
 		it("should not remove client certs if TLS is disabled", function () {
 			Config.values.public = false;
 
-			const client = {idMsg: 1, emit() {}, messageStorage: []};
+			const client: TestClient = {idMsg: 1, emit() {}, messageStorage: []};
 
 			const network = new Network({host: "irc.example.com", sasl: "external"});
-			(network as any).createIrcFramework(client);
+			(network as NetworkWithIrcFramework).createIrcFramework(client as Client);
 			assert.isNotNull(network.irc);
 
 			const client_cert = network.irc?.options?.client_certificate;
 			assert.isNotNull(client_cert);
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
-			expect(network.validate(client as any)).to.equal(true);
+			expect(network.validate(client as Client)).to.equal(true);
 
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
@@ -260,19 +270,19 @@ describe("Network", function () {
 		it("should not remove client certs if there is a STS policy", function () {
 			Config.values.public = false;
 
-			const client = {idMsg: 1, emit() {}, messageStorage: []};
+			const client: TestClient = {idMsg: 1, emit() {}, messageStorage: []};
 			STSPolicies.update("irc.example.com", 7000, 3600);
 			assert.isNotNull(STSPolicies.get("irc.example.com"));
 
 			const network = new Network({host: "irc.example.com", sasl: "external"});
-			(network as any).createIrcFramework(client);
+			(network as NetworkWithIrcFramework).createIrcFramework(client as Client);
 			assert.isNotNull(network.irc);
 
 			const client_cert = network.irc?.options?.client_certificate;
 			assert.isNotNull(client_cert);
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
-			expect(network.validate(client as any)).to.equal(true);
+			expect(network.validate(client as Client)).to.equal(true);
 
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
@@ -288,19 +298,22 @@ describe("Network", function () {
 		it("should generate and use a client certificate when using SASL external", function () {
 			Config.values.public = false;
 
-			const client = {idMsg: 1, emit() {}};
+			const client: TestClient = {idMsg: 1, emit() {}};
 			STSPolicies.update("irc.example.com", 7000, 3600);
 			assert.isNotNull(STSPolicies.get("irc.example.com"));
 
-			let network: any = new Network({host: "irc.example.com"});
-			network.createIrcFramework(client);
+			let network = new Network({host: "irc.example.com"}) as NetworkWithIrcFramework;
+			network.createIrcFramework(client as Client);
 			assert.isNotNull(network.irc);
-			expect(network.irc.options.client_certificate).to.equal(null);
+			expect(network.irc?.options?.client_certificate).to.equal(null);
 
-			network = new Network({host: "irc.example.com", sasl: "external"});
-			network.createIrcFramework(client);
+			network = new Network({
+				host: "irc.example.com",
+				sasl: "external",
+			}) as NetworkWithIrcFramework;
+			network.createIrcFramework(client as Client);
 			assert.isNotNull(network.irc);
-			assert.isNotNull(network.irc.options.client_certificate);
+			assert.isNotNull(network.irc?.options?.client_certificate);
 
 			ClientCertificate.remove(network.uuid);
 			Config.values.public = true;
@@ -315,39 +328,37 @@ describe("Network", function () {
 			let saveCalled = false;
 			let nameEmitCalled = false;
 
-			const network = new Network();
-			(network as any).edit(
-				{
-					emit(name, data) {
-						if (name === "network:name") {
-							nameEmitCalled = true;
-							expect(data.uuid).to.equal(network.uuid);
-							expect(data.name).to.equal("Lounge Test Network");
-						}
-					},
-					save() {
-						saveCalled = true;
-					},
+			const network = new Network() as NetworkWithIrcFramework;
+			const editClient = {
+				emit(name: string, data: {uuid: string; name: string}) {
+					if (name === "network:name") {
+						nameEmitCalled = true;
+						expect(data.uuid).to.equal(network.uuid);
+						expect(data.name).to.equal("Lounge Test Network");
+					}
 				},
-				{
-					nick: "newNick",
-					host: "new.tld",
-					name: "Lounge Test Network",
-					port: "1337",
-					tls: undefined,
-					rejectUnauthorized: undefined,
-					username: 1234,
-					password: 4567,
-					realname: 8901,
-					sasl: "something",
-					saslAccount: 1337,
-					saslPassword: 1337,
-					commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
-					ip: "newIp",
-					hostname: "newHostname",
-					uuid: "newuuid",
-				}
-			);
+				save() {
+					saveCalled = true;
+				},
+			} as Client;
+			network.edit(editClient, {
+				nick: "newNick",
+				host: "new.tld",
+				name: "Lounge Test Network",
+				port: "1337",
+				tls: undefined,
+				rejectUnauthorized: undefined,
+				username: 1234,
+				password: 4567,
+				realname: 8901,
+				sasl: "something",
+				saslAccount: 1337,
+				saslPassword: 1337,
+				commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
+				ip: "newIp",
+				hostname: "newHostname",
+				uuid: "newuuid",
+			});
 
 			expect(saveCalled).to.equal(true);
 			expect(nameEmitCalled).to.equal(true);

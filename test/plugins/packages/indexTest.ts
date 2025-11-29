@@ -12,9 +12,8 @@ describe("packages", function () {
 	beforeEach(function () {
 		logInfoStub = sinon.stub(log, "info");
 
-		delete require.cache[require.resolve("../../../server/plugins/packages")];
-
-		packages = require("../../../server/plugins/packages").default;
+		packages = packagePlugin;
+		packages.clearPackages();
 	});
 
 	afterEach(function () {
@@ -26,8 +25,8 @@ describe("packages", function () {
 			assert.isEmpty(packages.getStylesheets());
 		});
 
-		it("should return the list of registered stylesheets for loaded packages", function () {
-			packages.loadPackages();
+		it("should return the list of registered stylesheets for loaded packages", async function () {
+			await packages.loadPackages();
 
 			expect(packages.getStylesheets()).to.deep.equal(["thelounge-package-foo/style.css"]);
 		});
@@ -38,22 +37,22 @@ describe("packages", function () {
 			expect(packages.getPackage("thelounge-package-foo")).to.equal(undefined);
 		});
 
-		it("should return details of a registered package after it was loaded", function () {
-			packages.loadPackages();
+		it("should return details of a registered package after it was loaded", async function () {
+			await packages.loadPackages();
 
 			expect(packages.getPackage("thelounge-package-foo")).to.have.key("onServerStart");
 		});
 	});
 
 	describe(".loadPackages", function () {
-		it("should display report about loading packages", function () {
+		it("should display report about loading packages", async function () {
 			// Mock `log.info` to extract its effect into a string
 			logInfoStub.restore();
 			let stdout = "";
 			logInfoStub = sinon
 				.stub(log, "info")
 				.callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
-			packages.loadPackages();
+			await packages.loadPackages();
 
 			expect(stdout).to.deep.equal(
 				"Package thelounge-package-foo vdummy loaded\nThere are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases.\n"

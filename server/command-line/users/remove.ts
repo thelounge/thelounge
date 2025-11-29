@@ -10,13 +10,13 @@ program
 	.description("Remove an existing user")
 	.on("--help", Utils.extraHelp)
 	.argument("<name>", "name of the user")
-	.action(function (name) {
+	.action(async function (name) {
 		if (!fs.existsSync(Config.getUsersPath())) {
 			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
 		}
 
-		const ClientManager = require("../../clientManager").default;
+		const ClientManager = (await import("../../clientManager.js")).default;
 		const manager = new ClientManager();
 
 		try {

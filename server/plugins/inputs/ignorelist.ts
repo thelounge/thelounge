@@ -1,11 +1,12 @@
 import {PluginInputHandler} from "./index.js";
+import Client from "../../client.js";
 import Msg from "../../models/msg.js";
 import {ChanType, SpecialChanType} from "../../../shared/types/chan.js";
 import {MessageType} from "../../../shared/types/msg.js";
 
 const commands = ["ignorelist"];
 
-const input: PluginInputHandler = function (this: any, network, chan) {
+const input: PluginInputHandler = function (this: Client, network, chan) {
 	if (network.ignoreList.length === 0) {
 		chan.pushMessage(
 			this,
@@ -33,9 +34,9 @@ const input: PluginInputHandler = function (this: any, network, chan) {
 		});
 		this.emit("join", {
 			network: network.uuid,
-			chan: newChan!.getFilteredClone(true),
+			chan: newChan.getFilteredClone(true),
 			shouldOpen: false,
-			index: network.addChannel(newChan!),
+			index: network.addChannel(newChan),
 		});
 		return;
 	}

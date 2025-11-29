@@ -5,15 +5,15 @@ import _ from "lodash";
 import colors from "chalk";
 import {SearchOptions} from "ldapts";
 import {pathToFileURL} from "node:url";
+import type {ConnectionOptions as TlsConnectionOptions} from "node:tls";
 
 import log from "./log.js";
 import Helper from "./helper.js";
 import Utils from "./command-line/utils.js";
 import Network from "./models/network.js";
 
-// TODO: Type this
 export type WebIRC = {
-	[key: string]: any;
+	[key: string]: unknown;
 };
 
 type Https = {
@@ -64,7 +64,7 @@ type SearchDN = {
 type Ldap = {
 	enable: boolean;
 	url: string;
-	tlsOptions: any;
+	tlsOptions: TlsConnectionOptions;
 	primaryKey: string;
 	searchDN: SearchDN;
 	baseDN?: string;
@@ -97,7 +97,7 @@ export type ConfigType = {
 	prefetchMaxSearchSize: number;
 	prefetchTimeout: number;
 	fileUpload: FileUpload;
-	transports: string[];
+	transports: ("polling" | "websocket")[];
 	leaveMessage: string;
 	defaults: Defaults;
 	lockNetwork: boolean;
@@ -239,7 +239,7 @@ class Config {
 		if (this.values.fileUpload.baseUrl) {
 			try {
 				new URL("test/file.png", this.values.fileUpload.baseUrl);
-			} catch (e: any) {
+			} catch (e: unknown) {
 				this.values.fileUpload.baseUrl = undefined;
 
 				log.warn(
@@ -284,8 +284,8 @@ class Config {
 		if (!logsStat) {
 			try {
 				fs.mkdirSync(userLogsPath, {recursive: true, mode: 0o750});
-			} catch (e: any) {
-				log.error("Unable to create logs directory", e);
+			} catch (e: unknown) {
+				log.error("Unable to create logs directory", String(e));
 			}
 		} else if (logsStat && logsStat.mode & 0o001) {
 			log.warn(

@@ -5,18 +5,18 @@ import Helper from "../helper.js";
 import Config from "../config.js";
 import Utils from "./utils.js";
 import {Command} from "commander";
-import {FullMetadata} from "package-json";
+import packageJsonImport from "package-json";
 import fs from "node:fs";
 import fspromises from "node:fs/promises";
 import path from "node:path";
-import packageJsonImport from "package-json";
 
-type CustomMetadata = FullMetadata & {
+interface CustomMetadata {
+	name: string;
+	version?: string;
 	thelounge?: {
 		supports?: string;
 	};
-	version?: string;
-};
+}
 
 const program = new Command("install");
 program
@@ -26,15 +26,15 @@ program
 	)
 	.description("Install a theme or a package")
 	.on("--help", Utils.extraHelp)
-	.action(async function (packageName: string) {
+	.action(function (packageName: string) {
 		if (!fs.existsSync(Config.getConfigPath())) {
 			log.error(`${Config.getConfigPath()} does not exist.`);
 			return;
 		}
 
 		log.info("Retrieving information about the package...");
-		// TODO: type
-		let readFile: any = null;
+
+		let readFile: Promise<CustomMetadata>;
 		let isLocalFile = false;
 		let packageVersion = "latest";
 
@@ -45,7 +45,7 @@ program
 			packageName = expandTildeInLocalPath(packageName);
 			readFile = fspromises
 				.readFile(path.join(packageName.substring("file:".length), "package.json"), "utf-8")
-				.then((data) => JSON.parse(data) as typeof packageJsonImport);
+				.then((data): CustomMetadata => JSON.parse(data) as CustomMetadata);
 		} else {
 			// properly split scoped and non-scoped npm packages
 			// into their name and version
@@ -60,11 +60,6 @@ program
 				fullMetadata: true,
 				version: packageVersion,
 			});
-		}
-
-		if (!readFile) {
-			// no-op, error should've been thrown before this point
-			return;
 		}
 
 		readFile
@@ -125,8 +120,8 @@ program
 	});
 
 function expandTildeInLocalPath(packageName: string): string {
-	const path = packageName.substring("file:".length);
-	return "file:" + Helper.expandHome(path);
+	const localPath = packageName.substring("file:".length);
+	return "file:" + Helper.expandHome(localPath);
 }
 
 export default program;

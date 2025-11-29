@@ -201,169 +201,171 @@ export default async function (
 
 	return new Promise<ServerInstance>((resolve) => {
 		server.listen(listenParams, () => {
-			if (typeof listenParams === "string") {
-				log.info("Available on socket " + colors.green(listenParams));
-			} else {
-				const protocol = Config.values.https.enable ? "https" : "http";
-				const address = server?.address();
-
-				if (address && typeof address !== "string") {
-					// Node.js changed address.family from number (4, 6) to string ("IPv4", "IPv6")
-					// in v18, but may revert this change. Support both formats for compatibility.
-					const family = address.family as string | number;
-
-					if (family === "IPv6" || family === 6) {
-						address.address = "[" + address.address + "]";
-					}
-
-					log.info(
-						"Available at " +
-							colors.green(`${protocol}://${address.address}:${address.port}/`) +
-							` in ${colors.bold(Config.values.public ? "public" : "private")} mode`
-					);
-				}
-			}
-
-			// This should never happen
-			if (!server) {
-				return;
-			}
-
-			sockets = new ioServer(server, {
-				wsEngine: wsServer,
-				cookie: false,
-				serveClient: false,
-
-				// TODO: type as Server.Transport[]
-				transports: Config.values.transports as any,
-				pingTimeout: 60000,
-			});
-
-			sockets.on("connect", (socket) => {
-				socket.on("error", (err) => log.error(`io socket error: ${err}`));
-
-				if (Config.values.public) {
-					performAuthentication.call(socket, {});
+			void (async () => {
+				if (typeof listenParams === "string") {
+					log.info("Available on socket " + colors.green(listenParams));
 				} else {
-					socket.on("auth:perform", performAuthentication);
-					socket.emit("auth:start", serverHash);
-				}
-			});
+					const protocol = Config.values.https.enable ? "https" : "http";
+					const address = server?.address();
 
-			manager = new ClientManager();
-			packages.loadPackages();
+					if (address && typeof address !== "string") {
+						// Node.js changed address.family from number (4, 6) to string ("IPv4", "IPv6")
+						// in v18, but may revert this change. Support both formats for compatibility.
+						const family = address.family as string | number;
 
-			const defaultTheme = themes.getByName(Config.values.theme);
+						if (family === "IPv6" || family === 6) {
+							address.address = "[" + address.address + "]";
+						}
 
-			if (defaultTheme === undefined) {
-				log.warn(
-					`The specified default theme "${colors.red(
-						Config.values.theme
-					)}" does not exist, verify your config.`
-				);
-				Config.values.theme = "default";
-			} else if (defaultTheme.themeColor) {
-				Config.values.themeColor = defaultTheme.themeColor;
-			}
-
-			new Identification((identHandler, err) => {
-				if (err) {
-					log.error(`Could not start identd server, ${err.message}`);
-					process.exit(1);
-				} else if (!manager) {
-					log.error("Could not start identd server, ClientManager is undefined");
-					process.exit(1);
+						log.info(
+							"Available at " +
+								colors.green(`${protocol}://${address.address}:${address.port}/`) +
+								` in ${colors.bold(Config.values.public ? "public" : "private")} mode`
+						);
+					}
 				}
 
-				identd = identHandler;
-				manager.init(identHandler, sockets!);
-			});
-
-			// Handle ctrl+c and kill gracefully
-			let suicideTimeout: NodeJS.Timeout | null = null;
-
-			const exitGracefully = async function () {
-				if (suicideTimeout !== null) {
+				// This should never happen
+				if (!server) {
 					return;
 				}
 
-				log.info("Exiting...");
+				sockets = new ioServer(server, {
+					wsEngine: wsServer,
+					cookie: false,
+					serveClient: false,
+					transports: Config.values.transports,
+					pingTimeout: 60000,
+				});
 
-				// Close all client and IRC connections
-				if (manager) {
-					manager.clients.forEach((client) => client.quit());
+				sockets.on("connect", (socket) => {
+					socket.on("error", (err) => log.error(`io socket error: ${err}`));
+
+					if (Config.values.public) {
+						performAuthentication.call(socket, {});
+					} else {
+						socket.on("auth:perform", performAuthentication);
+						socket.emit("auth:start", serverHash);
+					}
+				});
+
+				manager = new ClientManager();
+				await packages.loadPackages();
+
+				const defaultTheme = themes.getByName(Config.values.theme);
+
+				if (defaultTheme === undefined) {
+					log.warn(
+						`The specified default theme "${colors.red(
+							Config.values.theme
+						)}" does not exist, verify your config.`
+					);
+					Config.values.theme = "default";
+				} else if (defaultTheme.themeColor) {
+					Config.values.themeColor = defaultTheme.themeColor;
 				}
 
-				if (Config.values.prefetchStorage) {
-					log.info("Clearing prefetch storage folder, this might take a while...");
-
-					(await import("./plugins/storage.js")).default.emptyDir();
-				}
-
-				// Forcefully exit after 3 seconds
-				suicideTimeout = setTimeout(() => process.exit(1), 3000);
-
-				// Close http server
-				server?.close(() => {
-					if (suicideTimeout !== null) {
-						clearTimeout(suicideTimeout);
+				new Identification((identHandler, err) => {
+					if (err) {
+						log.error(`Could not start identd server, ${err.message}`);
+						process.exit(1);
+					} else if (!manager) {
+						log.error("Could not start identd server, ClientManager is undefined");
+						process.exit(1);
 					}
 
-					process.exit(0);
+					identd = identHandler;
+					manager.init(identHandler, sockets!);
 				});
-			};
 
-			/* eslint-disable @typescript-eslint/no-misused-promises */
-			process.on("SIGINT", exitGracefully);
-			process.on("SIGTERM", exitGracefully);
-			/* eslint-enable @typescript-eslint/no-misused-promises */
+				// Handle ctrl+c and kill gracefully
+				let suicideTimeout: NodeJS.Timeout | null = null;
 
-			// Clear storage folder after server starts successfully
-			if (Config.values.prefetchStorage) {
-				import("./plugins/storage.js")
-					.then(({default: storage}) => {
-						storage.emptyDir();
-					})
-					.catch((err: Error) => {
-						log.error(`Could not clear storage folder, ${err.message}`);
+				const exitGracefully = function () {
+					if (suicideTimeout !== null) {
+						return;
+					}
+
+					log.info("Exiting...");
+
+					// Close all client and IRC connections
+					if (manager) {
+						manager.clients.forEach((client) => client.quit());
+					}
+
+					if (Config.values.prefetchStorage) {
+						log.info("Clearing prefetch storage folder, this might take a while...");
+
+						import("./plugins/storage.js")
+							.then(({default: storage}) => {
+								storage.emptyDir();
+							})
+							.catch((err: Error) => {
+								log.error(`Could not clear storage folder, ${err.message}`);
+							});
+					}
+
+					// Forcefully exit after 3 seconds
+					suicideTimeout = setTimeout(() => process.exit(1), 3000);
+
+					// Close http server
+					server?.close(() => {
+						if (suicideTimeout !== null) {
+							clearTimeout(suicideTimeout);
+						}
+
+						process.exit(0);
 					});
-			}
+				};
 
-			changelog.checkForUpdates(manager);
+				process.on("SIGINT", exitGracefully);
+				process.on("SIGTERM", exitGracefully);
 
-			// Create stop method that properly closes everything
-			const stop = (callback: (err?: Error) => void) => {
-				// Stop changelog update checks to clear the 24-hour timeout
-				changelog.stopUpdateChecks();
-
-				// Stop file watchers
-				packages.stopWatching();
-
-				if (manager) {
-					manager.stopAutoloadUsers();
+				// Clear storage folder after server starts successfully
+				if (Config.values.prefetchStorage) {
+					import("./plugins/storage.js")
+						.then(({default: storage}) => {
+							storage.emptyDir();
+						})
+						.catch((err: Error) => {
+							log.error(`Could not clear storage folder, ${err.message}`);
+						});
 				}
 
-				// Remove signal handlers to prevent double-close on SIGTERM/SIGINT
-				/* eslint-disable @typescript-eslint/no-misused-promises */
-				process.removeListener("SIGINT", exitGracefully);
-				process.removeListener("SIGTERM", exitGracefully);
-				/* eslint-enable @typescript-eslint/no-misused-promises */
+				changelog.checkForUpdates(manager);
 
-				// Close identd first, then HTTP server (which will auto-close Socket.IO)
-				if (identd) {
-					identd.close(() => {
+				// Create stop method that properly closes everything
+				const stop = (callback: (err?: Error) => void) => {
+					// Stop changelog update checks to clear the 24-hour timeout
+					changelog.stopUpdateChecks();
+
+					// Stop file watchers
+					packages.stopWatching();
+
+					if (manager) {
+						manager.stopAutoloadUsers();
+					}
+
+					// Remove signal handlers to prevent double-close on SIGTERM/SIGINT
+					process.removeListener("SIGINT", exitGracefully);
+					process.removeListener("SIGTERM", exitGracefully);
+
+					// Close identd first, then HTTP server (which will auto-close Socket.IO)
+					if (identd) {
+						identd.close(() => {
+							server.close(callback);
+						});
+					} else {
 						server.close(callback);
-					});
-				} else {
-					server.close(callback);
-				}
-			};
+					}
+				};
 
-			resolve({
-				httpServer: server,
-				io: sockets,
-				stop,
-			});
+				resolve({
+					httpServer: server,
+					io: sockets,
+					stop,
+				});
+			})();
 		});
 	});
 }
@@ -789,7 +791,7 @@ function initializeClient(
 						newSetting.value = "";
 					}
 
-					client.awayMessage = newSetting.value;
+					client.awayMessage = newSetting.value as string;
 				}
 			}
 		});
@@ -1103,9 +1105,17 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	Auth.initialize().then(() => {
+	if (!manager) {
+		log.error("performAuthentication: ClientManager not initialized");
+		authCallback(false);
+		return;
+	}
+
+	const clientManager = manager;
+
+	void Auth.initialize().then(() => {
 		// Perform password checking
-		Auth.auth(manager, client, data.user, data.password, authCallback);
+		Auth.auth(clientManager, client, data.user, data.password, authCallback);
 	});
 }
 
@@ -1143,7 +1153,7 @@ function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
 			);
 		});
 	} catch (err) {
-		log.error(`failed to resolve rDNS for ${ip}, using ip instead`, (err as any).toString());
+		log.error(`failed to resolve rDNS for ${ip}, using ip instead`, String(err));
 		setImmediate(callback, ip); // makes sure we always behave asynchronously
 	}
 }

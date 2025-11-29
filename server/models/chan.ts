@@ -35,7 +35,7 @@ class Chan {
 
 	userAway?: boolean;
 	special?: SpecialChanType;
-	data?: any;
+	data?: unknown;
 	closed?: boolean;
 	num_users?: number;
 
