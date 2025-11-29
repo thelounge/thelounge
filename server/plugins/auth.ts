@@ -5,17 +5,32 @@ import log from "../log.js";
 
 export type AuthHandler = (
 	manager: ClientManager,
-	client: Client,
+	client: Client | undefined,
 	user: string,
 	password: string,
 	callback: (success: boolean) => void
 ) => void;
 
+export type LoadUsersHandler = (
+	users: string[],
+	callbackLoadUser: (user: string) => void
+) => boolean;
+
+export interface AuthModule {
+	moduleName: string;
+	auth: AuthHandler | (() => void);
+	loadUsers: LoadUsersHandler | (() => boolean);
+	isEnabled?: () => boolean;
+	initialized: boolean;
+	initialize: () => Promise<void>;
+	[key: string]: unknown; // Allow dynamic properties from plugins
+}
+
 // The order defines priority: the first available plugin is used.
 // Always keep 'local' auth plugin at the end of the list; it should always be enabled.
 const plugins = [import("./auth/ldap.js"), import("./auth/local.js")];
 
-const toExport = {
+const toExport: AuthModule = {
 	moduleName: "<module with no name>",
 
 	// Must override: implements authentication mechanism
@@ -28,7 +43,7 @@ const toExport = {
 	loadUsers: () => false,
 	// local auth should always be enabled, but check here to verify
 	initialized: false,
-	// TODO: fix typing
+
 	async initialize() {
 		if (toExport.initialized) {
 			return;
@@ -42,7 +57,7 @@ const toExport = {
 				toExport.initialized = true;
 
 				for (const name in plugin) {
-					toExport[name] = plugin[name];
+					toExport[name] = plugin[name as keyof typeof plugin];
 				}
 
 				break;
@@ -53,7 +68,7 @@ const toExport = {
 			log.error("None of the auth plugins is enabled");
 		}
 	},
-} as any;
+};
 
 function unimplemented(funcName: string) {
 	log.debug(

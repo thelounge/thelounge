@@ -2,8 +2,9 @@ import {expect} from "chai";
 
 import {mount} from "@vue/test-utils";
 import ParsedMessage from "../../../../client/components/ParsedMessage.vue.js";
+import type {ClientMessage} from "../../../../client/js/types.js";
 
-function getParsedMessageContents(text: string, message?: any) {
+function getParsedMessageContents(text: string, message?: ClientMessage | string) {
 	const wrapper = mount(ParsedMessage, {
 		props: {
 			text,

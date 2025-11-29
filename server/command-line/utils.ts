@@ -52,7 +52,6 @@ class Utils {
 	static parseConfigOptions(this: void, val: string, memo?: Record<string, unknown>) {
 		// Invalid option that is not of format `key=value`, do nothing
 		if (!val.includes("=")) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return memo;
 		}
 
@@ -105,7 +104,6 @@ class Utils {
 			memo = _.set(memo, key, parsedValue);
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return memo;
 	}
 

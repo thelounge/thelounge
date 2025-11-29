@@ -313,9 +313,8 @@ class Uploader {
 			return "application/octet-stream";
 		} catch (e: unknown) {
 			if (e && typeof e === "object" && "code" in e && e.code !== "ENOENT") {
-				log.warn(
-					`Failed to read ${filePath}: ${e instanceof Error ? e.message : String(e)}`
-				);
+				const message = e instanceof Error ? e.message : "unknown error";
+				log.warn(`Failed to read ${filePath}: ${message}`);
 			}
 		}
 

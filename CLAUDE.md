@@ -8,11 +8,14 @@ yarn test    # JEDYNA komenda do weryfikacji - uruchamia build, lint i testy
 
 **NIGDY nie używaj npm** - projekt używa yarn workspaces.
 
+**Naprawiamy WSZYSTKIE problemy** - zarówno errors jak i warnings!
+
 ## KRYTYCZNE ZASADY NAPRAW KODU
 
 ### NO WORKAROUNDS - Prawdziwe naprawy, nie obejścia!
 
 **ZAKAZANE praktyki:**
+
 - `// @ts-ignore` lub `// @ts-expect-error`
 - `// eslint-disable-next-line`
 - `as any` lub `as unknown as X`
@@ -20,6 +23,7 @@ yarn test    # JEDYNA komenda do weryfikacji - uruchamia build, lint i testy
 - Ukrywanie błędów zamiast ich naprawy
 
 **WYMAGANE podejście:**
+
 1. **Naprawiaj przyczynę, nie objaw** - jeśli typ jest zły, popraw definicję typu
 2. **Rozumiej błąd** - przed naprawą zrozum DLACZEGO występuje błąd
 3. **Testuj zmiany** - po każdej naprawie uruchom `yarn build:server` i `yarn test`
@@ -33,12 +37,12 @@ yarn test    # Uruchamia WSZYSTKO: build + lint + testy
 
 ### Typowe naprawy (poprawne vs niepoprawne)
 
-| Problem | ZŁE (workaround) | DOBRE (naprawa) |
-|---------|------------------|-----------------|
-| `any` type | `// eslint-disable` | Zdefiniuj proper interface |
-| Duplicate imports | Zostaw jak jest | Scal w jeden import |
-| Use before define | `// eslint-disable` | Przenieś definicję wyżej |
-| Type mismatch | `as any` | Popraw typ lub definicję |
+| Problem           | ZŁE (workaround)    | DOBRE (naprawa)            |
+| ----------------- | ------------------- | -------------------------- |
+| `any` type        | `// eslint-disable` | Zdefiniuj proper interface |
+| Duplicate imports | Zostaw jak jest     | Scal w jeden import        |
+| Use before define | `// eslint-disable` | Przenieś definicję wyżej   |
+| Type mismatch     | `as any`            | Popraw typ lub definicję   |
 
 ## Struktura projektu
 

@@ -1,11 +1,12 @@
 import log from "../../../server/log.js";
 import ldapAuth from "../../../server/plugins/auth/ldap.js";
 import Config from "../../../server/config.js";
-import {Client} from "ldapts";
+import {Client as LdapClient} from "ldapts";
 import {expect} from "chai";
 import TestUtil from "../../util.js";
 import ClientManager from "../../../server/clientManager.js";
 import sinon from "sinon";
+import type ServerClient from "../../../server/client.js";
 
 type SinonSandbox = sinon.SinonSandbox;
 
@@ -18,6 +19,9 @@ const wrongPassword = "dolorsitamet";
 const baseDN = "ou=accounts,dc=example,dc=com";
 const primaryKey = "uid";
 
+// LDAP auth tests don't use the ServerClient parameter - it's passed through but unused
+const unusedServerClient = {} as ServerClient;
+
 function runAuth(
 	sandbox: SinonSandbox,
 	manager: ClientManager,
@@ -25,8 +29,10 @@ function runAuth(
 	username: string,
 	password: string
 ): AuthResult {
+	// client parameter is ignored - LDAP auth doesn't use it in these test paths
+	void client; // suppress unused warning
 	return new Promise((resolve) => {
-		ldapAuth.auth(manager, client as any, username, password, resolve);
+		ldapAuth.auth(manager, unusedServerClient, username, password, resolve);
 	});
 }
 
@@ -53,9 +59,10 @@ describe("LDAP authentication plugin", function () {
 
 		sandbox.stub(log, "info");
 
+		// Mock ClientManager with only the method used by LDAP auth
 		manager = {
 			addUser: sandbox.stub(),
-		} as unknown as ClientManager;
+		} as ClientManager;
 	});
 
 	afterEach(function () {
@@ -79,8 +86,8 @@ describe("LDAP authentication plugin", function () {
 
 	describe("Simple LDAP authentication (predefined DN pattern)", function () {
 		it("should successfully authenticate with correct password", async function () {
-			const bindStub = sandbox.stub(Client.prototype, "bind").resolves();
-			const unbindStub = sandbox.stub(Client.prototype, "unbind").resolves();
+			const bindStub = sandbox.stub(LdapClient.prototype, "bind").resolves();
+			const unbindStub = sandbox.stub(LdapClient.prototype, "unbind").resolves();
 
 			const valid = await runAuth(sandbox, manager, client, user, correctPassword);
 
@@ -95,9 +102,9 @@ describe("LDAP authentication plugin", function () {
 				.stub(log, "error")
 				.callsFake(TestUtil.sanitizeLog((str) => (errorMessage += str)));
 			sandbox
-				.stub(Client.prototype, "bind")
+				.stub(LdapClient.prototype, "bind")
 				.rejects(new Error("InsufficientAccessRightsError"));
-			sandbox.stub(Client.prototype, "unbind").resolves();
+			sandbox.stub(LdapClient.prototype, "unbind").resolves();
 
 			const valid = await runAuth(sandbox, manager, client, user, wrongPassword);
 
@@ -113,8 +120,8 @@ describe("LDAP authentication plugin", function () {
 			const errorLogStub = sandbox
 				.stub(log, "error")
 				.callsFake(TestUtil.sanitizeLog((str) => (errorMessage += str)));
-			sandbox.stub(Client.prototype, "bind").rejects(new Error("NoSuchObjectError"));
-			sandbox.stub(Client.prototype, "unbind").resolves();
+			sandbox.stub(LdapClient.prototype, "bind").rejects(new Error("NoSuchObjectError"));
+			sandbox.stub(LdapClient.prototype, "unbind").resolves();
 
 			const valid = await runAuth(sandbox, manager, client, wrongUser, correctPassword);
 
@@ -137,15 +144,15 @@ describe("LDAP authentication plugin", function () {
 		});
 
 		it("should successfully authenticate with correct password", async function () {
-			const bindStub = sandbox.stub(Client.prototype, "bind");
+			const bindStub = sandbox.stub(LdapClient.prototype, "bind");
 			bindStub.onCall(0).resolves();
 			bindStub.onCall(1).resolves();
 
-			sandbox.stub(Client.prototype, "search").resolves({
+			sandbox.stub(LdapClient.prototype, "search").resolves({
 				searchEntries: [{dn: `${primaryKey}=${user},${baseDN}`}],
 				searchReferences: [],
 			});
-			sandbox.stub(Client.prototype, "unbind").resolves();
+			sandbox.stub(LdapClient.prototype, "unbind").resolves();
 
 			const valid = await runAuth(sandbox, manager, client, user, correctPassword);
 
@@ -159,15 +166,15 @@ describe("LDAP authentication plugin", function () {
 				.stub(log, "error")
 				.callsFake(TestUtil.sanitizeLog((str) => (errorMessage += str)));
 
-			const bindStub = sandbox.stub(Client.prototype, "bind");
+			const bindStub = sandbox.stub(LdapClient.prototype, "bind");
 			bindStub.onCall(0).resolves();
 			bindStub.onCall(1).rejects(new Error("InsufficientAccessRightsError"));
 
-			sandbox.stub(Client.prototype, "search").resolves({
+			sandbox.stub(LdapClient.prototype, "search").resolves({
 				searchEntries: [{dn: `${primaryKey}=${user},${baseDN}`}],
 				searchReferences: [],
 			});
-			sandbox.stub(Client.prototype, "unbind").resolves();
+			sandbox.stub(LdapClient.prototype, "unbind").resolves();
 
 			const valid = await runAuth(sandbox, manager, client, user, wrongPassword);
 
@@ -185,12 +192,12 @@ describe("LDAP authentication plugin", function () {
 				.stub(log, "warn")
 				.callsFake(TestUtil.sanitizeLog((str) => (warningMessage += str)));
 
-			sandbox.stub(Client.prototype, "bind").resolves();
-			sandbox.stub(Client.prototype, "search").resolves({
+			sandbox.stub(LdapClient.prototype, "bind").resolves();
+			sandbox.stub(LdapClient.prototype, "search").resolves({
 				searchEntries: [],
 				searchReferences: [],
 			});
-			sandbox.stub(Client.prototype, "unbind").resolves();
+			sandbox.stub(LdapClient.prototype, "unbind").resolves();
 
 			const valid = await runAuth(sandbox, manager, client, wrongUser, correctPassword);
 

@@ -33,7 +33,7 @@ describe("Helper", function () {
 		});
 
 		it("should return an empty string when given undefined", function () {
-			expect(Helper.expandHome(undefined as any)).to.equal("");
+			expect(Helper.expandHome(undefined)).to.equal("");
 		});
 	});
 

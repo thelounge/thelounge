@@ -13,6 +13,13 @@ import MessageStorage, {
 } from "../../dist/server/plugins/messageStorage/sqlite.js";
 import Database from "better-sqlite3";
 import type {DeletionRequest} from "../../server/plugins/messageStorage/types.js";
+import type Network from "../../server/models/network.js";
+import type {Channel} from "../../server/models/chan.js";
+
+// Test-specific types for SQLite message storage tests
+type SqlValue = string | number | boolean | null | Buffer;
+type TestNetwork = Pick<Network, "uuid">;
+type TestChannel = Pick<Channel, "name">;
 
 const orig_schema = [
 	// Schema version #1
@@ -52,7 +59,7 @@ const v1_dummy_messages = [
 describe("SQLite migrations", function () {
 	let db: Database.Database;
 
-	function serialize_run(stmt: string, ...params: any[]): Promise<void> {
+	function serialize_run(stmt: string, ...params: SqlValue[]): Promise<void> {
 		try {
 			db.prepare(stmt).run(...params);
 			return Promise.resolve();
@@ -138,8 +145,8 @@ describe("SQLite unit tests", function () {
 	it("deletes messages when asked to", async function () {
 		const baseDate = new Date();
 
-		const net = {uuid: "testnet"} as any;
-		const chan = {name: "#channel"} as any;
+		const net: TestNetwork = {uuid: "testnet"};
+		const chan: TestChannel = {name: "#channel"};
 
 		for (let i = 0; i < 14; ++i) {
 			await store.index(
@@ -177,8 +184,8 @@ describe("SQLite unit tests", function () {
 	it("deletes only the types it should", async function () {
 		const baseDate = new Date();
 
-		const net = {uuid: "testnet"} as any;
-		const chan = {name: "#channel"} as any;
+		const net: TestNetwork = {uuid: "testnet"};
+		const chan: TestChannel = {name: "#channel"};
 
 		for (let i = 0; i < 6; ++i) {
 			await store.index(
@@ -236,7 +243,7 @@ describe("SQLite Message Storage", function () {
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
 
-	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
+	function db_get_one(stmt: string, ...params: SqlValue[]): Promise<Record<string, SqlValue>> {
 		try {
 			const row = store.database.prepare(stmt).get(...params);
 			return Promise.resolve(row);
@@ -273,7 +280,10 @@ describe("SQLite Message Storage", function () {
 
 	it("should resolve an empty array when disabled", async function () {
 		store.isEnabled = false;
-		const messages = await store.getMessages(null as any, null as any, null as any);
+		// When disabled, getMessages returns empty array without using params
+		const dummyNet: TestNetwork = {uuid: "disabled-test"};
+		const dummyChan: TestChannel = {name: "#disabled-test"};
+		const messages = await store.getMessages(dummyNet, dummyChan, () => 0);
 		expect(messages).to.have.lengthOf(0);
 		store.isEnabled = true;
 	});
@@ -293,16 +303,12 @@ describe("SQLite Message Storage", function () {
 
 	it("should store a message", async function () {
 		await store.index(
-			{
-				uuid: "this-is-a-network-guid",
-			} as any,
-			{
-				name: "#thisISaCHANNEL",
-			} as any,
+			{uuid: "this-is-a-network-guid"} as Network,
+			{name: "#thisISaCHANNEL"} as Channel,
 			new Msg({
 				time: 123456789,
 				text: "Hello from sqlite world!",
-			} as any)
+			})
 		);
 	});
 
@@ -311,10 +317,10 @@ describe("SQLite Message Storage", function () {
 		const messages = await store.getMessages(
 			{
 				uuid: "this-is-a-network-guid",
-			} as any,
+			} as Network,
 			{
 				name: "#thisisaCHANNEL",
-			} as any,
+			} as Channel,
 			() => msgid++
 		);
 		expect(messages).to.have.lengthOf(1);
@@ -332,19 +338,19 @@ describe("SQLite Message Storage", function () {
 
 			for (let i = 0; i < 200; ++i) {
 				await store.index(
-					{uuid: "retrieval-order-test-network"} as any,
-					{name: "#channel"} as any,
+					{uuid: "retrieval-order-test-network"} as Network,
+					{name: "#channel"} as Channel,
 					new Msg({
 						time: 123456789 + i,
 						text: `msg ${i}`,
-					} as any)
+					})
 				);
 			}
 
 			let msgId = 0;
 			const messages = await store.getMessages(
-				{uuid: "retrieval-order-test-network"} as any,
-				{name: "#channel"} as any,
+				{uuid: "retrieval-order-test-network"} as Network,
+				{name: "#channel"} as Channel,
 				() => msgId++
 			);
 			expect(messages).to.have.lengthOf(2);
@@ -396,30 +402,30 @@ describe("SQLite Message Storage", function () {
 			Config.values.maxHistory = 3;
 
 			await store.index(
-				{uuid: "this-is-a-network-guid2"} as any,
-				{name: "#channel"} as any,
+				{uuid: "this-is-a-network-guid2"} as Network,
+				{name: "#channel"} as Channel,
 				new Msg({
 					time: 123456790,
 					text: `foo % bar _ baz`,
-				} as any)
+				})
 			);
 
 			await store.index(
-				{uuid: "this-is-a-network-guid2"} as any,
-				{name: "#channel"} as any,
+				{uuid: "this-is-a-network-guid2"} as Network,
+				{name: "#channel"} as Channel,
 				new Msg({
 					time: 123456791,
 					text: `foo bar x baz`,
-				} as any)
+				})
 			);
 
 			await store.index(
-				{uuid: "this-is-a-network-guid2"} as any,
-				{name: "#channel"} as any,
+				{uuid: "this-is-a-network-guid2"} as Network,
+				{name: "#channel"} as Channel,
 				new Msg({
 					time: 123456792,
 					text: `bar @ baz`,
-				} as any)
+				})
 			);
 
 			await assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]);

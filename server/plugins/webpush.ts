@@ -6,6 +6,14 @@ import WebPushAPI from "web-push";
 import Config from "../config.js";
 import Client from "../client.js";
 import * as os from "os";
+
+export interface WebPushPayload {
+	type: "notification";
+	chanId?: number;
+	timestamp: number;
+	title: string;
+	body: string;
+}
 class WebPush {
 	vapidKeys?: {
 		publicKey: string;
@@ -69,7 +77,7 @@ class WebPush {
 		);
 	}
 
-	push(client: Client, payload: any, onlyToOffline: boolean) {
+	push(client: Client, payload: WebPushPayload, onlyToOffline: boolean) {
 		_.forOwn(client.config.sessions, ({pushSubscription}, token) => {
 			if (pushSubscription) {
 				if (onlyToOffline && _.find(client.attachedClients, {token}) !== undefined) {
@@ -81,7 +89,7 @@ class WebPush {
 		});
 	}
 
-	pushSingle(client: Client, subscription: WebPushAPI.PushSubscription, payload: any) {
+	pushSingle(client: Client, subscription: WebPushAPI.PushSubscription, payload: WebPushPayload) {
 		WebPushAPI.sendNotification(subscription, JSON.stringify(payload)).catch((error) => {
 			if (error.statusCode >= 400 && error.statusCode < 500) {
 				log.warn(

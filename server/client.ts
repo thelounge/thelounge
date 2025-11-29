@@ -17,7 +17,11 @@ import inputs from "./plugins/inputs/index.js";
 import PublicClient from "./plugins/packages/publicClient.js";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite.js";
 import TextFileMessageStorage from "./plugins/messageStorage/text.js";
-import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network.js";
+import Network, {
+	NetworkConfig,
+	NetworkFormData,
+	NetworkWithIrcFramework,
+} from "./models/network.js";
 import ClientManager from "./clientManager.js";
 import {MessageStorage} from "./plugins/messageStorage/types.js";
 import {StorageCleaner} from "./storageCleaner.js";
@@ -248,7 +252,7 @@ class Client {
 		return false;
 	}
 
-	networkFromConfig(args: Record<string, unknown>): Network {
+	networkFromConfig(args: NetworkFormData): Network {
 		let channels: Chan[] = [];
 
 		if (Array.isArray(args.channels)) {
@@ -277,14 +281,14 @@ class Client {
 					"User '" +
 						this.name +
 						"' on network '" +
-						String(args.name) +
+						(args.name || "") +
 						"' has an invalid channel which has been ignored"
 				);
 			}
 			// `join` is kept for backwards compatibility when updating from versions <2.0
 			// also used by the "connect" window
 		} else if (args.join) {
-			channels = String(args.join)
+			channels = (args.join || "")
 				.replace(/,/g, " ")
 				.split(/\s+/g)
 				.map((chan: string) => {
@@ -298,38 +302,38 @@ class Client {
 				});
 		}
 
-		// TODO; better typing for args
+		// Handle commands - can be string[] or string
+		const commands = Array.isArray(args.commands) ? args.commands : [];
+
 		return new Network({
-			uuid: args.uuid as string | undefined,
-			name: String(
-				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
-			),
-			host: String(args.host || ""),
-			port: parseInt(String(args.port), 10),
+			uuid: args.uuid,
+			name: args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || "",
+			host: args.host || "",
+			port: parseInt(String(args.port ?? 6667), 10),
 			tls: !!args.tls,
 			userDisconnected: !!args.userDisconnected,
 			rejectUnauthorized: !!args.rejectUnauthorized,
-			password: String(args.password || ""),
-			nick: String(args.nick || ""),
-			username: String(args.username || ""),
-			realname: String(args.realname || ""),
-			leaveMessage: String(args.leaveMessage || ""),
-			sasl: String(args.sasl || ""),
-			saslAccount: String(args.saslAccount || ""),
-			saslPassword: String(args.saslPassword || ""),
-			commands: (args.commands as string[]) || [],
+			password: args.password || "",
+			nick: args.nick || "",
+			username: args.username || "",
+			realname: args.realname || "",
+			leaveMessage: args.leaveMessage || "",
+			sasl: args.sasl || "",
+			saslAccount: args.saslAccount || "",
+			saslPassword: args.saslPassword || "",
+			commands: commands,
 			channels: channels,
-			ignoreList: args.ignoreList ? (args.ignoreList as IgnoreListItem[]) : [],
+			ignoreList: args.ignoreList || [],
 
 			proxyEnabled: !!args.proxyEnabled,
-			proxyHost: String(args.proxyHost || ""),
-			proxyPort: parseInt(String(args.proxyPort), 10),
-			proxyUsername: String(args.proxyUsername || ""),
-			proxyPassword: String(args.proxyPassword || ""),
+			proxyHost: args.proxyHost || "",
+			proxyPort: parseInt(String(args.proxyPort ?? 1080), 10),
+			proxyUsername: args.proxyUsername || "",
+			proxyPassword: args.proxyPassword || "",
 		});
 	}
 
-	connectToNetwork(args: Record<string, unknown>, isStartup = false) {
+	connectToNetwork(args: NetworkFormData, isStartup = false) {
 		// Get channel id for lobby before creating other channels for nicer ids
 		const lobbyChannelId = this.idChan++;
 

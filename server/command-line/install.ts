@@ -45,7 +45,7 @@ program
 			packageName = expandTildeInLocalPath(packageName);
 			readFile = fspromises
 				.readFile(path.join(packageName.substring("file:".length), "package.json"), "utf-8")
-				.then((data) => JSON.parse(data));
+				.then((data): CustomMetadata => JSON.parse(data) as CustomMetadata);
 		} else {
 			// properly split scoped and non-scoped npm packages
 			// into their name and version
