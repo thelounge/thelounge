@@ -406,6 +406,88 @@ export default defineComponent({
 			}
 		);
 
+		// Scroll to focused message when navigating from search or mentions
+		const scrollToFocusedMessage = async (focusedId: number): Promise<boolean> => {
+			if (!chat.value) {
+				return false;
+			}
+
+			await nextTick();
+
+			const messageEl = chat.value.querySelector(`#msg-${focusedId}`);
+
+			if (messageEl) {
+				messageEl.scrollIntoView({behavior: "smooth", block: "center"});
+				return true;
+			}
+
+			return false;
+		};
+
+		const loadHistoryUntilMessage = async (targetMsgId: number) => {
+			if (!store.state.isConnected) {
+				return;
+			}
+
+			// Check if message already exists
+			if (await scrollToFocusedMessage(targetMsgId)) {
+				return;
+			}
+
+			// If no more history available, give up
+			if (!props.channel.moreHistoryAvailable) {
+				return;
+			}
+
+			// Find the oldest message ID to request history before it
+			let oldestMessageId = -1;
+
+			for (const message of props.channel.messages) {
+				if (!message.showInActive) {
+					oldestMessageId = message.id;
+					break;
+				}
+			}
+
+			// If target is newer than our oldest message, it should already be loaded
+			if (targetMsgId > oldestMessageId && oldestMessageId !== -1) {
+				return;
+			}
+
+			// Load more history
+			props.channel.historyLoading = true;
+
+			socket.emit("more", {
+				target: props.channel.id,
+				lastId: oldestMessageId,
+				condensed: store.state.settings.statusMessages !== "shown",
+			});
+
+			// Wait for history to load, then try again
+			const unwatch = watch(
+				() => props.channel.historyLoading,
+				async (loading) => {
+					if (!loading) {
+						unwatch();
+						// Recursively try again
+						await loadHistoryUntilMessage(targetMsgId);
+					}
+				}
+			);
+		};
+
+		watch(
+			() => props.focused,
+			async (focusedId) => {
+				if (!focusedId) {
+					return;
+				}
+
+				await loadHistoryUntilMessage(focusedId);
+			},
+			{immediate: true}
+		);
+
 		onBeforeUpdate(() => {
 			unreadMarkerShown = false;
 		});

@@ -277,6 +277,7 @@ class Client {
 						key: chan.key || "",
 						type: type,
 						muted: chan.muted,
+						pinned: chan.pinned,
 					})
 				);
 			});

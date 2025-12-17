@@ -681,6 +681,7 @@ class Network {
 					keys.push("key");
 				} else if (chan.type === ChanType.QUERY) {
 					keys.push("type");
+					keys.push("pinned");
 				}
 
 				return _.pick(chan, keys);

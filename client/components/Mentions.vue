@@ -49,7 +49,11 @@
 							</span>
 						</div>
 					</div>
-					<div class="content" dir="auto">
+					<div
+						class="content"
+						dir="auto"
+						@click="jumpToMention(message)"
+					>
 						<ParsedMessage :message="message as any" />
 					</div>
 				</div>
@@ -103,6 +107,11 @@
 	margin-top: 2px;
 	word-wrap: break-word;
 	word-break: break-word; /* Webkit-specific */
+	cursor: pointer;
+}
+
+.mentions-popup .msg .content:hover {
+	background-color: var(--highlight-border-color);
 }
 
 .mentions-popup .msg-dismiss::before {
@@ -155,6 +164,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import {computed, watch, defineComponent, ref, onMounted, onUnmounted} from "vue";
 import {useStore} from "../js/store";
 import {ClientMention} from "../js/types";
+import {switchToChannel} from "../js/router";
 
 dayjs.extend(relativeTime);
 
@@ -204,6 +214,18 @@ export default defineComponent({
 			socket.emit("mentions:dismiss_all");
 		};
 
+		const jumpToMention = (message: ClientMention) => {
+			if (!message.channel) {
+				return;
+			}
+
+			// Navigate to the channel with the focused message
+			switchToChannel(message.channel.channel, message.msgId);
+
+			// Close the popup
+			isOpen.value = false;
+		};
+
 		const containerClick = (event: Event) => {
 			if (event.currentTarget === event.target) {
 				isOpen.value = false;
@@ -240,6 +262,7 @@ export default defineComponent({
 			messageTime,
 			dismissMention,
 			dismissAllMentions,
+			jumpToMention,
 			containerClick,
 		};
 	},

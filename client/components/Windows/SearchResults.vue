@@ -63,7 +63,7 @@
 								v-for="(message, id) in messages"
 								:key="message.id"
 								class="result"
-								@click="jump(message, id)"
+								@click="jump(message)"
 							>
 								<DateMarker
 									v-if="shouldDisplayDateMarker(message, id)"
@@ -89,6 +89,14 @@
 <style>
 .channel-name {
 	font-weight: 700;
+}
+
+.result {
+	cursor: pointer;
+}
+
+.result:hover {
+	background-color: var(--highlight-bg-color);
 }
 </style>
 
@@ -240,10 +248,13 @@ export default defineComponent({
 			el.scrollTop = el.scrollHeight;
 		};
 
-		const jump = () => {
-			// TODO: Implement jumping to messages!
-			// This is difficult because it means client will need to handle a potentially nonlinear message set
-			// (loading IntersectionObserver both before AND after the messages)
+		const jump = (message: ClientMessage) => {
+			if (!channel.value) {
+				return;
+			}
+
+			// Navigate to the channel with the focused message
+			switchToChannel(channel.value, message.id);
 		};
 
 		watch(

@@ -155,19 +155,29 @@ router.afterEach((to) => {
 	}
 });
 
-async function navigate(routeName: string, params: RouteParamsRawGeneric = {}) {
+async function navigate(
+	routeName: string,
+	params: RouteParamsRawGeneric = {},
+	query: Record<string, string | number> = {}
+) {
 	if (router.currentRoute.value.name) {
-		await router.push({name: routeName, params});
+		await router.push({name: routeName, params, query});
 	} else {
 		// If current route is null, replace the history entry
 		// This prevents invalid entries from lingering in history,
 		// and then the route guard preventing proper navigation
-		await router.replace({name: routeName, params}).catch(() => {});
+		await router.replace({name: routeName, params, query}).catch(() => {});
 	}
 }
 
-function switchToChannel(channel: ClientChan) {
-	void navigate("RoutedChat", {id: channel.id});
+function switchToChannel(channel: ClientChan, focusedMessageId?: number) {
+	const query: Record<string, number> = {};
+
+	if (focusedMessageId) {
+		query.focused = focusedMessageId;
+	}
+
+	void navigate("RoutedChat", {id: channel.id}, query);
 }
 
 if ("serviceWorker" in navigator) {

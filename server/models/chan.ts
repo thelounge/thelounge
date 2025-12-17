@@ -15,6 +15,7 @@ export type ChanConfig = {
 	name: string;
 	key?: string;
 	muted?: boolean;
+	pinned?: boolean;
 	type?: string;
 };
 
