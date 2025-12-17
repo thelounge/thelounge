@@ -1257,6 +1257,24 @@ textarea.input {
 	margin: 0;
 }
 
+/* Return to latest button - floating at bottom when scrolled up in history */
+.return-to-latest {
+	position: sticky;
+	bottom: 15px;
+	display: flex;
+	justify-content: center;
+	z-index: 10;
+	pointer-events: none;
+}
+
+.return-to-latest .btn {
+	pointer-events: auto;
+	padding: 8px 20px;
+	border-radius: 20px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+	font-weight: 500;
+}
+
 .scroll-down {
 	position: absolute;
 	bottom: 16px;

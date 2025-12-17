@@ -1,6 +1,6 @@
 <template>
 	<div ref="chat" class="chat" tabindex="-1">
-		<div v-show="channel.moreHistoryAvailable" class="show-more">
+		<div v-show="showLoadMoreButton" class="show-more">
 			<button
 				ref="loadMoreButton"
 				:disabled="channel.historyLoading || !store.state.isConnected"
@@ -18,16 +18,14 @@
 			aria-relevant="additions"
 			@copy="onCopy"
 		>
-			<template v-for="(message, id) in condensedMessages">
+			<template v-for="(message, idx) in windowedMessages" :key="getMessageKey(message)">
 				<DateMarker
-					v-if="shouldDisplayDateMarker(message, id)"
-					:key="message.id + '-date'"
+					v-if="shouldDisplayDateMarker(message, idx)"
 					:message="message as any"
-					:focused="message.id === focused"
+					:focused="message.id === focusedMsgId"
 				/>
 				<div
 					v-if="shouldDisplayUnreadMarker(Number(message.id))"
-					:key="message.id + '-unread'"
 					class="unread-marker"
 				>
 					<span class="unread-marker-text" />
@@ -35,24 +33,28 @@
 
 				<MessageCondensed
 					v-if="message.type === 'condensed'"
-					:key="message.messages[0].id"
 					:network="network"
 					:keep-scroll-position="keepScrollPosition"
 					:messages="message.messages"
-					:focused="message.id === focused"
+					:focused="message.id === focusedMsgId"
 				/>
 				<Message
 					v-else
-					:key="message.id"
 					:channel="channel"
 					:network="network"
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
-					:is-previous-source="isPreviousSource(message, id)"
-					:focused="message.id === focused"
+					:is-previous-source="isPreviousSource(message, idx)"
+					:focused="message.id === focusedMsgId"
 					@toggle-link-preview="onLinkPreviewToggle"
 				/>
 			</template>
+		</div>
+		<!-- Return to latest button -->
+		<div v-if="!isAtEnd" class="return-to-latest">
+			<button class="btn" @click="jumpToBottom">
+				↓ Return to latest
+			</button>
 		</div>
 	</div>
 </template>
@@ -92,6 +94,11 @@ type CondensedMessageContainer = {
 // TODO; move into component
 let unreadMarkerShown = false;
 
+// Configuration
+const WINDOW_SIZE = 150; // How many messages to render at once
+const SCROLL_THRESHOLD = 150; // Pixels from edge to trigger window shift
+const SHIFT_AMOUNT = 25; // How many messages to shift when moving window
+
 export default defineComponent({
 	name: "MessageList",
 	components: {
@@ -103,6 +110,7 @@ export default defineComponent({
 		network: {type: Object as PropType<ClientNetwork>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: Number,
+		focusedTime: Number,
 	},
 	setup(props) {
 		const store = useStore();
@@ -110,102 +118,49 @@ export default defineComponent({
 		const chat = ref<HTMLDivElement | null>(null);
 		const loadMoreButton = ref<HTMLButtonElement | null>(null);
 		const historyObserver = ref<IntersectionObserver | null>(null);
-		const skipNextScrollEvent = ref(false);
 
-		const isWaitingForNextTick = ref(false);
+		// Window state: which index in allMessages to start rendering from
+		// We render from windowStart to windowStart + WINDOW_SIZE
+		const windowStart = ref(0);
 
-		const jumpToBottom = () => {
-			skipNextScrollEvent.value = true;
-			props.channel.scrolledToBottom = true;
+		// Flag to prevent scroll handler from firing during programmatic scrolls
+		const ignoreNextScroll = ref(false);
 
-			const el = chat.value;
+		// Flag to prevent any scroll/watcher interference during jump animations
+		const isJumping = ref(false);
 
-			if (el) {
-				el.scrollTop = el.scrollHeight;
-			}
-		};
+		// Track if a window shift is pending (using rAF)
+		let pendingWindowShift = false;
 
-		const onShowMoreClick = () => {
-			if (!store.state.isConnected) {
-				return;
-			}
+		// Target message ID we're trying to jump to (for loading more history)
+		const pendingJumpTarget = ref<number | null>(null);
 
-			let lastMessage = -1;
+		// The currently focused/highlighted message ID (resolved from either focused or focusedTime)
+		const focusedMsgId = ref<number | null>(null);
 
-			// Find the id of first message that isn't showInActive
-			// If showInActive is set, this message is actually in another channel
-			for (const message of props.channel.messages) {
-				if (!message.showInActive) {
-					lastMessage = message.id;
-					break;
-				}
-			}
-
-			props.channel.historyLoading = true;
-
-			socket.emit("more", {
-				target: props.channel.id,
-				lastId: lastMessage,
-				condensed: store.state.settings.statusMessages !== "shown",
-			});
-		};
-
-		const onLoadButtonObserved = (entries: IntersectionObserverEntry[]) => {
-			entries.forEach((entry) => {
-				if (!entry.isIntersecting) {
-					return;
-				}
-
-				onShowMoreClick();
-			});
-		};
-
-		nextTick(() => {
-			if (!chat.value) {
-				return;
-			}
-
-			if (window.IntersectionObserver) {
-				historyObserver.value = new window.IntersectionObserver(onLoadButtonObserved, {
-					root: chat.value,
-				});
-			}
-
-			jumpToBottom();
-		}).catch((e) => {
-			// eslint-disable-next-line no-console
-			console.error("Error in new IntersectionObserver", e);
-		});
-
-		const condensedMessages = computed(() => {
+		// Full condensed message list (can be large)
+		const allMessages = computed(() => {
 			if (props.channel.type !== ChanType.CHANNEL && props.channel.type !== ChanType.QUERY) {
 				return props.channel.messages;
 			}
 
-			// If actions are hidden, just return a message list with them excluded
 			if (store.state.settings.statusMessages === "hidden") {
 				return props.channel.messages.filter(
 					(message) => !condensedTypes.has(message.type || "")
 				);
 			}
 
-			// If actions are not condensed, just return raw message list
 			if (store.state.settings.statusMessages !== "condensed") {
 				return props.channel.messages;
 			}
 
 			let lastCondensedContainer: CondensedMessageContainer | null = null;
-
 			const condensed: (ClientMessage | CondensedMessageContainer)[] = [];
 
 			for (const message of props.channel.messages) {
-				// If this message is not condensable, or its an action affecting our user,
-				// then just append the message to container and be done with it
 				if (message.self || message.highlight || !condensedTypes.has(message.type || "")) {
 					lastCondensedContainer = null;
-
 					condensed.push(message);
-
 					continue;
 				}
 
@@ -215,42 +170,348 @@ export default defineComponent({
 						type: "condensed",
 						messages: [],
 					};
-
 					condensed.push(lastCondensedContainer);
 				}
 
 				lastCondensedContainer.messages.push(message);
-
-				// Set id of the condensed container to last message id,
-				// which is required for the unread marker to work correctly
 				lastCondensedContainer.id = message.id;
 
-				// If this message is the unread boundary, create a split condensed container
 				if (message.id === props.channel.firstUnread) {
 					lastCondensedContainer = null;
 				}
 			}
 
 			return condensed.map((message) => {
-				// Skip condensing single messages, it doesn't save any
-				// space but makes useful information harder to see
 				if (message.type === "condensed" && message.messages.length === 1) {
 					return message.messages[0];
 				}
-
 				return message;
 			});
 		});
 
+		// The slice of messages currently rendered
+		const windowedMessages = computed(() => {
+			const all = allMessages.value;
+			const start = windowStart.value;
+			const end = Math.min(start + WINDOW_SIZE, all.length);
+			return all.slice(start, end);
+		});
+
+		// Are we showing the end of the message list?
+		const isAtEnd = computed(() => {
+			return windowStart.value + WINDOW_SIZE >= allMessages.value.length;
+		});
+
+		// Should we show the "load more" button?
+		const showLoadMoreButton = computed(() => {
+			// Show if there's more history on server AND we're at the start of our local array
+			return props.channel.moreHistoryAvailable && windowStart.value === 0;
+		});
+
+		// Helper to get a unique key for each message
+		const getMessageKey = (message: ClientMessage | CondensedMessageContainer) => {
+			if (message.type === "condensed") {
+				return `condensed-${message.messages[0].id}`;
+			}
+			return message.id;
+		};
+
+		// Set window to show the latest messages
+		const goToEnd = () => {
+			const total = allMessages.value.length;
+			windowStart.value = Math.max(0, total - WINDOW_SIZE);
+		};
+
+		// Jump to bottom - go to end and scroll down
+		const jumpToBottom = async () => {
+			goToEnd();
+			props.channel.scrolledToBottom = true;
+
+			await nextTick();
+
+			if (chat.value) {
+				ignoreNextScroll.value = true;
+				chat.value.scrollTop = chat.value.scrollHeight;
+			}
+		};
+
+		// Find message index by ID in allMessages
+		const findMessageIndex = (msgId: number): number => {
+			const all = allMessages.value;
+			for (let i = 0; i < all.length; i++) {
+				const msg = all[i];
+				if (msg.id === msgId) return i;
+				if (msg.type === "condensed") {
+					for (const inner of msg.messages) {
+						if (inner.id === msgId) return i;
+					}
+				}
+			}
+			return -1;
+		};
+
+		// Find message index by timestamp (for search results which have different IDs)
+		const findMessageIndexByTime = (timestamp: number): {index: number; msgId: number} => {
+			const all = allMessages.value;
+			for (let i = 0; i < all.length; i++) {
+				const msg = all[i];
+				const msgTime = new Date(msg.time).getTime();
+				// Allow 1 second tolerance for timestamp matching
+				if (Math.abs(msgTime - timestamp) < 1000) {
+					return {index: i, msgId: msg.id || 0};
+				}
+				if (msg.type === "condensed") {
+					for (const inner of msg.messages) {
+						const innerTime = new Date(inner.time).getTime();
+						if (Math.abs(innerTime - timestamp) < 1000) {
+							return {index: i, msgId: inner.id};
+						}
+					}
+				}
+			}
+			return {index: -1, msgId: 0};
+		};
+
+		// Jump to a specific message by ID
+		const jumpToMessage = async (msgId: number): Promise<boolean> => {
+			// Immediately prevent any other scroll interference
+			isJumping.value = true;
+			props.channel.scrolledToBottom = false;
+
+			const index = findMessageIndex(msgId);
+
+			if (index === -1) {
+				// Message not in memory - need to load more history
+				if (props.channel.moreHistoryAvailable) {
+					// Set target and trigger history load
+					pendingJumpTarget.value = msgId;
+
+					// Go to start of window and trigger history loading
+					windowStart.value = 0;
+					await nextTick();
+
+					if (chat.value) {
+						ignoreNextScroll.value = true;
+						chat.value.scrollTop = 0;
+					}
+
+					// Trigger loading more history
+					onShowMoreClick();
+
+					// Keep isJumping true - the messages watcher will handle completion
+					return false;
+				}
+
+				// No more history available and message not found
+				isJumping.value = false;
+				return false;
+			}
+
+			// Clear any pending jump target since we found the message
+			pendingJumpTarget.value = null;
+
+			// Set the focused message ID for highlighting
+			focusedMsgId.value = msgId;
+
+			// Center the window on this message
+			const total = allMessages.value.length;
+			const halfWindow = Math.floor(WINDOW_SIZE / 2);
+			let newStart = index - halfWindow;
+
+			// Clamp to valid range
+			newStart = Math.max(0, Math.min(newStart, total - WINDOW_SIZE));
+			newStart = Math.max(0, newStart); // In case total < WINDOW_SIZE
+
+			windowStart.value = newStart;
+
+			// Wait for Vue to render
+			await nextTick();
+			await nextTick(); // Double nextTick to ensure DOM is fully updated
+
+			// Find and scroll to the element
+			if (chat.value) {
+				const el = chat.value.querySelector(`#msg-${msgId}`);
+				if (el) {
+					// Use instant scroll to avoid animation conflicts
+					el.scrollIntoView({ behavior: "instant", block: "center" });
+
+					// Keep isJumping true briefly to let things settle
+					setTimeout(() => {
+						isJumping.value = false;
+					}, 150);
+
+					// Clear the highlight after a few seconds
+					setTimeout(() => {
+						focusedMsgId.value = null;
+					}, 3000);
+
+					return true;
+				}
+			}
+
+			isJumping.value = false;
+			return false;
+		};
+
+		// Jump to a specific message by timestamp (for search results)
+		const jumpToMessageByTime = async (timestamp: number): Promise<boolean> => {
+			// Immediately prevent any other scroll interference
+			isJumping.value = true;
+			props.channel.scrolledToBottom = false;
+
+			const {index, msgId} = findMessageIndexByTime(timestamp);
+
+			if (index === -1) {
+				// Message not in memory - this shouldn't happen often since
+				// we load messages from SQLite on startup
+				isJumping.value = false;
+				return false;
+			}
+
+			// Set the focused message ID for highlighting
+			focusedMsgId.value = msgId;
+
+			// Center the window on this message
+			const total = allMessages.value.length;
+			const halfWindow = Math.floor(WINDOW_SIZE / 2);
+			let newStart = index - halfWindow;
+
+			// Clamp to valid range
+			newStart = Math.max(0, Math.min(newStart, total - WINDOW_SIZE));
+			newStart = Math.max(0, newStart);
+
+			windowStart.value = newStart;
+
+			// Wait for Vue to render
+			await nextTick();
+			await nextTick();
+
+			// Find and scroll to the element
+			if (chat.value && msgId) {
+				const el = chat.value.querySelector(`#msg-${msgId}`);
+				if (el) {
+					el.scrollIntoView({ behavior: "instant", block: "center" });
+
+					setTimeout(() => {
+						isJumping.value = false;
+					}, 150);
+
+					// Clear the highlight after a few seconds
+					setTimeout(() => {
+						focusedMsgId.value = null;
+					}, 3000);
+
+					return true;
+				}
+			}
+
+			isJumping.value = false;
+			return false;
+		};
+
+		// Handle scroll - shift window when near edges
+		const handleScroll = () => {
+			// Skip if we're in the middle of a programmatic jump
+			if (isJumping.value) return;
+
+			if (ignoreNextScroll.value) {
+				ignoreNextScroll.value = false;
+				return;
+			}
+
+			const el = chat.value;
+			if (!el) return;
+
+			// Always update scrolledToBottom immediately
+			const atBottom = el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
+			props.channel.scrolledToBottom = atBottom;
+
+			// Skip window shifting if already pending or not needed
+			if (pendingWindowShift) return;
+
+			const total = allMessages.value.length;
+			if (total <= WINDOW_SIZE) return;
+
+			const currentStart = windowStart.value;
+			const currentEnd = currentStart + WINDOW_SIZE;
+			const scrollTop = el.scrollTop;
+			const scrollBottom = el.scrollHeight - scrollTop;
+			const distanceFromBottom = el.scrollHeight - scrollTop - el.offsetHeight;
+
+			// Check if we need to shift
+			const needsShiftUp = scrollTop < SCROLL_THRESHOLD && currentStart > 0;
+			const needsShiftDown = distanceFromBottom < SCROLL_THRESHOLD && currentEnd < total;
+
+			if (!needsShiftUp && !needsShiftDown) return;
+
+			// Use rAF for smooth window shifting
+			pendingWindowShift = true;
+			requestAnimationFrame(() => {
+				pendingWindowShift = false;
+				if (isJumping.value) return;
+
+				const el = chat.value;
+				if (!el) return;
+
+				// Re-check conditions (scroll may have changed)
+				const currentStart = windowStart.value;
+				const currentEnd = currentStart + WINDOW_SIZE;
+
+				if (needsShiftUp && currentStart > 0) {
+					const scrollBottom = el.scrollHeight - el.scrollTop;
+					const newStart = Math.max(0, currentStart - SHIFT_AMOUNT);
+					windowStart.value = newStart;
+
+					// Maintain scroll position after DOM update
+					void nextTick(() => {
+						ignoreNextScroll.value = true;
+						el.scrollTop = el.scrollHeight - scrollBottom;
+					});
+				} else if (needsShiftDown && currentEnd < total) {
+					const scrollTop = el.scrollTop;
+					const oldHeight = el.scrollHeight;
+					const newStart = Math.min(total - WINDOW_SIZE, currentStart + SHIFT_AMOUNT);
+					windowStart.value = newStart;
+
+					// Maintain scroll position after DOM update
+					void nextTick(() => {
+						ignoreNextScroll.value = true;
+						const heightDiff = oldHeight - el.scrollHeight;
+						el.scrollTop = scrollTop - heightDiff;
+					});
+				}
+			});
+		};
+
+		// Load more from server
+		const onShowMoreClick = () => {
+			if (!store.state.isConnected) return;
+
+			let lastMessage = -1;
+			for (const message of props.channel.messages) {
+				if (!message.showInActive) {
+					lastMessage = message.id;
+					break;
+				}
+			}
+
+			props.channel.historyLoading = true;
+			socket.emit("more", {
+				target: props.channel.id,
+				lastId: lastMessage,
+				condensed: store.state.settings.statusMessages !== "shown",
+			});
+		};
+
+		// For date markers - need to check against allMessages for correct previous message
 		const shouldDisplayDateMarker = (
 			message: SharedMsg | CondensedMessageContainer,
-			id: number
+			windowIdx: number
 		) => {
-			const previousMessage = condensedMessages.value[id - 1];
+			const absoluteIdx = windowStart.value + windowIdx;
+			const previousMessage = allMessages.value[absoluteIdx - 1];
 
-			if (!previousMessage) {
-				return true;
-			}
+			if (!previousMessage) return true;
 
 			const oldDate = new Date(previousMessage.time);
 			const newDate = new Date(message.time);
@@ -267,12 +528,12 @@ export default defineComponent({
 				unreadMarkerShown = true;
 				return true;
 			}
-
 			return false;
 		};
 
-		const isPreviousSource = (currentMessage: ClientMessage, id: number) => {
-			const previousMessage = condensedMessages.value[id - 1];
+		const isPreviousSource = (currentMessage: ClientMessage, windowIdx: number) => {
+			const absoluteIdx = windowStart.value + windowIdx;
+			const previousMessage = allMessages.value[absoluteIdx - 1];
 			return (
 				previousMessage &&
 				currentMessage.type === MessageType.MESSAGE &&
@@ -290,46 +551,25 @@ export default defineComponent({
 		};
 
 		const keepScrollPosition = async () => {
-			// If we are already waiting for the next tick to force scroll position,
-			// we have no reason to perform more checks and set it again in the next tick
-			if (isWaitingForNextTick.value) {
+			// Only relevant when loading history
+			if (!props.channel.historyLoading) {
+				if (props.channel.scrolledToBottom) {
+					await jumpToBottom();
+				}
 				return;
 			}
 
 			const el = chat.value;
+			if (!el) return;
 
-			if (!el) {
-				return;
-			}
-
-			if (!props.channel.scrolledToBottom) {
-				if (props.channel.historyLoading) {
-					const heightOld = el.scrollHeight - el.scrollTop;
-
-					isWaitingForNextTick.value = true;
-
-					await nextTick();
-
-					isWaitingForNextTick.value = false;
-					skipNextScrollEvent.value = true;
-
-					el.scrollTop = el.scrollHeight - heightOld;
-				}
-
-				return;
-			}
-
-			isWaitingForNextTick.value = true;
+			const scrollBottom = el.scrollHeight - el.scrollTop;
 			await nextTick();
-			isWaitingForNextTick.value = false;
-
-			jumpToBottom();
+			ignoreNextScroll.value = true;
+			el.scrollTop = el.scrollHeight - scrollBottom;
 		};
 
 		const onLinkPreviewToggle = async (preview: ClientLinkPreview, message: ClientMessage) => {
 			await keepScrollPosition();
-
-			// Tell the server we're toggling so it remembers at page reload
 			socket.emit("msg:preview:toggle", {
 				target: props.channel.id,
 				msgId: message.id,
@@ -338,154 +578,136 @@ export default defineComponent({
 			});
 		};
 
-		const handleScroll = () => {
-			// Setting scrollTop also triggers scroll event
-			// We don't want to perform calculations for that
-			if (skipNextScrollEvent.value) {
-				skipNextScrollEvent.value = false;
-				return;
-			}
-
-			const el = chat.value;
-
-			if (!el) {
-				return;
-			}
-
-			props.channel.scrolledToBottom = el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
-		};
-
 		const handleResize = () => {
-			// Keep message list scrolled to bottom on resize
 			if (props.channel.scrolledToBottom) {
-				jumpToBottom();
+				void jumpToBottom();
 			}
 		};
 
-		onMounted(() => {
-			chat.value?.addEventListener("scroll", handleScroll, {passive: true});
-
+		// Initialize
+		onMounted(async () => {
+			chat.value?.addEventListener("scroll", handleScroll, { passive: true });
 			eventbus.on("resize", handleResize);
 
-			void nextTick(() => {
-				if (historyObserver.value && loadMoreButton.value) {
-					historyObserver.value.observe(loadMoreButton.value);
+			// If we have a focused time (from search), jump by time
+			// If we have a focused ID, jump by ID
+			// Otherwise go to end
+			if (props.focusedTime && !isNaN(props.focusedTime)) {
+				await jumpToMessageByTime(props.focusedTime);
+			} else if (props.focused && !isNaN(props.focused)) {
+				const success = await jumpToMessage(props.focused);
+				if (!success && props.channel.moreHistoryAvailable && chat.value) {
+					// Message not in memory, scroll to top to prompt loading more
+					windowStart.value = 0;
+					await nextTick();
+					ignoreNextScroll.value = true;
+					chat.value.scrollTop = 0;
 				}
-			});
+			} else {
+				goToEnd();
+
+				await nextTick();
+				if (chat.value) {
+					ignoreNextScroll.value = true;
+					chat.value.scrollTop = chat.value.scrollHeight;
+				}
+			}
+
+			// Set up intersection observer for auto-loading history
+			await nextTick();
+			if (window.IntersectionObserver && loadMoreButton.value) {
+				historyObserver.value = new IntersectionObserver(
+					(entries) => {
+						entries.forEach((entry) => {
+							if (entry.isIntersecting) {
+								onShowMoreClick();
+							}
+						});
+					},
+					{ root: chat.value }
+				);
+				historyObserver.value.observe(loadMoreButton.value);
+			}
 		});
 
+		// Channel switch - reset to end
 		watch(
 			() => props.channel.id,
 			() => {
 				props.channel.scrolledToBottom = true;
+				goToEnd();
 
-				// Re-add the intersection observer to trigger the check again on channel switch
-				// Otherwise if last channel had the button visible, switching to a new channel won't trigger the history
-				if (historyObserver.value && loadMoreButton.value) {
-					historyObserver.value.unobserve(loadMoreButton.value);
-					historyObserver.value.observe(loadMoreButton.value);
-				}
-			}
-		);
-
-		watch(
-			() => props.channel.messages,
-			async () => {
-				await keepScrollPosition();
-			},
-			{
-				deep: true,
-			}
-		);
-
-		watch(
-			() => props.channel.pendingMessage,
-			async () => {
-				// Keep the scroll stuck when input gets resized while typing
-				await keepScrollPosition();
-			}
-		);
-
-		// Scroll to focused message when navigating from search or mentions
-		const scrollToFocusedMessage = async (focusedId: number): Promise<boolean> => {
-			if (!chat.value) {
-				return false;
-			}
-
-			await nextTick();
-
-			const messageEl = chat.value.querySelector(`#msg-${focusedId}`);
-
-			if (messageEl) {
-				messageEl.scrollIntoView({behavior: "smooth", block: "center"});
-				return true;
-			}
-
-			return false;
-		};
-
-		const loadHistoryUntilMessage = async (targetMsgId: number) => {
-			if (!store.state.isConnected) {
-				return;
-			}
-
-			// Check if message already exists
-			if (await scrollToFocusedMessage(targetMsgId)) {
-				return;
-			}
-
-			// If no more history available, give up
-			if (!props.channel.moreHistoryAvailable) {
-				return;
-			}
-
-			// Find the oldest message ID to request history before it
-			let oldestMessageId = -1;
-
-			for (const message of props.channel.messages) {
-				if (!message.showInActive) {
-					oldestMessageId = message.id;
-					break;
-				}
-			}
-
-			// If target is newer than our oldest message, it should already be loaded
-			if (targetMsgId > oldestMessageId && oldestMessageId !== -1) {
-				return;
-			}
-
-			// Load more history
-			props.channel.historyLoading = true;
-
-			socket.emit("more", {
-				target: props.channel.id,
-				lastId: oldestMessageId,
-				condensed: store.state.settings.statusMessages !== "shown",
-			});
-
-			// Wait for history to load, then try again
-			const unwatch = watch(
-				() => props.channel.historyLoading,
-				async (loading) => {
-					if (!loading) {
-						unwatch();
-						// Recursively try again
-						await loadHistoryUntilMessage(targetMsgId);
+				void nextTick(() => {
+					if (chat.value) {
+						ignoreNextScroll.value = true;
+						chat.value.scrollTop = chat.value.scrollHeight;
 					}
-				}
-			);
-		};
 
+					if (historyObserver.value && loadMoreButton.value) {
+						historyObserver.value.unobserve(loadMoreButton.value);
+						historyObserver.value.observe(loadMoreButton.value);
+					}
+				});
+			}
+		);
+
+		// New messages - stay at bottom if we were at bottom, or handle pending jump
 		watch(
-			() => props.focused,
-			async (focusedId) => {
-				if (!focusedId) {
+			() => props.channel.messages.length,
+			async () => {
+				// Check if we're waiting to jump to a specific message
+				if (pendingJumpTarget.value !== null) {
+					const targetId = pendingJumpTarget.value;
+					const index = findMessageIndex(targetId);
+
+					if (index !== -1) {
+						// Found the message! Jump to it
+						await jumpToMessage(targetId);
+					} else if (props.channel.moreHistoryAvailable && !props.channel.historyLoading) {
+						// Still not found, keep loading more
+						onShowMoreClick();
+					} else if (!props.channel.moreHistoryAvailable) {
+						// No more history to load, give up
+						pendingJumpTarget.value = null;
+						isJumping.value = false;
+					}
 					return;
 				}
 
-				await loadHistoryUntilMessage(focusedId);
-			},
-			{immediate: true}
+				// Don't interfere if we're jumping to a specific message
+				if (isJumping.value) return;
+
+				if (props.channel.scrolledToBottom) {
+					await jumpToBottom();
+				}
+			}
+		);
+
+		// Handle focused message (from search/mentions)
+		// Note: Not immediate - we handle initial focus in onMounted after DOM is ready
+		watch(
+			() => props.focused,
+			async (focusedId) => {
+				if (!focusedId) return;
+
+				const success = await jumpToMessage(focusedId);
+				if (!success && props.channel.moreHistoryAvailable && chat.value) {
+					// Message not in memory, scroll to top to prompt loading more
+					windowStart.value = 0;
+					await nextTick();
+					ignoreNextScroll.value = true;
+					chat.value.scrollTop = 0;
+				}
+			}
+		);
+
+		// Handle focused time (from search results)
+		watch(
+			() => props.focusedTime,
+			async (focusedTime) => {
+				if (!focusedTime || isNaN(focusedTime)) return;
+				await jumpToMessageByTime(focusedTime);
+			}
 		);
 
 		onBeforeUpdate(() => {
@@ -498,18 +720,20 @@ export default defineComponent({
 		});
 
 		onUnmounted(() => {
-			if (historyObserver.value) {
-				historyObserver.value.disconnect();
-			}
+			historyObserver.value?.disconnect();
 		});
 
 		return {
 			chat,
 			store,
-			onShowMoreClick,
 			loadMoreButton,
+			windowedMessages,
+			showLoadMoreButton,
+			isAtEnd,
+			focusedMsgId,
+			getMessageKey,
+			onShowMoreClick,
 			onCopy,
-			condensedMessages,
 			shouldDisplayDateMarker,
 			shouldDisplayUnreadMarker,
 			keepScrollPosition,

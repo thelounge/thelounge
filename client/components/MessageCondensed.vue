@@ -1,5 +1,5 @@
 <template>
-	<div :class="['msg', {closed: isCollapsed}]" data-type="condensed">
+	<div :class="['msg', {closed: isCollapsed, highlight: focused}]" data-type="condensed">
 		<div class="condensed-summary">
 			<span class="time" />
 			<span class="from" />

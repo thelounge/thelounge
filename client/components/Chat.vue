@@ -105,6 +105,7 @@
 						:network="network"
 						:channel="channel"
 						:focused="focused"
+						:focused-time="focusedTime"
 					/>
 				</div>
 			</div>
@@ -152,6 +153,7 @@ export default defineComponent({
 		network: {type: Object as PropType<ClientNetwork>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: Number,
+		focusedTime: Number,
 	},
 	emits: ["channel-changed"],
 	setup(props, {emit}) {

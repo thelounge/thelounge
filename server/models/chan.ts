@@ -195,15 +195,13 @@ class Chan {
 
 		// If client is reconnecting, only send new messages that client has not seen yet
 		if (lastMessage && lastMessage > -1) {
-			// When reconnecting, always send up to 100 messages to prevent message gaps on the client
-			// See https://github.com/thelounge/thelounge/issues/1883
-			msgs = this.messages.filter((m) => m.id > lastMessage).slice(-100);
+			// When reconnecting, send all messages the client hasn't seen
+			msgs = this.messages.filter((m) => m.id > lastMessage);
 		} else {
-			// If channel is active, send up to 100 last messages, for all others send just 1
-			// Client will automatically load more messages whenever needed based on last seen messages
-			const messagesToSend =
-				lastActiveChannel === true || this.id === lastActiveChannel ? 100 : 1;
-			msgs = this.messages.slice(-messagesToSend);
+			// If channel is active, send ALL messages so search/navigation works
+			// For inactive channels, send just 1 (they'll load more when opened)
+			const isActive = lastActiveChannel === true || this.id === lastActiveChannel;
+			msgs = isActive ? this.messages : this.messages.slice(-1);
 		}
 
 		return {
@@ -307,9 +305,10 @@ class Chan {
 					this.firstUnread = messages[messages.length - 1].id;
 				}
 
+				// Send all loaded messages to the client
 				client.emit("more", {
 					chan: this.id,
-					messages: messages.slice(-100),
+					messages: messages,
 					totalMessages: messages.length,
 				});
 

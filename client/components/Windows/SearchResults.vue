@@ -253,8 +253,11 @@ export default defineComponent({
 				return;
 			}
 
-			// Navigate to the channel with the focused message
-			switchToChannel(channel.value, message.id);
+			// Navigate to the channel with the message time
+			// We use time instead of id because search results have different IDs
+			// than the messages stored in channel.messages
+			const messageTime = new Date(message.time).getTime();
+			switchToChannel(channel.value, undefined, messageTime);
 		};
 
 		watch(

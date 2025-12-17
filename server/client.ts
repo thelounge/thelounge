@@ -584,7 +584,10 @@ class Client {
 		let messages: Msg[] = [];
 		let index = 0;
 
-		// If client requests -1, send last 100 messages
+		// Use larger batch size for "more" requests - send up to 1000 messages at a time
+		const batchSize = 1000;
+
+		// If client requests -1, send last batch of messages
 		if (data.lastId < 0) {
 			index = chan.messages.length;
 		} else {
@@ -596,25 +599,25 @@ class Client {
 			let startIndex = index;
 
 			if (data.condensed) {
-				// Limit to 1000 messages (that's 10x normal limit)
-				const indexToStop = Math.max(0, index - 1000);
-				let realMessagesLeft = 100;
+				// Limit to 10000 messages when condensed
+				const indexToStop = Math.max(0, index - 10000);
+				let realMessagesLeft = batchSize;
 
 				for (let i = index - 1; i >= indexToStop; i--) {
 					startIndex--;
 
-					// Do not count condensed messages towards the 100 messages
+					// Do not count condensed messages towards the batch
 					if (condensedTypes.has(chan.messages[i].type)) {
 						continue;
 					}
 
-					// Count up actual 100 visible messages
+					// Count up actual visible messages
 					if (--realMessagesLeft === 0) {
 						break;
 					}
 				}
 			} else {
-				startIndex = Math.max(0, index - 100);
+				startIndex = Math.max(0, index - batchSize);
 			}
 
 			messages = chan.messages.slice(startIndex, index);

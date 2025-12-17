@@ -148,10 +148,8 @@ router.afterEach((to) => {
 			channel.firstUnread = channel.messages[channel.messages.length - 1].id;
 		}
 
-		if (channel.messages?.length > 100) {
-			channel.messages.splice(0, channel.messages.length - 100);
-			channel.moreHistoryAvailable = true;
-		}
+		// Note: We no longer truncate messages here - messages are kept in memory
+		// for search/navigation purposes and windowed for rendering performance
 	}
 });
 
@@ -170,11 +168,15 @@ async function navigate(
 	}
 }
 
-function switchToChannel(channel: ClientChan, focusedMessageId?: number) {
+function switchToChannel(channel: ClientChan, focusedMessageId?: number, focusedMessageTime?: number) {
 	const query: Record<string, number> = {};
 
 	if (focusedMessageId) {
 		query.focused = focusedMessageId;
+	}
+
+	if (focusedMessageTime) {
+		query.focusedTime = focusedMessageTime;
 	}
 
 	void navigate("RoutedChat", {id: channel.id}, query);

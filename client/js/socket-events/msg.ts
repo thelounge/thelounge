@@ -74,19 +74,12 @@ socket.on("msg", function (data) {
 		notifyMessage(data.chan, channel, store.state.activeChannel, data.msg);
 	}
 
-	let messageLimit = 0;
+	// Keep messages in memory for search/navigation - windowing handles render performance
+	// Only trim if we have an excessive amount (>10000) to prevent memory issues
+	const maxMessages = 10000;
 
-	if (!isActiveChannel) {
-		// If message arrives in non active channel, keep only 100 messages
-		messageLimit = 100;
-	} else if (channel.scrolledToBottom) {
-		// If message arrives in active channel, keep 1500 messages if scroll is currently at the bottom
-		// One history load may load up to 1000 messages at once if condendesed or hidden events are enabled
-		messageLimit = 1500;
-	}
-
-	if (messageLimit > 0 && channel.messages.length > messageLimit) {
-		channel.messages.splice(0, channel.messages.length - messageLimit);
+	if (channel.messages.length > maxMessages) {
+		channel.messages.splice(0, channel.messages.length - maxMessages);
 		channel.moreHistoryAvailable = true;
 	}
 

@@ -220,8 +220,9 @@ export default defineComponent({
 		const maxVisible = 5;
 
 		// Count of unique conversations with unread messages (not total lines)
+		// Skip muted channels - they shouldn't contribute to the unread badge
 		const totalUnread = computed(() => {
-			return props.queries.filter((q) => q.unread > 0).length;
+			return props.queries.filter((q) => q.unread > 0 && !q.muted).length;
 		});
 
 		const filteredQueries = computed(() => {
