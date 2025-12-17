@@ -1,14 +1,11 @@
-// TODO: type
-// @ts-nocheck
-
 import {h as createElement, VNode} from "vue";
 import parseStyle from "./ircmessageparser/parseStyle";
-import findChannels from "./ircmessageparser/findChannels";
-import {findLinks} from "../../../shared/linkify";
-import findEmoji from "./ircmessageparser/findEmoji";
-import findNames from "./ircmessageparser/findNames";
+import findChannels, {ChannelPart} from "./ircmessageparser/findChannels";
+import {findLinks, LinkPart} from "../../../shared/linkify";
+import findEmoji, {EmojiPart} from "./ircmessageparser/findEmoji";
+import findNames, {NamePart} from "./ircmessageparser/findNames";
 import merge, {MergedParts} from "./ircmessageparser/merge";
-import emojiMap from "./fullnamemap.json";
+import emojiMap from "./fullnamemap.json" with {type: "json"};
 import LinkPreviewToggle from "../../components/LinkPreviewToggle.vue";
 import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
 import InlineChannel from "../../components/InlineChannel.vue";
@@ -16,6 +13,41 @@ import Username from "../../components/Username.vue";
 import {ClientMessage, ClientNetwork} from "../types";
 
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]|\u{fe0f}/gu;
+
+type FragmentType = {
+	start: number;
+	end: number;
+	text: string;
+};
+
+// Type guards for proper type narrowing
+function isLinkPart(part: {
+	fragments: FragmentType[];
+	[key: string]: unknown;
+}): part is LinkPart & {fragments: FragmentType[]} {
+	return "link" in part;
+}
+
+function isChannelPart(part: {
+	fragments: FragmentType[];
+	[key: string]: unknown;
+}): part is ChannelPart & {fragments: FragmentType[]} {
+	return "channel" in part;
+}
+
+function isEmojiPart(part: {
+	fragments: FragmentType[];
+	[key: string]: unknown;
+}): part is EmojiPart & {fragments: FragmentType[]} {
+	return "emoji" in part;
+}
+
+function isNamePart(part: {
+	fragments: FragmentType[];
+	[key: string]: unknown;
+}): part is NamePart & {fragments: FragmentType[]} {
+	return "nick" in part;
+}
 
 type Fragment = {
 	class?: string[];
@@ -126,7 +158,7 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 		const fragments = textPart.fragments.map((fragment) => createFragment(fragment));
 
 		// Wrap these potentially styled fragments with links and channel buttons
-		if (textPart.link) {
+		if (isLinkPart(textPart)) {
 			const preview =
 				message &&
 				message.previews &&
@@ -172,7 +204,7 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 				},
 				linkEls
 			);
-		} else if (textPart.channel) {
+		} else if (isChannelPart(textPart)) {
 			return createElement(
 				InlineChannel,
 				{
@@ -182,7 +214,7 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 					default: () => fragments,
 				}
 			);
-		} else if (textPart.emoji) {
+		} else if (isEmojiPart(textPart)) {
 			const emojiWithoutModifiers = textPart.emoji.replace(emojiModifiersRegex, "");
 			const title = emojiMap[emojiWithoutModifiers]
 				? `Emoji: ${emojiMap[emojiWithoutModifiers]}`
@@ -198,7 +230,7 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 				},
 				fragments
 			);
-		} else if (textPart.nick) {
+		} else if (isNamePart(textPart)) {
 			return createElement(
 				Username,
 				{

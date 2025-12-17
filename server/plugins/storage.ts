@@ -1,8 +1,8 @@
-import log from "../log";
+import log from "../log.js";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import Config from "../config";
+import Config from "../config.js";
 
 class Storage {
 	references: Map<string, number>;
@@ -20,7 +20,7 @@ class Storage {
 
 		try {
 			items = fs.readdirSync(dir);
-		} catch (e: any) {
+		} catch {
 			fs.mkdirSync(dir, {recursive: true});
 			return;
 		}

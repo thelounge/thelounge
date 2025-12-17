@@ -1,15 +1,15 @@
 import fs from "fs";
 import path from "path";
 import {expect} from "chai";
-import ClientCertificate, {ClientCertificateType} from "../../server/plugins/clientCertificate";
-import Config from "../../server/config";
+import ClientCertificate, {ClientCertificateType} from "../../server/plugins/clientCertificate.js";
+import Config from "../../server/config.js";
 
 describe("ClientCertificate", function () {
 	it("should not generate a client certificate in public mode", function () {
 		Config.values.public = true;
 
 		const certificate = ClientCertificate.get("this-is-test-uuid");
-		expect(certificate).to.be.null;
+		expect(certificate).to.equal(null);
 	});
 
 	it("should generate a client certificate", function () {
@@ -38,13 +38,13 @@ describe("ClientCertificate", function () {
 			`this-is-test-uuid.crt`
 		);
 
-		expect(fs.existsSync(privateKeyPath)).to.be.true;
-		expect(fs.existsSync(certificatePath)).to.be.true;
+		expect(fs.existsSync(privateKeyPath)).to.equal(true);
+		expect(fs.existsSync(certificatePath)).to.equal(true);
 
 		ClientCertificate.remove("this-is-test-uuid");
 
-		expect(fs.existsSync(privateKeyPath)).to.be.false;
-		expect(fs.existsSync(certificatePath)).to.be.false;
+		expect(fs.existsSync(privateKeyPath)).to.equal(false);
+		expect(fs.existsSync(certificatePath)).to.equal(false);
 
 		Config.values.public = true;
 	});

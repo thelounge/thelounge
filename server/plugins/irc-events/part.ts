@@ -1,12 +1,10 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("part", function (data) {
+	irc.on("part", (data) => {
 		if (!data.channel) {
 			return;
 		}
@@ -26,12 +24,31 @@ export default <IrcEventHandler>function (irc, network) {
 			from: user,
 			self: data.nick === irc.user.nick,
 		});
-		chan.pushMessage(client, msg);
 
+		// Self parts should not be buffered and need special handling
 		if (data.nick === irc.user.nick) {
-			client.part(network, chan);
-		} else {
+			chan.pushMessage(this, msg);
+			this.part(network, chan);
+			return;
+		}
+
+		// User list update callback - executed regardless of buffering
+		const updateUserList = () => {
 			chan.removeUser(user);
+		};
+
+		// Try to process through mass event aggregator
+		const wasBuffered = this.massEventAggregator.processMessage(
+			network,
+			chan,
+			msg,
+			updateUserList
+		);
+
+		if (!wasBuffered) {
+			// Not in mass event mode - process normally
+			chan.pushMessage(this, msg);
+			updateUserList();
 		}
 	});
 };

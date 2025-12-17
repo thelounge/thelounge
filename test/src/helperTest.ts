@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import os from "os";
-import Helper from "../../server/helper";
+import Helper from "../../server/helper.js";
 
 describe("Helper", function () {
 	describe("#expandHome", function () {
@@ -33,7 +33,7 @@ describe("Helper", function () {
 		});
 
 		it("should return an empty string when given undefined", function () {
-			expect(Helper.expandHome(undefined as any)).to.equal("");
+			expect(Helper.expandHome(undefined)).to.equal("");
 		});
 	});
 

@@ -1,1 +1,1 @@
-import "./command-line";
+import "./command-line/index.js";

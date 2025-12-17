@@ -1,4 +1,4 @@
-import {PluginInputHandler} from "./index";
+import {PluginInputHandler} from "./index.js";
 
 const commands = ["whois"];
 

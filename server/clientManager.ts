@@ -4,24 +4,26 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 
-import Auth from "./plugins/auth";
-import Client, {UserConfig} from "./client";
-import Config from "./config";
-import WebPush from "./plugins/webpush";
-import log from "./log";
-import {Server} from "./server";
+import Auth from "./plugins/auth.js";
+import Client, {UserConfig} from "./client.js";
+import Config from "./config.js";
+import Identification from "./identification.js";
+import WebPush from "./plugins/webpush.js";
+import log from "./log.js";
+import {Server} from "./server.js";
 
 class ClientManager {
 	clients: Client[];
 	sockets!: Server;
-	identHandler: any;
+	identHandler!: Identification;
 	webPush!: WebPush;
+	userWatcher: fs.FSWatcher | null = null;
 
 	constructor() {
 		this.clients = [];
 	}
 
-	init(identHandler, sockets: Server) {
+	init(identHandler: Identification, sockets: Server) {
 		this.sockets = sockets;
 		this.identHandler = identHandler;
 		this.webPush = new WebPush();
@@ -86,28 +88,39 @@ class ClientManager {
 	}
 
 	autoloadUsers() {
-		fs.watch(Config.getUsersPath(), (_eventType, file) => {
-			if (!file.endsWith(".json")) {
-				return;
+		this.userWatcher = fs.watch(
+			Config.getUsersPath(),
+			{persistent: false},
+			(_eventType, file) => {
+				if (!file || !file.endsWith(".json")) {
+					return;
+				}
+
+				const name = file.slice(0, -5);
+
+				const userPath = Config.getUserConfigPath(name);
+
+				if (fs.existsSync(userPath)) {
+					this.loadUser(name);
+					return;
+				}
+
+				const client = _.find(this.clients, {name});
+
+				if (client) {
+					client.quit(true);
+					this.clients = _.without(this.clients, client);
+					log.info(`User ${colors.bold(name)} disconnected and removed.`);
+				}
 			}
+		);
+	}
 
-			const name = file.slice(0, -5);
-
-			const userPath = Config.getUserConfigPath(name);
-
-			if (fs.existsSync(userPath)) {
-				this.loadUser(name);
-				return;
-			}
-
-			const client = _.find(this.clients, {name});
-
-			if (client) {
-				client.quit(true);
-				this.clients = _.without(this.clients, client);
-				log.info(`User ${colors.bold(name)} disconnected and removed.`);
-			}
-		});
+	stopAutoloadUsers() {
+		if (this.userWatcher) {
+			this.userWatcher.close();
+			this.userWatcher = null;
+		}
 	}
 
 	loadUser(name: string) {
@@ -174,8 +187,10 @@ class ClientManager {
 				mode: 0o600,
 			});
 			fs.renameSync(tmpPath, userPath);
-		} catch (e: any) {
-			log.error(`Failed to create user ${colors.green(name)} (${e})`);
+		} catch (e) {
+			log.error(
+				`Failed to create user ${colors.green(name)} (${e instanceof Error ? e.message : String(e)})`
+			);
 			throw e;
 		}
 
@@ -203,7 +218,7 @@ class ClientManager {
 				);
 				fs.chownSync(userPath, userFolderStat.uid, userFolderStat.gid);
 			}
-		} catch (e: any) {
+		} catch {
 			// We're simply verifying file owner as a safe guard for users
 			// that run `thelounge add` as root, so we don't care if it fails
 		}
@@ -221,7 +236,7 @@ class ClientManager {
 		return {newUser, newHash};
 	}
 
-	saveUser(client: Client, callback?: (err?: any) => void) {
+	saveUser(client: Client, callback?: (err?: Error) => void) {
 		const {newUser, newHash} = this.getDataToSave(client);
 
 		// Do not write to disk if the exported data hasn't actually changed
@@ -241,11 +256,13 @@ class ClientManager {
 			fs.renameSync(pathTemp, pathReal);
 
 			return callback ? callback() : true;
-		} catch (e: any) {
-			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
+		} catch (e) {
+			log.error(
+				`Failed to update user ${colors.green(client.name)} (${e instanceof Error ? e.message : String(e)})`
+			);
 
 			if (callback) {
-				callback(e);
+				callback(e instanceof Error ? e : new Error(String(e)));
 			}
 		}
 	}
@@ -274,8 +291,10 @@ class ClientManager {
 		try {
 			const data = fs.readFileSync(userPath, "utf-8");
 			return JSON.parse(data) as UserConfig;
-		} catch (e: any) {
-			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
+		} catch (e) {
+			log.error(
+				`Failed to read user ${colors.bold(name)}: ${e instanceof Error ? e.message : String(e)}`
+			);
 		}
 
 		return false;

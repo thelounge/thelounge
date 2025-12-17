@@ -1,6 +1,17 @@
 // Recursively load all JS files (test files) in the `js` folder
-// @ts-expect-error ts-migrate(2339) FIXME: Property 'context' does not exist on type 'NodeReq... Remove this comment to see the full error message
-const context = require.context("./js", true, /.+\.js$/);
+// Webpack's require.context is not in standard Node.js types
+interface WebpackRequire extends NodeRequire {
+	context(
+		directory: string,
+		useSubdirectories: boolean,
+		regExp: RegExp
+	): {
+		keys(): string[];
+		(id: string): unknown;
+	};
+}
+
+const context = (require as WebpackRequire).context("./js", true, /.+\.js$/);
 context.keys().forEach(context);
 
-module.exports = context;
+export default context;

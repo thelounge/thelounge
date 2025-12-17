@@ -1,30 +1,35 @@
 import _ from "lodash";
-import UAParser from "ua-parser-js";
+import {UAParser} from "ua-parser-js";
 import {v4 as uuidv4} from "uuid";
-import escapeRegExp from "lodash/escapeRegExp";
+import escapeRegExp from "lodash/escapeRegExp.js";
 import crypto from "crypto";
 import colors from "chalk";
 
-import log from "./log";
-import Chan, {ChanConfig} from "./models/chan";
-import Msg from "./models/msg";
-import Config from "./config";
-import {condensedTypes} from "../shared/irc";
-import {MessageType} from "../shared/types/msg";
-import {SharedMention} from "../shared/types/mention";
+import log from "./log.js";
+import Chan, {ChanConfig} from "./models/chan.js";
+import Msg from "./models/msg.js";
+import Config from "./config.js";
+import {condensedTypes} from "../shared/irc.js";
+import {MessageType} from "../shared/types/msg.js";
+import {SharedMention} from "../shared/types/mention.js";
 
-import inputs from "./plugins/inputs";
-import PublicClient from "./plugins/packages/publicClient";
-import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
-import TextFileMessageStorage from "./plugins/messageStorage/text";
-import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
-import ClientManager from "./clientManager";
-import {MessageStorage} from "./plugins/messageStorage/types";
-import {StorageCleaner} from "./storageCleaner";
-import {SearchQuery, SearchResponse} from "../shared/types/storage";
-import {SharedChan, ChanType} from "../shared/types/chan";
-import {SharedNetwork} from "../shared/types/network";
-import {ServerToClientEvents} from "../shared/types/socket-events";
+import inputs from "./plugins/inputs/index.js";
+import PublicClient from "./plugins/packages/publicClient.js";
+import SqliteMessageStorage from "./plugins/messageStorage/sqlite.js";
+import TextFileMessageStorage from "./plugins/messageStorage/text.js";
+import Network, {
+	NetworkConfig,
+	NetworkFormData,
+	NetworkWithIrcFramework,
+} from "./models/network.js";
+import ClientManager from "./clientManager.js";
+import {MessageStorage} from "./plugins/messageStorage/types.js";
+import {StorageCleaner} from "./storageCleaner.js";
+import {SearchQuery, SearchResponse} from "../shared/types/storage.js";
+import {SharedChan, ChanType} from "../shared/types/chan.js";
+import {SharedNetwork} from "../shared/types/network.js";
+import {ServerToClientEvents} from "../shared/types/socket-events.js";
+import MassEventAggregator from "./plugins/massEventAggregator.js";
 
 const events = [
 	"away",
@@ -74,7 +79,7 @@ export type UserConfig = {
 		};
 	};
 	clientSettings: {
-		[key: string]: any;
+		[key: string]: unknown;
 	};
 	browser?: {
 		language?: string;
@@ -103,6 +108,7 @@ class Client {
 	highlightRegex!: RegExp | null;
 	highlightExceptionRegex!: RegExp | null;
 	messageProvider?: SqliteMessageStorage;
+	massEventAggregator!: MassEventAggregator;
 
 	fileHash!: string;
 
@@ -125,56 +131,57 @@ class Client {
 			messageProvider: undefined,
 		});
 
-		const client = this;
+		this.config.log = Boolean(this.config.log);
+		this.config.password = String(this.config.password);
 
-		client.config.log = Boolean(client.config.log);
-		client.config.password = String(client.config.password);
+		// Initialize mass event aggregator for handling netsplits/mass reconnects
+		this.massEventAggregator = new MassEventAggregator(this);
 
-		if (!Config.values.public && client.config.log) {
+		if (!Config.values.public && this.config.log) {
 			if (Config.values.messageStorage.includes("sqlite")) {
-				client.messageProvider = new SqliteMessageStorage(client.name);
+				this.messageProvider = new SqliteMessageStorage(this.name);
 
 				if (Config.values.storagePolicy.enabled) {
 					log.info(
 						`Activating storage cleaner. Policy: ${Config.values.storagePolicy.deletionPolicy}. MaxAge: ${Config.values.storagePolicy.maxAgeDays} days`
 					);
-					const cleaner = new StorageCleaner(client.messageProvider);
+					const cleaner = new StorageCleaner(this.messageProvider);
 					cleaner.start();
 				}
 
-				client.messageStorage.push(client.messageProvider);
+				this.messageStorage.push(this.messageProvider);
 			}
 
 			if (Config.values.messageStorage.includes("text")) {
-				client.messageStorage.push(new TextFileMessageStorage(client.name));
+				this.messageStorage.push(new TextFileMessageStorage(this.name));
 			}
 
-			for (const messageStorage of client.messageStorage) {
+			for (const messageStorage of this.messageStorage) {
 				messageStorage.enable().catch((e) => log.error(e));
 			}
 		}
 
-		if (!_.isPlainObject(client.config.sessions)) {
-			client.config.sessions = {};
+		if (!_.isPlainObject(this.config.sessions)) {
+			this.config.sessions = {};
 		}
 
-		if (!_.isPlainObject(client.config.clientSettings)) {
-			client.config.clientSettings = {};
+		if (!_.isPlainObject(this.config.clientSettings)) {
+			this.config.clientSettings = {};
 		}
 
-		if (!_.isPlainObject(client.config.browser)) {
-			client.config.browser = {};
+		if (!_.isPlainObject(this.config.browser)) {
+			this.config.browser = {};
 		}
 
-		if (client.config.clientSettings.awayMessage) {
-			client.awayMessage = client.config.clientSettings.awayMessage;
+		if (this.config.clientSettings.awayMessage) {
+			this.awayMessage = this.config.clientSettings.awayMessage as string;
 		}
 
-		client.config.clientSettings.searchEnabled = client.messageProvider !== undefined;
+		this.config.clientSettings.searchEnabled = this.messageProvider !== undefined;
 
-		client.compileCustomHighlights();
+		this.compileCustomHighlights();
 
-		_.forOwn(client.config.sessions, (session) => {
+		_.forOwn(this.config.sessions, (session) => {
 			if (session.pushSubscription) {
 				this.registerPushSubscription(session, session.pushSubscription, true);
 			}
@@ -182,27 +189,25 @@ class Client {
 	}
 
 	connect() {
-		const client = this;
-
-		if (client.networks.length !== 0) {
-			throw new Error(`${client.name} is already connected`);
+		if (this.networks.length !== 0) {
+			throw new Error(`${this.name} is already connected`);
 		}
 
-		(client.config.networks || []).forEach((network) => client.connectToNetwork(network, true));
+		(this.config.networks || []).forEach((network) => this.connectToNetwork(network, true));
 
 		// Networks are stored directly in the client object
 		// We don't need to keep it in the config object
-		delete client.config.networks;
+		delete this.config.networks;
 
-		if (client.name) {
-			log.info(`User ${colors.bold(client.name)} loaded`);
+		if (this.name) {
+			log.info(`User ${colors.bold(this.name)} loaded`);
 
 			// Networks are created instantly, but to reduce server load on startup
 			// We randomize the IRC connections and channel log loading
-			let delay = client.manager.clients.length * 500;
-			client.networks.forEach((network) => {
+			let delay = this.manager.clients.length * 500;
+			this.networks.forEach((network) => {
 				setTimeout(() => {
-					network.channels.forEach((channel) => channel.loadMessages(client, network));
+					network.channels.forEach((channel) => channel.loadMessages(this, network));
 
 					if (!network.userDisconnected && network.irc) {
 						network.irc.connect();
@@ -212,7 +217,7 @@ class Client {
 				delay += 1000 + Math.floor(Math.random() * 1000);
 			});
 
-			client.fileHash = client.manager.getDataToSave(client).newHash;
+			this.fileHash = this.manager.getDataToSave(this).newHash;
 		}
 	}
 
@@ -252,9 +257,7 @@ class Client {
 		return false;
 	}
 
-	networkFromConfig(args: Record<string, any>): Network {
-		const client = this;
-
+	networkFromConfig(args: NetworkFormData): Network {
 		let channels: Chan[] = [];
 
 		if (Array.isArray(args.channels)) {
@@ -269,7 +272,7 @@ class Client {
 				}
 
 				channels.push(
-					client.createChannel({
+					this.createChannel({
 						name: chan.name,
 						key: chan.key || "",
 						type: type,
@@ -278,19 +281,19 @@ class Client {
 				);
 			});
 
-			if (badChanConf && client.name) {
+			if (badChanConf && this.name) {
 				log.warn(
 					"User '" +
-						client.name +
+						this.name +
 						"' on network '" +
-						String(args.name) +
+						(args.name || "") +
 						"' has an invalid channel which has been ignored"
 				);
 			}
 			// `join` is kept for backwards compatibility when updating from versions <2.0
 			// also used by the "connect" window
 		} else if (args.join) {
-			channels = args.join
+			channels = (args.join || "")
 				.replace(/,/g, " ")
 				.split(/\s+/g)
 				.map((chan: string) => {
@@ -298,69 +301,67 @@ class Client {
 						chan = `#${chan}`;
 					}
 
-					return client.createChannel({
+					return this.createChannel({
 						name: chan,
 					});
 				});
 		}
 
-		// TODO; better typing for args
+		// Handle commands - can be string[] or string
+		const commands = Array.isArray(args.commands) ? args.commands : [];
+
 		return new Network({
 			uuid: args.uuid,
-			name: String(
-				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
-			),
-			host: String(args.host || ""),
-			port: parseInt(String(args.port), 10),
+			name: args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || "",
+			host: args.host || "",
+			port: parseInt(String(args.port ?? 6667), 10),
 			tls: !!args.tls,
 			userDisconnected: !!args.userDisconnected,
 			rejectUnauthorized: !!args.rejectUnauthorized,
-			password: String(args.password || ""),
-			nick: String(args.nick || ""),
-			username: String(args.username || ""),
-			realname: String(args.realname || ""),
-			leaveMessage: String(args.leaveMessage || ""),
-			sasl: String(args.sasl || ""),
-			saslAccount: String(args.saslAccount || ""),
-			saslPassword: String(args.saslPassword || ""),
-			commands: (args.commands as string[]) || [],
+			password: args.password || "",
+			nick: args.nick || "",
+			username: args.username || "",
+			realname: args.realname || "",
+			leaveMessage: args.leaveMessage || "",
+			sasl: args.sasl || "",
+			saslAccount: args.saslAccount || "",
+			saslPassword: args.saslPassword || "",
+			commands: commands,
 			channels: channels,
-			ignoreList: args.ignoreList ? (args.ignoreList as IgnoreListItem[]) : [],
+			ignoreList: args.ignoreList || [],
 
 			proxyEnabled: !!args.proxyEnabled,
-			proxyHost: String(args.proxyHost || ""),
-			proxyPort: parseInt(args.proxyPort, 10),
-			proxyUsername: String(args.proxyUsername || ""),
-			proxyPassword: String(args.proxyPassword || ""),
+			proxyHost: args.proxyHost || "",
+			proxyPort: parseInt(String(args.proxyPort ?? 1080), 10),
+			proxyUsername: args.proxyUsername || "",
+			proxyPassword: args.proxyPassword || "",
 		});
 	}
 
-	connectToNetwork(args: Record<string, any>, isStartup = false) {
-		const client = this;
-
+	connectToNetwork(args: NetworkFormData, isStartup = false) {
 		// Get channel id for lobby before creating other channels for nicer ids
-		const lobbyChannelId = client.idChan++;
+		const lobbyChannelId = this.idChan++;
 
 		const network = this.networkFromConfig(args);
 
 		// Set network lobby channel id
 		network.getLobby().id = lobbyChannelId;
 
-		client.networks.push(network);
-		client.emit("network", {
+		this.networks.push(network);
+		this.emit("network", {
 			network: network.getFilteredClone(this.lastActiveChannel, -1),
 		});
 
-		if (!network.validate(client)) {
+		if (!network.validate(this)) {
 			return;
 		}
 
-		(network as NetworkWithIrcFramework).createIrcFramework(client);
+		(network as NetworkWithIrcFramework).createIrcFramework(this);
 
 		// TODO
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		events.forEach(async (plugin) => {
-			(await import(`./plugins/irc-events/${plugin}`)).default.apply(client, [
+			(await import(`./plugins/irc-events/${plugin}.js`)).default.apply(this, [
 				network.irc,
 				network,
 			]);
@@ -368,7 +369,7 @@ class Client {
 
 		if (network.userDisconnected) {
 			network.getLobby().pushMessage(
-				client,
+				this,
 				new Msg({
 					text: "You have manually disconnected from this network before, use the /connect command to connect again.",
 				}),
@@ -381,8 +382,8 @@ class Client {
 		}
 
 		if (!isStartup) {
-			client.save();
-			network.channels.forEach((channel) => channel.loadMessages(client, network));
+			this.save();
+			network.channels.forEach((channel) => channel.loadMessages(this, network));
 		}
 	}
 
@@ -400,9 +401,14 @@ class Client {
 		return crypto.createHash("sha512").update(token).digest("hex");
 	}
 
-	updateSession(token: string, ip: string, request: any) {
-		const client = this;
-		const agent = UAParser(request.headers["user-agent"] || "");
+	updateSession(
+		token: string,
+		ip: string,
+		request: {headers: Record<string, string | string[] | undefined>}
+	) {
+		const userAgent = request.headers["user-agent"];
+		const parser = new UAParser(typeof userAgent === "string" ? userAgent : "");
+		const agent = parser.getResult();
 		let friendlyAgent = "";
 
 		if (agent.browser.name) {
@@ -419,24 +425,22 @@ class Client {
 			}
 		}
 
-		client.config.sessions[token] = _.assign(client.config.sessions[token], {
+		this.config.sessions[token] = _.assign(this.config.sessions[token], {
 			lastUse: Date.now(),
 			ip: ip,
 			agent: friendlyAgent,
 		});
 
-		client.save();
+		this.save();
 	}
 
 	setPassword(hash: string, callback: (success: boolean) => void) {
-		const client = this;
-
-		const oldHash = client.config.password;
-		client.config.password = hash;
-		client.manager.saveUser(client, function (err) {
+		const oldHash = this.config.password;
+		this.config.password = hash;
+		this.manager.saveUser(this, (err) => {
 			if (err) {
 				// If user file fails to write, reset it back
-				client.config.password = oldHash;
+				this.config.password = oldHash;
 				return callback(false);
 			}
 
@@ -445,16 +449,14 @@ class Client {
 	}
 
 	input(data) {
-		const client = this;
 		data.text.split("\n").forEach((line) => {
 			data.text = line;
-			client.inputLine(data);
+			this.inputLine(data);
 		});
 	}
 
 	inputLine(data) {
-		const client = this;
-		const target = client.find(data.target);
+		const target = this.find(data.target);
 
 		if (!target) {
 			return;
@@ -508,7 +510,7 @@ class Client {
 				return;
 			}
 
-			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
+			plugin.input.apply(this, [target.network, target.chan, cmd, args]);
 			return;
 		}
 
@@ -521,7 +523,7 @@ class Client {
 			}
 
 			extPlugin.input(
-				new PublicClient(client, extPlugin.packageInfo),
+				new PublicClient(this, extPlugin.packageInfo),
 				{network: target.network, chan: target.chan},
 				cmd,
 				args
@@ -535,7 +537,7 @@ class Client {
 		}
 
 		// TODO: fix
-		irc!.raw(text);
+		irc.raw(text);
 	}
 
 	compileCustomHighlights() {
@@ -562,15 +564,16 @@ class Client {
 			);
 		}
 
-		this.highlightRegex = compileHighlightRegex(this.config.clientSettings.highlights);
+		this.highlightRegex = compileHighlightRegex(
+			this.config.clientSettings.highlights as string
+		);
 		this.highlightExceptionRegex = compileHighlightRegex(
-			this.config.clientSettings.highlightExceptions
+			this.config.clientSettings.highlightExceptions as string
 		);
 	}
 
 	more(data) {
-		const client = this;
-		const target = client.find(data.target);
+		const target = this.find(data.target);
 
 		if (!target) {
 			return null;
@@ -624,8 +627,7 @@ class Client {
 	}
 
 	clearHistory(data) {
-		const client = this;
-		const target = client.find(data.target);
+		const target = this.find(data.target);
 
 		if (!target) {
 			return;
@@ -636,7 +638,7 @@ class Client {
 		target.chan.highlight = 0;
 		target.chan.firstUnread = 0;
 
-		client.emit("history:clear", {
+		this.emit("history:clear", {
 			target: target.chan.id,
 		});
 
@@ -666,7 +668,7 @@ class Client {
 		// process this event normally even if there is no attached client anymore.
 		const attachedClient =
 			this.attachedClients[socketId] ||
-			({} as Record<string, typeof this.attachedClients[0]>);
+			({} as Record<string, (typeof this.attachedClients)[0]>);
 
 		// Opening a window like settings
 		if (target === null) {
@@ -730,26 +732,26 @@ class Client {
 	}
 
 	names(data: {target: number}) {
-		const client = this;
-		const target = client.find(data.target);
+		const target = this.find(data.target);
 
 		if (!target) {
 			return;
 		}
 
-		client.emit("names", {
+		this.emit("names", {
 			id: target.chan.id,
 			users: target.chan.getSortedUsers(target.network.irc),
 		});
 	}
 
 	part(network: Network, chan: Chan) {
-		const client = this;
+		console.log("[DEBUG] Client.part() called:", {chanId: chan.id, chanName: chan.name});
 		network.channels = _.without(network.channels, chan);
-		client.mentions = client.mentions.filter((msg) => !(msg.chanId === chan.id));
+		this.mentions = this.mentions.filter((msg) => !(msg.chanId === chan.id));
 		chan.destroy();
-		client.save();
-		client.emit("part", {
+		this.save();
+		console.log("[DEBUG] Emitting part event for chan:", chan.id);
+		this.emit("part", {
 			chan: chan.id,
 		});
 	}
@@ -783,10 +785,8 @@ class Client {
 	}
 
 	clientAttach(socketId: string, token: string) {
-		const client = this;
-
-		if (client.awayMessage && _.size(client.attachedClients) === 0) {
-			client.networks.forEach(function (network) {
+		if (this.awayMessage && _.size(this.attachedClients) === 0) {
+			this.networks.forEach((network) => {
 				// Only remove away on client attachment if
 				// there is no away message on this network
 				if (network.irc && !network.awayMessage) {
@@ -795,28 +795,34 @@ class Client {
 			});
 		}
 
-		const openChannel = client.lastActiveChannel;
-		client.attachedClients[socketId] = {token, openChannel};
+		const openChannel = this.lastActiveChannel;
+		this.attachedClients[socketId] = {token, openChannel};
 	}
 
 	clientDetach(socketId: string) {
-		const client = this;
-
 		delete this.attachedClients[socketId];
 
-		if (client.awayMessage && _.size(client.attachedClients) === 0) {
-			client.networks.forEach(function (network) {
+		if (this.awayMessage && _.size(this.attachedClients) === 0) {
+			this.networks.forEach((network) => {
 				// Only set away on client deattachment if
 				// there is no away message on this network
 				if (network.irc && !network.awayMessage) {
-					network.irc.raw("AWAY", client.awayMessage);
+					network.irc.raw("AWAY", this.awayMessage);
 				}
 			});
 		}
 	}
 
-	// TODO: type session to this.attachedClients
-	registerPushSubscription(session: any, subscription: PushSubscriptionJSON, noSave = false) {
+	registerPushSubscription(
+		session: {
+			lastUse: number;
+			ip: string;
+			agent: string;
+			pushSubscription?: ClientPushSubscription;
+		},
+		subscription: PushSubscriptionJSON,
+		noSave = false
+	) {
 		if (
 			!_.isPlainObject(subscription) ||
 			typeof subscription.endpoint !== "string" ||
@@ -826,7 +832,7 @@ class Client {
 			typeof subscription.keys.p256dh !== "string" ||
 			typeof subscription.keys.auth !== "string"
 		) {
-			session.pushSubscription = null;
+			session.pushSubscription = undefined;
 			return;
 		}
 
@@ -858,8 +864,7 @@ class Client {
 				return;
 			}
 
-			const client = this;
-			client.manager.saveUser(client);
+			this.manager.saveUser(this);
 		},
 		5000,
 		{maxWait: 20000}

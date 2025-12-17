@@ -1,9 +1,11 @@
-/* eslint-disable no-use-before-define */
-// @ts-nocheck
-// eslint-disable
+// Type definitions for irc-framework (incomplete)
+// Source: https://raw.githubusercontent.com/eternagame/HTML-Chat/vue-rewrite/src/app/types/modules/irc-framework/irc-framework.d.ts
+//
+// This is a third-party type definition file that needs significant work to be fully typed.
+// The 'any' types are used temporarily until proper types can be determined from the library source.
+// TODO: Replace 'any' types with proper type definitions based on irc-framework library internals
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-// https://raw.githubusercontent.com/eternagame/HTML-Chat/vue-rewrite/src/app/types/modules/irc-framework/irc-framework.d.ts
-// TODO: Fix this
 declare module "irc-framework" {
 	import {EventEmitter} from "eventemitter3";
 	// import { DuplexStream } from 'stream';

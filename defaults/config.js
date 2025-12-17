@@ -1,6 +1,4 @@
-"use strict";
-
-module.exports = {
+export default {
 	// ## Server settings
 
 	// ### `public`
@@ -322,6 +320,33 @@ module.exports = {
 		enabled: false,
 		maxAgeDays: 7,
 		deletionPolicy: "statusOnly",
+	},
+
+	// ### `massEventDetection`
+	//
+	// Configure detection and aggregation of mass IRC events (netsplits/reconnects).
+	// When enabled, rapid consecutive status messages are buffered and displayed as
+	// a single summary message instead of flooding the chat with individual messages.
+	//
+	// The available keys for the `massEventDetection` object are:
+	//
+	// - `enable`: When set to `true`, mass event detection is active.
+	// - `threshold`: Number of status messages within the window that triggers
+	//   mass event mode.
+	// - `windowMs`: Time window in milliseconds for counting messages toward threshold.
+	// - `cooldownMs`: Time in milliseconds of inactivity before ending a mass event.
+	// - `maxDurationMs`: Maximum duration of a mass event in milliseconds (safety limit).
+	// - `refreshNamesAfter`: Whether to send NAMES after mass event ends to refresh
+	//   the user list.
+	//
+	// This value is set to enable mass event detection by default:
+	massEventDetection: {
+		enable: true,
+		threshold: 10,        // Trigger after 10 messages (was 20)
+		windowMs: 10000,      // 10 second window (was 5s)
+		cooldownMs: 10000,    // 10 seconds of inactivity to end (was 3s)
+		maxDurationMs: 300000, // 5 minute max (was 1 min)
+		refreshNamesAfter: true,
 	},
 
 	// ### `useHexIp`

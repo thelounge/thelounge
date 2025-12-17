@@ -1,12 +1,15 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import {expect} from "chai";
-import util from "../util";
-import Config from "../../server/config";
-import storage from "../../server/plugins/storage";
-import link from "../../server/plugins/irc-events/link";
+import {expect, assert} from "chai";
+import {fileURLToPath} from "url";
+import util from "../util.js";
+import Config from "../../server/config.js";
+import storage from "../../server/plugins/storage.js";
+import link from "../../server/plugins/irc-events/link.js";
 import {Request, Response} from "express";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe("Image storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -134,9 +137,9 @@ describe("Image storage", function () {
 	it("should clear storage folder", function () {
 		const dir = Config.getStoragePath();
 
-		expect(fs.readdirSync(dir)).to.not.be.empty;
+		assert.isNotEmpty(fs.readdirSync(dir));
 		storage.emptyDir();
-		expect(fs.readdirSync(dir)).to.be.empty;
-		expect(fs.existsSync(dir)).to.be.true;
+		assert.isEmpty(fs.readdirSync(dir));
+		expect(fs.existsSync(dir)).to.equal(true);
 	});
 });

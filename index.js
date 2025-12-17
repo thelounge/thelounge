@@ -1,19 +1,23 @@
 #!/usr/bin/env node
 
-"use strict";
+import {existsSync} from "node:fs";
+import {resolve} from "node:path";
+import {fileURLToPath} from "node:url";
+import semver from "semver";
+import pkg from "./package.json" with {type: "json"};
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = resolve(__filename, "..");
 
 process.chdir(__dirname);
 
-// Perform node version check before loading any other files or modules
-// Doing this check as soon as possible allows us to
-// avoid ES6 parser errors or other issues
-const pkg = require("./package.json");
+const requiredNodeVersion = pkg.engines?.node ?? "";
 
-if (!require("semver").satisfies(process.version, pkg.engines.node)) {
+if (!semver.satisfies(process.version, requiredNodeVersion)) {
 	/* eslint-disable no-console */
 	console.error(
 		"The Lounge requires Node.js " +
-			pkg.engines.node +
+			requiredNodeVersion +
 			" (current version: " +
 			process.version +
 			")"
@@ -25,10 +29,10 @@ if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 	process.exit(1);
 }
 
-const fs = require("fs");
+const distEntry = resolve(__dirname, "./dist/server/index.js");
 
-if (fs.existsSync("./dist/server/index.js")) {
-	require("./dist/server/index.js");
+if (existsSync(distEntry)) {
+	await import("./dist/server/index.js");
 } else {
 	console.error(
 		"Files in ./dist/server/ not found. Please run `yarn build` before trying to run `node index.js`."

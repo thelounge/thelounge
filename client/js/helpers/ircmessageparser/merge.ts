@@ -20,10 +20,6 @@ type Fragment = {
 	text: string;
 };
 
-type PartWithFragments = Part & {
-	fragments: Fragment[];
-};
-
 // Merge text part information within a styling fragment
 function assign(textPart: Part, fragment: Fragment) {
 	const fragStart = fragment.start;
@@ -40,6 +36,10 @@ function sortParts(a: Part, b: Part) {
 
 export type MergedParts = (TextPart | NamePart | EmojiPart | ChannelPart | LinkPart)[];
 
+type MergedPart = (TextPart | NamePart | EmojiPart | ChannelPart | LinkPart) & {
+	fragments: Fragment[];
+};
+
 // Merge the style fragments within the text parts, taking into account
 // boundaries and text sections that have not matched to links or channels.
 // For example, given a string "foobar" where "foo" and "bar" have been
@@ -47,11 +47,7 @@ export type MergedParts = (TextPart | NamePart | EmojiPart | ChannelPart | LinkP
 // different styles, the first resulting part will contain fragments "fo" and
 // "o", and the second resulting part will contain "b" and "ar". "o" and "b"
 // fragments will contain duplicate styling attributes.
-function merge(
-	parts: MergedParts,
-	styleFragments: Fragment[],
-	cleanText: string
-): PartWithFragments[] {
+function merge(parts: MergedParts, styleFragments: Fragment[], cleanText: string): MergedPart[] {
 	// Remove overlapping parts
 	parts = parts.sort(sortParts).reduce<MergedParts>((prev, curr) => {
 		const intersection = prev.some((p) => anyIntersection(p, curr));
@@ -71,12 +67,12 @@ function merge(
 	const allParts: MergedParts = [...parts, ...filled].sort(sortParts); // Sort all parts identified based on their position in the original text
 
 	// Distribute the style fragments within the text parts
-	return allParts.map((part: any) => {
-		part.fragments = styleFragments
+	return allParts.map((part) => {
+		const fragments = styleFragments
 			.filter((fragment) => anyIntersection(part, fragment))
 			.map((fragment) => assign(part, fragment));
 
-		return part as PartWithFragments;
+		return {...part, fragments} as MergedPart;
 	});
 }
 

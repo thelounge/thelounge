@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, PropType, watch, onUnmounted, onBeforeUnmount} from "vue";
+import {defineComponent, ref, PropType, watch, onBeforeUnmount} from "vue";
 import Sortable from "sortablejs";
 
 const Props = {
@@ -66,7 +66,7 @@ const Props = {
 		required: true,
 	},
 	list: {
-		type: Array as PropType<any[]>,
+		type: Array as PropType<Record<string, unknown>[]>,
 		default: [],
 		required: true,
 	},

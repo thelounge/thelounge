@@ -1,6 +1,8 @@
 coverage/
 public/
 dist/
+.yarn/
+node_modules/
 test/fixtures/.thelounge/logs/
 test/fixtures/.thelounge/certificates/
 test/fixtures/.thelounge/storage/
@@ -26,3 +28,14 @@ yarn.lock
 .browserslistrc
 
 *.css
+
+# System files
+.DS_Store
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Claude local settings
+.claude/

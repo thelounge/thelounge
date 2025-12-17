@@ -23,7 +23,7 @@ socket.on("init", async function (data) {
 
 		try {
 			await router.isReady();
-		} catch (e: any) {
+		} catch {
 			// if the router throws an error, it means the route isn't matched,
 			// so we can continue on.
 		}

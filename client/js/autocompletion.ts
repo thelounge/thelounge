@@ -6,7 +6,7 @@ import {TextareaEditor} from "@textcomplete/textarea";
 
 import fuzzy from "fuzzy";
 
-import emojiMap from "./helpers/simplemap.json";
+import emojiMap from "./helpers/simplemap.json" with {type: "json"};
 import {store} from "./store";
 import {ChanType} from "../../shared/types/chan";
 

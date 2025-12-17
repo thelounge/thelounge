@@ -2,10 +2,10 @@ import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 import express from "express";
 
-import log from "../log";
+import log from "../log.js";
 
 import webpack from "webpack";
-import config from "../../webpack.config";
+import config from "../../webpack.config.mjs";
 
 export default (app: express.Application) => {
 	log.debug("Starting server in development mode");
@@ -28,15 +28,17 @@ export default (app: express.Application) => {
 
 	const compiler = webpack(webpackConfig);
 
+	if (!compiler) {
+		throw new Error("Failed to create webpack compiler");
+	}
+
 	app.use(
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		webpackDevMiddleware(compiler, {
 			index: "/",
 			publicPath: webpackConfig.output?.publicPath,
 		})
 	).use(
-		// TODO: Fix compiler type
-		webpackHotMiddleware(compiler as any, {
+		webpackHotMiddleware(compiler, {
 			path: "/storage/__webpack_hmr",
 		})
 	);

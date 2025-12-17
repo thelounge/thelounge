@@ -1,9 +1,12 @@
 import path from "path";
-import {expect} from "chai";
-import util from "../util";
-import Config from "../../server/config";
-import link from "../../server/plugins/irc-events/link";
-import {LinkPreview} from "../../shared/types/msg";
+import {expect, assert} from "chai";
+import {fileURLToPath} from "url";
+import util from "../util.js";
+import Config from "../../server/config.js";
+import link from "../../server/plugins/irc-events/link.js";
+import {LinkPreview} from "../../shared/types/msg.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe("Link plugin", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -229,7 +232,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		});
 		it("should ignore og:image if disableMediaPreview", function (done) {
 			app.get("/nonexistent-test-image.png", function () {
-				throw "Should not fetch image";
+				throw new Error("Should not fetch image");
 			});
 
 			const invalid_url = this._makeUrl("nonexistent-test-image.png");
@@ -251,7 +254,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		});
 		it("should ignore og:video if disableMediaPreview", function (done) {
 			app.get("/nonexistent-video.mp4", function () {
-				throw "Should not fetch video";
+				throw new Error("Should not fetch video");
 			});
 
 			const invalid_url = this._makeUrl("nonexistent-video.mp4");
@@ -391,7 +394,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.head).to.equal("404 image");
 			expect(data.preview.link).to.equal(thumb_404_url);
-			expect(data.preview.thumb).to.be.empty;
+			assert.isEmpty(data.preview.thumb);
 			done();
 		});
 	});
@@ -592,12 +595,17 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 		link(this.irc, this.network.channels[0], message, message.text);
 
-		expect(message.previews).to.be.empty;
+		assert.isEmpty(message.previews);
 	});
 
 	it("should de-duplicate links", function (done) {
 		const port = this.port;
 		const host = this.host;
+
+		app.get("/", function (req, res) {
+			res.send("<!DOCTYPE html><html><head><title>test</title></head><body></body></html>");
+		});
+
 		const message = this.irc.createMessage({
 			text: `//${host}:${port}/ http://${host}:${port}/ http://${host}:${port}/`,
 		});
@@ -619,7 +627,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.link).to.equal(root_url);
-			expect(data.preview.type).to.equal("error");
+			expect(data.preview.type).to.equal("link");
 			done();
 		});
 	});
@@ -629,7 +637,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "ssh://example.com ftp://example.com irc://example.com http:////////example.com",
 		});
 
-		expect(message.previews).to.be.empty;
+		assert.isEmpty(message.previews);
 	});
 
 	it("should not try to fetch links with username or password", function () {
@@ -637,7 +645,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://root:'some%pass'@hostname/database http://a:%p@c http://a:%p@example.com http://test@example.com",
 		});
 
-		expect(message.previews).to.be.empty;
+		assert.isEmpty(message.previews);
 	});
 
 	it("should fetch same link only once at the same time", function (done) {

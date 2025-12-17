@@ -1,26 +1,16 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import STSPolicies from "../sts";
+import Msg from "../../models/msg.js";
+import STSPolicies from "../sts.js";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("cap ls", (data) => {
-		handleSTS(data, true);
-	});
-
-	irc.on("cap new", (data) => {
-		handleSTS(data, false);
-	});
-
-	function handleSTS(data, shouldReconnect: boolean) {
+	const handleSTS = (data, shouldReconnect: boolean) => {
 		if (!Object.prototype.hasOwnProperty.call(data.capabilities, "sts")) {
 			return;
 		}
 
 		const isSecure = irc.connection.transport.socket.encrypted;
-		const values = {} as any;
+		const values: {duration?: string; port?: string; [key: string]: string | undefined} = {};
 
 		data.capabilities.sts.split(",").map((value) => {
 			value = value.split("=", 2);
@@ -28,7 +18,7 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 
 		if (isSecure) {
-			const duration = parseInt(values.duration, 10);
+			const duration = parseInt(values.duration ?? "", 10);
 
 			if (isNaN(duration)) {
 				return;
@@ -36,14 +26,14 @@ export default <IrcEventHandler>function (irc, network) {
 
 			STSPolicies.update(network.host, network.port, duration);
 		} else {
-			const port = parseInt(values.port, 10);
+			const port = parseInt(values.port ?? "", 10);
 
 			if (isNaN(port)) {
 				return;
 			}
 
 			network.getLobby().pushMessage(
-				client,
+				this,
 				new Msg({
 					text: `Server sent a strict transport security policy, reconnecting to ${network.host}:${port}…`,
 				}),
@@ -72,7 +62,15 @@ export default <IrcEventHandler>function (irc, network) {
 				irc.connect();
 			}
 
-			client.save();
+			this.save();
 		}
-	}
+	};
+
+	irc.on("cap ls", (data) => {
+		handleSTS(data, true);
+	});
+
+	irc.on("cap new", (data) => {
+		handleSTS(data, false);
+	});
 };

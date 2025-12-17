@@ -12,14 +12,14 @@ export default {
 	set(key: string, value: string) {
 		try {
 			window.localStorage.setItem(key, value);
-		} catch (e) {
+		} catch {
 			//
 		}
 	},
 	get(key: string) {
 		try {
 			return window.localStorage.getItem(key);
-		} catch (e) {
+		} catch {
 			// Return null as if data is not set
 			return null;
 		}
@@ -27,14 +27,14 @@ export default {
 	remove(key: string) {
 		try {
 			window.localStorage.removeItem(key);
-		} catch (e) {
+		} catch {
 			//
 		}
 	},
 	clear() {
 		try {
 			window.localStorage.clear();
-		} catch (e) {
+		} catch {
 			//
 		}
 	},

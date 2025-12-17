@@ -124,7 +124,7 @@
 					>
 						<template v-slot:item="{element: channel, index}">
 							<Channel
-								v-if="index > 0"
+								v-if="index > 0 && channel.type !== 'query'"
 								:key="channel.id"
 								:data-item="channel.id"
 								:channel="channel"
@@ -136,6 +136,11 @@
 							/>
 						</template>
 					</Draggable>
+
+					<DirectMessageSection
+						:network="network"
+						:queries="network.channels.filter(c => c.type === 'query')"
+					/>
 				</div>
 			</template>
 		</Draggable>
@@ -212,6 +217,7 @@ import {filter as fuzzyFilter} from "fuzzy";
 import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
 import JoinChannel from "./JoinChannel.vue";
+import DirectMessageSection from "./DirectMessageSection.vue";
 
 import socket from "../js/socket";
 import collapseNetworkHelper from "../js/helpers/collapseNetwork";
@@ -230,6 +236,7 @@ export default defineComponent({
 		NetworkLobby,
 		Channel,
 		Draggable,
+		DirectMessageSection,
 	},
 	setup() {
 		const store = useStore();
@@ -244,7 +251,12 @@ export default defineComponent({
 
 		const sidebarWasClosed = ref(false);
 
-		const moveItemInArray = <T>(array: T[], from: number, to: number) => {
+		interface SortableEvent {
+			originalEvent: Event;
+			item: HTMLElement;
+		}
+
+		const moveItemInArray = <T,>(array: T[], from: number, to: number) => {
 			const item = array.splice(from, 1)[0];
 			array.splice(to, 0, item);
 		};
@@ -346,17 +358,18 @@ export default defineComponent({
 			});
 		};
 
-		const isTouchEvent = (event: any): boolean => {
+		const isTouchEvent = (event: Event): boolean => {
 			// This is the same way Sortable.js detects a touch event. See
 			// SortableJS/Sortable@daaefeda:/src/Sortable.js#L465
 
 			return !!(
-				(event.touches && event.touches[0]) ||
-				(event.pointerType && event.pointerType === "touch")
+				((event as TouchEvent).touches && (event as TouchEvent).touches[0]) ||
+				((event as PointerEvent).pointerType &&
+					(event as PointerEvent).pointerType === "touch")
 			);
 		};
 
-		const onDraggableChoose = (event: any) => {
+		const onDraggableChoose = (event: SortableEvent) => {
 			const original = event.originalEvent;
 
 			if (isTouchEvent(original)) {
@@ -374,7 +387,7 @@ export default defineComponent({
 			}
 		};
 
-		const onDraggableUnchoose = (event: any) => {
+		const onDraggableUnchoose = (event: SortableEvent) => {
 			event.item.classList.remove("ui-sortable-dragging-touch-cue");
 			startDrag.value = null;
 		};
@@ -542,9 +555,6 @@ export default defineComponent({
 			Mousetrap.unbind("alt+shift+left");
 			Mousetrap.unbind("alt+j");
 		});
-
-		const networkContainerRef = ref<HTMLDivElement>();
-		const channelRefs = ref<{[key: string]: HTMLDivElement}>({});
 
 		return {
 			store,

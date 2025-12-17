@@ -1,5 +1,5 @@
-import LinkifyIt, {Match} from "linkify-it";
-import tlds from "tlds";
+import LinkifyIt, {Match, type Validate} from "linkify-it";
+import tlds from "tlds/index.json" with {type: "json"};
 
 export type LinkPart = {
 	start: number;
@@ -59,7 +59,8 @@ linkify.add("web+", {
 // We take the validation logic from linkify and just add our own
 // normalizer.
 linkify.add("//", {
-	validate: (linkify as any).__schemas__["//"].validate,
+	validate: (linkify as unknown as {__schemas__: Record<string, {validate: Validate}>})
+		.__schemas__["//"].validate,
 	normalize(match) {
 		match.schema = ""; // this counts as not having a schema
 		match.url = "http:" + match.url;

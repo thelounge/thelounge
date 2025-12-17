@@ -1,37 +1,13 @@
-import {IrcEventHandler} from "../../client";
+import Client, {IrcEventHandler} from "../../client.js";
 
-import Chan from "../../models/chan";
-import {ChanType, SpecialChanType} from "../../../shared/types/chan";
+import Chan from "../../models/chan.js";
+import {ChanType, SpecialChanType} from "../../../shared/types/chan.js";
 
-export default <IrcEventHandler>function (irc, network) {
-	const client = this;
+export default <IrcEventHandler>function (this: Client, irc, network) {
 	const MAX_CHANS = 500;
 
-	irc.on("channel list start", function () {
-		network.chanCache = [];
-
-		updateListStatus({
-			text: "Loading channel list, this can take a moment...",
-		});
-	});
-
-	irc.on("channel list", function (channels) {
-		Array.prototype.push.apply(network.chanCache, channels);
-
-		updateListStatus({
-			text: `Loaded ${network.chanCache.length} channels...`,
-		});
-	});
-
-	irc.on("channel list end", function () {
-		updateListStatus(
-			network.chanCache.sort((a, b) => b.num_users! - a.num_users!).slice(0, MAX_CHANS)
-		);
-
-		network.chanCache = [];
-	});
-
 	function updateListStatus(
+		this: Client,
 		msg:
 			| {
 					text: string;
@@ -41,14 +17,14 @@ export default <IrcEventHandler>function (irc, network) {
 		let chan = network.getChannel("Channel List");
 
 		if (typeof chan === "undefined") {
-			chan = client.createChannel({
+			chan = this.createChannel({
 				type: ChanType.SPECIAL,
 				special: SpecialChanType.CHANNELLIST,
 				name: "Channel List",
 				data: msg,
 			});
 
-			client.emit("join", {
+			this.emit("join", {
 				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				shouldOpen: false,
@@ -57,10 +33,35 @@ export default <IrcEventHandler>function (irc, network) {
 		} else {
 			chan.data = msg;
 
-			client.emit("msg:special", {
+			this.emit("msg:special", {
 				chan: chan.id,
 				data: msg,
 			});
 		}
 	}
+
+	irc.on("channel list start", () => {
+		network.chanCache = [];
+
+		updateListStatus.call(this, {
+			text: "Loading channel list, this can take a moment...",
+		});
+	});
+
+	irc.on("channel list", (channels) => {
+		Array.prototype.push.apply(network.chanCache, channels);
+
+		updateListStatus.call(this, {
+			text: `Loaded ${network.chanCache.length} channels...`,
+		});
+	});
+
+	irc.on("channel list end", () => {
+		updateListStatus.call(
+			this,
+			network.chanCache.sort((a, b) => b.num_users! - a.num_users!).slice(0, MAX_CHANS)
+		);
+
+		network.chanCache = [];
+	});
 };

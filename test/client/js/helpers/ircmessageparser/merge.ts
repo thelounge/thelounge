@@ -1,9 +1,19 @@
 import {expect} from "chai";
-import merge from "../../../../../client/js/helpers/ircmessageparser/merge";
+import merge, {
+	type MergedParts,
+	type Part,
+} from "../../../../../client/js/helpers/ircmessageparser/merge.js";
+
+// Test-specific type that extends Part with arbitrary flags for testing
+type TestPart = Part & {
+	text?: string;
+	flag1?: boolean;
+	flag2?: boolean;
+};
 
 describe("merge", () => {
 	it("should split style information", () => {
-		const textParts = [
+		const textParts: TestPart[] = [
 			{
 				start: 0,
 				end: 10,
@@ -71,7 +81,7 @@ describe("merge", () => {
 		];
 
 		const actual = merge(
-			textParts as any,
+			textParts as MergedParts,
 			styleFragments,
 			styleFragments.map((fragment) => fragment.text).join("")
 		);

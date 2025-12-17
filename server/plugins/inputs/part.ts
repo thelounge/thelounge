@@ -1,14 +1,15 @@
-import {PluginInputHandler} from "./index";
+import {PluginInputHandler} from "./index.js";
 
-import Msg from "../../models/msg";
-import Config from "../../config";
-import {MessageType} from "../../../shared/types/msg";
-import {ChanType, ChanState} from "../../../shared/types/chan";
+import Msg from "../../models/msg.js";
+import Config from "../../config.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {ChanType, ChanState} from "../../../shared/types/chan.js";
 
 const commands = ["close", "leave", "part"];
 const allowDisconnected = true;
 
 const input: PluginInputHandler = function (network, chan, cmd, args) {
+	console.log("[DEBUG] part.ts input handler called:", {cmd, chanType: chan.type, chanName: chan.name});
 	let target = chan;
 
 	if (args.length > 0) {
@@ -39,6 +40,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		target.state === ChanState.PARTED ||
 		!network.irc.connected
 	) {
+		console.log("[DEBUG] Calling this.part() for:", target.name, target.type);
 		this.part(network, target);
 	} else {
 		const partMessage = args.join(" ") || network.leaveMessage || Config.values.leaveMessage;

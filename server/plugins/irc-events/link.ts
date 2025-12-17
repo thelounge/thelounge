@@ -1,16 +1,15 @@
 import * as cheerio from "cheerio";
-import got from "got";
 import {URL} from "url";
 import mime from "mime-types";
 
-import log from "../../log";
-import Config from "../../config";
-import {findLinksWithSchema} from "../../../shared/linkify";
-import {LinkPreview} from "../../../shared/types/msg";
-import storage from "../storage";
-import Client from "../../client";
-import Chan from "../../models/chan";
-import Msg from "../../models/msg";
+import log from "../../log.js";
+import Config from "../../config.js";
+import {findLinksWithSchema} from "../../../shared/linkify.js";
+import {LinkPreview} from "../../../shared/types/msg.js";
+import storage from "../storage.js";
+import Client from "../../client.js";
+import Chan from "../../models/chan.js";
+import Msg from "../../models/msg.js";
 
 type FetchRequest = {
 	data: Buffer;
@@ -74,7 +73,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 	}, []);
 }
 
-function parseHtml(preview, res, client: Client) {
+function parseHtml(preview: LinkPreview, res: FetchRequest, client: Client) {
 	// TODO:
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	return new Promise((resolve: (preview: FetchRequest | null) => void) => {
@@ -139,11 +138,14 @@ function parseHtml(preview, res, client: Client) {
 	});
 }
 
-// TODO: type $
-function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> {
+function parseHtmlMedia(
+	$: ReturnType<typeof cheerio.load>,
+	preview: LinkPreview,
+	client: Client
+): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
-			reject();
+			reject(new Error("Media preview is disabled"));
 			return;
 		}
 
@@ -158,7 +160,7 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 			!openGraphType.startsWith("video") &&
 			!openGraphType.startsWith("music")
 		) {
-			reject();
+			reject(new Error("Open Graph type is not video or music"));
 			return;
 		}
 
@@ -201,7 +203,7 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 					})
 						.then((resMedia) => {
 							if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
-								return reject();
+								return reject(new Error("Invalid media type"));
 							}
 
 							preview.type = type;
@@ -218,7 +220,7 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 		});
 
 		if (!foundMedia) {
-			reject();
+			reject(new Error("No media found"));
 		}
 	});
 }
@@ -317,12 +319,22 @@ function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, cl
 	void promise.then((newRes) => handlePreview(client, chan, msg, preview, newRes));
 }
 
-function handlePreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview, res) {
+function handlePreview(
+	client: Client,
+	chan: Chan,
+	msg: Msg,
+	preview: LinkPreview,
+	res: FetchRequest | null
+) {
 	const thumb = preview.thumbActualUrl || "";
 	delete preview.thumbActualUrl;
 
 	if (!thumb.length || !Config.values.prefetchStorage) {
 		preview.thumb = thumb;
+		return emitPreview(client, chan, msg, preview);
+	}
+
+	if (!res) {
 		return emitPreview(client, chan, msg, preview);
 	}
 
@@ -375,7 +387,7 @@ function removePreview(msg: Msg, preview: LinkPreview) {
 	}
 }
 
-function getRequestHeaders(headers: Record<string, string>) {
+function getRequestHeaders(headers: Record<string, string>): HeadersInit {
 	const formattedHeaders = {
 		// Certain websites like Amazon only add <meta> tags to known bots,
 		// lets pretend to be them to get the metadata
@@ -417,55 +429,63 @@ function fetch(uri: string, headers: Record<string, string>) {
 		let limit = Config.values.prefetchMaxImageSize * 1024;
 
 		try {
-			const gotStream = got.stream(uri, {
-				retry: 0,
-				timeout: prefetchTimeout || 5000, // milliseconds
+			const requestOptions: RequestInit = {
+				method: "GET",
 				headers: getRequestHeaders(headers),
-				localAddress: Config.values.bind,
-			});
+				signal: AbortSignal.timeout(prefetchTimeout || 5000),
+			};
 
-			gotStream
-				.on("response", function (res) {
-					contentLength = parseInt(res.headers["content-length"], 10) || 0;
-					contentType = res.headers["content-type"];
+			globalThis
+				.fetch(uri, requestOptions)
+				.then(async (response) => {
+					contentLength = parseInt(response.headers.get("content-length") || "0", 10);
+					contentType = response.headers.get("content-type") || undefined;
 
 					if (contentType && imageTypeRegex.test(contentType)) {
 						// response is an image
-						// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
-						// and if file is not to be stored we don't need to download further either
 						if (contentLength > limit || !Config.values.prefetchStorage) {
-							gotStream.destroy();
+							resolve({
+								data: Buffer.alloc(0),
+								type: contentType,
+								size: contentLength,
+							});
+							return;
 						}
 					} else if (contentType && mediaTypeRegex.test(contentType)) {
-						// We don't need to download the file any further after we received content-type header
-						gotStream.destroy();
+						// We don't need to download the file any further
+						resolve({data: Buffer.alloc(0), type: contentType, size: contentLength});
+						return;
 					} else {
-						// if not image, limit download to the max search size, since we need only meta tags
-						// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets, the default is set to 50.
-						// for sites like Youtube the og tags are in the first 300K and hence this is configurable by the admin
+						// if not image, limit download to the max search size
 						limit =
 							"prefetchMaxSearchSize" in Config.values
 								? Config.values.prefetchMaxSearchSize * 1024
-								: // set to the previous size if config option is unset
-								  50 * 1024;
+								: 50 * 1024;
 					}
-				})
-				.on("error", (e) => reject(e))
-				.on("data", (data) => {
-					buffer = Buffer.concat(
-						[buffer, data],
-						buffer.length + (data as Array<any>).length
-					);
 
-					if (buffer.length >= limit) {
-						gotStream.destroy();
+					if (!response.body) {
+						throw new Error("Response body is null");
 					}
-				})
-				.on("end", () => gotStream.destroy())
-				.on("close", () => {
+
+					const reader = response.body.getReader();
+
+					while (true) {
+						const {done, value} = await reader.read();
+
+						if (done) {
+							break;
+						}
+
+						const chunkBuffer = Buffer.from(value);
+						buffer = Buffer.concat([buffer, chunkBuffer]);
+
+						if (buffer.length >= limit) {
+							await reader.cancel();
+							break;
+						}
+					}
+
 					let type = "";
-
-					// If we downloaded more data then specified in Content-Length, use real data size
 					const size = contentLength > buffer.length ? contentLength : buffer.length;
 
 					if (contentType) {
@@ -473,9 +493,10 @@ function fetch(uri: string, headers: Record<string, string>) {
 					}
 
 					resolve({data: buffer, type, size});
-				});
-		} catch (e: any) {
-			return reject(e);
+				})
+				.catch((e) => reject(e instanceof Error ? e : new Error(String(e))));
+		} catch (e) {
+			return reject(e instanceof Error ? e : new Error(String(e)));
 		}
 	});
 
@@ -510,7 +531,7 @@ function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
 		url.hash = "";
 
 		return url.toString();
-	} catch (e: any) {
+	} catch {
 		// if an exception was thrown, the url is not valid
 	}
 

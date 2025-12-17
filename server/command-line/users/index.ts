@@ -1,15 +1,17 @@
-import Config from "../../config";
-let add, reset;
+import Config from "../../config.js";
+import list from "./list.js";
+import remove from "./remove.js";
+import edit from "./edit.js";
+import type {Command} from "commander";
+
+let add: Command | undefined;
+let reset: Command | undefined;
 
 if (!Config.values.ldap.enable) {
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	add = require("./add").default;
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	reset = require("./reset").default;
+	const addModule = await import("./add.js");
+	const resetModule = await import("./reset.js");
+	add = addModule.default;
+	reset = resetModule.default;
 }
-
-import list from "./list";
-import remove from "./remove";
-import edit from "./edit";
 
 export default [list, remove, edit, add, reset];

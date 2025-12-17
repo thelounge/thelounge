@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 import _ from "lodash";
 
-import Config from "../../config";
-import Utils from "../../command-line/utils";
+import Config from "../../config.js";
+import Utils from "../../command-line/utils.js";
 
 type Module = {
 	type?: string;

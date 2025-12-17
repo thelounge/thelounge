@@ -1,24 +1,25 @@
 import {expect} from "chai";
 
-import Msg from "../../server/models/msg";
-import User from "../../server/models/user";
-import {LinkPreview} from "../../shared/types/msg";
+import Msg from "../../server/models/msg.js";
+import User from "../../server/models/user.js";
+import Prefix from "../../server/models/prefix.js";
+import {LinkPreview} from "../../shared/types/msg.js";
 
 describe("Msg", function () {
 	["from", "target"].forEach((prop) => {
 		it(`should keep a copy of the original user in the \`${prop}\` property`, function () {
-			const prefixLookup = {modeToSymbol: {a: "&", o: "@"}};
+			const prefixLookup = {modeToSymbol: {a: "&", o: "@"}} as Pick<Prefix, "modeToSymbol">;
 			const user = new User(
 				{
 					modes: ["o"],
 					nick: "foo",
 				},
-				prefixLookup as any
+				prefixLookup as Prefix
 			);
 			const msg = new Msg({[prop]: user});
 
 			// Mutating the user
-			user.setModes(["a"], prefixLookup as any);
+			user.setModes(["a"], prefixLookup as Prefix);
 			user.nick = "bar";
 
 			// Message's `.from`/etc. should still refer to the original user
@@ -53,7 +54,7 @@ describe("Msg", function () {
 		});
 
 		it("should not find a preview that does not exist", function () {
-			expect(msg.findPreview("https://github.com/thelounge/thelounge")).to.be.undefined;
+			expect(msg.findPreview("https://github.com/thelounge/thelounge")).to.equal(undefined);
 		});
 	});
 });

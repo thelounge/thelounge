@@ -105,7 +105,7 @@
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
-import {computed, defineComponent, onMounted, PropType, ref} from "vue";
+import {computed, defineComponent, onMounted, ref} from "vue";
 import {useStore} from "../../js/store";
 
 export default defineComponent({
@@ -124,10 +124,12 @@ export default defineComponent({
 			update_failed: "Failed to update your password",
 		};
 
-		const passwordChangeStatus = ref<{
+		type PasswordChangeResponse = {
 			success: boolean;
 			error: keyof typeof passwordErrors;
-		}>();
+		};
+
+		const passwordChangeStatus = ref<PasswordChangeResponse>();
 
 		const old_password = ref("");
 		const new_password = ref("");
@@ -174,7 +176,7 @@ export default defineComponent({
 
 			socket.once("change-password", (response) => {
 				// TODO type
-				passwordChangeStatus.value = response as any;
+				passwordChangeStatus.value = response as PasswordChangeResponse;
 			});
 
 			socket.emit("change-password", data);

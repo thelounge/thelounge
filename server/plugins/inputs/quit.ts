@@ -1,18 +1,16 @@
 import _ from "lodash";
 
-import {PluginInputHandler} from "./index";
-import ClientCertificate from "../clientCertificate";
+import {PluginInputHandler} from "./index.js";
+import ClientCertificate from "../clientCertificate.js";
 
 const commands = ["quit"];
 const allowDisconnected = true;
 
 const input: PluginInputHandler = function (network, chan, cmd, args) {
-	const client = this;
-
-	client.networks = _.without(client.networks, network);
+	this.networks = _.without(this.networks, network);
 	network.destroy();
-	client.save();
-	client.emit("quit", {
+	this.save();
+	this.emit("quit", {
 		network: network.uuid,
 	});
 

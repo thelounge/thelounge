@@ -1,6 +1,6 @@
 import constants from "./constants";
 
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHashHistory, type RouteParamsRawGeneric} from "vue-router";
 import SignIn from "../components/Windows/SignIn.vue";
 import Connect from "../components/Windows/Connect.vue";
 import Settings from "../components/Windows/Settings.vue";
@@ -110,7 +110,7 @@ router.beforeEach((to, from, next) => {
 	next();
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
 	// Disallow navigating to non-existing routes
 	if (!to.matched.length) {
 		return false;
@@ -155,7 +155,7 @@ router.afterEach((to) => {
 	}
 });
 
-async function navigate(routeName: string, params: any = {}) {
+async function navigate(routeName: string, params: RouteParamsRawGeneric = {}) {
 	if (router.currentRoute.value.name) {
 		await router.push({name: routeName, params});
 	} else {

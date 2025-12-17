@@ -1,10 +1,10 @@
 import {expect} from "chai";
 
-import Chan from "../../server/models/chan";
-import Msg from "../../server/models/msg";
-import Network from "../../server/models/network";
-import Prefix from "../../server/models/prefix";
-import User from "../../server/models/user";
+import Chan from "../../server/models/chan.js";
+import Msg from "../../server/models/msg.js";
+import Network from "../../server/models/network.js";
+import Prefix from "../../server/models/prefix.js";
+import User from "../../server/models/user.js";
 describe("Chan", function () {
 	const network = {
 		network: {
@@ -43,7 +43,7 @@ describe("Chan", function () {
 		});
 
 		it("should not find a message that does not exist", function () {
-			expect(chan.findMessage(42)).to.be.undefined;
+			expect(chan.findMessage(42)).to.equal(undefined);
 		});
 	});
 
@@ -52,7 +52,7 @@ describe("Chan", function () {
 			const chan = new Chan();
 			chan.setUser(new User({nick: "TestUser"}));
 
-			expect(chan.users.has("testuser")).to.be.true;
+			expect(chan.users.has("testuser")).to.equal(true);
 		});
 
 		it("should update user object", function () {

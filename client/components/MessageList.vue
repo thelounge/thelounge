@@ -219,11 +219,11 @@ export default defineComponent({
 					condensed.push(lastCondensedContainer);
 				}
 
-				lastCondensedContainer!.messages.push(message);
+				lastCondensedContainer.messages.push(message);
 
 				// Set id of the condensed container to last message id,
 				// which is required for the unread marker to work correctly
-				lastCondensedContainer!.id = message.id;
+				lastCondensedContainer.id = message.id;
 
 				// If this message is the unread boundary, create a split condensed container
 				if (message.id === props.channel.firstUnread) {

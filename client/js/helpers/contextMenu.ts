@@ -107,7 +107,7 @@ export function generateChannelContextMenu(
 								target: channel.id,
 								text: "/disconnect",
 							}),
-				  }
+					}
 				: {
 						label: "Connect",
 						type: "item",
@@ -117,7 +117,7 @@ export function generateChannelContextMenu(
 								target: channel.id,
 								text: "/connect",
 							}),
-				  },
+					},
 		];
 	}
 
@@ -168,6 +168,17 @@ export function generateChannelContextMenu(
 					socket.emit("input", {
 						target: channel.id,
 						text: "/ignore " + channel.name,
+					});
+				},
+			},
+			{
+				label: channel.pinned ? "Unpin conversation" : "Pin conversation",
+				type: "item",
+				class: "pin",
+				action() {
+					socket.emit("pin:change", {
+						target: channel.id,
+						setPinnedTo: !channel.pinned,
 					});
 				},
 			}

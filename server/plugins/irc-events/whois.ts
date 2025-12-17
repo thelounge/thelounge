@@ -1,41 +1,50 @@
-import {IrcEventHandler} from "../../client";
+import Client, {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
-import {ChanType} from "../../../shared/types/chan";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {ChanType} from "../../../shared/types/chan.js";
 
-export default <IrcEventHandler>function (irc, network) {
-	const client = this;
+interface WhoisData {
+	nick: string;
+	error?: boolean;
+	idle?: number;
+	logon?: number;
+	whowas?: boolean;
+	[key: string]: unknown;
+}
 
-	irc.on("whois", handleWhois);
-
-	irc.on("whowas", (data) => {
-		data.whowas = true;
-
-		handleWhois(data);
+export default <IrcEventHandler>function (this: Client, irc, network) {
+	irc.on("whois", (data: WhoisData) => {
+		handleWhois.call(this, data);
 	});
 
-	function handleWhois(data) {
+	irc.on("whowas", (data: WhoisData) => {
+		data.whowas = true;
+
+		handleWhois.call(this, data);
+	});
+
+	function handleWhois(this: Client, data: WhoisData) {
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
 			// Do not create new windows for errors as they may contain illegal characters
 			if (data.error) {
-				chan = network.getLobby();
+				chan = network.getLobby()!;
 			} else {
-				chan = client.createChannel({
+				chan = this.createChannel({
 					type: ChanType.QUERY,
 					name: data.nick,
 				});
 
-				client.emit("join", {
+				this.emit("join", {
 					network: network.uuid,
 					chan: chan.getFilteredClone(true),
 					shouldOpen: true,
 					index: network.addChannel(chan),
 				});
-				chan.loadMessages(client, network);
-				client.save();
+				chan.loadMessages(this, network);
+				this.save();
 			}
 		}
 
@@ -48,15 +57,15 @@ export default <IrcEventHandler>function (irc, network) {
 			});
 		} else {
 			// Absolute datetime in milliseconds since nick is idle
-			data.idleTime = Date.now() - data.idle * 1000;
+			data.idleTime = Date.now() - (data.idle ?? 0) * 1000;
 			// Absolute datetime in milliseconds when nick logged on.
-			data.logonTime = data.logon * 1000;
+			data.logonTime = (data.logon ?? 0) * 1000;
 			msg = new Msg({
 				type: MessageType.WHOIS,
 				whois: data,
 			});
 		}
 
-		chan.pushMessage(client, msg);
+		chan.pushMessage(this, msg);
 	}
 };

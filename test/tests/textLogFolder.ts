@@ -1,6 +1,6 @@
 import {expect} from "chai";
-import Network from "../../server/models/network";
-import TextFileMessageStorage from "../../server/plugins/messageStorage/text";
+import Network from "../../server/models/network.js";
+import TextFileMessageStorage from "../../server/plugins/messageStorage/text.js";
 
 describe("TextFileMessageStorage", function () {
 	it("should combine network name and uuid into a safe name", function () {
@@ -18,7 +18,7 @@ describe("TextFileMessageStorage", function () {
 				name: '@ TeSt ../..\\<>:"/\\|?*',
 				uuid: "f9042ec9-4016-45e0-a8a8-d378fb252628",
 			} as Network)
-		).to.equal("@-test-.._..--45e0-a8a8-d378fb252628");
+		).to.equal("@-test-.._.._-45e0-a8a8-d378fb252628");
 	});
 
 	it("folder name may contain two dashes if on boundary", function () {

@@ -1,10 +1,10 @@
 import {expect} from "chai";
 
 import {mount} from "@vue/test-utils";
-import ParsedMessage from "../../../../client/components/ParsedMessage.vue";
-import {ClientMessage} from "../../../../client/js/types";
+import ParsedMessage from "../../../../client/components/ParsedMessage.vue.js";
+import type {ClientMessage} from "../../../../client/js/types.js";
 
-function getParsedMessageContents(text: string, message?: any) {
+function getParsedMessageContents(text: string, message?: ClientMessage | string) {
 	const wrapper = mount(ParsedMessage, {
 		props: {
 			text,
@@ -343,7 +343,7 @@ describe("IRC formatted message parser", () => {
 		});
 	});
 
-	it("should find nicks", async () => {
+	it("should find nicks", () => {
 		const testCases = [
 			{
 				message: {
@@ -358,8 +358,8 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			testCases.map((testCase) => getParsedMessageContents(testCase.input, testCase.message))
+		const actual = testCases.map((testCase) =>
+			getParsedMessageContents(testCase.input, testCase.message)
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
 

@@ -1,5 +1,5 @@
-import {expect} from "chai";
-import fill from "../../../../../client/js/helpers/ircmessageparser/fill";
+import {expect, assert} from "chai";
+import fill from "../../../../../client/js/helpers/ircmessageparser/fill.js";
 
 describe("fill", () => {
 	const text = "01234567890123456789";
@@ -41,6 +41,6 @@ describe("fill", () => {
 
 		const actual = fill(existingEntries, text);
 
-		expect(actual).to.be.empty;
+		assert.isEmpty(actual);
 	});
 });
