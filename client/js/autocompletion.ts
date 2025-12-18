@@ -282,17 +282,19 @@ function rawNicks() {
 		return [];
 	}
 
-	if (store.state.activeChannel.channel.users.length > 0) {
-		const users = store.state.activeChannel.channel.users.slice();
+	const channel = store.state.activeChannel.channel;
+
+	if (channel.users && channel.users.length > 0) {
+		const users = channel.users.slice();
 
 		return users.sort((a, b) => b.lastMessage - a.lastMessage).map((u) => u.nick);
 	}
 
 	const me = store.state.activeChannel.network.nick;
-	const otherUser = store.state.activeChannel.channel.name;
+	const otherUser = channel.name;
 
 	// If this is a query, add their name to autocomplete
-	if (me !== otherUser && store.state.activeChannel.channel.type === ChanType.QUERY) {
+	if (me !== otherUser && channel.type === ChanType.QUERY) {
 		return [otherUser, me];
 	}
 

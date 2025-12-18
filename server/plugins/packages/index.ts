@@ -184,7 +184,9 @@ async function loadPackage(packageName: string) {
 			);
 		}
 
-		packageFile = await import(packagePath);
+		const imported = await import(packagePath);
+		// Handle both ESM (direct exports) and CommonJS (wrapped in .default) modules
+		packageFile = imported.default || imported;
 	} catch (e: unknown) {
 		log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
 
@@ -283,16 +285,6 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 	const packagesPath = Config.getPackagesPath();
 	const packagesConfig = path.join(packagesPath, "package.json");
 	const packagesList = JSON.parse(fs.readFileSync(packagesConfig, "utf-8")).dependencies;
-	const argsList = [
-		"outdated",
-		"--latest",
-		"--json",
-		"--production",
-		"--ignore-scripts",
-		"--non-interactive",
-		"--cwd",
-		packagesPath,
-	];
 
 	// Check if the configuration file exists
 	if (!Object.entries(packagesList).length) {
@@ -304,18 +296,11 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 		return false;
 	}
 
-	const command = argsList.shift();
-	const params = argsList;
-
-	if (!command) {
-		return;
-	}
-
-	// If we get an error from calling outdated and the code isn't 0, then there are no outdated packages
-	// TODO: was (...argsList), verify this works
-	await Utils.executeYarnCommand(command, ...params)
+	// npm outdated returns exit code 1 when packages are outdated, 0 when all up to date
+	// executeYarnCommand handles this mapping
+	await Utils.executeYarnCommand("outdated")
 		.then(() => updateOutdated(false))
-		.catch((code) => updateOutdated(code !== 0));
+		.catch(() => updateOutdated(true));
 
 	if (cacheTimeout > 0) {
 		setTimeout(() => {

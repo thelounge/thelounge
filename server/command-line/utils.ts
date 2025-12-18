@@ -108,86 +108,104 @@ class Utils {
 	}
 
 	static executeYarnCommand(command: string, ...parameters: string[]) {
-		const yarn = require.resolve("yarn/bin/yarn.js");
 		const packagesPath = Config.getPackagesPath();
 		const cachePath = path.join(packagesPath, "package_manager_cache");
 
+		// Map yarn commands to npm commands
+		let npmCommand = command;
+		const npmParameters: string[] = [];
+
+		// Convert yarn commands to npm equivalents
+		switch (command) {
+			case "add":
+				npmCommand = "install";
+				// Filter out --exact flag (npm uses --save-exact)
+				for (const param of parameters) {
+					if (param === "--exact") {
+						npmParameters.push("--save-exact");
+					} else {
+						npmParameters.push(param);
+					}
+				}
+				break;
+			case "outdated":
+				npmCommand = "outdated";
+				// npm outdated doesn't need --latest flag
+				for (const param of parameters) {
+					if (param !== "--latest" && param !== "--production") {
+						npmParameters.push(param);
+					}
+				}
+				break;
+			case "remove":
+				npmCommand = "uninstall";
+				npmParameters.push(...parameters);
+				break;
+			case "upgrade":
+				npmCommand = "update";
+				npmParameters.push(...parameters);
+				break;
+			case "install":
+				npmCommand = "install";
+				npmParameters.push(...parameters);
+				break;
+			default:
+				npmParameters.push(...parameters);
+		}
+
 		const staticParameters = [
-			"--cache-folder",
-			cachePath,
-			"--cwd",
+			"--prefix",
 			packagesPath,
-			"--json",
+			"--cache",
+			cachePath,
 			"--ignore-scripts",
-			"--non-interactive",
 		];
 
 		const env = {
+			...process.env,
 			// We only ever operate in production mode
 			NODE_ENV: "production",
-
-			// If The Lounge runs from a user that does not have a home directory,
-			// yarn may fail when it tries to read certain folders,
-			// we give it an existing folder so the reads do not throw a permission error.
-			// Yarn uses os.homedir() to figure out the path, which internally reads
-			// from the $HOME env on unix. On Windows it uses $USERPROFILE, but
-			// the user folder should always exist on Windows, so we don't set it.
+			// Set HOME to cache path to avoid permission issues
 			HOME: cachePath,
 		};
 
 		return new Promise((resolve, reject) => {
 			let success = false;
-			const add = spawn(
-				process.execPath,
-				[yarn, command, ...staticParameters, ...parameters],
-				{env: env}
-			);
+			let hasOutput = false;
+
+			const add = spawn("npm", [npmCommand, ...staticParameters, ...npmParameters], {
+				env: env,
+				shell: true,
+			});
 
 			add.stdout.on("data", (data) => {
-				data.toString()
-					.trim()
-					.split("\n")
-					.forEach((line: string) => {
-						try {
-							const json = JSON.parse(line);
+				hasOutput = true;
+				const output = data.toString().trim();
 
-							if (json.type === "success") {
-								success = true;
-							}
-						} catch {
-							// Stdout buffer has limitations and yarn may print
-							// big package trees, for example in the upgrade command
-							// See https://github.com/thelounge/thelounge/issues/3679
-						}
-					});
+				if (output) {
+					// npm outdated returns non-zero when packages are outdated
+					// but we want to treat that as success for our purposes
+					if (npmCommand === "outdated") {
+						success = true;
+					}
+
+					log.debug(output);
+				}
 			});
 
 			add.stderr.on("data", (data) => {
-				data.toString()
-					.trim()
-					.split("\n")
-					.forEach((line: string) => {
-						try {
-							const json = JSON.parse(line);
+				const output = data.toString().trim();
 
-							switch (json.type) {
-								case "error":
-									log.error(json.data);
-									break;
-								case "warning":
-									// this includes pointless things like "ignored scripts due to flag"
-									// so let's hide it
-									break;
-							}
-
-							return;
-						} catch {
-							// we simply fall through and log at debug... chances are there's nothing the user can do about it
-							// as it includes things like deprecation warnings, but we might want to know as developers
-						}
-
-						log.debug(line);
-					});
+				if (output) {
+					// npm often puts warnings on stderr
+					if (output.includes("WARN")) {
+						log.debug(output);
+					} else if (output.includes("ERR!")) {
+						log.error(output);
+					} else {
+						log.debug(output);
+					}
+				}
 			});
 
 			add.on("error", (e) => {
@@ -196,7 +214,16 @@ class Utils {
 			});
 
 			add.on("close", (code) => {
-				if (!success || code !== 0) {
+				// npm install returns 0 on success
+				// npm outdated returns 1 when packages are outdated (which is expected)
+				if (code === 0) {
+					success = true;
+				} else if (npmCommand === "outdated" && code === 1) {
+					// npm outdated returns 1 when there are outdated packages
+					success = true;
+				}
+
+				if (!success) {
 					return reject(new Error(`Process exited with code ${code}`));
 				}
 
