@@ -160,7 +160,7 @@ function getPersistentStorageDir(packageName: string) {
 }
 
 async function loadPackage(packageName: string) {
-	let packageInfo: PackageInfo;
+	let packageInfo: PackageInfo & {main?: string; exports?: string | Record<string, unknown>};
 	// TODO: type
 	let packageFile: Package;
 
@@ -184,7 +184,31 @@ async function loadPackage(packageName: string) {
 			);
 		}
 
-		const imported = await import(packagePath);
+		// ESM requires importing a file, not a directory
+		// Determine the entry point from package.json
+		let entryPoint = "index.js";
+
+		if (typeof packageInfo.exports === "string") {
+			entryPoint = packageInfo.exports;
+		} else if (packageInfo.exports && typeof packageInfo.exports === "object") {
+			// Handle exports map like { ".": "./index.js" } or { "import": "...", "require": "..." }
+			const exportsObj = packageInfo.exports as Record<string, unknown>;
+			if (typeof exportsObj["."] === "string") {
+				entryPoint = exportsObj["."];
+			} else if (typeof exportsObj["import"] === "string") {
+				entryPoint = exportsObj["import"];
+			} else if (typeof exportsObj["require"] === "string") {
+				entryPoint = exportsObj["require"];
+			} else if (exportsObj["."] && typeof exportsObj["."] === "object") {
+				const dotExports = exportsObj["."] as Record<string, string>;
+				entryPoint = dotExports["import"] || dotExports["require"] || dotExports["default"] || "index.js";
+			}
+		} else if (packageInfo.main) {
+			entryPoint = packageInfo.main;
+		}
+
+		const fullEntryPath = path.join(packagePath, entryPoint);
+		const imported = await import(fullEntryPath);
 		// Handle both ESM (direct exports) and CommonJS (wrapped in .default) modules
 		packageFile = imported.default || imported;
 	} catch (e: unknown) {
