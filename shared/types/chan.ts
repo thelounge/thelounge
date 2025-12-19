@@ -3,6 +3,7 @@ import {SharedMsg} from "./msg";
 // User groups sent by seedpool/enhanced capable servers
 export type UserGroup = {
 	name: string;
+	position: number;
 	users: string[];
 };
 

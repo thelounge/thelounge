@@ -4,10 +4,18 @@ import log from "../../log.js";
 import Msg from "../../models/msg.js";
 import {MessageType} from "../../../shared/types/msg.js";
 
+// Commands handled by other plugins - don't display as unhandled
+const handledCommands = new Set(["SPGROUPS", "SPJOIN"]);
+
 export default <IrcEventHandler>function (irc, network) {
 	irc.on("unknown command", (command) => {
 		// Log all unknown commands for debugging
 		log.debug(`[UNKNOWN CMD] ${command.command} params: ${JSON.stringify(command.params)}`);
+
+		// Skip commands that are handled by other plugins
+		if (handledCommands.has(command.command)) {
+			return;
+		}
 
 		let target = network.getLobby();
 

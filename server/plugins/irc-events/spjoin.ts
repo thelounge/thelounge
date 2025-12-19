@@ -43,8 +43,8 @@ export default <IrcEventHandler>function (irc, network) {
 		let targetGroup = chan.groups.find(g => g.name === groupName);
 
 		if (!targetGroup) {
-			// Add new group at the end (lowest priority)
-			targetGroup = {name: groupName, users: []};
+			// Add new group at the end (lowest priority, position 0)
+			targetGroup = {name: groupName, position: 0, users: []};
 			chan.groups.push(targetGroup);
 		}
 

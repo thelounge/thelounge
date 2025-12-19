@@ -28,7 +28,7 @@
 			<!-- Custom groups from SPGROUPS -->
 			<template v-if="hasCustomGroups">
 				<div
-					v-for="group in channel.groups"
+					v-for="group in sortedGroups"
 					:key="'group-' + group.name"
 					:class="['user-mode', 'custom-group', 'group-' + slugify(group.name)]"
 				>
@@ -128,6 +128,12 @@ export default defineComponent({
 		// Check if we have custom groups from SPGROUPS
 		const hasCustomGroups = computed(() => {
 			return props.channel.groups && props.channel.groups.length > 0;
+		});
+
+		// Sort groups by position (highest first)
+		const sortedGroups = computed(() => {
+			if (!props.channel.groups) return [];
+			return [...props.channel.groups].sort((a, b) => b.position - a.position);
 		});
 
 		// Create a set of users in each group for quick lookup
@@ -322,6 +328,7 @@ export default defineComponent({
 			filteredUsers,
 			groupedUsers,
 			hasCustomGroups,
+			sortedGroups,
 			userSearchInput,
 			activeUser,
 			userlist,

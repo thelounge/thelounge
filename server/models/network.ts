@@ -1,6 +1,7 @@
 import _ from "lodash";
 import {v4 as uuidv4} from "uuid";
 import IrcFramework, {Client as IRCClient} from "irc-framework";
+import log from "../log.js";
 import Chan, {ChanConfig, Channel} from "./chan.js";
 import Msg from "./msg.js";
 import Prefix from "./prefix.js";
@@ -334,11 +335,24 @@ class Network {
 
 		this.setIrcFrameworkOptions(client);
 
-		this.irc.requestCap([
+		// Request custom capabilities
+		const customCaps = [
 			"znc.in/self-message", // Legacy echo-message for ZNC
 			"znc.in/playback", // See http://wiki.znc.in/Playback
 			"seedpool/enhanced", // THC enhanced client features
-		]);
+		];
+		log.debug(`[CAP] Requesting custom capabilities: ${customCaps.join(", ")}`);
+		this.irc.requestCap(customCaps);
+
+		// Debug: log raw outgoing data to see what CAP REQ is sent
+		this.irc.on("raw", (event: {line: string; from_server: boolean}) => {
+			if (!event.from_server && event.line.startsWith("CAP")) {
+				log.debug(`[CAP OUT] ${event.line}`);
+			}
+			if (event.from_server && event.line.includes("CAP")) {
+				log.debug(`[CAP IN] ${event.line}`);
+			}
+		});
 	}
 
 	setIrcFrameworkOptions(this: NetworkWithIrcFramework, client: Client) {

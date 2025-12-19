@@ -26,6 +26,8 @@ export function toClientChan(shared: SharedNetworkChan): ClientChan {
 		moreHistoryAvailable: shared.totalMessages > shared.messages.length,
 		inputHistory: history,
 		messages: sharedMsgToClientMsg(messages),
+		// Initialize groups for reactivity (will be populated by SPGROUPS)
+		groups: shared.groups || undefined,
 	};
 	return channel;
 }

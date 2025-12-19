@@ -224,6 +224,7 @@ class Chan {
 			data: this.data,
 			closed: this.closed,
 			num_users: this.num_users,
+			groups: this.groups,
 		};
 		// TODO: funny array mutation below might need to be reproduced
 		// static optionalProperties = ["userAway", "special", "data", "closed", "num_users"];
