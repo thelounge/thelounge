@@ -43,8 +43,11 @@ export default <IrcEventHandler>function (irc, network) {
 		let targetGroup = chan.groups.find(g => g.name === groupName);
 
 		if (!targetGroup) {
-			// Add new group at the end (lowest priority, position 0)
-			targetGroup = {name: groupName, position: 0, users: []};
+			// Find the lowest existing position and go below it
+			const lowestPosition = chan.groups.length > 0
+				? Math.min(...chan.groups.map(g => g.position)) - 1
+				: 0;
+			targetGroup = {name: groupName, position: lowestPosition, users: []};
 			chan.groups.push(targetGroup);
 		}
 
@@ -52,6 +55,9 @@ export default <IrcEventHandler>function (irc, network) {
 		if (!targetGroup.users.map(u => u.toLowerCase()).includes(nickname.toLowerCase())) {
 			targetGroup.users.push(nickname);
 		}
+
+		// Sort groups by position (highest first) before emitting
+		chan.groups.sort((a, b) => b.position - a.position);
 
 		// Emit updated groups to client
 		this.emit("channel:groups", {

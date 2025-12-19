@@ -33,8 +33,8 @@ export default <IrcEventHandler>function (irc, network) {
 				return;
 			}
 
-			// Store groups on the channel
-			chan.groups = data.groups;
+			// Store groups on the channel, sorted by position (highest first)
+			chan.groups = data.groups.sort((a, b) => b.position - a.position);
 
 			// Emit to client
 			this.emit("channel:groups", {

@@ -9,5 +9,6 @@ socket.on("channel:groups", (data) => {
 		return;
 	}
 
-	channel.groups = data.groups;
+	// Create a new array to ensure Vue reactivity detects the change
+	channel.groups = [...data.groups];
 });
