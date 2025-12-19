@@ -337,6 +337,7 @@ class Network {
 		this.irc.requestCap([
 			"znc.in/self-message", // Legacy echo-message for ZNC
 			"znc.in/playback", // See http://wiki.znc.in/Playback
+			"seedpool/enhanced", // THC enhanced client features
 		]);
 	}
 

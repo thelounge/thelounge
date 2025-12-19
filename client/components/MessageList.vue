@@ -184,6 +184,9 @@ export default defineComponent({
 			const el = chat.value;
 			if (el) {
 				el.scrollTop = el.scrollHeight;
+				// Immediately mark as at bottom - don't wait for scroll event
+				isAtBottom.value = true;
+				props.channel.scrolledToBottom = true;
 			}
 		};
 
