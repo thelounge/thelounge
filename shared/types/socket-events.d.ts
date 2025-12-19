@@ -80,6 +80,8 @@ interface ServerToClientEvents {
 
 	more: EventHandler<{chan: number; messages: SharedMsg[]; totalMessages: number}>;
 
+	"messages:around": EventHandler<{chan: number; messages: SharedMsg[]}>;
+
 	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;
 	"msg:special": EventHandler<{chan: number; data?: unknown}>;
 	msg: EventHandler<{msg: SharedMsg; chan: number; highlight?: number; unread?: number}>;
@@ -155,6 +157,8 @@ interface ClientToServerEvents {
 	"mentions:get": NoPayloadEventHandler;
 
 	more: EventHandler<{target: number; lastId: number; condensed: boolean}>;
+
+	"messages:around": EventHandler<{target: number; time: number}>;
 
 	"msg:preview:toggle": EventHandler<{
 		target: number;

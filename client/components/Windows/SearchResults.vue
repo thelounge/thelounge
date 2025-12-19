@@ -248,16 +248,50 @@ export default defineComponent({
 			el.scrollTop = el.scrollHeight;
 		};
 
+		// Track pending jump target
+		const pendingJump = ref<{id: number; time: number; chanId: number} | null>(null);
+
 		const jump = (message: ClientMessage) => {
 			if (!channel.value) {
 				return;
 			}
 
-			// Navigate to the channel with the message ID
-			// IDs are now consistent between search results and channel messages
-			// Pass time as fallback for older messages without stored IDs
 			const messageTime = new Date(message.time).getTime();
-			switchToChannel(channel.value, message.id, messageTime);
+			const chanId = channel.value.id;
+
+			// Check if message is already loaded in the channel
+			const isLoaded = channel.value.messages.some(m => m.id === message.id);
+
+			if (isLoaded) {
+				// Message is already in memory, just navigate
+				switchToChannel(channel.value, message.id, messageTime);
+				return;
+			}
+
+			// Message not in memory - request messages around that time
+			pendingJump.value = {id: message.id, time: messageTime, chanId};
+
+			socket.emit("messages:around", {
+				target: chanId,
+				time: messageTime,
+			});
+		};
+
+		// Handle when messages around target are loaded
+		const onMessagesLoaded = (data: {chan: number}) => {
+			if (!pendingJump.value || data.chan !== pendingJump.value.chanId) {
+				return;
+			}
+
+			const {id, time} = pendingJump.value;
+			pendingJump.value = null;
+
+			if (!channel.value) {
+				return;
+			}
+
+			// Now navigate to the channel
+			switchToChannel(channel.value, id, time);
 		};
 
 		watch(
@@ -303,11 +337,13 @@ export default defineComponent({
 
 			eventbus.on("escapekey", closeSearch);
 			eventbus.on("re-search", doSearch);
+			eventbus.on("messages:around:loaded", onMessagesLoaded);
 		});
 
 		onUnmounted(() => {
 			eventbus.off("escapekey", closeSearch);
 			eventbus.off("re-search", doSearch);
+			eventbus.off("messages:around:loaded", onMessagesLoaded);
 			clearSearchState();
 		});
 

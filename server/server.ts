@@ -516,6 +516,17 @@ function initializeClient(
 		}
 	});
 
+	// Fetch messages around a specific time (for jumping to search results)
+	socket.on("messages:around", async (data) => {
+		if (_.isPlainObject(data)) {
+			const result = await client.getMessagesAround(data);
+
+			if (result !== null) {
+				socket.emit("messages:around", result);
+			}
+		}
+	});
+
 	socket.on("network:new", (data) => {
 		if (_.isPlainObject(data)) {
 			// prevent people from overriding webirc settings

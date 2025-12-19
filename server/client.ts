@@ -666,6 +666,38 @@ class Client {
 		return this.messageProvider.search(query);
 	}
 
+	async getMessagesAround(data: {target: number; time: number}) {
+		const target = this.find(data.target);
+
+		if (!target) {
+			return null;
+		}
+
+		const chan = target.chan;
+		const network = target.network;
+
+		if (!this.messageProvider?.isEnabled) {
+			return null;
+		}
+
+		try {
+			const messages = await this.messageProvider.getMessagesAround(
+				network.uuid,
+				chan.name,
+				data.time,
+				200
+			);
+
+			return {
+				chan: chan.id,
+				messages: messages,
+			};
+		} catch (err) {
+			log.error("Failed to get messages around time:", String(err));
+			return null;
+		}
+	}
+
 	open(socketId: string, target: number) {
 		// Due to how socket.io works internally, normal events may arrive later than
 		// the disconnect event, and because we can't control this timing precisely,

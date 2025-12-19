@@ -697,6 +697,60 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	/**
+	 * Get messages around a specific timestamp (for jumping to search results)
+	 * Returns messages before and after the target time
+	 */
+	async getMessagesAround(
+		networkUuid: string,
+		channelName: string,
+		targetTime: number,
+		limit: number = 200
+	): Promise<Message[]> {
+		await this.initDone.promise;
+
+		if (!this.isEnabled) {
+			return [];
+		}
+
+		const halfLimit = Math.floor(limit / 2);
+
+		// Get messages before the target time
+		const beforeRows = await this.serialize_fetchall(
+			"SELECT id, msg, type, time FROM messages WHERE network = ? AND channel = ? AND time <= ? ORDER BY time DESC LIMIT ?",
+			networkUuid,
+			channelName.toLowerCase(),
+			targetTime,
+			halfLimit
+		);
+
+		// Get messages after the target time
+		const afterRows = await this.serialize_fetchall(
+			"SELECT id, msg, type, time FROM messages WHERE network = ? AND channel = ? AND time > ? ORDER BY time ASC LIMIT ?",
+			networkUuid,
+			channelName.toLowerCase(),
+			targetTime,
+			halfLimit
+		);
+
+		// Combine: before (reversed) + after
+		const allRows = [...beforeRows.reverse(), ...afterRows];
+
+		return allRows.map((row): Message => {
+			const r = row as Record<string, unknown>;
+			const msg = JSON.parse(r.msg as string);
+			msg.time = r.time;
+			msg.type = r.type;
+
+			// Use stored ID from JSON if available, fall back to SQLite row ID
+			if (typeof msg.id !== "number") {
+				msg.id = r.id as number;
+			}
+
+			return new Msg(msg);
+		});
+	}
+
+	/**
 	 * Get total message count for a channel
 	 */
 	async getMessageCount(networkUuid: string, channelName: string): Promise<number> {
