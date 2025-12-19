@@ -467,10 +467,19 @@ export default defineComponent({
 				// Skip if no previous value or if we're loading history
 				if (oldLen === undefined || isLoadingHistory.value) return;
 
-				// New messages added at end - scroll to bottom if we were at bottom
-				if (newLen > oldLen && isAtBottom.value && !isJumpingToMessage.value) {
-					await nextTick();
-					scrollToBottom();
+				// New messages added at end - check if we should scroll
+				if (newLen > oldLen && !isJumpingToMessage.value) {
+					const el = chat.value;
+					if (!el) return;
+
+					// Check current scroll position directly (don't rely on debounced state)
+					const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+					const wasAtBottom = distanceFromBottom <= 150; // More forgiving threshold
+
+					if (wasAtBottom || isAtBottom.value) {
+						await nextTick();
+						scrollToBottom();
+					}
 				}
 			}
 		);

@@ -25,33 +25,72 @@
 			/>
 		</div>
 		<div class="names">
-			<div
-				v-for="(users, mode) in groupedUsers"
-				:key="mode"
-				:class="['user-mode', getModeClass(String(mode))]"
-			>
-				<template v-if="userSearchInput.length > 0">
-					<!-- eslint-disable vue/no-v-text-v-html-on-component -->
-					<Username
-						v-for="user in users"
-						:key="user.original.nick + '-search'"
-						:on-hover="hoverUser"
-						:active="user.original === activeUser"
-						:user="user.original"
-						v-html="user.string"
-					/>
-					<!-- eslint-enable -->
-				</template>
-				<template v-else>
-					<Username
-						v-for="user in users"
-						:key="user.nick"
-						:on-hover="hoverUser"
-						:active="user === activeUser"
-						:user="user"
-					/>
-				</template>
-			</div>
+			<!-- Custom groups from SPGROUPS -->
+			<template v-if="hasCustomGroups">
+				<div
+					v-for="group in channel.groups"
+					:key="'group-' + group.name"
+					:class="['user-mode', 'custom-group', 'group-' + slugify(group.name)]"
+				>
+					<div
+						v-if="getGroupUsers(group.name).length > 0"
+						:class="['custom-group-header', 'group-header-' + slugify(group.name)]"
+					>
+						{{ group.name }}
+					</div>
+					<template v-if="userSearchInput.length > 0">
+						<!-- eslint-disable vue/no-v-text-v-html-on-component -->
+						<Username
+							v-for="user in getGroupUsers(group.name)"
+							:key="user.original.nick + '-search'"
+							:on-hover="hoverUser"
+							:active="user.original === activeUser"
+							:user="user.original"
+							v-html="user.string"
+						/>
+						<!-- eslint-enable -->
+					</template>
+					<template v-else>
+						<Username
+							v-for="user in getGroupUsers(group.name)"
+							:key="user.nick"
+							:on-hover="hoverUser"
+							:active="user === activeUser"
+							:user="user"
+						/>
+					</template>
+				</div>
+			</template>
+			<!-- Default IRC modes fallback -->
+			<template v-else>
+				<div
+					v-for="(users, mode) in groupedUsers"
+					:key="mode"
+					:class="['user-mode', getModeClass(String(mode))]"
+				>
+					<template v-if="userSearchInput.length > 0">
+						<!-- eslint-disable vue/no-v-text-v-html-on-component -->
+						<Username
+							v-for="user in users"
+							:key="user.original.nick + '-search'"
+							:on-hover="hoverUser"
+							:active="user.original === activeUser"
+							:user="user.original"
+							v-html="user.string"
+						/>
+						<!-- eslint-enable -->
+					</template>
+					<template v-else>
+						<Username
+							v-for="user in users"
+							:key="user.nick"
+							:on-hover="hoverUser"
+							:active="user === activeUser"
+							:user="user"
+						/>
+					</template>
+				</div>
+			</template>
 		</div>
 	</aside>
 </template>
@@ -85,6 +124,25 @@ export default defineComponent({
 		const userSearchInput = ref("");
 		const activeUser = ref<UserInMessage | null>();
 		const userlist = ref<HTMLDivElement>();
+
+		// Check if we have custom groups from SPGROUPS
+		const hasCustomGroups = computed(() => {
+			return props.channel.groups && props.channel.groups.length > 0;
+		});
+
+		// Create a set of users in each group for quick lookup
+		const groupUsersMap = computed(() => {
+			const map: Record<string, Set<string>> = {};
+
+			if (props.channel.groups) {
+				for (const group of props.channel.groups) {
+					map[group.name] = new Set(group.users.map(u => u.toLowerCase()));
+				}
+			}
+
+			return map;
+		});
+
 		const filteredUsers = computed(() => {
 			if (!userSearchInput.value) {
 				return;
@@ -96,6 +154,30 @@ export default defineComponent({
 				extract: (u) => u.nick,
 			});
 		});
+
+		// Get users for a specific group
+		const getGroupUsers = (groupName: string) => {
+			const groupUserSet = groupUsersMap.value[groupName];
+
+			if (!groupUserSet) {
+				return [];
+			}
+
+			if (userSearchInput.value && filteredUsers.value) {
+				return filteredUsers.value.filter(user =>
+					groupUserSet.has(user.original.nick.toLowerCase())
+				);
+			}
+
+			return props.channel.users.filter(user =>
+				groupUserSet.has(user.nick.toLowerCase())
+			);
+		};
+
+		// Convert group name to CSS-safe class name
+		const slugify = (name: string) => {
+			return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+		};
 
 		const groupedUsers = computed(() => {
 			const groups = {};
@@ -239,10 +321,13 @@ export default defineComponent({
 		return {
 			filteredUsers,
 			groupedUsers,
+			hasCustomGroups,
 			userSearchInput,
 			activeUser,
 			userlist,
 
+			getGroupUsers,
+			slugify,
 			setUserSearchInput,
 			getModeClass,
 			selectUser,

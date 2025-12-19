@@ -1,5 +1,5 @@
 import {SharedMention} from "./mention";
-import {ChanState, SharedChan} from "./chan";
+import {ChanState, SharedChan, UserGroup} from "./chan";
 import {SharedNetwork, SharedServerOptions} from "./network";
 import {SharedMsg, LinkPreview} from "./msg";
 import {SharedUser} from "./user";
@@ -30,6 +30,7 @@ interface ServerToClientEvents {
 	"changelog:newversion": NoPayloadEventHandler;
 
 	"channel:state": EventHandler<{chan: number; state: ChanState}>;
+	"channel:groups": EventHandler<{chan: number; groups: UserGroup[]}>;
 
 	"change-password": EventHandler<{success: boolean; error?: unknown}>;
 

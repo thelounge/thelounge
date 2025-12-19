@@ -8,7 +8,7 @@ import Client from "../client.js";
 import Network from "./network.js";
 import Prefix from "./prefix.js";
 import {MessageType, SharedMsg} from "../../shared/types/msg.js";
-import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan.js";
+import {ChanType, SpecialChanType, ChanState, UserGroup} from "../../shared/types/chan.js";
 import {SharedNetworkChan} from "../../shared/types/network.js";
 
 export type ChanConfig = {
@@ -40,6 +40,7 @@ class Chan {
 	data?: unknown;
 	closed?: boolean;
 	num_users?: number;
+	groups?: UserGroup[];
 
 	constructor(attr?: Partial<Chan>) {
 		_.defaults(this, attr, {

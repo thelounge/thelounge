@@ -1,4 +1,5 @@
 import {IrcEventHandler} from "../../client.js";
+import log from "../../log.js";
 
 import Msg from "../../models/msg.js";
 import STSPolicies from "../sts.js";
@@ -67,10 +68,20 @@ export default <IrcEventHandler>function (irc, network) {
 	};
 
 	irc.on("cap ls", (data) => {
+		log.debug("[CAP LS] Server capabilities:", Object.keys(data.capabilities).join(", "));
 		handleSTS(data, true);
 	});
 
+	irc.on("cap ack", (data) => {
+		log.debug("[CAP ACK] Server acknowledged:", Object.keys(data.capabilities).join(", "));
+	});
+
+	irc.on("cap nak", (data) => {
+		log.debug("[CAP NAK] Server rejected:", Object.keys(data.capabilities).join(", "));
+	});
+
 	irc.on("cap new", (data) => {
+		log.debug("[CAP NEW] New capabilities:", Object.keys(data.capabilities).join(", "));
 		handleSTS(data, false);
 	});
 };

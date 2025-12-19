@@ -54,6 +54,8 @@ const events = [
 	"part",
 	"quit",
 	"sasl",
+	"spgroups",
+	"spjoin",
 	"topic",
 	"welcome",
 	"whois",
