@@ -455,10 +455,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		const clonedMsg = Object.keys(msg).reduce((newMsg, prop) => {
-			// id is regenerated when messages are retrieved
 			// previews are not stored because storage is cleared on lounge restart
 			// type and time are stored in a separate column
-			if (prop !== "id" && prop !== "previews" && prop !== "type" && prop !== "time") {
+			// id IS now stored so it can be retrieved consistently
+			if (prop !== "previews" && prop !== "type" && prop !== "time") {
 				newMsg[prop] = msg[prop];
 			}
 
@@ -514,24 +514,47 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		// If unlimited history is specified, load 100k messages
 		const limit = Config.values.maxHistory < 0 ? 100000 : Config.values.maxHistory;
 
+		// Select id from SQLite to use as the canonical message ID
 		const rows = await this.serialize_fetchall(
-			"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
+			"SELECT id, msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
 			network.uuid,
 			channel.name.toLowerCase(),
 			limit
 		);
 
-		return rows.reverse().map((row): Message => {
+		// Track max ID so we can update client.idMsg
+		let maxId = 0;
+
+		const messages = rows.reverse().map((row): Message => {
 			const r = row as Record<string, unknown>;
 			const msg = JSON.parse(r.msg as string);
 			msg.time = r.time;
 			msg.type = r.type;
 
 			const newMsg = new Msg(msg);
-			newMsg.id = nextID();
+
+			// Use ID from stored JSON if available (new messages)
+			// Fall back to SQLite row ID for old messages without stored ID
+			if (typeof msg.id === "number") {
+				newMsg.id = msg.id;
+			} else {
+				newMsg.id = r.id as number;
+			}
+
+			if (newMsg.id > maxId) {
+				maxId = newMsg.id;
+			}
 
 			return newMsg;
 		});
+
+		// Ensure client.idMsg is higher than any loaded message ID
+		// by calling nextID until it surpasses maxId
+		while (nextID() <= maxId) {
+			// Keep incrementing until we're past the max
+		}
+
+		return messages;
 	}
 
 	async search(query: SearchQuery): Promise<SearchResponse> {
@@ -551,7 +574,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
 
 		let select =
-			"SELECT msg, type, time, network, channel FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
+			"SELECT id, msg, type, time, network, channel FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
 		const params: unknown[] = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
@@ -573,7 +596,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const rows = await this.serialize_fetchall(select, ...params);
 		return {
 			...query,
-			results: parseSearchRowsToMessages(query.offset, rows).reverse(),
+			results: parseSearchRowsToMessages(rows).reverse(),
 		};
 	}
 
@@ -724,7 +747,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 }
 
-function parseSearchRowsToMessages(id: number, rows: unknown[]) {
+function parseSearchRowsToMessages(rows: unknown[]) {
 	const messages: Msg[] = [];
 
 	for (const row of rows) {
@@ -734,9 +757,13 @@ function parseSearchRowsToMessages(id: number, rows: unknown[]) {
 		msg.type = r.type;
 		msg.networkUuid = r.network;
 		msg.channelName = r.channel;
-		msg.id = id;
+
+		// Use stored ID from JSON if available, fall back to SQLite row ID
+		if (typeof msg.id !== "number") {
+			msg.id = r.id as number;
+		}
+
 		messages.push(new Msg(msg));
-		id += 1;
 	}
 
 	return messages;

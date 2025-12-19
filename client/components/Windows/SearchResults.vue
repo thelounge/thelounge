@@ -253,11 +253,11 @@ export default defineComponent({
 				return;
 			}
 
-			// Navigate to the channel with the message time
-			// We use time instead of id because search results have different IDs
-			// than the messages stored in channel.messages
+			// Navigate to the channel with the message ID
+			// IDs are now consistent between search results and channel messages
+			// Pass time as fallback for older messages without stored IDs
 			const messageTime = new Date(message.time).getTime();
-			switchToChannel(channel.value, undefined, messageTime);
+			switchToChannel(channel.value, message.id, messageTime);
 		};
 
 		watch(
