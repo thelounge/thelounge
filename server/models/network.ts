@@ -524,7 +524,7 @@ class Network {
 			const transport = this.irc.connection.transport;
 
 			if (transport.socket) {
-				const isLocalhost = transport.socket.remoteAddress === "127.0.0.1";
+				const isLocalhost = ["127.0.0.1", "::1"].includes(transport.socket.remoteAddress);
 				const isAuthorized = transport.socket.encrypted && transport.socket.authorized;
 
 				status.connected = transport.isConnected();
