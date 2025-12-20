@@ -184,9 +184,6 @@ export default defineComponent({
 			const el = chat.value;
 			if (el) {
 				el.scrollTop = el.scrollHeight;
-				// Immediately mark as at bottom - don't wait for scroll event
-				isAtBottom.value = true;
-				props.channel.scrolledToBottom = true;
 			}
 		};
 
@@ -194,9 +191,12 @@ export default defineComponent({
 			const el = chat.value;
 			if (!el) return;
 
+			// Don't update if we're in the middle of jumping to a message
+			if (isJumpingToMessage.value) return;
+
 			const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-			// Use 50px threshold - more forgiving than 30px
-			isAtBottom.value = distanceFromBottom <= 50;
+			// Use 30px threshold - only consider "at bottom" when very close
+			isAtBottom.value = distanceFromBottom <= 30;
 			props.channel.scrolledToBottom = isAtBottom.value;
 		};
 
@@ -460,23 +460,21 @@ export default defineComponent({
 			}
 		);
 
-		// Watch for new messages - auto-scroll if at bottom
+		// Watch for new messages - auto-scroll only if user is at bottom
 		watch(
 			() => props.channel.messages.length,
 			async (newLen, oldLen) => {
-				// Skip if no previous value or if we're loading history
-				if (oldLen === undefined || isLoadingHistory.value) return;
+				// Skip if no previous value, loading history, or jumping to message
+				if (oldLen === undefined || isLoadingHistory.value || isJumpingToMessage.value) return;
 
-				// New messages added at end - check if we should scroll
-				if (newLen > oldLen && !isJumpingToMessage.value) {
+				// Only scroll if new messages were added (not history load)
+				if (newLen > oldLen) {
 					const el = chat.value;
 					if (!el) return;
 
-					// Check current scroll position directly (don't rely on debounced state)
+					// Only scroll if user is very close to bottom (within 30px)
 					const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-					const wasAtBottom = distanceFromBottom <= 150; // More forgiving threshold
-
-					if (wasAtBottom || isAtBottom.value) {
+					if (distanceFromBottom <= 30) {
 						await nextTick();
 						scrollToBottom();
 					}
@@ -490,8 +488,19 @@ export default defineComponent({
 			async () => {
 				// Reset state for new channel
 				isLoadingHistory.value = false;
-				isJumpingToMessage.value = false;
 				scrollStateBeforeHistoryLoad.value = null;
+
+				// Don't reset jump state or scroll if we have a focused message
+				// The focused watcher will handle scrolling
+				if (props.focused && !isNaN(props.focused)) {
+					isJumpingToMessage.value = true;
+					focusedMsgId.value = props.focused;
+					focusedMsgTime.value = props.focusedTime || null;
+					return;
+				}
+
+				// No focused message - reset and scroll to bottom
+				isJumpingToMessage.value = false;
 				focusedMsgId.value = null;
 				focusedMsgTime.value = null;
 				isAtBottom.value = true;
@@ -507,6 +516,9 @@ export default defineComponent({
 			() => props.focused,
 			async (focused) => {
 				if (focused && !isNaN(focused)) {
+					// Mark as jumping BEFORE any async work
+					isJumpingToMessage.value = true;
+					isAtBottom.value = false;
 					await nextTick();
 					await jumpToMessage(focused, props.focusedTime);
 				}
@@ -517,19 +529,24 @@ export default defineComponent({
 		onMounted(async () => {
 			eventbus.on("resize", handleResize);
 
-			// Handle initial focus from route
+			// Handle initial focus from route (search result navigation)
 			if (props.focused && !isNaN(props.focused)) {
+				isJumpingToMessage.value = true;
+				isAtBottom.value = false;
 				await nextTick();
 				await jumpToMessage(props.focused, props.focusedTime);
 			} else if (props.focusedTime && !isNaN(props.focusedTime)) {
+				isJumpingToMessage.value = true;
+				isAtBottom.value = false;
 				await nextTick();
 				await jumpToMessageByTime(props.focusedTime);
 			} else {
 				// Default: scroll to bottom
-				isAtBottom.value = true;
-				props.channel.scrolledToBottom = true;
 				await nextTick();
 				scrollToBottom();
+				// Set at bottom after scrolling
+				isAtBottom.value = true;
+				props.channel.scrolledToBottom = true;
 			}
 		});
 

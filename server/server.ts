@@ -492,6 +492,14 @@ function initializeClient(
 		openChannel = client.lastActiveChannel;
 	}
 
+	// If no valid active channel, default to the first channel of the first network
+	if (!openChannel || openChannel < 0) {
+		const firstNetwork = client.networks[0];
+		if (firstNetwork && firstNetwork.channels.length > 0) {
+			openChannel = firstNetwork.channels[0].id;
+		}
+	}
+
 	if (Config.values.fileUpload.enable) {
 		new Uploader(socket);
 	}
