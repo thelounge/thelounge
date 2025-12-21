@@ -1,20 +1,19 @@
 <template>
 	<div v-if="queries.length > 0" class="dm-section" :class="{ collapsed: isCollapsed }">
-		<div class="dm-section-header" @click.stop="toggleCollapsed">
+		<div class="channel-list-item dm-section-header" :title="'Total Queries: ' + queries.length + 'Total Unread: ' + totalUnread" @click.stop="toggleCollapsed">
 			<span class="dm-collapse-icon" :class="{ 'is-collapsed': isCollapsed }"></span>
 			<span class="dm-section-title">Direct Messages</span>
-			<span class="dm-count">({{ queries.length }})</span>
 			<span v-if="totalUnread > 0" class="dm-unread-badge">{{ totalUnread }}</span>
 		</div>
 
 		<template v-if="!isCollapsed">
-			<div v-if="queries.length > 2" class="dm-filter">
+			<div v-if="queries.length >= 8" class="dm-filter">
 				<input
 					ref="filterInput"
 					v-model="filterText"
 					type="text"
 					placeholder="Filter DMs..."
-					class="dm-filter-input"
+					class="dm-filter-input input"
 				/>
 			</div>
 
@@ -44,14 +43,13 @@
 							:network="network"
 							:active="store.state.activeChannel && channel === store.state.activeChannel.channel"
 						/>
-						<span v-if="channel.pinned" class="pin-indicator" title="Pinned"></span>
 					</div>
 				</template>
 			</Draggable>
 
 			<div
 				v-if="hasHiddenChannels"
-				class="dm-show-more"
+				class="channel-list-item dm-show-more"
 				@click="showAll = !showAll"
 			>
 				{{ showAll ? 'Show less' : `Show ${hiddenCount} more...` }}
@@ -66,10 +64,7 @@
 }
 
 .dm-section-header {
-	display: flex;
 	align-items: center;
-	padding: 6px 14px;
-	cursor: pointer;
 	color: rgba(255, 255, 255, 0.7);
 	font-size: 0.85em;
 	text-transform: uppercase;
@@ -77,15 +72,10 @@
 	user-select: none;
 }
 
-.dm-section-header:hover {
-	color: rgba(255, 255, 255, 0.9);
-	background-color: rgba(255, 255, 255, 0.05);
-}
-
 .dm-collapse-icon {
 	font-family: FontAwesome;
-	font-size: 0.8em;
-	margin-right: 8px;
+	margin: 0 11px 0 2px;
+	font-size: initial;
 	width: 12px;
 	opacity: 0.8;
 	transition: transform 0.2s ease;
@@ -105,38 +95,54 @@
 
 .dm-section-title {
 	flex: 1;
-}
-
-.dm-count {
-	margin-left: 4px;
-	opacity: 0.7;
+	cursor: pointer;
+	display: flex;
+	margin-right: 5px;
+	position: relative;
+	font-size: 13px;
+	font-weight: 700;
+	text-transform: capitalize;
 }
 
 .dm-unread-badge {
-	background-color: #e74c3c;
-	color: white;
-	font-size: 0.75em;
-	padding: 2px 6px;
-	border-radius: 10px;
-	margin-left: 8px;
+	background-color: rgb(255, 255, 255);
+	color: rgb(0, 0, 0);
+	border-radius: 3px;
+	font-size: 10px;
+	padding: 4px 5.8px;
+	margin: 0;
+	line-height: 1.2;
 }
 
 .dm-filter {
-	padding: 4px 14px 8px;
+	margin: 8px;
+	position: relative;
+
+	&::before {
+		bottom: 0;
+		color: rgba(255, 255, 255, 0.349);
+		content: "\f0b0";
+		font-family: FontAwesome;
+		line-height: 35px !important;
+		pointer-events: none;
+		position: absolute;
+		right: 8px;
+		top: 0;
+	}
 }
 
 .dm-filter-input {
+	appearance: none;
+	background-color: rgba(255, 255, 255, 0.102);
+	border: 0;
+	color: rgb(255, 255, 255);
+	margin: 0;
+	padding-right: 35px;
 	width: 100%;
-	padding: 6px 10px;
-	border: none;
-	border-radius: 4px;
-	background-color: rgba(255, 255, 255, 0.1);
-	color: white;
-	font-size: 0.9em;
 }
 
 .dm-filter-input::placeholder {
-	color: rgba(255, 255, 255, 0.4);
+	color: rgba(255, 255, 255, 0.35);
 }
 
 .dm-filter-input:focus {
@@ -149,16 +155,9 @@
 }
 
 .dm-show-more {
-	padding: 8px 14px;
 	color: rgba(255, 255, 255, 0.5);
 	font-size: 0.85em;
-	cursor: pointer;
-	text-align: center;
-}
-
-.dm-show-more:hover {
-	color: rgba(255, 255, 255, 0.8);
-	background-color: rgba(255, 255, 255, 0.05);
+	justify-content: center;
 }
 
 /* DM channel wrapper for pinned indicator */
@@ -167,23 +166,14 @@
 }
 
 .dm-channel-wrapper.is-pinned :deep(.channel-list-item) {
-	padding-right: 45px;
-}
+	padding: 8px 14px;
 
-/* Pinned indicator */
-.pin-indicator {
-	position: absolute;
-	right: 28px;
-	top: 50%;
-	transform: translateY(-50%);
-	font-family: FontAwesome;
-	font-size: 0.75em;
-	color: rgba(255, 255, 255, 0.5);
-	pointer-events: none;
-}
-
-.pin-indicator::before {
-	content: "\f08d"; /* Font Awesome thumbtack icon */
+	/* Pinned indicator, replace message icon */
+	&::before {
+		content: "\f08d";
+		rotate: 45deg;
+		transform: translate(2px, 2px);
+	}
 }
 </style>
 

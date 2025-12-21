@@ -1,4 +1,5 @@
 @import url("../../node_modules/normalize.css/normalize.css");
+@import url("fontawesome6.css");
 @import url("fontawesome.css");
 @import url("../../node_modules/primer-tooltips/build/build.css");
 
@@ -44,12 +45,14 @@
 
 ::placeholder {
 	color: rgb(0 0 0 / 35%);
-	opacity: 1; /* fix opacity in Firefox */
+	opacity: 1;
+	/* fix opacity in Firefox */
 }
 
 html {
 	box-sizing: border-box;
-	-webkit-tap-highlight-color: transparent; /* remove tap highlight on touch devices */
+	-webkit-tap-highlight-color: transparent;
+	/* remove tap highlight on touch devices */
 }
 
 *,
@@ -88,7 +91,8 @@ abbr[title] {
 html,
 body {
 	height: 100%;
-	overscroll-behavior: none; /* prevent overscroll navigation actions */
+	overscroll-behavior: none;
+	/* prevent overscroll navigation actions */
 }
 
 body {
@@ -104,7 +108,8 @@ body {
 	  * Disable pull-to-refresh on mobile that conflicts with scrolling the message list.
 	  * See http://stackoverflow.com/a/29313685/1935861
 	  */
-	overflow: hidden; /* iOS Safari requires overflow rather than overflow-y */
+	overflow: hidden;
+	/* iOS Safari requires overflow rather than overflow-y */
 }
 
 body.force-no-select * {
@@ -180,7 +185,8 @@ kbd {
 	display: inline-block;
 	font-family: inherit;
 	line-height: 1em;
-	min-width: 28px; /* Ensure 1-char keys have the same width */
+	min-width: 28px;
+	/* Ensure 1-char keys have the same width */
 	margin: 0 1px;
 	padding: 4px 6px;
 	color: #444;
@@ -210,7 +216,8 @@ p {
 	text-transform: uppercase;
 	transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
 	word-spacing: 3px;
-	cursor: pointer; /* This is useful for `<button>` elements */
+	cursor: pointer;
+	/* This is useful for `<button>` elements */
 }
 
 .btn-small {
@@ -273,14 +280,15 @@ p {
 }
 
 #chat #js-copy-hack .msg[data-type="condensed"]:not(.closed) .msg,
-#chat #js-copy-hack > .msg {
+#chat #js-copy-hack>.msg {
 	display: block;
 }
 
 .only-copy {
 	font-size: 0;
 	opacity: 0;
-	width: 0.01px;  /* Must be non-zero to be the first selected character on Firefox */
+	width: 0.01px;
+	/* Must be non-zero to be the first selected character on Firefox */
 	display: inline-block;
 }
 
@@ -346,71 +354,185 @@ p {
 .password-container .reveal-password span,
 #sidebar .collapse-network-icon::before {
 	font: normal normal normal 14px/1 FontAwesome;
-	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
+	font-size: inherit;
+	/* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
-#viewport .lt::before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
-#viewport .rt::before { content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */ }
-#chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
-#chat button.mentions::before { content: "\f1fa"; /* https://fontawesome.com/icons/at?style=solid */ }
-#chat button.search::before { content: "\f002"; /* https://fontawesome.com/icons/search?style=solid */ }
-#chat button.close::before { content: "\f00d"; /* https://fontawesome.com/icons/times?style=solid */ }
+#viewport .lt::before {
+	content: "\f0c9";
+	/* http://fontawesome.io/icon/bars/ */
+}
 
-.context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
-.context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
-.context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
-.context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
-.context-menu-disconnect::before { content: "\f127"; /* https://fontawesome.com/icons/unlink?style=solid */ }
-.context-menu-connect::before { content: "\f0c1"; /* https://fontawesome.com/icons/link?style=solid */ }
-.context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
-.context-menu-action-ignore::before { content: "\f506"; /* https://fontawesome.com/icons/user-slash?style=solid  */ }
-.context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
-.context-menu-action-set-mode::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
-.context-menu-action-revoke-mode::before { content: "\f068"; /* http://fontawesome.io/icon/minus/ */ }
-.context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
-.context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
-.context-menu-clear-history::before { content: "\f1f8"; /* https://fontawesome.com/icons/trash?style=solid */ }
-.context-menu-mute::before { content: "\f6a9"; /* https://fontawesome.com/v5.15/icons/volume-mute?style=solid */ }
-.context-menu-pin::before { content: "\f08d"; /* https://fontawesome.com/icons/thumbtack?style=solid */ }
+#viewport .rt::before {
+	content: "\f0c0";
+	/* https://fontawesome.com/icons/users?style=solid */
+}
+
+#chat button.menu::before {
+	content: "\f142";
+	/* http://fontawesome.io/icon/ellipsis-v/ */
+}
+
+#chat button.mentions::before {
+	content: "\f1fa";
+	/* https://fontawesome.com/icons/at?style=solid */
+}
+
+#chat button.search::before {
+	content: "\f002";
+	/* https://fontawesome.com/icons/search?style=solid */
+}
+
+#chat button.close::before {
+	content: "\f00d";
+	/* https://fontawesome.com/icons/times?style=solid */
+}
+
+.context-menu-join::before {
+	content: "\f067";
+	/* http://fontawesome.io/icon/plus/ */
+}
+
+.context-menu-user::before {
+	content: "\f007";
+	/* http://fontawesome.io/icon/user/ */
+}
+
+.context-menu-close::before {
+	content: "\f00d";
+	/* http://fontawesome.io/icon/times/ */
+}
+
+.context-menu-list::before {
+	content: "\f03a";
+	/* http://fontawesome.io/icon/list/ */
+}
+
+.context-menu-disconnect::before {
+	content: "\f127";
+	/* https://fontawesome.com/icons/unlink?style=solid */
+}
+
+.context-menu-connect::before {
+	content: "\f0c1";
+	/* https://fontawesome.com/icons/link?style=solid */
+}
+
+.context-menu-action-whois::before {
+	content: "\f05a";
+	/* http://fontawesome.io/icon/info-circle/  */
+}
+
+.context-menu-action-ignore::before {
+	content: "\f506";
+	/* https://fontawesome.com/icons/user-slash?style=solid  */
+}
+
+.context-menu-action-kick::before {
+	content: "\f05e";
+	/* http://fontawesome.io/icon/ban/ */
+}
+
+.context-menu-action-set-mode::before {
+	content: "\f067";
+	/* http://fontawesome.io/icon/plus/ */
+}
+
+.context-menu-action-revoke-mode::before {
+	content: "\f068";
+	/* http://fontawesome.io/icon/minus/ */
+}
+
+.context-menu-network::before {
+	content: "\f233";
+	/* https://fontawesome.com/icons/server?style=solid */
+}
+
+.context-menu-edit::before {
+	content: "\f303";
+	/* https://fontawesome.com/icons/pencil-alt?style=solid */
+}
+
+.context-menu-clear-history::before {
+	content: "\f1f8";
+	/* https://fontawesome.com/icons/trash?style=solid */
+}
+
+.context-menu-mute::before {
+	content: "\f6a9";
+	/* https://fontawesome.com/v5.15/icons/volume-mute?style=solid */
+}
+
+.context-menu-pin::before {
+	content: "\f08d";
+	/* https://fontawesome.com/icons/thumbtack?style=solid */
+}
 
 .channel-list-item .not-secure-icon::before {
-	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
+	content: "\f071";
+	/* https://fontawesome.com/icons/exclamation-triangle?style=solid */
 }
 
 .channel-list-item .not-connected-icon::before,
 .channel-list-item .parted-channel-icon::before {
-	content: "\f127"; /* https://fontawesome.com/icons/unlink?style=solid */
+	content: "\f127";
+	/* https://fontawesome.com/icons/unlink?style=solid */
 }
 
 .context-menu-query::before,
 .context-menu-action-query::before,
 .channel-list-item[data-type="query"]::before {
-	content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */
+	content: "\f075";
+	/* https://fontawesome.com/icons/comment?style=solid */
 }
 
 .context-menu-chan::before,
-.channel-list-item[data-type="channel"]::before { content: "\f086"; /* http://fontawesome.io/icon/comments/ */ }
-
-.channel-list-item[data-type="special"]::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
-
-.channel-list-item.has-draft:not(.active, [data-type="lobby"])::before {
-	content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */
+.channel-list-item[data-type="channel"]::before {
+	content: "\f086";
+	/* http://fontawesome.io/icon/comments/ */
 }
 
-#footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+.channel-list-item[data-type="special"]::before {
+	content: "\f03a";
+	/* http://fontawesome.io/icon/list/ */
+}
 
-#footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
+.channel-list-item.has-draft:not(.active, [data-type="lobby"])::before {
+	content: "\f304";
+	/* https://fontawesome.com/icons/pen?style=solid */
+}
 
-#footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
+#footer .connect::before {
+	content: "\f067";
+	/* http://fontawesome.io/icon/plus/ */
+}
 
-#form #upload::before { content: "\f0c6"; /* https://fontawesome.com/icons/paperclip?style=solid */ }
-#form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
+#footer .settings::before {
+	content: "\f013";
+	/* http://fontawesome.io/icon/cog/ */
+}
+
+#footer .help::before {
+	content: "\f059";
+	/* http://fontawesome.io/icon/question/ */
+}
+
+#form #upload::before {
+	content: "\f0c6";
+	/* https://fontawesome.com/icons/paperclip?style=solid */
+}
+
+#form #submit::before {
+	content: "\f1d8";
+	/* http://fontawesome.io/icon/paper-plane/ */
+}
 
 #chat .msg[data-type="away"] .from::before,
 #chat .msg[data-type="back"] .from::before {
-	content: "\f017"; /* https://fontawesome.com/icons/clock?style=solid */
+	content: "\f017";
+	/* https://fontawesome.com/icons/clock?style=solid */
 	color: #7f8c8d;
 }
 
@@ -425,102 +547,131 @@ p {
 	text-align: center;
 }
 
-#help .website-link::before { content: "\f0ac"; /* http://fontawesome.io/icon/globe/ */ }
-#help .documentation-link::before { content: "\f19d"; /* http://fontawesome.io/icon/graduation-cap/ */ }
-#help .report-issue-link::before { content: "\f188"; /* http://fontawesome.io/icon/bug/ */ }
+#help .website-link::before {
+	content: "\f0ac";
+	/* http://fontawesome.io/icon/globe/ */
+}
+
+#help .documentation-link::before {
+	content: "\f19d";
+	/* http://fontawesome.io/icon/graduation-cap/ */
+}
+
+#help .report-issue-link::before {
+	content: "\f188";
+	/* http://fontawesome.io/icon/bug/ */
+}
 
 #chat .msg[data-type="invite"] .from::before {
-	content: "\f0e0"; /* https://fontawesome.com/icons/envelope?style=solid */
+	content: "\f0e0";
+	/* https://fontawesome.com/icons/envelope?style=solid */
 	color: #2ecc40;
 }
 
 #chat .msg[data-type="login"] .from::before {
-	content: "\f007"; /* https://fontawesome.com/icons/user?style=solid */
+	content: "\f007";
+	/* https://fontawesome.com/icons/user?style=solid */
 	color: #2ecc40;
 }
 
 #chat .msg[data-type="logout"] .from::before {
-	content: "\f007"; /* https://fontawesome.com/icons/user?style=solid */
+	content: "\f007";
+	/* https://fontawesome.com/icons/user?style=solid */
 	color: #ff4136;
 }
 
 #chat .msg[data-type="part"] .from::before,
 #chat .msg[data-type="quit"] .from::before {
-	content: "\f2f5"; /* https://fontawesome.com/icons/sign-out-alt?style=solid */
+	content: "\f2f5";
+	/* https://fontawesome.com/icons/sign-out-alt?style=solid */
 	color: #ff4136;
 	display: inline-block;
 	transform: rotate(180deg);
 }
 
 #chat .msg[data-type="topic"] .from::before {
-	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
+	content: "\f0a1";
+	/* http://fontawesome.io/icon/bullhorn/ */
 	color: #2ecc40;
 }
 
 #chat .msg[data-type="mode_channel"] .from::before,
 #chat .msg[data-type="mode_user"] .from::before,
 #chat .msg[data-type="mode"] .from::before {
-	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
+	content: "\f05a";
+	/* http://fontawesome.io/icon/info-circle/ */
 	color: #2ecc40;
 }
 
 #chat .msg[data-command="motd"] .from::before {
-	content: "\f02e"; /* https://fontawesome.com/icons/bookmark?style=solid */
+	content: "\f02e";
+	/* https://fontawesome.com/icons/bookmark?style=solid */
 	color: var(--body-color-muted);
 }
 
 #chat .msg[data-command="help"] .from::before {
-	content: "\f059"; /* https://fontawesome.com/icons/question-circle?style=solid */
+	content: "\f059";
+	/* https://fontawesome.com/icons/question-circle?style=solid */
 	color: var(--body-color-muted);
 }
 
 #chat .msg[data-command="info"] .from::before {
-	content: "\f05a"; /* https://fontawesome.com/icons/info-circle?style=solid */
+	content: "\f05a";
+	/* https://fontawesome.com/icons/info-circle?style=solid */
 	color: var(--body-color-muted);
 }
 
 #chat .msg[data-type="ctcp"] .from::before,
 #chat .msg[data-type="ctcp_request"] .from::before {
-	content: "\f15c"; /* https://fontawesome.com/icons/file-alt?style=solid */
+	content: "\f15c";
+	/* https://fontawesome.com/icons/file-alt?style=solid */
 	color: var(--body-color-muted);
 }
 
 #chat .msg[data-type="whois"] .from::before {
-	content: "\f007"; /* http://fontawesome.io/icon/user/ */
+	content: "\f007";
+	/* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
 #chat .msg[data-type="nick"] .from::before,
 #chat .msg[data-type="chghost"] .from::before {
-	content: "\f007"; /* http://fontawesome.io/icon/user/ */
+	content: "\f007";
+	/* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
 #chat .msg[data-type="join"] .from::before {
-	content: "\f2f6"; /* https://fontawesome.com/icons/sign-in-alt?style=solid */
+	content: "\f2f6";
+	/* https://fontawesome.com/icons/sign-in-alt?style=solid */
 	color: #2ecc40;
 }
 
 #chat .msg[data-type="kick"] .from::before {
-	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
+	content: "\f05e";
+	/* http://fontawesome.io/icon/ban/ */
 	color: #ff4136;
 }
 
 #chat .msg[data-type="raw"] .from::before {
-	content: "\f101"; /* https://fontawesome.com/icons/angle-double-right?style=solid */
+	content: "\f101";
+	/* https://fontawesome.com/icons/angle-double-right?style=solid */
 }
 
 #chat .msg.self[data-type="raw"] .from::before {
-	content: "\f359"; /* https://fontawesome.com/icons/arrow-alt-circle-left?style=solid */
+	content: "\f359";
+	/* https://fontawesome.com/icons/arrow-alt-circle-left?style=solid */
 	color: #2ecc40;
 }
 
 #chat .msg[data-type="action"] .from::before {
-	content: "\f005"; /* http://fontawesome.io/icon/star/ */
+	content: "\f005";
+	/* http://fontawesome.io/icon/star/ */
 }
 
 #chat .msg[data-type="plugin"] .from::before {
-	content: "\f1e6"; /* http://fontawesome.io/icon/plug/ */
+	content: "\f1e6";
+	/* http://fontawesome.io/icon/plug/ */
 	transform: rotate(45deg);
 	display: inline-block;
 	padding: 1px;
@@ -535,7 +686,8 @@ p {
 #chat .msg-statusmsg span::before,
 #chat .msg-shown-in-active span::before {
 	font-size: 10px;
-	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
+	content: "\f06e";
+	/* https://fontawesome.com/icons/eye?style=solid */
 }
 
 #chat .msg-statusmsg {
@@ -555,12 +707,14 @@ p {
 }
 
 #chat .toggle-button::after {
-	content: "\f0da"; /* http://fontawesome.io/icon/caret-right/ */
+	content: "\f0da";
+	/* http://fontawesome.io/icon/caret-right/ */
 }
 
 #chat .count::before {
 	color: #cfcfcf;
-	content: "\f002"; /* http://fontawesome.io/icon/search/ */
+	content: "\f002";
+	/* http://fontawesome.io/icon/search/ */
 	position: absolute;
 	right: 13px;
 	line-height: 45px;
@@ -568,24 +722,29 @@ p {
 
 #connect .extra-help::before,
 #settings .extra-help::before {
-	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
+	content: "\f059";
+	/* http://fontawesome.io/icon/question-circle/ */
 }
 
 #settings #play::before {
-	content: "\f028"; /* http://fontawesome.io/icon/volume-up/ */
+	content: "\f028";
+	/* http://fontawesome.io/icon/volume-up/ */
 	margin-right: 9px;
 }
 
 #image-viewer .previous-image-btn::before {
-	content: "\f104"; /* http://fontawesome.io/icon/angle-left/ */
+	content: "\f104";
+	/* http://fontawesome.io/icon/angle-left/ */
 }
 
 #image-viewer .next-image-btn::before {
-	content: "\f105"; /* http://fontawesome.io/icon/angle-right/ */
+	content: "\f105";
+	/* http://fontawesome.io/icon/angle-right/ */
 }
 
 #image-viewer .open-btn::before {
-	content: "\f35d"; /* https://fontawesome.com/icons/external-link-alt?style=solid */
+	content: "\f35d";
+	/* https://fontawesome.com/icons/external-link-alt?style=solid */
 }
 
 /* End icons */
@@ -634,7 +793,8 @@ p {
 #chat button.menu::before,
 #chat button.close::before {
 	width: 36px;
-	line-height: 36px; /* Fix alignment in Microsoft Edge */
+	line-height: 36px;
+	/* Fix alignment in Microsoft Edge */
 }
 
 /* Channel list button stays fixed when scrolling... */
@@ -660,7 +820,8 @@ p {
 	border: 2px solid var(--window-bg-color);
 	opacity: 0;
 	transition: opacity 0.2s;
-	background-clip: padding-box; /* Fix border-radius bleeding color */
+	background-clip: padding-box;
+	/* Fix border-radius bleeding color */
 }
 
 #viewport.notified .lt::after {
@@ -677,7 +838,8 @@ p {
 	width: 220px;
 	max-height: 100%;
 	will-change: transform;
-	color: #b7c5d1; /* same as .channel-list-item color */
+	color: #b7c5d1;
+	/* same as .channel-list-item color */
 }
 
 #viewport.menu-open #sidebar {
@@ -730,7 +892,8 @@ p {
 background on hover (unless active) */
 .channel-list-item:hover,
 #footer button:hover {
-	background-color: rgb(48 62 74 / 50%); /* #303e4a x 50% alpha */
+	background-color: rgb(48 62 74 / 50%);
+	/* #303e4a x 50% alpha */
 }
 
 /* Darker background and default cursor for active channels */
@@ -947,7 +1110,8 @@ background on hover (unless active) */
 }
 
 #sidebar .network .collapse-network-icon::before {
-	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
+	content: "\f0d7";
+	/* http://fontawesome.io/icon/caret-down/ */
 	color: #fff;
 }
 
@@ -1312,7 +1476,8 @@ textarea.input {
 }
 
 .scroll-down-arrow::after {
-	content: "\f107"; /* https://fontawesome.com/icons/angle-down?style=solid */
+	content: "\f107";
+	/* https://fontawesome.com/icons/angle-down?style=solid */
 }
 
 .userlist-open .chat-view[data-type="channel"] .scroll-down {
@@ -1330,7 +1495,8 @@ textarea.input {
 
 #chat .msg {
 	word-wrap: break-word;
-	word-break: break-word; /* Webkit-specific */
+	word-break: break-word;
+	/* Webkit-specific */
 	display: flex;
 	align-items: flex-start;
 	position: relative;
@@ -1400,7 +1566,8 @@ textarea.input {
 	padding-left: 10px;
 	width: 55px;
 	font-variant-numeric: tabular-nums;
-	box-sizing: content-box; /* highlights have a border-left */
+	box-sizing: content-box;
+	/* highlights have a border-left */
 }
 
 #chat.time-12h .time,
@@ -1427,8 +1594,10 @@ textarea.input {
 	padding-left: 10px;
 	padding-right: 6px;
 	border-left: 1px solid #f6f6f6;
-	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
-	text-align: left; /* so RTL text will still be aligned left, not right */
+	overflow: hidden;
+	/* Prevents Zalgo text to expand beyond messages */
+	text-align: left;
+	/* so RTL text will still be aligned left, not right */
 }
 
 #chat .msg[data-type="unhandled"] .from {
@@ -1457,38 +1626,133 @@ textarea.input {
 	color: #50a656;
 }
 
-.user.color-1 { color: #107ead; }
-.user.color-2 { color: #a86500; }
-.user.color-3 { color: #008a3c; }
-.user.color-4 { color: #e00096; }
-.user.color-5 { color: #f0000c; }
-.user.color-6 { color: #000094; }
-.user.color-7 { color: #006441; }
-.user.color-8 { color: #00566e; }
-.user.color-9 { color: #e6006b; }
-.user.color-10 { color: #0d8766; }
-.user.color-11 { color: #006b3b; }
-.user.color-12 { color: #00857e; }
-.user.color-13 { color: #00465b; }
-.user.color-14 { color: #eb005a; }
-.user.color-15 { color: #e62600; }
-.user.color-16 { color: #0f8546; }
-.user.color-17 { color: #e60067; }
-.user.color-18 { color: #eb002b; }
-.user.color-19 { color: #eb003f; }
-.user.color-20 { color: #007a56; }
-.user.color-21 { color: #095092; }
-.user.color-22 { color: #000bde; }
-.user.color-23 { color: #008577; }
-.user.color-24 { color: #00367d; }
-.user.color-25 { color: #007e9e; }
-.user.color-26 { color: #006119; }
-.user.color-27 { color: #007ea8; }
-.user.color-28 { color: #3c8500; }
-.user.color-29 { color: #e6007e; }
-.user.color-30 { color: #c75300; }
-.user.color-31 { color: #eb0400; }
-.user.color-32 { color: #e60082; }
+.user.color-1 {
+	color: #107ead;
+}
+
+.user.color-2 {
+	color: #a86500;
+}
+
+.user.color-3 {
+	color: #008a3c;
+}
+
+.user.color-4 {
+	color: #e00096;
+}
+
+.user.color-5 {
+	color: #f0000c;
+}
+
+.user.color-6 {
+	color: #000094;
+}
+
+.user.color-7 {
+	color: #006441;
+}
+
+.user.color-8 {
+	color: #00566e;
+}
+
+.user.color-9 {
+	color: #e6006b;
+}
+
+.user.color-10 {
+	color: #0d8766;
+}
+
+.user.color-11 {
+	color: #006b3b;
+}
+
+.user.color-12 {
+	color: #00857e;
+}
+
+.user.color-13 {
+	color: #00465b;
+}
+
+.user.color-14 {
+	color: #eb005a;
+}
+
+.user.color-15 {
+	color: #e62600;
+}
+
+.user.color-16 {
+	color: #0f8546;
+}
+
+.user.color-17 {
+	color: #e60067;
+}
+
+.user.color-18 {
+	color: #eb002b;
+}
+
+.user.color-19 {
+	color: #eb003f;
+}
+
+.user.color-20 {
+	color: #007a56;
+}
+
+.user.color-21 {
+	color: #095092;
+}
+
+.user.color-22 {
+	color: #000bde;
+}
+
+.user.color-23 {
+	color: #008577;
+}
+
+.user.color-24 {
+	color: #00367d;
+}
+
+.user.color-25 {
+	color: #007e9e;
+}
+
+.user.color-26 {
+	color: #006119;
+}
+
+.user.color-27 {
+	color: #007ea8;
+}
+
+.user.color-28 {
+	color: #3c8500;
+}
+
+.user.color-29 {
+	color: #e6007e;
+}
+
+.user.color-30 {
+	color: #c75300;
+}
+
+.user.color-31 {
+	color: #eb0400;
+}
+
+.user.color-32 {
+	color: #e60082;
+}
 
 #chat .self .content {
 	color: var(--body-color-muted);
@@ -1617,14 +1881,18 @@ textarea.input {
 	user-select: none;
 }
 
-#chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */
-#chat .toggle-button.opened, /* Thumbnail toggle */
-#chat .msg:not(.closed)[data-type="condensed"] .toggle-button { /* Expanded status message toggle */
+#chat .toggle-content.opened .more-caret,
+/* Expand/Collapse link previews */
+#chat .toggle-button.opened,
+/* Thumbnail toggle */
+#chat .msg:not(.closed)[data-type="condensed"] .toggle-button {
+	/* Expanded status message toggle */
 	transform: rotate(90deg);
 }
 
 #chat .preview {
-	display: flex; /* Fix odd margin added by inline-flex in .toggle-content */
+	display: flex;
+	/* Fix odd margin added by inline-flex in .toggle-content */
 }
 
 #chat .toggle-content {
@@ -1726,7 +1994,8 @@ textarea.input {
 }
 
 #chat .toggle-content .more-caret::before {
-	content: "\f0da"; /* https://fontawesome.com/icons/caret-right?style=solid */
+	content: "\f0da";
+	/* https://fontawesome.com/icons/caret-right?style=solid */
 }
 
 #chat audio {
@@ -1877,7 +2146,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #loading .logo-inverted,
 .window .logo-inverted {
-	display: none; /* In dark themes, inverted logo must be used instead */
+	display: none;
+	/* In dark themes, inverted logo must be used instead */
 }
 
 #sign-in label {
@@ -1900,8 +2170,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: flex;
 }
 
-#connect .connect-row > .input,
-#connect .connect-row > .input-wrap {
+#connect .connect-row>.input,
+#connect .connect-row>.input-wrap {
 	flex-grow: 1;
 }
 
@@ -2054,15 +2324,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 .password-container .reveal-password span::before {
-	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
+	content: "\f06e";
+	/* https://fontawesome.com/icons/eye?style=solid */
 }
 
 .topic-container .save-topic span::before {
-	content: "\f00c"; /* https://fontawesome.com/icons/check?style=solid */
+	content: "\f00c";
+	/* https://fontawesome.com/icons/check?style=solid */
 }
 
 .password-container .reveal-password-visible span::before {
-	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
+	content: "\f070";
+	/* https://fontawesome.com/icons/eye-slash?style=solid */
 	color: #ff4136;
 }
 
@@ -2166,7 +2439,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #version-checker.loading::before {
-	content: "\f253"; /* https://fontawesome.com/icons/hourglass-end?style=solid */
+	content: "\f253";
+	/* https://fontawesome.com/icons/hourglass-end?style=solid */
 }
 
 #version-checker.new-version,
@@ -2177,7 +2451,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #version-checker.new-version::before,
 #version-checker.new-packages::before {
-	content: "\f164"; /* https://fontawesome.com/icons/thumbs-up?style=solid */
+	content: "\f164";
+	/* https://fontawesome.com/icons/thumbs-up?style=solid */
 }
 
 #version-checker.error {
@@ -2186,7 +2461,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #version-checker.error::before {
-	content: "\f06a"; /* http://fontawesome.io/icon/exclamation-circle/ */
+	content: "\f06a";
+	/* http://fontawesome.io/icon/exclamation-circle/ */
 }
 
 #version-checker.up-to-date {
@@ -2195,7 +2471,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #version-checker.up-to-date::before {
-	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
+	content: "\f00c";
+	/* http://fontawesome.io/icon/check/ */
 }
 
 #upload-progressbar {
@@ -2205,7 +2482,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	height: 2px;
 	visibility: hidden;
 	position: absolute;
-	top: -1px; /* put it on top of #form's border */
+	top: -1px;
+	/* put it on top of #form's border */
 	left: 0;
 }
 
@@ -2259,10 +2537,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: transparent;
 	border: none;
 	font: inherit;
-	min-height: 19px; /* Required when computing input height at char deletion */
+	min-height: 19px;
+	/* Required when computing input height at char deletion */
 	height: 19px;
-	max-height: 95px; /* min-height/height x number of lines maximum */
-	line-height: 19px; /* should match height */
+	max-height: 95px;
+	/* min-height/height x number of lines maximum */
+	line-height: 19px;
+	/* should match height */
 	outline: none;
 	margin: 5px;
 	padding: 0;
@@ -2305,7 +2586,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	pointer-events: none;
 }
 
-#context-menu-container.passthrough > * {
+#context-menu-container.passthrough>* {
 	pointer-events: auto;
 }
 
@@ -2385,206 +2666,798 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
   * IRC Message Styling
   * Colours are credit to http://clrs.cc/
   */
-.irc-fg0 { color: #fff; }
-.irc-fg1 { color: #000; }
-.irc-fg2 { color: #001f3f; }
-.irc-fg3 { color: #2ecc40; }
-.irc-fg4 { color: #ff4136; }
-.irc-fg5 { color: #85144b; }
-.irc-fg6 { color: #b10dc9; }
-.irc-fg7 { color: #ff851b; }
-.irc-fg8 { color: #ffdc00; }
-.irc-fg9 { color: #01ff70; }
-.irc-fg10 { color: #39cccc; }
-.irc-fg11 { color: #7fdbff; }
-.irc-fg12 { color: #0074d9; }
-.irc-fg13 { color: #f012be; }
-.irc-fg14 { color: #aaa; }
-.irc-fg15 { color: #ddd; }
-.irc-bg0 { background: #fff; }
-.irc-bg1 { background: #000; }
-.irc-bg2 { background: #001f3f; }
-.irc-bg3 { background: #2ecc40; }
-.irc-bg4 { background: #ff4136; }
-.irc-bg5 { background: #85144b; }
-.irc-bg6 { background: #b10dc9; }
-.irc-bg7 { background: #ff851b; }
-.irc-bg8 { background: #ffdc00; }
-.irc-bg9 { background: #01ff70; }
-.irc-bg10 { background: #39cccc; }
-.irc-bg11 { background: #7fdbff; }
-.irc-bg12 { background: #0074d9; }
-.irc-bg13 { background: #f012be; }
-.irc-bg14 { background: #aaa; }
-.irc-bg15 { background: #ddd; }
+.irc-fg0 {
+	color: #fff;
+}
+
+.irc-fg1 {
+	color: #000;
+}
+
+.irc-fg2 {
+	color: #001f3f;
+}
+
+.irc-fg3 {
+	color: #2ecc40;
+}
+
+.irc-fg4 {
+	color: #ff4136;
+}
+
+.irc-fg5 {
+	color: #85144b;
+}
+
+.irc-fg6 {
+	color: #b10dc9;
+}
+
+.irc-fg7 {
+	color: #ff851b;
+}
+
+.irc-fg8 {
+	color: #ffdc00;
+}
+
+.irc-fg9 {
+	color: #01ff70;
+}
+
+.irc-fg10 {
+	color: #39cccc;
+}
+
+.irc-fg11 {
+	color: #7fdbff;
+}
+
+.irc-fg12 {
+	color: #0074d9;
+}
+
+.irc-fg13 {
+	color: #f012be;
+}
+
+.irc-fg14 {
+	color: #aaa;
+}
+
+.irc-fg15 {
+	color: #ddd;
+}
+
+.irc-bg0 {
+	background: #fff;
+}
+
+.irc-bg1 {
+	background: #000;
+}
+
+.irc-bg2 {
+	background: #001f3f;
+}
+
+.irc-bg3 {
+	background: #2ecc40;
+}
+
+.irc-bg4 {
+	background: #ff4136;
+}
+
+.irc-bg5 {
+	background: #85144b;
+}
+
+.irc-bg6 {
+	background: #b10dc9;
+}
+
+.irc-bg7 {
+	background: #ff851b;
+}
+
+.irc-bg8 {
+	background: #ffdc00;
+}
+
+.irc-bg9 {
+	background: #01ff70;
+}
+
+.irc-bg10 {
+	background: #39cccc;
+}
+
+.irc-bg11 {
+	background: #7fdbff;
+}
+
+.irc-bg12 {
+	background: #0074d9;
+}
+
+.irc-bg13 {
+	background: #f012be;
+}
+
+.irc-bg14 {
+	background: #aaa;
+}
+
+.irc-bg15 {
+	background: #ddd;
+}
 
 /* https://modern.ircdocs.horse/formatting.html#colors-16-98 */
-.irc-fg16 { color: #470000; }
-.irc-fg17 { color: #472100; }
-.irc-fg18 { color: #474700; }
-.irc-fg19 { color: #324700; }
-.irc-fg20 { color: #004700; }
-.irc-fg21 { color: #00472c; }
-.irc-fg22 { color: #004747; }
-.irc-fg23 { color: #002747; }
-.irc-fg24 { color: #000047; }
-.irc-fg25 { color: #2e0047; }
-.irc-fg26 { color: #470047; }
-.irc-fg27 { color: #47002a; }
-.irc-fg28 { color: #740000; }
-.irc-fg29 { color: #743a00; }
-.irc-fg30 { color: #747400; }
-.irc-fg31 { color: #517400; }
-.irc-fg32 { color: #007400; }
-.irc-fg33 { color: #007449; }
-.irc-fg34 { color: #007474; }
-.irc-fg35 { color: #004074; }
-.irc-fg36 { color: #000074; }
-.irc-fg37 { color: #4b0074; }
-.irc-fg38 { color: #740074; }
-.irc-fg39 { color: #740045; }
-.irc-fg40 { color: #b50000; }
-.irc-fg41 { color: #b56300; }
-.irc-fg42 { color: #b5b500; }
-.irc-fg43 { color: #7db500; }
-.irc-fg44 { color: #00b500; }
-.irc-fg45 { color: #00b571; }
-.irc-fg46 { color: #00b5b5; }
-.irc-fg47 { color: #0063b5; }
-.irc-fg48 { color: #0000b5; }
-.irc-fg49 { color: #7500b5; }
-.irc-fg50 { color: #b500b5; }
-.irc-fg51 { color: #b5006b; }
-.irc-fg52 { color: #f00; }
-.irc-fg53 { color: #ff8c00; }
-.irc-fg54 { color: #ff0; }
-.irc-fg55 { color: #b2ff00; }
-.irc-fg56 { color: #0f0; }
-.irc-fg57 { color: #00ffa0; }
-.irc-fg58 { color: #0ff; }
-.irc-fg59 { color: #008cff; }
-.irc-fg60 { color: #00f; }
-.irc-fg61 { color: #a500ff; }
-.irc-fg62 { color: #f0f; }
-.irc-fg63 { color: #ff0098; }
-.irc-fg64 { color: #ff5959; }
-.irc-fg65 { color: #ffb459; }
-.irc-fg66 { color: #ffff71; }
-.irc-fg67 { color: #cfff60; }
-.irc-fg68 { color: #6fff6f; }
-.irc-fg69 { color: #65ffc9; }
-.irc-fg70 { color: #6dffff; }
-.irc-fg71 { color: #59b4ff; }
-.irc-fg72 { color: #5959ff; }
-.irc-fg73 { color: #c459ff; }
-.irc-fg74 { color: #f6f; }
-.irc-fg75 { color: #ff59bc; }
-.irc-fg76 { color: #ff9c9c; }
-.irc-fg77 { color: #ffd39c; }
-.irc-fg78 { color: #ffff9c; }
-.irc-fg79 { color: #e2ff9c; }
-.irc-fg80 { color: #9cff9c; }
-.irc-fg81 { color: #9cffdb; }
-.irc-fg82 { color: #9cffff; }
-.irc-fg83 { color: #9cd3ff; }
-.irc-fg84 { color: #9c9cff; }
-.irc-fg85 { color: #dc9cff; }
-.irc-fg86 { color: #ff9cff; }
-.irc-fg87 { color: #ff94d3; }
-.irc-fg88 { color: #000; }
-.irc-fg89 { color: #131313; }
-.irc-fg90 { color: #282828; }
-.irc-fg91 { color: #363636; }
-.irc-fg92 { color: #4d4d4d; }
-.irc-fg93 { color: #656565; }
-.irc-fg94 { color: #818181; }
-.irc-fg95 { color: #9f9f9f; }
-.irc-fg96 { color: #bcbcbc; }
-.irc-fg97 { color: #e2e2e2; }
-.irc-fg98 { color: #fff; }
-.irc-bg16 { background-color: #470000; }
-.irc-bg17 { background-color: #472100; }
-.irc-bg18 { background-color: #474700; }
-.irc-bg19 { background-color: #324700; }
-.irc-bg20 { background-color: #004700; }
-.irc-bg21 { background-color: #00472c; }
-.irc-bg22 { background-color: #004747; }
-.irc-bg23 { background-color: #002747; }
-.irc-bg24 { background-color: #000047; }
-.irc-bg25 { background-color: #2e0047; }
-.irc-bg26 { background-color: #470047; }
-.irc-bg27 { background-color: #47002a; }
-.irc-bg28 { background-color: #740000; }
-.irc-bg29 { background-color: #743a00; }
-.irc-bg30 { background-color: #747400; }
-.irc-bg31 { background-color: #517400; }
-.irc-bg32 { background-color: #007400; }
-.irc-bg33 { background-color: #007449; }
-.irc-bg34 { background-color: #007474; }
-.irc-bg35 { background-color: #004074; }
-.irc-bg36 { background-color: #000074; }
-.irc-bg37 { background-color: #4b0074; }
-.irc-bg38 { background-color: #740074; }
-.irc-bg39 { background-color: #740045; }
-.irc-bg40 { background-color: #b50000; }
-.irc-bg41 { background-color: #b56300; }
-.irc-bg42 { background-color: #b5b500; }
-.irc-bg43 { background-color: #7db500; }
-.irc-bg44 { background-color: #00b500; }
-.irc-bg45 { background-color: #00b571; }
-.irc-bg46 { background-color: #00b5b5; }
-.irc-bg47 { background-color: #0063b5; }
-.irc-bg48 { background-color: #0000b5; }
-.irc-bg49 { background-color: #7500b5; }
-.irc-bg50 { background-color: #b500b5; }
-.irc-bg51 { background-color: #b5006b; }
-.irc-bg52 { background-color: #f00; }
-.irc-bg53 { background-color: #ff8c00; }
-.irc-bg54 { background-color: #ff0; }
-.irc-bg55 { background-color: #b2ff00; }
-.irc-bg56 { background-color: #0f0; }
-.irc-bg57 { background-color: #00ffa0; }
-.irc-bg58 { background-color: #0ff; }
-.irc-bg59 { background-color: #008cff; }
-.irc-bg60 { background-color: #00f; }
-.irc-bg61 { background-color: #a500ff; }
-.irc-bg62 { background-color: #f0f; }
-.irc-bg63 { background-color: #ff0098; }
-.irc-bg64 { background-color: #ff5959; }
-.irc-bg65 { background-color: #ffb459; }
-.irc-bg66 { background-color: #ffff71; }
-.irc-bg67 { background-color: #cfff60; }
-.irc-bg68 { background-color: #6fff6f; }
-.irc-bg69 { background-color: #65ffc9; }
-.irc-bg70 { background-color: #6dffff; }
-.irc-bg71 { background-color: #59b4ff; }
-.irc-bg72 { background-color: #5959ff; }
-.irc-bg73 { background-color: #c459ff; }
-.irc-bg74 { background-color: #f6f; }
-.irc-bg75 { background-color: #ff59bc; }
-.irc-bg76 { background-color: #ff9c9c; }
-.irc-bg77 { background-color: #ffd39c; }
-.irc-bg78 { background-color: #ffff9c; }
-.irc-bg79 { background-color: #e2ff9c; }
-.irc-bg80 { background-color: #9cff9c; }
-.irc-bg81 { background-color: #9cffdb; }
-.irc-bg82 { background-color: #9cffff; }
-.irc-bg83 { background-color: #9cd3ff; }
-.irc-bg84 { background-color: #9c9cff; }
-.irc-bg85 { background-color: #dc9cff; }
-.irc-bg86 { background-color: #ff9cff; }
-.irc-bg87 { background-color: #ff94d3; }
-.irc-bg88 { background-color: #000; }
-.irc-bg89 { background-color: #131313; }
-.irc-bg90 { background-color: #282828; }
-.irc-bg91 { background-color: #363636; }
-.irc-bg92 { background-color: #4d4d4d; }
-.irc-bg93 { background-color: #656565; }
-.irc-bg94 { background-color: #818181; }
-.irc-bg95 { background-color: #9f9f9f; }
-.irc-bg96 { background-color: #bcbcbc; }
-.irc-bg97 { background-color: #e2e2e2; }
-.irc-bg98 { background-color: #fff; }
+.irc-fg16 {
+	color: #470000;
+}
+
+.irc-fg17 {
+	color: #472100;
+}
+
+.irc-fg18 {
+	color: #474700;
+}
+
+.irc-fg19 {
+	color: #324700;
+}
+
+.irc-fg20 {
+	color: #004700;
+}
+
+.irc-fg21 {
+	color: #00472c;
+}
+
+.irc-fg22 {
+	color: #004747;
+}
+
+.irc-fg23 {
+	color: #002747;
+}
+
+.irc-fg24 {
+	color: #000047;
+}
+
+.irc-fg25 {
+	color: #2e0047;
+}
+
+.irc-fg26 {
+	color: #470047;
+}
+
+.irc-fg27 {
+	color: #47002a;
+}
+
+.irc-fg28 {
+	color: #740000;
+}
+
+.irc-fg29 {
+	color: #743a00;
+}
+
+.irc-fg30 {
+	color: #747400;
+}
+
+.irc-fg31 {
+	color: #517400;
+}
+
+.irc-fg32 {
+	color: #007400;
+}
+
+.irc-fg33 {
+	color: #007449;
+}
+
+.irc-fg34 {
+	color: #007474;
+}
+
+.irc-fg35 {
+	color: #004074;
+}
+
+.irc-fg36 {
+	color: #000074;
+}
+
+.irc-fg37 {
+	color: #4b0074;
+}
+
+.irc-fg38 {
+	color: #740074;
+}
+
+.irc-fg39 {
+	color: #740045;
+}
+
+.irc-fg40 {
+	color: #b50000;
+}
+
+.irc-fg41 {
+	color: #b56300;
+}
+
+.irc-fg42 {
+	color: #b5b500;
+}
+
+.irc-fg43 {
+	color: #7db500;
+}
+
+.irc-fg44 {
+	color: #00b500;
+}
+
+.irc-fg45 {
+	color: #00b571;
+}
+
+.irc-fg46 {
+	color: #00b5b5;
+}
+
+.irc-fg47 {
+	color: #0063b5;
+}
+
+.irc-fg48 {
+	color: #0000b5;
+}
+
+.irc-fg49 {
+	color: #7500b5;
+}
+
+.irc-fg50 {
+	color: #b500b5;
+}
+
+.irc-fg51 {
+	color: #b5006b;
+}
+
+.irc-fg52 {
+	color: #f00;
+}
+
+.irc-fg53 {
+	color: #ff8c00;
+}
+
+.irc-fg54 {
+	color: #ff0;
+}
+
+.irc-fg55 {
+	color: #b2ff00;
+}
+
+.irc-fg56 {
+	color: #0f0;
+}
+
+.irc-fg57 {
+	color: #00ffa0;
+}
+
+.irc-fg58 {
+	color: #0ff;
+}
+
+.irc-fg59 {
+	color: #008cff;
+}
+
+.irc-fg60 {
+	color: #00f;
+}
+
+.irc-fg61 {
+	color: #a500ff;
+}
+
+.irc-fg62 {
+	color: #f0f;
+}
+
+.irc-fg63 {
+	color: #ff0098;
+}
+
+.irc-fg64 {
+	color: #ff5959;
+}
+
+.irc-fg65 {
+	color: #ffb459;
+}
+
+.irc-fg66 {
+	color: #ffff71;
+}
+
+.irc-fg67 {
+	color: #cfff60;
+}
+
+.irc-fg68 {
+	color: #6fff6f;
+}
+
+.irc-fg69 {
+	color: #65ffc9;
+}
+
+.irc-fg70 {
+	color: #6dffff;
+}
+
+.irc-fg71 {
+	color: #59b4ff;
+}
+
+.irc-fg72 {
+	color: #5959ff;
+}
+
+.irc-fg73 {
+	color: #c459ff;
+}
+
+.irc-fg74 {
+	color: #f6f;
+}
+
+.irc-fg75 {
+	color: #ff59bc;
+}
+
+.irc-fg76 {
+	color: #ff9c9c;
+}
+
+.irc-fg77 {
+	color: #ffd39c;
+}
+
+.irc-fg78 {
+	color: #ffff9c;
+}
+
+.irc-fg79 {
+	color: #e2ff9c;
+}
+
+.irc-fg80 {
+	color: #9cff9c;
+}
+
+.irc-fg81 {
+	color: #9cffdb;
+}
+
+.irc-fg82 {
+	color: #9cffff;
+}
+
+.irc-fg83 {
+	color: #9cd3ff;
+}
+
+.irc-fg84 {
+	color: #9c9cff;
+}
+
+.irc-fg85 {
+	color: #dc9cff;
+}
+
+.irc-fg86 {
+	color: #ff9cff;
+}
+
+.irc-fg87 {
+	color: #ff94d3;
+}
+
+.irc-fg88 {
+	color: #000;
+}
+
+.irc-fg89 {
+	color: #131313;
+}
+
+.irc-fg90 {
+	color: #282828;
+}
+
+.irc-fg91 {
+	color: #363636;
+}
+
+.irc-fg92 {
+	color: #4d4d4d;
+}
+
+.irc-fg93 {
+	color: #656565;
+}
+
+.irc-fg94 {
+	color: #818181;
+}
+
+.irc-fg95 {
+	color: #9f9f9f;
+}
+
+.irc-fg96 {
+	color: #bcbcbc;
+}
+
+.irc-fg97 {
+	color: #e2e2e2;
+}
+
+.irc-fg98 {
+	color: #fff;
+}
+
+.irc-bg16 {
+	background-color: #470000;
+}
+
+.irc-bg17 {
+	background-color: #472100;
+}
+
+.irc-bg18 {
+	background-color: #474700;
+}
+
+.irc-bg19 {
+	background-color: #324700;
+}
+
+.irc-bg20 {
+	background-color: #004700;
+}
+
+.irc-bg21 {
+	background-color: #00472c;
+}
+
+.irc-bg22 {
+	background-color: #004747;
+}
+
+.irc-bg23 {
+	background-color: #002747;
+}
+
+.irc-bg24 {
+	background-color: #000047;
+}
+
+.irc-bg25 {
+	background-color: #2e0047;
+}
+
+.irc-bg26 {
+	background-color: #470047;
+}
+
+.irc-bg27 {
+	background-color: #47002a;
+}
+
+.irc-bg28 {
+	background-color: #740000;
+}
+
+.irc-bg29 {
+	background-color: #743a00;
+}
+
+.irc-bg30 {
+	background-color: #747400;
+}
+
+.irc-bg31 {
+	background-color: #517400;
+}
+
+.irc-bg32 {
+	background-color: #007400;
+}
+
+.irc-bg33 {
+	background-color: #007449;
+}
+
+.irc-bg34 {
+	background-color: #007474;
+}
+
+.irc-bg35 {
+	background-color: #004074;
+}
+
+.irc-bg36 {
+	background-color: #000074;
+}
+
+.irc-bg37 {
+	background-color: #4b0074;
+}
+
+.irc-bg38 {
+	background-color: #740074;
+}
+
+.irc-bg39 {
+	background-color: #740045;
+}
+
+.irc-bg40 {
+	background-color: #b50000;
+}
+
+.irc-bg41 {
+	background-color: #b56300;
+}
+
+.irc-bg42 {
+	background-color: #b5b500;
+}
+
+.irc-bg43 {
+	background-color: #7db500;
+}
+
+.irc-bg44 {
+	background-color: #00b500;
+}
+
+.irc-bg45 {
+	background-color: #00b571;
+}
+
+.irc-bg46 {
+	background-color: #00b5b5;
+}
+
+.irc-bg47 {
+	background-color: #0063b5;
+}
+
+.irc-bg48 {
+	background-color: #0000b5;
+}
+
+.irc-bg49 {
+	background-color: #7500b5;
+}
+
+.irc-bg50 {
+	background-color: #b500b5;
+}
+
+.irc-bg51 {
+	background-color: #b5006b;
+}
+
+.irc-bg52 {
+	background-color: #f00;
+}
+
+.irc-bg53 {
+	background-color: #ff8c00;
+}
+
+.irc-bg54 {
+	background-color: #ff0;
+}
+
+.irc-bg55 {
+	background-color: #b2ff00;
+}
+
+.irc-bg56 {
+	background-color: #0f0;
+}
+
+.irc-bg57 {
+	background-color: #00ffa0;
+}
+
+.irc-bg58 {
+	background-color: #0ff;
+}
+
+.irc-bg59 {
+	background-color: #008cff;
+}
+
+.irc-bg60 {
+	background-color: #00f;
+}
+
+.irc-bg61 {
+	background-color: #a500ff;
+}
+
+.irc-bg62 {
+	background-color: #f0f;
+}
+
+.irc-bg63 {
+	background-color: #ff0098;
+}
+
+.irc-bg64 {
+	background-color: #ff5959;
+}
+
+.irc-bg65 {
+	background-color: #ffb459;
+}
+
+.irc-bg66 {
+	background-color: #ffff71;
+}
+
+.irc-bg67 {
+	background-color: #cfff60;
+}
+
+.irc-bg68 {
+	background-color: #6fff6f;
+}
+
+.irc-bg69 {
+	background-color: #65ffc9;
+}
+
+.irc-bg70 {
+	background-color: #6dffff;
+}
+
+.irc-bg71 {
+	background-color: #59b4ff;
+}
+
+.irc-bg72 {
+	background-color: #5959ff;
+}
+
+.irc-bg73 {
+	background-color: #c459ff;
+}
+
+.irc-bg74 {
+	background-color: #f6f;
+}
+
+.irc-bg75 {
+	background-color: #ff59bc;
+}
+
+.irc-bg76 {
+	background-color: #ff9c9c;
+}
+
+.irc-bg77 {
+	background-color: #ffd39c;
+}
+
+.irc-bg78 {
+	background-color: #ffff9c;
+}
+
+.irc-bg79 {
+	background-color: #e2ff9c;
+}
+
+.irc-bg80 {
+	background-color: #9cff9c;
+}
+
+.irc-bg81 {
+	background-color: #9cffdb;
+}
+
+.irc-bg82 {
+	background-color: #9cffff;
+}
+
+.irc-bg83 {
+	background-color: #9cd3ff;
+}
+
+.irc-bg84 {
+	background-color: #9c9cff;
+}
+
+.irc-bg85 {
+	background-color: #dc9cff;
+}
+
+.irc-bg86 {
+	background-color: #ff9cff;
+}
+
+.irc-bg87 {
+	background-color: #ff94d3;
+}
+
+.irc-bg88 {
+	background-color: #000;
+}
+
+.irc-bg89 {
+	background-color: #131313;
+}
+
+.irc-bg90 {
+	background-color: #282828;
+}
+
+.irc-bg91 {
+	background-color: #363636;
+}
+
+.irc-bg92 {
+	background-color: #4d4d4d;
+}
+
+.irc-bg93 {
+	background-color: #656565;
+}
+
+.irc-bg94 {
+	background-color: #818181;
+}
+
+.irc-bg95 {
+	background-color: #9f9f9f;
+}
+
+.irc-bg96 {
+	background-color: #bcbcbc;
+}
+
+.irc-bg97 {
+	background-color: #e2e2e2;
+}
+
+.irc-bg98 {
+	background-color: #fff;
+}
 
 .irc-bold {
 	font-weight: bold;
@@ -2610,7 +3483,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	font-size: 12px;
 }
 
-@media (width >= 480px) {
+@media (width >=480px) {
+
 	/* Fade out for long usernames */
 	#chat .from {
 		padding-left: 10px;
@@ -2618,7 +3492,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 }
 
-@media (width <= 768px) {
+@media (width <=768px) {
+
 	/**
 	  * TODO Replace this with `@media (hover: hover)` when Firefox supports it
 	  * See:
@@ -2724,7 +3599,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 }
 
-@media (width <= 479px) {
+@media (width <=479px) {
 	.container {
 		max-width: 100%;
 		margin: 0;
@@ -2742,8 +3617,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		flex-direction: column;
 	}
 
-	#connect .connect-row > .input,
-	#connect .connect-row > .input-wrap {
+	#connect .connect-row>.input,
+	#connect .connect-row>.input-wrap {
 		flex-grow: 1;
 	}
 
@@ -2910,7 +3785,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 1;
 }
 
-#image-viewer > img {
+#image-viewer>img {
 	cursor: grab;
 	position: absolute;
 	transform-origin: 50% 50%;

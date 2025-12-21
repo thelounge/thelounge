@@ -1,16 +1,16 @@
 import path from "node:path";
-import {fileURLToPath} from "node:url";
-import {readFileSync} from "node:fs";
+import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
 import crypto from "node:crypto";
-import {execSync} from "node:child_process";
+import { execSync } from "node:child_process";
 import webpack from "webpack";
 import CopyPlugin from "copy-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import {VueLoaderPlugin} from "vue-loader";
+import { VueLoaderPlugin } from "vue-loader";
 import babelConfig from "./babel.config.cjs";
 
-const {DefinePlugin, NormalModuleReplacementPlugin} = webpack;
+const { DefinePlugin, NormalModuleReplacementPlugin } = webpack;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,7 +47,7 @@ const createForkTsCheckerPlugin = (withBuild) =>
 				semantic: true,
 				syntactic: true,
 			},
-			...(withBuild ? {build: true} : {}),
+			...(withBuild ? { build: true } : {}),
 		},
 	});
 
@@ -57,6 +57,10 @@ const createMiniCssExtractPlugin = () =>
 	});
 
 const copyPatterns = (isProduction) => [
+	{
+		from: resolveFromRoot("client/fonts/font-awesome/*").replace(/\\/g, "/"),
+		to: "fonts/font-awesome/[name][ext]",
+	},
 	{
 		from: resolveFromRoot(
 			"node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*"
@@ -191,7 +195,7 @@ function createBaseConfig(mode, isProduction) {
 				__VUE_OPTIONS_API__: false,
 			}),
 			createMiniCssExtractPlugin(),
-			new CopyPlugin({patterns: copyPatterns(isProduction)}),
+			new CopyPlugin({ patterns: copyPatterns(isProduction) }),
 			new NormalModuleReplacementPlugin(/debug/, resolveFromRoot("scripts/noop.js")),
 		],
 	};
@@ -202,10 +206,10 @@ function addIstanbulPlugin(rule) {
 		return rule;
 	}
 
-	const {use} = rule;
+	const { use } = rule;
 
 	if (use && typeof use === "object" && !Array.isArray(use) && use.loader === "babel-loader") {
-		const options = {...(use.options ?? {})};
+		const options = { ...(use.options ?? {}) };
 		const plugins = Array.isArray(options.plugins) ? [...options.plugins] : [];
 
 		if (!plugins.includes("istanbul")) {
@@ -228,7 +232,7 @@ function addIstanbulPlugin(rule) {
 }
 
 function applyDevelopmentOverrides(config) {
-	const devConfig = {...config};
+	const devConfig = { ...config };
 
 	devConfig.target = "node";
 	devConfig.devtool = "eval";

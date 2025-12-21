@@ -95,6 +95,264 @@
 	</aside>
 </template>
 
+<style lang="css" scoped>
+.custom-group-header {
+	background: var(--window-bg-color);
+	color: var(--body-color-muted);
+	display: flex;
+	font-weight: 700;
+	padding: 8px 14px 8px 10px;
+	position: sticky;
+	top: 0;
+
+	&::before {
+		font-weight: 900;
+		font-family: "Font Awesome 6 Pro";
+		display: var(--fa-display, inline-block);
+		font-style: normal;
+		font-variant: normal;
+		text-rendering: auto;
+		margin-right: 6px;
+		align-self: center;
+	}
+
+	&::after {
+		content: "";
+		height: 1px;
+		background: currentColor;
+		margin: 0 0 0 10px;
+		opacity: 0.5;
+		flex-grow: 1;
+		align-self: center;
+	}
+}
+
+.group-header-bot {
+	color: rgb(255, 215, 0);
+
+	&::before {
+		content: "\e4e2";
+	}
+}
+
+.group-header-sysop {
+	color: rgb(255, 0, 0);
+
+	&::before {
+		content: "\f43f";
+	}
+}
+
+.group-header-administrator {
+	color: rgb(242, 59, 22);
+
+	&::before {
+		content: "\f445";
+	}
+}
+
+
+.group-header-moderator {
+	color: rgb(201, 26, 26);
+
+	&::before {
+		content: "\f447";
+	}
+}
+
+.group-header-fls {
+	color: rgb(255, 211, 156);
+
+	&::before {
+		content: "\f132";
+	}
+}
+
+.group-header-editor {
+	color: rgb(21, 176, 151);
+
+	&::before {
+		content: "\f336";
+	}
+}
+
+.group-header-internal {
+	color: rgb(255, 77, 77);
+
+	&::before {
+		content: "\e4e2";
+	}
+}
+
+.group-header-uploader {
+	color: rgb(46, 204, 113);
+
+	&::before {
+		content: "\f093";
+	}
+}
+
+.group-header-external {
+	color: rgb(0, 153, 255);
+
+	&::before {
+		content: "\f54c";
+	}
+}
+
+.group-header-specialpool {
+	color: rgb(255, 215, 0);
+
+	&::before {
+		content: "\e4e2";
+	}
+}
+
+.group-header-foundingpool {
+	color: rgb(255, 132, 9);
+
+	&::before {
+		content: "\f43a";
+	}
+}
+
+.group-header-godpool {
+	color: rgb(212, 172, 13);
+
+	&::before {
+		content: "\e4e2";
+	}
+}
+
+.group-header-megapool {
+	color: rgb(224, 138, 78);
+
+	&::before {
+		content: "\e4e2";
+	}
+}
+
+.group-header-propool {
+	color: rgb(255, 215, 0);
+
+	&::before {
+		content: "\f51e";
+	}
+}
+
+.group-header-uberpool {
+	color: rgb(255, 255, 128);
+
+	&::before {
+		content: "\f447";
+	}
+}
+
+.group-header-superpool {
+	color: rgb(255, 132, 9);
+
+	&::before {
+		content: "\f441";
+	}
+}
+
+.group-header-powerpool {
+	color: rgb(17, 85, 204);
+
+	&::before {
+		content: "\f441";
+	}
+}
+
+.group-header-pool {
+	color: rgb(99, 230, 190);
+
+	&::before {
+		content: "\f439";
+	}
+}
+
+.group-header-user {
+	color: rgb(114, 137, 218);
+
+	&::before {
+		content: "\f443";
+	}
+}
+
+.group-header-kiddiepool {
+	color: rgb(48, 47, 145);
+
+	&::before {
+		content: "\f77c";
+	}
+}
+
+.group-header-validating {
+	color: rgb(149, 165, 166);
+
+	&::before {
+		content: "\f059";
+	}
+}
+
+.group-header-cesspool {
+	color: rgb(150, 75, 0);
+
+	&::before {
+		content: "\f619";
+	}
+}
+
+.group-header-idlepool {
+	color: rgb(87, 87, 87);
+
+	&::before {
+		content: "\f1da";
+	}
+}
+
+.group-header-guest {
+	color: rgb(87, 87, 87);
+
+	&::before {
+		content: "\f059";
+	}
+}
+
+.group-header-leech {
+	color: rgb(150, 40, 27);
+
+	&::before {
+		content: "\f00d";
+	}
+}
+
+.group-header-banned {
+	color: rgb(255, 0, 0);
+
+	&::before {
+		content: "\f05e";
+	}
+}
+
+.group-header-disabled {
+	color: rgb(141, 98, 98);
+
+	&::before {
+		content: "\f28b";
+	}
+}
+
+.group-header-pruned {
+	color: rgb(141, 98, 98);
+
+	&::before {
+		content: "\f057";
+	}
+}
+</style>
+
 <script lang="ts">
 import {filter as fuzzyFilter} from "fuzzy";
 import {computed, defineComponent, nextTick, PropType, ref} from "vue";
