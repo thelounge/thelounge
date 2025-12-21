@@ -3,7 +3,7 @@
 		<div class="channel-list-item dm-section-header" :title="'Total Queries: ' + queries.length + 'Total Unread: ' + totalUnread" @click.stop="toggleCollapsed">
 			<span class="dm-collapse-icon" :class="{ 'is-collapsed': isCollapsed }"></span>
 			<span class="dm-section-title">Direct Messages</span>
-			<span v-if="totalUnread > 0" class="dm-unread-badge">{{ totalUnread }}</span>
+			<span v-if="hasUnread" class="dm-unread-badge">{{ totalUnreadCount }}</span>
 		</div>
 
 		<template v-if="!isCollapsed">
@@ -211,9 +211,12 @@ export default defineComponent({
 
 		// Count of unique conversations with unread messages (not total lines)
 		// Skip muted channels - they shouldn't contribute to the unread badge
-		const totalUnread = computed(() => {
-			return props.queries.filter((q) => q.unread > 0 && !q.muted).length;
+		const hasUnread = computed(() => {
+			return props.queries.filter((q) => q.unread > 0 && !q.muted).length > 0;
 		});
+		const totalUnreadCount = computed(() => {
+			return roundBadgeNumber(props.queries.filter((q) => q.unread > 0 && !q.muted).length)
+		})
 
 		const filteredQueries = computed(() => {
 			if (!filterText.value) {
@@ -299,7 +302,8 @@ export default defineComponent({
 			isCollapsed,
 			filterText,
 			showAll,
-			totalUnread,
+			hasUnread,
+			totalUnreadCount,
 			sortedQueries,
 			hiddenCount,
 			hasHiddenChannels,
