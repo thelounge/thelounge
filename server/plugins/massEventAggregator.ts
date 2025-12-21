@@ -59,13 +59,11 @@ class MassEventAggregator {
 	): boolean {
 		// Check if mass event detection is enabled
 		if (!Config.values.massEventDetection?.enable) {
-			log.debug("MassEvent: disabled in config");
 			return false;
 		}
 
 		// Only process condensable message types
 		if (!condensedTypes.has(msg.type)) {
-			log.debug(`MassEvent: msg.type ${msg.type} not in condensedTypes`);
 			return false;
 		}
 
@@ -82,10 +80,6 @@ class MassEventAggregator {
 		state.recentTimestamps.push(now);
 		const windowStart = now - config.windowMs;
 		state.recentTimestamps = state.recentTimestamps.filter((t) => t > windowStart);
-
-		log.debug(
-			`MassEvent: chan=${chan.name} type=${msg.type} recentCount=${state.recentTimestamps.length} threshold=${config.threshold} isActive=${state.isActive}`
-		);
 
 		// Check if we should activate mass event mode
 		if (!state.isActive) {
