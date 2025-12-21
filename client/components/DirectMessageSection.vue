@@ -1,9 +1,9 @@
 <template>
 	<div v-if="queries.length > 0" class="dm-section" :class="{ collapsed: isCollapsed }">
-		<div class="channel-list-item dm-section-header" :title="'Total Queries: ' + queries.length + 'Total Unread: ' + totalUnread" @click.stop="toggleCollapsed">
+		<div class="channel-list-item dm-section-header" :class="hasUnread ? 'has-unread has-highlight': ''" :title="'Total Queries: ' + queries.length + ' - Total Unread: ' + totalUnreadCount" @click.stop="toggleCollapsed">
 			<span class="dm-collapse-icon" :class="{ 'is-collapsed': isCollapsed }"></span>
 			<span class="dm-section-title">Direct Messages</span>
-			<span v-if="hasUnread" class="dm-unread-badge">{{ totalUnreadCount }}</span>
+			<span v-if="hasUnread" class="dm-unread-badge highlight badge">{{ totalUnreadCount }}</span>
 		</div>
 
 		<template v-if="!isCollapsed">
@@ -64,11 +64,7 @@
 }
 
 .dm-section-header {
-	align-items: center;
 	color: rgba(255, 255, 255, 0.7);
-	font-size: 0.85em;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
 	user-select: none;
 }
 
@@ -94,24 +90,15 @@
 }
 
 .dm-section-title {
-	flex: 1;
-	cursor: pointer;
-	display: flex;
+	flex-grow: 1;
 	margin-right: 5px;
+	overflow: hidden;
 	position: relative;
-	font-size: 13px;
+	white-space: nowrap;
+	font-size: 14px;
 	font-weight: 700;
 	text-transform: capitalize;
-}
-
-.dm-unread-badge {
-	background-color: rgb(255, 255, 255);
-	color: rgb(0, 0, 0);
-	border-radius: 3px;
-	font-size: 10px;
-	padding: 4px 5.8px;
-	margin: 0;
-	line-height: 1.2;
+	mask-image: linear-gradient(270deg,#0000,#000 20px);
 }
 
 .dm-filter {
@@ -185,6 +172,7 @@ import Channel from "./Channel.vue";
 import socket from "../js/socket";
 import {ClientChan, ClientNetwork} from "../js/types";
 import {useStore} from "../js/store";
+import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 
 export default defineComponent({
 	name: "DirectMessageSection",
