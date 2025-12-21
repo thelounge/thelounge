@@ -1,5 +1,5 @@
 <template>
-	<span class="content mass-event-summary">
+	<span v-if="store.state.settings.statusMessages !== 'hidden'" class="content mass-event-summary">
 		<strong>Mass event:</strong>
 		<span v-for="(item, index) in summaryParts" :key="index">
 			{{ index > 0 ? ", " : " " }}{{ item }}
@@ -11,6 +11,7 @@
 <script lang="ts">
 import {computed, defineComponent, PropType} from "vue";
 import type {ClientMessage, ClientNetwork} from "../../js/types";
+import {useStore} from "../../js/store";
 
 export default defineComponent({
 	name: "MessageTypeMassEvent",
@@ -25,6 +26,7 @@ export default defineComponent({
 		},
 	},
 	setup(props) {
+		const store = useStore();
 		const summaryParts = computed(() => {
 			const parts: string[] = [];
 			const summary = props.message.massEventSummary;
@@ -96,6 +98,7 @@ export default defineComponent({
 		});
 
 		return {
+			store,
 			summaryParts,
 			formattedDuration,
 		};

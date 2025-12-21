@@ -80,6 +80,49 @@
 				Hide all status messages
 			</label>
 		</div>
+		<h2>Layout</h2>
+		<div>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.showInputNick"
+					type="checkbox"
+					name="showInputNick"
+				/>
+				Show current nick in the input box
+			</label>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.jumptoEabled"
+					type="checkbox"
+					name="jumptoEabled"
+				/>
+				Enable Jump to
+			</label>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.filterdmsEnabled"
+					type="checkbox"
+					name="filterdmsEnabled"
+				/>
+				Enable Filter DMs
+			</label>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.showAllDMs"
+					type="checkbox"
+					name="showAllDMs"
+				/>
+				Always show all DMs in sidebar
+			</label>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.disableMutedUnread"
+					type="checkbox"
+					name="disableMutedUnread"
+				/>
+				Don't show unread on muted
+			</label>
+		</div>
 		<h2>Visual Aids</h2>
 		<div>
 			<label class="opt">

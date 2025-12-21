@@ -1,7 +1,7 @@
 <template>
 	<form id="form" method="post" action="" @submit.prevent="onSubmit">
 		<span id="upload-progressbar" />
-		<span id="nick">{{ network.nick }}</span>
+		<span v-if="store.state.settings.showInputNick" id="nick">{{ network.nick }}</span>
 		<textarea
 			id="input"
 			ref="input"

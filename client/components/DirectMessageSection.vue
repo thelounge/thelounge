@@ -7,7 +7,7 @@
 		</div>
 
 		<template v-if="!isCollapsed">
-			<div v-if="queries.length >= 8" class="dm-filter">
+			<div v-if="queries.length > 2 && store.state.settings.filterdmsEnabled" class="dm-filter">
 				<input
 					ref="filterInput"
 					v-model="filterText"
@@ -195,7 +195,7 @@ export default defineComponent({
 		const isCollapsed = ref(false);
 		const filterText = ref("");
 		const showAll = ref(false);
-		const maxVisible = 5;
+		const maxVisible = computed(() => store.state.settings.showAllDMs ? Number.MAX_SAFE_INTEGER : 5);
 
 		// Count of unique conversations with unread messages (not total lines)
 		// Skip muted channels - they shouldn't contribute to the unread badge
@@ -246,7 +246,7 @@ export default defineComponent({
 			const unread = sortedQueries.value.filter((q) => !q.pinned && q.unread > 0);
 			const rest = sortedQueries.value.filter((q) => !q.pinned && q.unread === 0);
 
-			const remaining = maxVisible - pinned.length - unread.length;
+			const remaining = maxVisible.value - pinned.length - unread.length;
 
 			if (remaining <= 0) {
 				return [...pinned, ...unread];

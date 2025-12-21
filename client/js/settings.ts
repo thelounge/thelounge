@@ -145,6 +145,21 @@ const defaultConfig = {
 	searchEnabled: {
 		default: false,
 	},
+	jumptoEabled: {
+		default: true,
+	},
+	filterdmsEnabled: {
+		default: true,
+	},
+	showAllDMs: {
+		default: false,
+	},
+	showInputNick: {
+		default: true,
+	},
+	disableMutedUnread: {
+		default: false
+	},
 };
 
 export const config = normalizeConfig(defaultConfig);
