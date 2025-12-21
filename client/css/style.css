@@ -333,6 +333,7 @@ p {
 #chat .msg[data-type="action"] .from::before,
 #chat .msg[data-type="plugin"] .from::before,
 #chat .msg[data-type="raw"] .from::before,
+#chat .msg[data-type="mass_event"] .from::before,
 #chat .msg-statusmsg span::before,
 #chat .msg-shown-in-active span::before,
 #chat .toggle-button::after,
@@ -675,6 +676,11 @@ p {
 	transform: rotate(45deg);
 	display: inline-block;
 	padding: 1px;
+}
+
+#chat .msg[data-type="mass_event"] .from::before {
+	content: "\e49a";
+	/* https://fontawesome.com/icons/circle-info?style=solid */
 }
 
 #chat .msg-statusmsg,
