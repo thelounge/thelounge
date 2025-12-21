@@ -41,8 +41,6 @@ export default <IrcEventHandler>function (irc, network) {
 				chan: chan.id,
 				groups: chan.groups,
 			});
-
-			log.debug(`[SPGROUPS] Received ${data.groups.length} groups for ${channelName}`);
 		} catch (err) {
 			log.error(`SPGROUPS: Failed to parse JSON payload: ${String(err)}`);
 		}

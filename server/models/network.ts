@@ -341,18 +341,7 @@ class Network {
 			"znc.in/playback", // See http://wiki.znc.in/Playback
 			"seedpool/enhanced", // THC enhanced client features
 		];
-		log.debug(`[CAP] Requesting custom capabilities: ${customCaps.join(", ")}`);
 		this.irc.requestCap(customCaps);
-
-		// Debug: log raw outgoing data to see what CAP REQ is sent
-		this.irc.on("raw", (event: {line: string; from_server: boolean}) => {
-			if (!event.from_server && event.line.startsWith("CAP")) {
-				log.debug(`[CAP OUT] ${event.line}`);
-			}
-			if (event.from_server && event.line.includes("CAP")) {
-				log.debug(`[CAP IN] ${event.line}`);
-			}
-		});
 	}
 
 	setIrcFrameworkOptions(this: NetworkWithIrcFramework, client: Client) {

@@ -31,7 +31,6 @@ export default function useCloseChannel(channel: ClientChan) {
 
 		channel.closed = true;
 
-		console.log("[DEBUG] Closing channel:", channel.id, channel.name, channel.type);
 		socket.emit("input", {
 			target: Number(channel.id),
 			text: "/close",

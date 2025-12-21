@@ -783,12 +783,10 @@ class Client {
 	}
 
 	part(network: Network, chan: Chan) {
-		console.log("[DEBUG] Client.part() called:", {chanId: chan.id, chanName: chan.name});
 		network.channels = _.without(network.channels, chan);
 		this.mentions = this.mentions.filter((msg) => !(msg.chanId === chan.id));
 		chan.destroy();
 		this.save();
-		console.log("[DEBUG] Emitting part event for chan:", chan.id);
 		this.emit("part", {
 			chan: chan.id,
 		});

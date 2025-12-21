@@ -64,7 +64,5 @@ export default <IrcEventHandler>function (irc, network) {
 			chan: chan.id,
 			groups: chan.groups,
 		});
-
-		log.debug(`SPJOIN: ${nickname} joined ${channelName} in group ${groupName}`);
 	});
 };

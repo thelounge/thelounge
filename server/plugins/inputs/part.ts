@@ -9,7 +9,6 @@ const commands = ["close", "leave", "part"];
 const allowDisconnected = true;
 
 const input: PluginInputHandler = function (network, chan, cmd, args) {
-	console.log("[DEBUG] part.ts input handler called:", {cmd, chanType: chan.type, chanName: chan.name});
 	let target = chan;
 
 	if (args.length > 0) {
@@ -40,7 +39,6 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		target.state === ChanState.PARTED ||
 		!network.irc.connected
 	) {
-		console.log("[DEBUG] Calling this.part() for:", target.name, target.type);
 		this.part(network, target);
 	} else {
 		const partMessage = args.join(" ") || network.leaveMessage || Config.values.leaveMessage;

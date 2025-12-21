@@ -277,7 +277,6 @@ export default defineComponent({
 		};
 
 		const toggleCollapsed = () => {
-			console.log("[DEBUG] toggleCollapsed called, current:", isCollapsed.value, "-> new:", !isCollapsed.value);
 			isCollapsed.value = !isCollapsed.value;
 		};
 
