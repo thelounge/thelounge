@@ -94,13 +94,14 @@
 			<label class="opt">
 				<label for="highlights" class="opt">
 					Custom highlights
-					<span
+					<button
 						class="tooltipped tooltipped-n tooltipped-no-delay"
 						aria-label="If a message contains any of these comma-separated
 expressions, it will trigger a highlight."
+						type="button"
 					>
-						<button class="extra-help" />
-					</span>
+						<span class="extra-help" />
+					</button>
 				</label>
 				<input
 					id="highlights"
@@ -118,14 +119,15 @@ expressions, it will trigger a highlight."
 			<label class="opt">
 				<label for="highlightExceptions" class="opt">
 					Highlight exceptions
-					<span
+					<button
 						class="tooltipped tooltipped-n tooltipped-no-delay"
 						aria-label="If a message contains any of these comma-separated
 expressions, it will not trigger a highlight even if it contains
 your nickname or expressions defined in custom highlights."
+						type="button"
 					>
-						<button class="extra-help" />
-					</span>
+						<span class="extra-help" />
+					</button>
 				</label>
 				<input
 					id="highlightExceptions"
