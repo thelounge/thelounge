@@ -108,7 +108,7 @@ const addPluginCommand = (packageInfo: PackageInfo, command: any, obj: any) => {
 		return;
 	} else if (!obj || typeof obj.input !== "function") {
 		log.error(
-			`plugin ${packageInfo.packageName} tried to register command "${command} without a callback"`
+			`plugin ${packageInfo.packageName} tried to register command "${command}" without a callback`
 		);
 		return;
 	}
