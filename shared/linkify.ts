@@ -7,7 +7,7 @@ export type LinkPart = {
 	link: string;
 };
 
-const linkify = LinkifyIt().tlds(tlds).tlds("onion", true);
+const linkify = new LinkifyIt().tlds(tlds).tlds("onion", true);
 
 // Known schemes to detect in text
 const commonSchemes = [
@@ -32,7 +32,7 @@ for (const schema of commonSchemes) {
 }
 
 linkify.add("web+", {
-	validate(text: string, pos: number, self: LinkifyIt.LinkifyIt) {
+	validate(text: string, pos: number, self: LinkifyIt) {
 		const webSchemaRe = /^[a-z]+:/gi;
 
 		if (!webSchemaRe.test(text.slice(pos))) {
