@@ -1024,6 +1024,16 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 			}
 
 			socket.emit("auth:failed");
+
+			// Forcibly close WS connections from the server side on auth failure,
+			// so that the client reconnects upon next auth submission,
+			// allowing abuse mitigation systems to take effect.
+			// This is unnecessary for HTTP long-polling;
+			// in that case, the existing open HTTP connection will be closed.
+			if (socket.client.conn.transport.name !== "polling") {
+				socket.disconnect();
+			}
+
 			return;
 		}
 
