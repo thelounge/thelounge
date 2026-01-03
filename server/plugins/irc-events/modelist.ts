@@ -1,11 +1,64 @@
-import {IrcEventHandler} from "../../client";
+import Client, {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
-import {SpecialChanType, ChanType} from "../../../shared/types/chan";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {SpecialChanType, ChanType} from "../../../shared/types/chan.js";
 
-export default <IrcEventHandler>function (irc, network) {
-	const client = this;
+export default <IrcEventHandler>function (this: Client, irc, network) {
+	const handleList = (
+		type: SpecialChanType,
+		name: string,
+		channel: string,
+		data: {
+			hostmask: string;
+			invited_by?: string;
+			inivted_at?: number;
+		}[]
+	) => {
+		if (data.length === 0) {
+			const msg = new Msg({
+				time: new Date(),
+				type: MessageType.ERROR,
+				text: `${name} is empty`,
+			});
+			let chan = network.getChannel(channel);
+
+			// Send error to lobby if we receive empty list for a channel we're not in
+			if (typeof chan === "undefined") {
+				msg.showInActive = true;
+				chan = network.getLobby()!;
+			}
+
+			chan.pushMessage(this, msg, true);
+
+			return;
+		}
+
+		const chanName = `${name} for ${channel}`;
+		let chan = network.getChannel(chanName);
+
+		if (typeof chan === "undefined") {
+			chan = this.createChannel({
+				type: ChanType.SPECIAL,
+				special: type,
+				name: chanName,
+				data: data,
+			});
+			this.emit("join", {
+				network: network.uuid,
+				chan: chan.getFilteredClone(true),
+				shouldOpen: false,
+				index: network.addChannel(chan),
+			});
+		} else {
+			chan.data = data;
+
+			this.emit("msg:special", {
+				chan: chan.id,
+				data: data,
+			});
+		}
+	};
 
 	irc.on("banlist", (list) => {
 		const data = list.bans.map((ban) => ({
@@ -26,59 +79,4 @@ export default <IrcEventHandler>function (irc, network) {
 
 		handleList(SpecialChanType.INVITELIST, "Invite list", list.channel, data);
 	});
-
-	function handleList(
-		type: SpecialChanType,
-		name: string,
-		channel: string,
-		data: {
-			hostmask: string;
-			invited_by?: string;
-			inivted_at?: number;
-		}[]
-	) {
-		if (data.length === 0) {
-			const msg = new Msg({
-				time: new Date(),
-				type: MessageType.ERROR,
-				text: `${name} is empty`,
-			});
-			let chan = network.getChannel(channel);
-
-			// Send error to lobby if we receive empty list for a channel we're not in
-			if (typeof chan === "undefined") {
-				msg.showInActive = true;
-				chan = network.getLobby();
-			}
-
-			chan.pushMessage(client, msg, true);
-
-			return;
-		}
-
-		const chanName = `${name} for ${channel}`;
-		let chan = network.getChannel(chanName);
-
-		if (typeof chan === "undefined") {
-			chan = client.createChannel({
-				type: ChanType.SPECIAL,
-				special: type,
-				name: chanName,
-				data: data,
-			});
-			client.emit("join", {
-				network: network.uuid,
-				chan: chan.getFilteredClone(true),
-				shouldOpen: false,
-				index: network.addChannel(chan),
-			});
-		} else {
-			chan.data = data;
-
-			client.emit("msg:special", {
-				chan: chan.id,
-				data: data,
-			});
-		}
-	}
 };

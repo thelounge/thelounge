@@ -1,15 +1,15 @@
 import _ from "lodash";
-import log from "../log";
-import Config from "../config";
-import User from "./user";
-import Msg from "./msg";
-import storage from "../plugins/storage";
-import Client from "../client";
-import Network from "./network";
-import Prefix from "./prefix";
-import {MessageType, SharedMsg} from "../../shared/types/msg";
-import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan";
-import {SharedNetworkChan} from "../../shared/types/network";
+import log from "../log.js";
+import Config from "../config.js";
+import User from "./user.js";
+import Msg from "./msg.js";
+import storage from "../plugins/storage.js";
+import Client from "../client.js";
+import Network from "./network.js";
+import Prefix from "./prefix.js";
+import {MessageType, SharedMsg} from "../../shared/types/msg.js";
+import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan.js";
+import {SharedNetworkChan} from "../../shared/types/network.js";
 
 export type ChanConfig = {
 	name: string;
@@ -35,7 +35,7 @@ class Chan {
 
 	userAway?: boolean;
 	special?: SpecialChanType;
-	data?: any;
+	data?: unknown;
 	closed?: boolean;
 	num_users?: number;
 
@@ -240,14 +240,12 @@ class Chan {
 			return;
 		}
 
-		const targetChannel: Chan = this;
-
 		// Is this particular message or channel loggable
 		if (!msg.isLoggable() || !this.isLoggable()) {
 			// Because notices are nasty and can be shown in active channel on the client
 			// if there is no open query, we want to always log notices in the sender's name
 			if (msg.type === MessageType.NOTICE && msg.showInActive) {
-				targetChannel.name = msg.from.nick || ""; // TODO: check if || works
+				this.name = msg.from.nick || ""; // TODO: check if || works
 			} else {
 				return;
 			}
@@ -261,7 +259,7 @@ class Chan {
 		}
 
 		for (const messageStorage of client.messageStorage) {
-			messageStorage.index(target.network, targetChannel, msg).catch((e) => log.error(e));
+			messageStorage.index(target.network, this, msg).catch((e) => log.error(e));
 		}
 	}
 

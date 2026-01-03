@@ -1,13 +1,13 @@
 import storage from "./localStorage";
 import socket from "./socket";
-import {config, createState} from "./settings";
+import {config, createState, SettingsState} from "./settings";
 import {Store} from "vuex";
 import {State} from "./store";
 
 export function createSettingsStore(store: Store<State>) {
 	return {
 		namespaced: true,
-		state: assignStoredSettings(createState(), loadFromLocalStorage()),
+		state: assignStoredSettings(createState() as SettingsState, loadFromLocalStorage()),
 		mutations: {
 			set(state, {name, value}) {
 				state[name] = value;
@@ -70,12 +70,12 @@ export function createSettingsStore(store: Store<State>) {
 	};
 }
 
-function loadFromLocalStorage() {
-	let storedSettings: Record<string, any> = {};
+function loadFromLocalStorage(): Record<string, unknown> {
+	let storedSettings: Record<string, unknown> = {};
 
 	try {
 		storedSettings = JSON.parse(storage.get("settings") || "{}");
-	} catch (e) {
+	} catch {
 		storage.remove("settings");
 	}
 
@@ -85,7 +85,7 @@ function loadFromLocalStorage() {
 
 	// Older The Lounge versions converted highlights to an array, turn it back into a string
 	if (storedSettings.highlights !== null && typeof storedSettings.highlights === "object") {
-		storedSettings.highlights = storedSettings.highlights.join(", ");
+		storedSettings.highlights = (storedSettings.highlights as string[]).join(", ");
 	}
 
 	return storedSettings;
@@ -99,8 +99,8 @@ function loadFromLocalStorage() {
  * @param {object} storedSettings
  */
 function assignStoredSettings(
-	defaultSettings: Record<string, any>,
-	storedSettings: Record<string, any>
+	defaultSettings: SettingsState,
+	storedSettings: Record<string, unknown>
 ) {
 	const newSettings = {...defaultSettings};
 

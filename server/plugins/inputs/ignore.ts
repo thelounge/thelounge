@@ -1,16 +1,14 @@
-import Msg from "../../models/msg";
-import Helper from "../../helper";
-import {PluginInputHandler} from "./index";
-import {MessageType} from "../../../shared/types/msg";
+import Msg from "../../models/msg.js";
+import Helper from "../../helper.js";
+import {PluginInputHandler} from "./index.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 const commands = ["ignore", "unignore"];
 
 const input: PluginInputHandler = function (network, chan, cmd, args) {
-	const client = this;
-
 	if (args.length === 0 || args[0].trim().length === 0) {
 		chan.pushMessage(
-			client,
+			this,
 			new Msg({
 				type: MessageType.ERROR,
 				text: `Usage: /${cmd} <nick>[!ident][@host]`,
@@ -28,7 +26,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			// IRC nicks are case insensitive
 			if (hostmask.nick.toLowerCase() === network.nick.toLowerCase()) {
 				chan.pushMessage(
-					client,
+					this,
 					new Msg({
 						type: MessageType.ERROR,
 						text: "You can't ignore yourself",
@@ -38,12 +36,12 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			}
 
 			if (
-				network.ignoreList.some(function (entry) {
+				network.ignoreList.some((entry) => {
 					return Helper.compareHostmask(entry, hostmask);
 				})
 			) {
 				chan.pushMessage(
-					client,
+					this,
 					new Msg({
 						type: MessageType.ERROR,
 						text: "The specified user/hostmask is already ignored",
@@ -57,9 +55,9 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 				when: Date.now(),
 			});
 
-			client.save();
+			this.save();
 			chan.pushMessage(
-				client,
+				this,
 				new Msg({
 					type: MessageType.ERROR, // TODO: Successfully added via type.Error 🤔 ?
 					text: `\u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f added to ignorelist`,
@@ -69,13 +67,13 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		}
 
 		case "unignore": {
-			const idx = network.ignoreList.findIndex(function (entry) {
+			const idx = network.ignoreList.findIndex((entry) => {
 				return Helper.compareHostmask(entry, hostmask);
 			});
 
 			if (idx === -1) {
 				chan.pushMessage(
-					client,
+					this,
 					new Msg({
 						type: MessageType.ERROR,
 						text: "The specified user/hostmask is not ignored",
@@ -85,10 +83,10 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			}
 
 			network.ignoreList.splice(idx, 1);
-			client.save();
+			this.save();
 
 			chan.pushMessage(
-				client,
+				this,
 				new Msg({
 					type: MessageType.ERROR, // TODO: Successfully removed via type.Error 🤔 ?
 					text: `Successfully removed \u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f from ignorelist`,

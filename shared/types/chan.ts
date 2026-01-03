@@ -1,6 +1,4 @@
 import {SharedMsg} from "./msg";
-import {SharedUser} from "./user";
-import {SharedNetworkChan} from "./network";
 
 export enum ChanType {
 	CHANNEL = "channel",
@@ -36,7 +34,7 @@ export type SharedChan = {
 	state: ChanState;
 
 	special?: SpecialChanType;
-	data?: any;
+	data?: unknown;
 	closed?: boolean;
 	num_users?: number;
 };

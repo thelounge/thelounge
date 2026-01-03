@@ -1,12 +1,16 @@
 import _ from "lodash";
-import log from "../log";
+import log from "../log.js";
 import colors from "chalk";
-import fs from "fs";
-import Helper from "../helper";
-import Config from "../config";
-import path from "path";
-import {spawn} from "child_process";
+import fs from "node:fs";
+import Helper from "../helper.js";
+import Config from "../config.js";
+import path from "node:path";
+import {spawn} from "node:child_process";
+import {createRequire} from "node:module";
+import {getDirname} from "../path-helper.js";
 let home: string;
+
+const require = createRequire(import.meta.url);
 
 class Utils {
 	static extraHelp(this: void) {
@@ -33,6 +37,8 @@ class Utils {
 	}
 
 	static getFileFromRelativeToRoot(...fileName: string[]) {
+		const __dirname = getDirname(import.meta.url);
+
 		// e.g. /thelounge/server/command-line/utils.ts
 		if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
 			return path.resolve(path.join(__dirname, "..", "..", ...fileName));
@@ -43,10 +49,9 @@ class Utils {
 	}
 
 	// Parses CLI options such as `-c public=true`, `-c debug.raw=true`, etc.
-	static parseConfigOptions(this: void, val: string, memo?: any) {
+	static parseConfigOptions(this: void, val: string, memo?: Record<string, unknown>) {
 		// Invalid option that is not of format `key=value`, do nothing
 		if (!val.includes("=")) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return memo;
 		}
 
@@ -99,7 +104,6 @@ class Utils {
 			memo = _.set(memo, key, parsedValue);
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return memo;
 	}
 
@@ -150,7 +154,7 @@ class Utils {
 							if (json.type === "success") {
 								success = true;
 							}
-						} catch (e: any) {
+						} catch {
 							// Stdout buffer has limitations and yarn may print
 							// big package trees, for example in the upgrade command
 							// See https://github.com/thelounge/thelounge/issues/3679
@@ -177,7 +181,7 @@ class Utils {
 							}
 
 							return;
-						} catch (e: any) {
+						} catch {
 							// we simply fall through and log at debug... chances are there's nothing the user can do about it
 							// as it includes things like deprecation warnings, but we might want to know as developers
 						}
@@ -193,7 +197,7 @@ class Utils {
 
 			add.on("close", (code) => {
 				if (!success || code !== 0) {
-					return reject(code);
+					return reject(new Error(`Process exited with code ${code}`));
 				}
 
 				resolve(true);

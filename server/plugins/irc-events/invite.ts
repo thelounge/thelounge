@@ -1,12 +1,10 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("invite", function (data) {
+	irc.on("invite", (data) => {
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
@@ -24,6 +22,6 @@ export default <IrcEventHandler>function (irc, network) {
 			highlight: invitedYou,
 			invitedYou: invitedYou,
 		});
-		chan.pushMessage(client, msg);
+		chan.pushMessage(this, msg);
 	});
 };

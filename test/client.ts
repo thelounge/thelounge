@@ -1,12 +1,11 @@
 import {expect} from "chai";
-import {NetworkConfig} from "../server/models/network";
-import {ChanConfig} from "../server/models/chan";
-import {ChanType} from "../shared/types/chan";
-import ClientManager from "../server/clientManager";
-import Client from "../server/client";
-import log from "../server/log";
+import {NetworkConfig} from "../server/models/network.js";
+import {ChanType} from "../shared/types/chan.js";
+import ClientManager from "../server/clientManager.js";
+import Client from "../server/client.js";
+import log from "../server/log.js";
 
-import sinon from "ts-sinon";
+import sinon from "sinon";
 
 describe("Client", function () {
 	const commonNetworkConfig: NetworkConfig = {
@@ -47,7 +46,6 @@ describe("Client", function () {
 
 	it("should parse channel configuration", function () {
 		const manager = new ClientManager();
-		const channel: ChanConfig = {name: "AAAA!", type: "query"};
 		const networkConfig: NetworkConfig = {
 			...commonNetworkConfig,
 			channels: [{name: "AAAA!", type: "query"}, {name: "#thelounge"}, {name: "&foobar"}],
@@ -78,7 +76,6 @@ describe("Client", function () {
 
 	it("should ignore invalid channel types", function () {
 		const manager = new ClientManager();
-		const channel: ChanConfig = {name: "AAAA!", type: "query"};
 		const networkConfig: NetworkConfig = {
 			...commonNetworkConfig,
 			channels: [

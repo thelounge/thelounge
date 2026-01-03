@@ -1,13 +1,11 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import Config from "../../config";
-import {MessageType} from "../../../shared/types/msg";
+import Msg from "../../models/msg.js";
+import Config from "../../config.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("irc error", function (data) {
+	irc.on("irc error", (data) => {
 		const msg = new Msg({
 			type: MessageType.ERROR,
 			error: data.error,
@@ -31,10 +29,10 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 		}
 
-		target.pushMessage(client, msg, true);
+		target.pushMessage(this, msg, true);
 	});
 
-	irc.on("nick in use", function (data) {
+	irc.on("nick in use", (data) => {
 		let message = data.nick + ": " + (data.reason || "Nickname is already in use.");
 
 		if (irc.connection.registered === false && !Config.values.public) {
@@ -53,7 +51,7 @@ export default <IrcEventHandler>function (irc, network) {
 			text: message,
 			showInActive: true,
 		});
-		lobby.pushMessage(client, msg, true);
+		lobby.pushMessage(this, msg, true);
 
 		if (irc.connection.registered === false) {
 			const nickLen = parseInt(network.irc.network.options.NICKLEN, 10) || 16;
@@ -67,26 +65,26 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 		}
 
-		client.emit("nick", {
+		this.emit("nick", {
 			network: network.uuid,
 			nick: irc.user.nick,
 		});
 	});
 
-	irc.on("nick invalid", function (data) {
+	irc.on("nick invalid", (data) => {
 		const lobby = network.getLobby();
 		const msg = new Msg({
 			type: MessageType.ERROR,
 			text: data.nick + ": " + (data.reason || "Nickname is invalid."),
 			showInActive: true,
 		});
-		lobby.pushMessage(client, msg, true);
+		lobby.pushMessage(this, msg, true);
 
 		if (irc.connection.registered === false) {
 			irc.changeNick(Config.getDefaultNick());
 		}
 
-		client.emit("nick", {
+		this.emit("nick", {
 			network: network.uuid,
 			nick: irc.user.nick,
 		});

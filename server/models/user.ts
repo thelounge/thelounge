@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Prefix from "./prefix";
+import Prefix from "./prefix.js";
 
 class User {
 	modes!: string[];

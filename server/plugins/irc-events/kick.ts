@@ -1,13 +1,11 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
-import {ChanState} from "../../../shared/types/chan";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
+import {ChanState} from "../../../shared/types/chan.js";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("kick", function (data) {
+	irc.on("kick", (data) => {
 		const chan = network.getChannel(data.channel!);
 
 		if (typeof chan === "undefined") {
@@ -24,13 +22,13 @@ export default <IrcEventHandler>function (irc, network) {
 			highlight: data.kicked === irc.user.nick,
 			self: data.nick === irc.user.nick,
 		});
-		chan.pushMessage(client, msg);
+		chan.pushMessage(this, msg);
 
 		if (data.kicked === irc.user.nick) {
 			chan.users = new Map();
 			chan.state = ChanState.PARTED;
 
-			client.emit("channel:state", {
+			this.emit("channel:state", {
 				chan: chan.id,
 				state: chan.state,
 			});

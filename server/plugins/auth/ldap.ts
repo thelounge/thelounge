@@ -1,11 +1,62 @@
-import ldap, {SearchOptions} from "ldapjs";
+import {Client, InvalidCredentialsError, SearchOptions} from "ldapts";
 import colors from "chalk";
 
-import log from "../../log";
-import Config from "../../config";
-import type {AuthHandler} from "../auth";
+import log from "../../log.js";
+import Config from "../../config.js";
+import type {AuthHandler} from "../auth.js";
 
-function ldapAuthCommon(
+type ErrorWithCode = NodeJS.ErrnoException & Error;
+
+const CONNECTION_ERROR_CODES = new Set([
+	"ECONNREFUSED",
+	"ECONNRESET",
+	"ENOTFOUND",
+	"ETIMEDOUT",
+	"EHOSTUNREACH",
+	"EAI_AGAIN",
+]);
+
+function errorToString(err: unknown): string {
+	if (err instanceof Error) {
+		return err.toString();
+	}
+
+	return String(err);
+}
+
+function isConnectionError(err: unknown): boolean {
+	if (!err || typeof err !== "object") {
+		return false;
+	}
+
+	const code = (err as ErrorWithCode).code;
+
+	if (code && CONNECTION_ERROR_CODES.has(code)) {
+		return true;
+	}
+
+	if (typeof (err as Error).message === "string") {
+		const message = (err as Error).message;
+
+		for (const possibleCode of CONNECTION_ERROR_CODES) {
+			if (message.includes(possibleCode)) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+async function safeUnbind(client: Client) {
+	try {
+		await client.unbind();
+	} catch {
+		// Ignore unbind errors
+	}
+}
+
+async function ldapAuthCommon(
 	user: string,
 	bindDN: string,
 	password: string,
@@ -13,26 +64,39 @@ function ldapAuthCommon(
 ) {
 	const config = Config.values;
 
-	const ldapclient = ldap.createClient({
+	const ldapclient = new Client({
 		url: config.ldap.url,
 		tlsOptions: config.ldap.tlsOptions,
 	});
 
-	ldapclient.on("error", function (err: Error) {
-		log.error(`Unable to connect to LDAP server: ${err.toString()}`);
-		callback(false);
-	});
+	let success = false;
+	let caughtError: unknown;
 
-	ldapclient.bind(bindDN, password, function (err) {
-		ldapclient.unbind();
+	try {
+		await ldapclient.bind(bindDN, password);
+		success = true;
+	} catch (err) {
+		caughtError = err;
+	}
 
-		if (err) {
-			log.error(`LDAP bind failed: ${err.toString()}`);
-			callback(false);
+	await safeUnbind(ldapclient);
+
+	if (success) {
+		callback(true);
+		return;
+	}
+
+	if (caughtError) {
+		if (isConnectionError(caughtError)) {
+			log.error(`Unable to connect to LDAP server: ${errorToString(caughtError)}`);
 		} else {
-			callback(true);
+			log.error(`LDAP bind failed: ${errorToString(caughtError)}`);
 		}
-	});
+	} else {
+		log.error("LDAP bind failed");
+	}
+
+	callback(false);
 }
 
 function simpleLdapAuth(user: string, password: string, callback: (success: boolean) => void) {
@@ -47,7 +111,7 @@ function simpleLdapAuth(user: string, password: string, callback: (success: bool
 
 	log.info(`Auth against LDAP ${config.ldap.url} with provided bindDN ${bindDN}`);
 
-	ldapAuthCommon(user, bindDN, password, callback);
+	void ldapAuthCommon(user, bindDN, password, callback);
 }
 
 /**
@@ -55,76 +119,71 @@ function simpleLdapAuth(user: string, password: string, callback: (success: bool
  */
 function advancedLdapAuth(user: string, password: string, callback: (success: boolean) => void) {
 	if (!user || !password) {
-		return callback(false);
+		callback(false);
+		return;
 	}
 
 	const config = Config.values;
 	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
 
-	const ldapclient = ldap.createClient({
-		url: config.ldap.url,
-		tlsOptions: config.ldap.tlsOptions,
-	});
+	void (async () => {
+		const ldapclient = new Client({
+			url: config.ldap.url,
+			tlsOptions: config.ldap.tlsOptions,
+		});
 
-	const base = config.ldap.searchDN.base;
-	const searchOptions: SearchOptions = {
-		scope: config.ldap.searchDN.scope,
-		filter: `(&(${config.ldap.primaryKey}=${userDN})${config.ldap.searchDN.filter})`,
-		attributes: ["dn"],
-	};
+		const base = config.ldap.searchDN.base;
+		const searchOptions: SearchOptions = {
+			scope: config.ldap.searchDN.scope,
+			filter: `(&(${config.ldap.primaryKey}=${userDN})${config.ldap.searchDN.filter})`,
+			attributes: ["dn"],
+		};
 
-	ldapclient.on("error", function (err: Error) {
-		log.error(`Unable to connect to LDAP server: ${err.toString()}`);
-		callback(false);
-	});
+		try {
+			await ldapclient.bind(config.ldap.searchDN.rootDN, config.ldap.searchDN.rootPassword);
+		} catch (err) {
+			if (err instanceof InvalidCredentialsError) {
+				log.error("Invalid LDAP root credentials");
+			} else if (isConnectionError(err)) {
+				log.error(`Unable to connect to LDAP server: ${errorToString(err)}`);
+			} else {
+				log.error(`LDAP error: ${errorToString(err)}`);
+			}
 
-	ldapclient.bind(config.ldap.searchDN.rootDN, config.ldap.searchDN.rootPassword, function (err) {
-		if (err) {
-			log.error("Invalid LDAP root credentials");
-			ldapclient.unbind();
+			await safeUnbind(ldapclient);
 			callback(false);
 			return;
 		}
 
-		ldapclient.search(base, searchOptions, function (err2, res) {
-			if (err2) {
+		let searchResult;
+
+		try {
+			searchResult = await ldapclient.search(base, searchOptions);
+		} catch (err) {
+			if (isConnectionError(err)) {
+				log.error(`Unable to connect to LDAP server: ${errorToString(err)}`);
+			} else {
 				log.warn(`LDAP User not found: ${userDN}`);
-				ldapclient.unbind();
-				callback(false);
-				return;
 			}
 
-			let found = false;
+			await safeUnbind(ldapclient);
+			callback(false);
+			return;
+		}
 
-			res.on("searchEntry", function (entry) {
-				found = true;
-				const bindDN = entry.objectName;
-				log.info(`Auth against LDAP ${config.ldap.url} with found bindDN ${bindDN || ""}`);
-				ldapclient.unbind();
+		await safeUnbind(ldapclient);
 
-				// TODO: Fix type !
-				ldapAuthCommon(user, bindDN!, password, callback);
-			});
+		if (!searchResult.searchEntries.length) {
+			log.warn(`LDAP Search did not find anything for: ${userDN}`);
+			callback(false);
+			return;
+		}
 
-			res.on("error", function (err3: Error) {
-				log.error(`LDAP error: ${err3.toString()}`);
-				callback(false);
-			});
+		const bindDN = searchResult.searchEntries[0].dn;
+		log.info(`Auth against LDAP ${config.ldap.url} with found bindDN ${bindDN}`);
 
-			res.on("end", function (result) {
-				ldapclient.unbind();
-
-				if (!found) {
-					log.warn(
-						`LDAP Search did not find anything for: ${userDN} (${
-							result?.status.toString() || "unknown"
-						})`
-					);
-					callback(false);
-				}
-			});
-		});
-	});
+		void ldapAuthCommon(user, bindDN, password, callback);
+	})();
 }
 
 const ldapAuth: AuthHandler = (manager, client, user, password, callback) => {
@@ -159,24 +218,29 @@ const ldapAuth: AuthHandler = (manager, client, user, password, callback) => {
 function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 	const config = Config.values;
 
-	const ldapclient = ldap.createClient({
-		url: config.ldap.url,
-		tlsOptions: config.ldap.tlsOptions,
-	});
+	void (async () => {
+		const ldapclient = new Client({
+			url: config.ldap.url,
+			tlsOptions: config.ldap.tlsOptions,
+		});
 
-	const base = config.ldap.searchDN.base;
+		try {
+			await ldapclient.bind(config.ldap.searchDN.rootDN, config.ldap.searchDN.rootPassword);
+		} catch (err) {
+			if (err instanceof InvalidCredentialsError) {
+				log.error("Invalid LDAP root credentials");
+			} else if (isConnectionError(err)) {
+				log.error(`Unable to connect to LDAP server: ${errorToString(err)}`);
+			} else {
+				log.error(`LDAP error: ${errorToString(err)}`);
+			}
 
-	ldapclient.on("error", function (err: Error) {
-		log.error(`Unable to connect to LDAP server: ${err.toString()}`);
-	});
-
-	ldapclient.bind(config.ldap.searchDN.rootDN, config.ldap.searchDN.rootPassword, function (err) {
-		if (err) {
-			log.error("Invalid LDAP root credentials");
-			return true;
+			await safeUnbind(ldapclient);
+			return;
 		}
 
 		const remainingUsers = new Set(users);
+		const base = config.ldap.searchDN.base;
 
 		const searchOptions: SearchOptions = {
 			scope: config.ldap.searchDN.scope,
@@ -185,38 +249,40 @@ function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 			paged: true,
 		};
 
-		ldapclient.search(base, searchOptions, function (err2, res) {
-			if (err2) {
-				log.error(`LDAP search error: ${err2?.toString()}`);
-				return true;
+		let searchResult;
+
+		try {
+			searchResult = await ldapclient.search(base, searchOptions);
+		} catch (err) {
+			if (isConnectionError(err)) {
+				log.error(`Unable to connect to LDAP server: ${errorToString(err)}`);
+			} else {
+				log.error(`LDAP search error: ${errorToString(err)}`);
 			}
 
-			res.on("searchEntry", function (entry) {
-				const user = entry.attributes[0].vals[0].toString();
+			await safeUnbind(ldapclient);
+			return;
+		}
 
-				if (remainingUsers.has(user)) {
-					remainingUsers.delete(user);
-					callbackLoadUser(user);
-				}
-			});
+		await safeUnbind(ldapclient);
 
-			res.on("error", function (err3) {
-				log.error(`LDAP error: ${err3.toString()}`);
-			});
+		for (const entry of searchResult.searchEntries) {
+			const userAttr = entry[config.ldap.primaryKey];
+			const user = Array.isArray(userAttr) ? userAttr[0] : userAttr;
+			const userStr = typeof user === "string" ? user : String(user);
 
-			res.on("end", function () {
-				remainingUsers.forEach((user) => {
-					log.warn(
-						`No account info in LDAP for ${colors.bold(
-							user
-						)} but user config file exists`
-					);
-				});
-			});
+			if (remainingUsers.has(userStr)) {
+				remainingUsers.delete(userStr);
+				callbackLoadUser(userStr);
+			}
+		}
+
+		remainingUsers.forEach((user) => {
+			log.warn(
+				`No account info in LDAP for ${colors.bold(user)} but user config file exists`
+			);
 		});
-
-		ldapclient.unbind();
-	});
+	})();
 
 	return true;
 }

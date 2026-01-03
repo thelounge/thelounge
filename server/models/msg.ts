@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {MessageType, LinkPreview, UserInMessage} from "../../shared/types/msg";
+import {MessageType, LinkPreview, UserInMessage, WhoisData} from "../../shared/types/msg.js";
 
 class Msg {
 	from!: UserInMessage;
@@ -31,9 +31,9 @@ class Msg {
 	channel!: string;
 	reason!: string;
 
-	raw_modes!: any;
+	raw_modes!: string;
 	when!: Date;
-	whois!: any;
+	whois!: WhoisData;
 	users!: string[];
 	statusmsgGroup!: string;
 	params!: string[];

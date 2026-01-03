@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import parseStyle from "../../../../../client/js/helpers/ircmessageparser/parseStyle";
+import parseStyle from "../../../../../client/js/helpers/ircmessageparser/parseStyle.js";
 
 describe("parseStyle", () => {
 	it("should replace control codes", () => {

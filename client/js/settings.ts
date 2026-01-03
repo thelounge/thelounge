@@ -159,7 +159,7 @@ export function createState() {
 	return state;
 }
 
-function normalizeConfig(obj: any) {
+function normalizeConfig(obj: Record<string, Record<string, unknown>>) {
 	const newConfig: Partial<typeof defaultConfig> = {};
 
 	for (const settingName in obj) {
@@ -171,5 +171,5 @@ function normalizeConfig(obj: any) {
 
 // flatten to type of default
 export type SettingsState = {
-	[key in keyof typeof defaultConfig]: typeof defaultConfig[key]["default"];
+	[key in keyof typeof defaultConfig]: (typeof defaultConfig)[key]["default"];
 };

@@ -1,11 +1,11 @@
-import pkg from "../package.json";
+import pkg from "../package.json" with {type: "json"};
 import _ from "lodash";
-import path from "path";
-import os from "os";
-import fs from "fs";
-import net from "net";
+import path from "node:path";
+import os from "node:os";
+import net from "node:net";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
+import crypto from "node:crypto";
+import {execSync} from "node:child_process";
 
 export type Hostmask = {
 	nick: string;
@@ -57,16 +57,14 @@ function getGitCommit() {
 	// --git-dir ".git" makes git only check current directory for `.git`, and not travel upwards
 	// We set cwd to the location of `index.js` as soon as the process is started
 	try {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		_gitCommit = require("child_process")
-			.execSync(
-				'git --git-dir ".git" rev-parse --short HEAD', // Returns hash of current commit
-				{stdio: ["ignore", "pipe", "ignore"]}
-			)
+		_gitCommit = execSync(
+			'git --git-dir ".git" rev-parse --short HEAD', // Returns hash of current commit
+			{stdio: ["ignore", "pipe", "ignore"]}
+		)
 			.toString()
 			.trim();
 		return _gitCommit;
-	} catch (e: any) {
+	} catch {
 		// Not a git repository or git is not installed
 		_gitCommit = null;
 		return null;
@@ -185,7 +183,7 @@ function compareWithWildcard(a: string, b: string) {
 	return re.test(b);
 }
 
-function catch_to_error(prefix: string, err: any): Error {
+function catch_to_error(prefix: string, err: unknown): Error {
 	let msg: string;
 
 	if (err instanceof Error) {
@@ -193,7 +191,7 @@ function catch_to_error(prefix: string, err: any): Error {
 	} else if (typeof err === "string") {
 		msg = err;
 	} else {
-		msg = err.toString();
+		msg = String(err);
 	}
 
 	return new Error(`${prefix}: ${msg}`);

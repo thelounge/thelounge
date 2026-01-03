@@ -1,10 +1,10 @@
-import log from "../../log";
+import log from "../../log.js";
 import colors from "chalk";
 import {Command} from "commander";
 import fs from "fs";
-import Helper from "../../helper";
-import Config from "../../config";
-import Utils from "../utils";
+import Helper from "../../helper.js";
+import Config from "../../config.js";
+import Utils from "../utils.js";
 
 const program = new Command("reset");
 program
@@ -12,14 +12,13 @@ program
 	.on("--help", Utils.extraHelp)
 	.argument("<name>", "name of the user")
 	.option("--password [password]", "new password, will be prompted if not specified")
-	.action(function (name, cmdObj) {
+	.action(async function (name, cmdObj) {
 		if (!fs.existsSync(Config.getUsersPath())) {
 			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const ClientManager = require("../../clientManager").default;
+		const {default: ClientManager} = await import("../../clientManager.js");
 		const users = new ClientManager().getUsers();
 
 		if (users === undefined) {
@@ -37,22 +36,24 @@ program
 			return;
 		}
 
-		log.prompt(
-			{
+		try {
+			const password = await log.prompt({
 				text: "Enter new password:",
 				silent: true,
-			},
-			function (err, password) {
-				if (err) {
-					return;
-				}
+			});
 
-				change(name, password);
-			}
-		);
+			change(name, password);
+		} catch (err) {
+			log.error("Error during prompt:", String(err));
+		}
 	});
 
 function change(name, password) {
+	if (!password) {
+		log.error("Password cannot be empty.");
+		return;
+	}
+
 	const pathReal = Config.getUserConfigPath(name);
 	const pathTemp = pathReal + ".tmp";
 	const user = JSON.parse(fs.readFileSync(pathReal, "utf-8"));

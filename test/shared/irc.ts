@@ -1,9 +1,10 @@
-import {expect} from "chai";
-import {condensedTypes} from "../../shared/irc";
+import {expect, assert} from "chai";
+import {condensedTypes} from "../../shared/irc.js";
 
 describe(".condensedTypes", function () {
 	it("should be a non-empty array", function () {
-		expect(condensedTypes).to.be.an.instanceof(Set).that.is.not.empty;
+		assert.instanceOf(condensedTypes, Set);
+		assert.isNotEmpty(condensedTypes);
 	});
 
 	it("should only contain ASCII strings", function () {

@@ -1,4 +1,4 @@
-@import "default.css";
+@import url("default.css");
 
 :root {
 	--body-color: #f3f3f3;

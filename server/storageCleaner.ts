@@ -1,8 +1,8 @@
-import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
-import Config from "./config";
-import {DeletionRequest} from "./plugins/messageStorage/types";
-import log from "./log";
-import {MessageType} from "../shared/types/msg";
+import SqliteMessageStorage from "./plugins/messageStorage/sqlite.js";
+import Config from "./config.js";
+import {DeletionRequest} from "./plugins/messageStorage/types.js";
+import log from "./log.js";
+import {MessageType} from "../shared/types/msg.js";
 
 const status_types = [
 	MessageType.AWAY,
@@ -49,7 +49,7 @@ export class StorageCleaner {
 				break;
 			default:
 				// exhaustive switch guard, blows up when user specifies a invalid policy enum
-				this.messageTypes = assertNoBadPolicy(policy.deletionPolicy);
+				this.messageTypes = assertNoBadPolicy();
 		}
 	}
 
@@ -91,9 +91,9 @@ export class StorageCleaner {
 		try {
 			num_deleted = await this.db.deleteMessages(req);
 			this.errCount = 0; // reset when it works
-		} catch (err: any) {
+		} catch (err: unknown) {
 			this.errCount++;
-			log.error("can't clean messages", err.message);
+			log.error("can't clean messages", err instanceof Error ? err.message : String(err));
 
 			if (this.errCount === 2) {
 				log.error("Cleaning failed too many times, will not retry");
@@ -115,10 +115,8 @@ export class StorageCleaner {
 	}
 
 	private schedule(ms: number) {
-		const self = this;
-
 		this.ticker = setTimeout(() => {
-			self.runDeletes().catch((err) => {
+			this.runDeletes().catch((err) => {
 				log.error("storageCleaner: unexpected failure");
 				throw err;
 			});
@@ -141,7 +139,7 @@ export class StorageCleaner {
 	}
 }
 
-function assertNoBadPolicy(_: never): never {
+function assertNoBadPolicy(): never {
 	throw new Error(
 		`Invalid deletion policy "${Config.values.storagePolicy.deletionPolicy}" in the \`storagePolicy\` object, fix your config.`
 	);

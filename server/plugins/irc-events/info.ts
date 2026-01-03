@@ -1,11 +1,9 @@
-import Msg from "../../models/msg";
-import {IrcEventHandler} from "../../client";
-import {MessageType} from "../../../shared/types/msg";
+import Msg from "../../models/msg.js";
+import {IrcEventHandler} from "../../client.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("info", function (data) {
+	irc.on("info", (data) => {
 		const lobby = network.getLobby();
 
 		if (data.info) {
@@ -14,7 +12,7 @@ export default <IrcEventHandler>function (irc, network) {
 				command: "info",
 				text: data.info,
 			});
-			lobby.pushMessage(client, msg, true);
+			lobby.pushMessage(this, msg, true);
 		}
 	});
 };

@@ -1,9 +1,11 @@
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
-import {md, pki} from "node-forge";
-import log from "../log";
-import Config from "../config";
+import forge from "node-forge";
+import log from "../log.js";
+import Config from "../config.js";
+
+const {md, pki} = forge;
 
 export default {
 	get,
@@ -32,8 +34,8 @@ function get(uuid: string): ClientCertificateType | null {
 			private_key: fs.readFileSync(paths.privateKeyPath, "utf-8"),
 			certificate: fs.readFileSync(paths.certificatePath, "utf-8"),
 		};
-	} catch (e: any) {
-		log.error("Unable to get certificate", e);
+	} catch (e: unknown) {
+		log.error("Unable to get certificate", String(e));
 	}
 
 	return null;
@@ -54,12 +56,15 @@ function remove(uuid: string) {
 		if (fs.existsSync(paths.certificatePath)) {
 			fs.unlinkSync(paths.certificatePath);
 		}
-	} catch (e: any) {
-		log.error("Unable to remove certificate", e);
+	} catch (e: unknown) {
+		log.error("Unable to remove certificate", String(e));
 	}
 }
 
-function generateAndWrite(folderPath: string, paths: {privateKeyPath: any; certificatePath: any}) {
+function generateAndWrite(
+	folderPath: string,
+	paths: {privateKeyPath: string; certificatePath: string}
+) {
 	const certificate = generate();
 
 	try {
@@ -73,7 +78,7 @@ function generateAndWrite(folderPath: string, paths: {privateKeyPath: any; certi
 		});
 
 		return certificate;
-	} catch (e: any) {
+	} catch (e: unknown) {
 		log.error("Unable to write certificate", String(e));
 	}
 

@@ -1,8 +1,8 @@
 import _ from "lodash";
 import fs from "fs";
 import path from "path";
-import log from "../log";
-import Config from "../config";
+import log from "../log.js";
+import Config from "../config.js";
 
 type PolicyOption = {
 	port: number;
@@ -15,7 +15,7 @@ type PolicyMap = Map<string, Omit<PolicyOption, "host">>;
 
 class STSPolicies {
 	stsFile: string;
-	refresh: _.DebouncedFunc<any>;
+	refresh: _.DebouncedFunc<() => void>;
 
 	private policies: PolicyMap;
 

@@ -59,6 +59,15 @@ export type LinkPreview = {
 	thumbActualUrl?: string;
 };
 
+export interface WhoisData {
+	nick: string;
+	error?: boolean;
+	idle?: number;
+	logon?: number;
+	whowas?: boolean;
+	[key: string]: unknown;
+}
+
 export type SharedMsg = {
 	from?: UserInMessage;
 	id: number;
@@ -89,9 +98,9 @@ export type SharedMsg = {
 	channel?: string;
 	reason?: string;
 
-	raw_modes?: any;
+	raw_modes?: string;
 	when?: Date;
-	whois?: any;
+	whois?: WhoisData;
 
 	users: string[];
 

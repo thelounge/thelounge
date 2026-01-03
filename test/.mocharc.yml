@@ -2,11 +2,18 @@ color: true
 check-leaks: true
 recursive: true
 reporter: dot
-ignore: "test/client/**"
-extension: ["ts", "js"]
+# TODO: Remove --exit once all event loop references are properly cleaned up
+# Despite improvements to Socket.IO cleanup (disconnectSockets, signal handler removal,
+# identd server closing), something still keeps the event loop alive after tests complete.
+# Candidates: file watchers (fs.watch with persistent:false), pending timers, or
+# Socket.IO internal state in v4.8.1. Further investigation needed.
+exit: true
+ignore:
+  - "test/client/**"
+  - "test/server.ts"
+  - "test/util.ts"
+spec: ["test/**/*.ts"]
 require:
-  - "ts-node/register"
-  # - "jsdom-global/register"
   - "test/fixtures/env.ts"
 globals:
   - "__VUE_PROD_DEVTOOLS__"

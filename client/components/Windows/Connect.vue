@@ -22,7 +22,7 @@ export default defineComponent({
 
 		const disabled = ref(false);
 
-		const handleSubmit = (data: Record<string, any>) => {
+		const handleSubmit = (data: NetworkFormDefaults) => {
 			disabled.value = true;
 			socket.emit("network:new", data);
 		};
@@ -32,7 +32,7 @@ export default defineComponent({
 				return {};
 			}
 
-			const parsedParams: Record<string, any> = {};
+			const parsedParams: Record<string, unknown> = {};
 
 			for (let key of Object.keys(params)) {
 				let value = params[key];

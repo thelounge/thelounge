@@ -1,9 +1,9 @@
 import fs from "fs";
 import net, {Socket} from "net";
 import colors from "chalk";
-import Helper from "./helper";
-import Config from "./config";
-import log from "./log";
+import Helper from "./helper.js";
+import Config from "./config.js";
+import log from "./log.js";
 
 type Connection = {
 	socket: Socket;
@@ -13,6 +13,7 @@ class Identification {
 	private connectionId: number;
 	private connections: Map<number, Connection>;
 	private oidentdFile?: string;
+	private identdServer?: net.Server;
 
 	constructor(startedCallback: (identHandler: Identification, err?: Error) => void) {
 		this.connectionId = 0;
@@ -32,7 +33,8 @@ class Identification {
 				);
 			}
 
-			const server = net.createServer(this.serverConnection.bind(this));
+			this.identdServer = net.createServer(this.serverConnection.bind(this));
+			const server = this.identdServer;
 
 			server.on("error", (err) => {
 				startedCallback(this, err);
@@ -177,6 +179,14 @@ class Identification {
 					log.error("Failed to update oidentd file!", err.message);
 				}
 			});
+		}
+	}
+
+	close(callback: () => void) {
+		if (this.identdServer) {
+			this.identdServer.close(callback);
+		} else {
+			callback();
 		}
 	}
 }

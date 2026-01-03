@@ -1,19 +1,19 @@
-import log from "../server/log";
-import Config from "../server/config";
-import {expect} from "chai";
+import log from "../server/log.js";
+import Config from "../server/config.js";
+import {expect, assert} from "chai";
 import got from "got";
 import io from "socket.io-client";
 import util from "./util";
-import changelog from "../server/plugins/changelog";
+import changelog from "../server/plugins/changelog.js";
 
-import sinon from "ts-sinon";
-import ClientManager from "../server/clientManager";
+import sinon from "sinon";
+import ClientManager from "../server/clientManager.js";
 
 describe("Server", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 
-	let server;
+	let serverInstance: import("../server/server").ServerInstance;
 	let logInfoStub: sinon.SinonStub<string[], void>;
 	let logWarnStub: sinon.SinonStub<string[], void>;
 	let checkForUpdatesStub: sinon.SinonStub<[manager: ClientManager], void>;
@@ -35,7 +35,7 @@ describe("Server", function () {
 		});
 
 		checkForUpdatesStub = sinon.stub(changelog, "checkForUpdates");
-		server = await (await import("../server/server")).default({} as any);
+		serverInstance = await (await import("../server/server")).default({dev: false});
 	});
 
 	after(function (done) {
@@ -44,7 +44,8 @@ describe("Server", function () {
 		logInfoStub.restore();
 		logWarnStub.restore();
 		checkForUpdatesStub.restore();
-		server.close(done);
+		// Use stop() method which properly closes Socket.IO then HTTP server
+		serverInstance.stop(done);
 	});
 
 	const webURL = `http://${Config.values.host}:${Config.values.port}/`;
@@ -63,7 +64,9 @@ describe("Server", function () {
 
 			expect(response.statusCode).to.equal(200);
 			expect(body.name).to.equal("The Lounge");
-			expect(response.headers["content-type"]).to.equal("application/manifest+json");
+			expect(response.headers["content-type"]).to.match(
+				/^application\/manifest\+json(?:;\s*charset=utf-8)?$/
+			);
 		});
 	});
 
@@ -109,7 +112,7 @@ describe("Server", function () {
 			});
 
 			client.on("network", (data) => {
-				expect(data.network).to.exist;
+				assert.exists(data.network);
 				expect(data.network.nick).to.equal("test-user");
 				expect(data.network.name).to.equal("Test Network");
 				expect(data.network.channels).to.have.lengthOf(3);
@@ -139,7 +142,7 @@ describe("Server", function () {
 
 		it("should emit push subscription state message", (done) => {
 			client.on("push:issubscribed", (data) => {
-				expect(data).to.be.false;
+				expect(data).to.equal(false);
 
 				done();
 			});
@@ -149,8 +152,8 @@ describe("Server", function () {
 			client.on("init", (data) => {
 				expect(data.active).to.equal(-1);
 				expect(data.networks).to.be.an("array");
-				expect(data.networks).to.be.empty;
-				expect(data.token).to.be.undefined;
+				assert.isEmpty(data.networks);
+				expect(data.token).to.equal(undefined);
 
 				done();
 			});

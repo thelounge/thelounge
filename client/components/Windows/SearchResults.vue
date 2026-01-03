@@ -104,7 +104,7 @@ import {watch, computed, defineComponent, nextTick, ref, onMounted, onUnmounted}
 import type {ClientMessage} from "../../js/types";
 
 import {useStore} from "../../js/store";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import {switchToChannel} from "../../js/router";
 import {SearchQuery} from "../../../shared/types/storage";
 
@@ -119,7 +119,6 @@ export default defineComponent({
 	setup() {
 		const store = useStore();
 		const route = useRoute();
-		const router = useRouter();
 
 		const chat = ref<HTMLDivElement>();
 
@@ -241,7 +240,7 @@ export default defineComponent({
 			el.scrollTop = el.scrollHeight;
 		};
 
-		const jump = (message: ClientMessage, id: number) => {
+		const jump = () => {
 			// TODO: Implement jumping to messages!
 			// This is difficult because it means client will need to handle a potentially nonlinear message set
 			// (loading IntersectionObserver both before AND after the messages)

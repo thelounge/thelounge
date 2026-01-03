@@ -1,12 +1,10 @@
-import {IrcEventHandler} from "../../client";
+import {IrcEventHandler} from "../../client.js";
 
-import Msg from "../../models/msg";
-import {MessageType} from "../../../shared/types/msg";
+import Msg from "../../models/msg.js";
+import {MessageType} from "../../../shared/types/msg.js";
 
 export default <IrcEventHandler>function (irc, network) {
-	const client = this;
-
-	irc.on("quit", function (data) {
+	irc.on("quit", (data) => {
 		network.channels.forEach((chan) => {
 			const user = chan.findUser(data.nick);
 
@@ -21,7 +19,7 @@ export default <IrcEventHandler>function (irc, network) {
 				hostmask: data.ident + "@" + data.hostname,
 				from: user,
 			});
-			chan.pushMessage(client, msg);
+			chan.pushMessage(this, msg);
 
 			chan.removeUser(user);
 		});

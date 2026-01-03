@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import path from "path";
-import fs, {Stats} from "fs";
-import os from "os";
+import path from "node:path";
+import fs, {Stats} from "node:fs";
+import os from "node:os";
 import _ from "lodash";
 import colors from "chalk";
-import {SearchOptions} from "ldapjs";
+import {SearchOptions} from "ldapts";
+import {pathToFileURL} from "node:url";
+import type {ConnectionOptions as TlsConnectionOptions} from "node:tls";
 
-import log from "./log";
-import Helper from "./helper";
-import Utils from "./command-line/utils";
-import Network from "./models/network";
+import log from "./log.js";
+import Helper from "./helper.js";
+import Utils from "./command-line/utils.js";
+import Network from "./models/network.js";
 
-// TODO: Type this
 export type WebIRC = {
-	[key: string]: any;
+	[key: string]: unknown;
 };
 
 type Https = {
@@ -64,13 +64,11 @@ type SearchDN = {
 type Ldap = {
 	enable: boolean;
 	url: string;
-	tlsOptions: any;
+	tlsOptions: TlsConnectionOptions;
 	primaryKey: string;
 	searchDN: SearchDN;
 	baseDN?: string;
 };
-
-type TlsOptions = any;
 
 type Debug = {
 	ircFramework: boolean;
@@ -99,7 +97,7 @@ export type ConfigType = {
 	prefetchMaxSearchSize: number;
 	prefetchTimeout: number;
 	fileUpload: FileUpload;
-	transports: string[];
+	transports: ("polling" | "websocket")[];
 	leaveMessage: string;
 	defaults: Defaults;
 	lockNetwork: boolean;
@@ -114,10 +112,10 @@ export type ConfigType = {
 	themeColor: string;
 };
 
+import defaultConfig from "../defaults/config.js";
+
 class Config {
-	values = require(path.resolve(
-		path.join(__dirname, "..", "defaults", "config.js")
-	)) as ConfigType;
+	values = {..._.cloneDeep(defaultConfig), themeColor: ""} as unknown as ConfigType;
 	#homePath = "";
 
 	getHomePath() {
@@ -205,36 +203,43 @@ class Config {
 		});
 	}
 
-	setHome(newPath: string) {
+	async setHome(newPath: string) {
 		this.#homePath = Helper.expandHome(newPath);
 
 		// Reload config from new home location
 		const configPath = this.getConfigPath();
 
 		if (fs.existsSync(configPath)) {
-			const userConfig = require(configPath);
+			try {
+				const configUrl = pathToFileURL(configPath).href;
+				const userConfigModule = await import(configUrl);
+				const userConfig = userConfigModule.default || userConfigModule;
 
-			if (_.isEmpty(userConfig)) {
-				log.warn(
-					`The file located at ${colors.green(
-						configPath
-					)} does not appear to expose anything.`
-				);
-				log.warn(
-					`Make sure it is non-empty and the configuration is exported using ${colors.bold(
-						"module.exports = { ... }"
-					)}.`
-				);
+				if (_.isEmpty(userConfig)) {
+					log.warn(
+						`The file located at ${colors.green(
+							configPath
+						)} does not appear to expose anything.`
+					);
+					log.warn(
+						`Make sure it is non-empty and the configuration is exported using ${colors.bold(
+							"export default { ... }"
+						)}.`
+					);
+					log.warn("Using default configuration...");
+				}
+
+				this.merge(userConfig);
+			} catch (error) {
+				log.error(`Failed to load config from ${configPath}:`, String(error));
 				log.warn("Using default configuration...");
 			}
-
-			this.merge(userConfig);
 		}
 
 		if (this.values.fileUpload.baseUrl) {
 			try {
 				new URL("test/file.png", this.values.fileUpload.baseUrl);
-			} catch (e: any) {
+			} catch (e: unknown) {
 				this.values.fileUpload.baseUrl = undefined;
 
 				log.warn(
@@ -248,18 +253,21 @@ class Config {
 		const manifestPath = Utils.getFileFromRelativeToRoot("public", "thelounge.webmanifest");
 
 		// Check if manifest exists, if not, the app most likely was not built
+		// Skip this check in test environment
 		if (!fs.existsSync(manifestPath)) {
-			log.error(
-				`The client application was not built. Run ${colors.bold(
-					"NODE_ENV=production yarn build"
-				)} to resolve this.`
-			);
-			process.exit(1);
+			if (process.env.NODE_ENV !== "test") {
+				log.error(
+					`The client application was not built. Run ${colors.bold(
+						"NODE_ENV=production yarn build"
+					)} to resolve this.`
+				);
+				process.exit(1);
+			}
+		} else {
+			// Load theme color from the web manifest
+			const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+			this.values.themeColor = manifest.theme_color;
 		}
-
-		// Load theme color from the web manifest
-		const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-		this.values.themeColor = manifest.theme_color;
 
 		// log dir probably shouldn't be world accessible.
 		// Create it with the desired permission bits if it doesn't exist yet.
@@ -276,8 +284,8 @@ class Config {
 		if (!logsStat) {
 			try {
 				fs.mkdirSync(userLogsPath, {recursive: true, mode: 0o750});
-			} catch (e: any) {
-				log.error("Unable to create logs directory", e);
+			} catch (e: unknown) {
+				log.error("Unable to create logs directory", String(e));
 			}
 		} else if (logsStat && logsStat.mode & 0o001) {
 			log.warn(
