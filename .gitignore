@@ -7,3 +7,15 @@ package-lock.json
 coverage/
 public/
 dist/
+.DS_Store
+
+# Yarn 4
+.yarn/cache
+.yarn/install-state.gz
+.yarn/unplugged
+.yarn/build-state.yml
+.pnp.*
+
+memory.db
+*.db-shm
+*.db-wal
