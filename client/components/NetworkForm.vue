@@ -220,6 +220,20 @@
 					@input="onNickChanged"
 				/>
 			</div>
+			<div class="connect-row">
+				<label></label>
+				<div class="input-wrap">
+					<label class="tls no-fallback-nick" for="connect:keepNickOnConnect">
+						<input
+							id="connect:keepNickOnConnect"
+							v-model="defaults.keepNickOnConnect"
+							type="checkbox"
+							name="keepNickOnConnect"
+						/>
+						No fallback nick
+					</label>
+				</div>
+			</div>
 			<template v-if="!config?.useHexIp">
 				<div class="connect-row">
 					<label for="connect:username">Username</label>
@@ -549,8 +563,16 @@ export default defineComponent({
 			const data: Partial<ClientNetwork> = {};
 
 			formData.forEach((value, key) => {
-				data[key] = value;
+				if (key === "keepNickOnConnect") {
+					data[key] = true;
+				} else {
+					data[key] = value;
+				}
 			});
+
+			if (!("keepNickOnConnect" in data)) {
+				data.keepNickOnConnect = false;
+			}
 
 			props.handleSubmit(data as ClientNetwork);
 		};

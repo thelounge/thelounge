@@ -332,6 +332,12 @@ class Client {
 			proxyPort: parseInt(args.proxyPort, 10),
 			proxyUsername: String(args.proxyUsername || ""),
 			proxyPassword: String(args.proxyPassword || ""),
+			keepNickOnConnect:
+				typeof args.keepNickOnConnect === "boolean" ? args.keepNickOnConnect : undefined,
+			keepNickRetryInterval:
+				typeof args.keepNickRetryInterval === "number"
+					? args.keepNickRetryInterval
+					: undefined,
 		});
 	}
 

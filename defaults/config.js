@@ -218,6 +218,19 @@ module.exports = {
 	// default.
 	leaveMessage: "The Lounge - https://thelounge.chat",
 
+	// ### `keepNickOnConnect`
+	//
+	// When set to `true`, The Lounge will keep retrying the original nick on connect if it is in use,
+	// and will not fall back to a random nick. If `false`, it will use a random fallback nick as before.
+	// This value is set to `false` by default for backward compatibility.
+	keepNickOnConnect: false,
+
+	// ### `keepNickRetryInterval`
+	//
+	// When using the 'No fallback nick' option, this sets how often (in milliseconds)
+	// The Lounge will retry your original nick if it is in use. Default is 30000 (30 seconds).
+	keepNickRetryInterval: 30000,
+
 	// ## Default network
 
 	// ### `defaults`
