@@ -13,7 +13,7 @@ describe("packages", function () {
 		logInfoStub = sinon.stub(log, "info");
 
 		delete require.cache[require.resolve("../../../server/plugins/packages")];
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		packages = require("../../../server/plugins/packages").default;
 	});
 

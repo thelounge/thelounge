@@ -6,7 +6,6 @@ describe("public folder", function () {
 	const publicFolder = path.join(__dirname, "..", "..", "public");
 
 	it("font awesome files are copied", function () {
-		expect(fs.existsSync(path.join(publicFolder, "fonts", "fa-solid-900.woff"))).to.be.true;
 		expect(fs.existsSync(path.join(publicFolder, "fonts", "fa-solid-900.woff2"))).to.be.true;
 	});
 

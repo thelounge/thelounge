@@ -1,5 +1,5 @@
 import _ from "lodash";
-import UAParser from "ua-parser-js";
+import {UAParser} from "ua-parser-js";
 import {v4 as uuidv4} from "uuid";
 import escapeRegExp from "lodash/escapeRegExp";
 import crypto from "crypto";
@@ -666,7 +666,7 @@ class Client {
 		// process this event normally even if there is no attached client anymore.
 		const attachedClient =
 			this.attachedClients[socketId] ||
-			({} as Record<string, typeof this.attachedClients[0]>);
+			({} as Record<string, (typeof this.attachedClients)[0]>);
 
 		// Opening a window like settings
 		if (target === null) {

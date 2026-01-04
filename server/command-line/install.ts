@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import log from "../log";
 import colors from "chalk";
 import semver from "semver";
@@ -6,11 +5,11 @@ import Helper from "../helper";
 import Config from "../config";
 import Utils from "./utils";
 import {Command} from "commander";
-import {FullMetadata} from "package-json";
+import {FullVersion} from "package-json";
 
-type CustomMetadata = FullMetadata & {
-	thelounge: {
-		supports: string;
+type CustomMetadata = FullVersion & {
+	thelounge?: {
+		supports?: string;
 	};
 };
 
@@ -34,8 +33,7 @@ program
 		}
 
 		log.info("Retrieving information about the package...");
-		// TODO: type
-		let readFile: any = null;
+		let readFile: Promise<CustomMetadata> | null = null;
 		let isLocalFile = false;
 
 		if (packageName.startsWith("file:")) {
@@ -45,7 +43,7 @@ program
 			packageName = expandTildeInLocalPath(packageName);
 			readFile = fspromises
 				.readFile(path.join(packageName.substring("file:".length), "package.json"), "utf-8")
-				.then((data) => JSON.parse(data) as typeof packageJson);
+				.then((data) => JSON.parse(data) as CustomMetadata);
 		} else {
 			// properly split scoped and non-scoped npm packages
 			// into their name and version
@@ -63,13 +61,13 @@ program
 			});
 		}
 
-		if (!readFile) {
+		if (readFile === null) {
 			// no-op, error should've been thrown before this point
 			return;
 		}
 
 		readFile
-			.then((json: CustomMetadata) => {
+			.then((json) => {
 				const humanVersion = isLocalFile ? packageName : `${json.name} v${json.version}`;
 
 				if (!("thelounge" in json)) {
@@ -79,7 +77,7 @@ program
 				}
 
 				if (
-					json.thelounge.supports &&
+					json.thelounge?.supports &&
 					!semver.satisfies(Helper.getVersionNumber(), json.thelounge.supports, {
 						includePrerelease: true,
 					})
@@ -106,12 +104,16 @@ program
 							// the lockfile properly. We need to run an install in that case
 							// even though that's supposed to be done by the add subcommand
 							return Utils.executeYarnCommand("install").catch((err) => {
-								throw `Failed to update lockfile after package install ${err}`;
+								throw new Error(
+									`Failed to update lockfile after package install ${err}`
+								);
 							});
 						}
 					})
 					.catch((code) => {
-						throw `Failed to install ${colors.red(humanVersion)}. Exit code: ${code}`;
+						throw new Error(
+							`Failed to install ${colors.red(humanVersion)}. Exit code: ${code}`
+						);
 					});
 			})
 			.catch((e) => {
