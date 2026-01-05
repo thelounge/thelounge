@@ -50,6 +50,8 @@
 html {
 	box-sizing: border-box;
 	-webkit-tap-highlight-color: transparent; /* remove tap highlight on touch devices */
+	min-height: calc(100% + env(safe-area-inset-top));
+	padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
 }
 
 *,
@@ -963,6 +965,7 @@ background on hover (unless active) */
 	flex-shrink: 0;
 	display: flex;
 	justify-content: center;
+	margin-bottom: calc(env(safe-area-inset-bottom) / 2);
 }
 
 #footer button {
@@ -2939,4 +2942,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	height: 100%;
 	justify-content: center;
 	align-items: center;
+}
+
+.mentions-popup {
+	margin-top: env(safe-area-inset-top);
+}
+
+#chat-container,
+#connect,
+#settings,
+#help {
+	padding-bottom: calc(env(safe-area-inset-bottom) / 2);
 }
