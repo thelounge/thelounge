@@ -36,16 +36,25 @@ socket.on("auth:start", async function (serverHash) {
 	lastServerHash = serverHash;
 
 	const user = storage.get("user");
-	const token = storage.get("token");
-	const doFastAuth = user && token;
+	const doFastAuth =
+		user && document.cookie.split("; ").some((cookie) => cookie.startsWith("connect.sid="));
 
 	// If we reconnect and no longer have a stored token, reload the page
 	if (store.state.appLoaded && !doFastAuth) {
 		return reloadPage("Authentication failed, reloading…");
 	}
 
+	let authenticated: boolean;
+
+	try {
+		const response = await fetch("/api/user-info");
+		authenticated = response.status === 200;
+	} catch {
+		authenticated = false;
+	}
+
 	// If we have user and token stored, perform auth without showing sign-in first
-	if (doFastAuth) {
+	if (authenticated) {
 		store.commit("currentUserVisibleError", "Authorizing…");
 		updateLoadingMessage();
 
@@ -67,8 +76,6 @@ socket.on("auth:start", async function (serverHash) {
 			(store.state.activeChannel && store.state.activeChannel.channel.id) || null;
 
 		socket.emit("auth:perform", {
-			user,
-			token,
 			lastMessage,
 			openChannel,
 			hasConfig: store.state.serverConfiguration !== null,
@@ -78,7 +85,7 @@ socket.on("auth:start", async function (serverHash) {
 	}
 });
 
-async function showSignIn() {
+export async function showSignIn() {
 	// TODO: this flashes grey background because it takes a little time for vue to mount signin
 	if (window.g_TheLoungeRemoveLoading) {
 		window.g_TheLoungeRemoveLoading();

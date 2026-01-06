@@ -1,10 +1,7 @@
 <template>
 	<div>
 		<div
-			v-if="
-				!store.state.serverConfiguration?.public &&
-				!store.state.serverConfiguration?.ldapEnabled
-			"
+			v-if="store.state.authMethod === 'local'"
 			id="change-password"
 			role="group"
 			aria-labelledby="label-change-password"

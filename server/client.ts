@@ -67,9 +67,6 @@ export type UserConfig = {
 	password: string;
 	sessions: {
 		[token: string]: {
-			lastUse: number;
-			ip: string;
-			agent: string;
 			pushSubscription?: ClientPushSubscription;
 		};
 	};

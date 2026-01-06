@@ -10,7 +10,7 @@ import isUtf8 from "is-utf8";
 import log from "../log";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
-import {Request, Response} from "express";
+import {Express, Request, Response} from "express";
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -35,46 +35,12 @@ const inlineContentDispositionTypes = {
 	"video/webm": "video.webm",
 };
 
-const uploadTokens = new Map();
-
 class Uploader {
-	constructor(socket: Socket) {
-		socket.on("upload:auth", () => {
-			const token = uuidv4();
-
-			socket.emit("upload:auth", token);
-
-			// Invalidate the token in one minute
-			const timeout = Uploader.createTokenTimeout(token);
-
-			uploadTokens.set(token, timeout);
+	static router(this: void, express: Express) {
+		express.get("/uploads/:name/:slug*?", (req, res, next) => {
+			Uploader.routeGetFile(req, res).catch(next);
 		});
-
-		socket.on("upload:ping", (token) => {
-			if (typeof token !== "string") {
-				return;
-			}
-
-			let timeout = uploadTokens.get(token);
-
-			if (!timeout) {
-				return;
-			}
-
-			clearTimeout(timeout);
-			timeout = Uploader.createTokenTimeout(token);
-			uploadTokens.set(token, timeout);
-		});
-	}
-
-	static createTokenTimeout(this: void, token: string) {
-		return setTimeout(() => uploadTokens.delete(token), 60 * 1000);
-	}
-
-	// TODO: type
-	static router(this: void, express: any) {
-		express.get("/uploads/:name/:slug*?", Uploader.routeGetFile);
-		express.post("/uploads/new/:token", Uploader.routeUploadFile);
+		express.post("/uploads/new", Uploader.routeUploadFile);
 	}
 
 	static async routeGetFile(this: void, req: Request, res: Response) {
@@ -83,7 +49,9 @@ class Uploader {
 		const nameRegex = /^[0-9a-f]{16}$/;
 
 		if (!nameRegex.test(name)) {
-			return res.status(404).send("Not found");
+			res.status(404).send("Not found");
+
+			return;
 		}
 
 		const folder = name.substring(0, 2);
@@ -93,7 +61,9 @@ class Uploader {
 
 		// doesn't exist
 		if (detectedMimeType === null) {
-			return res.status(404).send("Not found");
+			res.status(404).send("Not found");
+
+			return;
 		}
 
 		// Force a download in the browser if it's not an allowed type (binary or otherwise unknown)
@@ -128,10 +98,16 @@ class Uploader {
 		res.setHeader("Cache-Control", "max-age=86400");
 		res.contentType(detectedMimeType);
 
-		return res.sendFile(filePath);
+		res.sendFile(filePath);
 	}
 
 	static routeUploadFile(this: void, req: Request, res: Response) {
+		if (!req.user) {
+			res.status(401).send("Unauthorized");
+
+			return;
+		}
+
 		let busboyInstance: NodeJS.WritableStream | busboy | null | undefined;
 		let uploadUrl: string | URL;
 		let randomName: string;
@@ -167,11 +143,6 @@ class Uploader {
 
 			return res.status(400).json({error: err.message});
 		};
-
-		// if the authentication token is incorrect, bail out
-		if (uploadTokens.delete(req.params.token) !== true) {
-			return abortWithError(Error("Invalid upload token"));
-		}
 
 		// if the request does not contain any body data, bail out
 		if (req.headers["content-length"] && parseInt(req.headers["content-length"]) < 1) {

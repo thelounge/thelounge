@@ -13,9 +13,7 @@ describe("Client passwords", function () {
 			"$2a$11$zrPPcfZ091WNfs6QrRHtQeUitlgrJcecfZhxOFiQs0FWw7TN3Q1oS"
 		);
 
-		return comparedPassword.then((result) => {
-			expect(result).to.be.true;
-		});
+		return expect(comparedPassword).to.be.true;
 	});
 
 	it("wrong hashed password should not match", function () {
@@ -25,18 +23,14 @@ describe("Client passwords", function () {
 			"$2a$11$zrPPcfZ091WRONGPASSWORDitlgrJcecfZhxOFiQs0FWw7TN3Q1oS"
 		);
 
-		return comparedPassword.then((result) => {
-			expect(result).to.be.false;
-		});
+		return expect(comparedPassword).to.be.false;
 	});
 
 	it("freshly hashed password should match", function () {
 		const hashedPassword = Helper.password.hash(inputPassword);
 		const comparedPassword = Helper.password.compare(inputPassword, hashedPassword);
 
-		return comparedPassword.then((result) => {
-			expect(result).to.be.true;
-		});
+		return expect(comparedPassword).to.be.true;
 	});
 
 	it("shout passwords should be marked as old", function () {

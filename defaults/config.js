@@ -43,6 +43,57 @@ module.exports = {
 	// pick its preferred one.
 	bind: undefined,
 
+	// ### `baseUrl`
+	//
+	// Set to the external URL of The Lounge. It should contain the correct scheme
+	// (`http` or `https`), hostname, port, and subpath if any.
+	//
+	// This option is required if using OpenID Connect authentication.
+	//
+	// This option is `undefined` by default.
+	baseUrl: undefined,
+
+	// ### `sessionSecretRef`
+	//
+	// The secret key used to encrypt session tokens. A string value with at least
+	// [64 bits of entropy are suggested](https://owasp.org/www-community/vulnerabilities/Insufficient_Session-ID_Length).
+	//
+	//   The value can be specified
+	//   using either:
+	//   - A file URL: `"file:///path/to/file"` to load the value from a file
+	//   - An environment variable URL: `"env:VARIABLE_NAME"` to load the value from an environmental variable.
+	//
+	// The default value is `undefined`. If `undefined`, a value will be generated in `session-secret.json`.
+	sessionSecretRef: undefined,
+
+	// ### `pushNotificationPublicKeyRef`
+	//
+	// The public key for use with Web Push notifications. See
+	// [Mozilla Services Blog](https://blog.mozilla.org/services/2016/08/23/sending-vapid-identified-webpush-notifications-via-mozillas-push-service/)
+	// for generation details.
+	//
+	//   The value can be specified
+	//   using either:
+	//   - A file URL: `"file:///path/to/file"` to load the value from a file
+	//   - An environment variable URL: `"env:VARIABLE_NAME"` to load the value from an environmental variable.
+	//
+	// The default value is `undefined`. If `undefined`, a value will be generated in `vapid.json`.
+	pushNotificationPublicKeyRef: undefined,
+
+	// ### `pushNotificationPrivateKeyRef`
+	//
+	// The private key for use with Web Push notifications. See
+	// [Mozilla Services Blog](https://blog.mozilla.org/services/2016/08/23/sending-vapid-identified-webpush-notifications-via-mozillas-push-service/)
+	// for generation details.
+	//
+	//   The value can be specified
+	//   using either:
+	//   - A file URL: `"file:///path/to/file"` to load the value from a file
+	//   - An environment variable URL: `"env:VARIABLE_NAME"` to load the value from an environmental variable.
+	//
+	// The default value is `undefined`. If `undefined`, a value will be generated in `vapid.json`.
+	pushNotificationPrivateKeyRef: undefined,
+
 	// ### `reverseProxy`
 	//
 	// When set to `true`, The Lounge is marked as served behind a reverse proxy
@@ -488,6 +539,78 @@ module.exports = {
 			//   - `scope`: LDAP search scope. It is set to `"sub"` by default.
 			scope: "sub",
 		},
+	},
+
+	// ## OpenID Connect (OIDC) Support
+	//
+	// These settings enable and configure OpenID Connect authentication.
+	//
+	// They are only being used in private mode. To know more about private mode,
+	// see the `public` setting above.
+	//
+	// The "openid" and "profile" scopes are requested from the issuer.
+	//
+	// The top-level `baseUrl` configuration option is required when using OIDC.
+	//
+	// The available keys for the `oidc` object are:
+	oidc: {
+		// - `enable`: when set to `false`, OIDC support is disabled and all other
+		//   values are ignored.
+		//   This value is set to `false` by default.
+		enable: false,
+
+		// - `issuer`: The OpenID Connect issuer identifier URL. This is the base URL
+		//   of the OIDC provider that publishes its discovery document at
+		//   `/.well-known/openid-configuration`. The issuer URL uniquely identifies
+		//   the OIDC provider and is used to validate tokens. This value is required
+		//   when OIDC is enabled. It is set to
+		//   `"https://auth.example.com/application/o/slug-name-here/"` by default.
+		issuer: "https://auth.example.com/application/o/slug-name-here/",
+
+		// - `authorizationUrl`: The authorization endpoint URL where users are
+		//   redirected to authenticate. This is part of the OIDC authorization code
+		//   flow. Users will be sent to this URL to log in with their credentials.
+		//   This value is required when OIDC is enabled. It is set to
+		//   `"https://auth.example.com/application/o/authorize/"` by default.
+		authorizationUrl: "https://auth.example.com/application/o/authorize/",
+
+		// - `tokenUrl`: The token endpoint URL where the authorization code is
+		//   exchanged for access tokens and ID tokens. After a user successfully
+		//   authenticates, The Lounge will use this endpoint to obtain tokens using
+		//   the authorization code received from the authorization endpoint. This value
+		//   is required when OIDC is enabled. It is set to
+		//   `"https://auth.example.com/application/o/token/"` by default.
+		tokenUrl: "https://auth.example.com/application/o/token/",
+
+		// - `userInfoUrl`: The userinfo endpoint URL where user information (claims)
+		//   are retrieved using the access token. After obtaining an access token,
+		//   The Lounge will query this endpoint to get user profile information such
+		//   as username and email. This value is required when OIDC is enabled. It is
+		//   set to `"https://auth.example.com/application/o/userinfo/"` by default.
+		userInfoUrl: "https://auth.example.com/application/o/userinfo/",
+
+		// - `clientIdRef`: Reference to the OIDC client ID. This identifies The Lounge
+		//   as a client application to the OIDC provider.
+		//
+		//   The value can be specified
+		//   using either:
+		//   - A file URL: `"file:///path/to/file"` to load the client ID from a file
+		//   - An environment variable URL: `"env:VARIABLE_NAME"` to load the client ID
+		//     from an environment variable
+		//
+		//   This value is required when OIDC is enabled. It is set to
+		//   `"file:///path/to/secret"` by default.
+		clientIdRef: "file:///path/to/secret",
+
+		// - `clientSecretRef`: Reference to the OIDC client secret. This is a secret
+		//   value used to authenticate The Lounge with the OIDC provider. The value
+		//   can be specified using either:
+		//   - A file URL: `"file:///path/to/file"` to load the client secret from a file
+		//   - An environment variable URL: `"env:VARIABLE_NAME"` to load the client
+		//     secret from an environment variable
+		//   This value is required when OIDC is enabled. It is set to
+		//   `"env:OIDC_CLIENT_SECRET"` by default.
+		clientSecretRef: "env:OIDC_CLIENT_SECRET",
 	},
 
 	// ## Debugging settings

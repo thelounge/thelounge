@@ -70,6 +70,16 @@ type Ldap = {
 	baseDN?: string;
 };
 
+type Oidc = {
+	enable: boolean;
+	issuer: string;
+	authorizationUrl: string;
+	tokenUrl: string;
+	userInfoUrl: string;
+	clientIdRef: string; // file or env URL scheme
+	clientSecretRef: string; // file or env URL scheme
+};
+
 type TlsOptions = any;
 
 type Debug = {
@@ -88,6 +98,10 @@ export type ConfigType = {
 	host: string | undefined;
 	port: number;
 	bind: string | undefined;
+	baseUrl?: URL;
+	sessionSecretRef?: string;
+	pushNotificationPublicKeyRef?: string;
+	pushNotificationPrivateKeyRef?: string;
 	reverseProxy: boolean;
 	maxHistory: number;
 	https: Https;
@@ -110,6 +124,7 @@ export type ConfigType = {
 	identd: Identd;
 	oidentd?: string;
 	ldap: Ldap;
+	oidc?: Oidc;
 	debug: Debug;
 	themeColor: string;
 };
@@ -130,6 +145,18 @@ class Config {
 
 	getUserLogsPath() {
 		return path.join(this.#homePath, "logs");
+	}
+
+	getSqliteDbPath() {
+		return path.join(this.#homePath, "thelounge.sqlite");
+	}
+
+	getSessionSecretPath() {
+		return path.join(this.#homePath, "session-secret.json");
+	}
+
+	getVapidPath() {
+		return path.join(this.#homePath, "vapid.json");
 	}
 
 	getStoragePath() {

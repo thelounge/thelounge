@@ -1,8 +1,9 @@
 import {store} from "../store";
 import socket from "../socket";
+import {showSignIn} from "./auth";
 
 socket.on("disconnect", handleDisconnect);
-socket.on("connect_error", handleDisconnect);
+socket.on("connect_error", handleConnectError);
 socket.on("error", handleDisconnect);
 
 socket.io.on("reconnect_attempt", function (attempt) {
@@ -24,6 +25,16 @@ socket.on("connect", function () {
 	store.commit("currentUserVisibleError", "Finalizing connection…");
 	updateLoadingMessage();
 });
+
+async function handleConnectError(error: any) {
+	if (error?.description === 401) {
+		socket.disconnect();
+		await showSignIn();
+		return;
+	}
+
+	handleDisconnect(error);
+}
 
 function handleDisconnect(data) {
 	const message = String(data.message || data);

@@ -5,10 +5,12 @@ test/fixtures/.thelounge/logs/
 test/fixtures/.thelounge/certificates/
 test/fixtures/.thelounge/storage/
 test/fixtures/.thelounge/sts-policies.json
+test/fixtures/.thelounge/session-secret.json
 *.log
 *.png
 *.svg
 *.ico
+*.sqlite
 *.wav
 *.tpl
 *.sh
@@ -26,3 +28,5 @@ yarn.lock
 .browserslistrc
 
 *.css
+
+.idea

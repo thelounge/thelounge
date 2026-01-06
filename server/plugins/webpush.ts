@@ -3,63 +3,75 @@ import log from "../log";
 import fs from "fs";
 import path from "path";
 import WebPushAPI from "web-push";
-import Config from "../config";
+import Config, {ConfigType} from "../config";
 import Client from "../client";
 import * as os from "os";
+import Helper from "../helper";
 class WebPush {
 	vapidKeys?: {
 		publicKey: string;
 		privateKey: string;
 	};
 
-	constructor() {
-		const vapidPath = path.join(Config.getHomePath(), "vapid.json");
+	constructor(config: ConfigType, vapidPath: string) {
+		if (config.pushNotificationPublicKeyRef && config.pushNotificationPrivateKeyRef) {
+			this.vapidKeys = {
+				publicKey: Helper.loadSecretValue(
+					config.pushNotificationPublicKeyRef,
+					"pushNotificationPublicKeyRef"
+				),
+				privateKey: Helper.loadSecretValue(
+					config.pushNotificationPrivateKeyRef,
+					"pushNotificationPrivateKeyRef"
+				),
+			};
+		} else {
+			let vapidStat: fs.Stats | undefined = undefined;
 
-		let vapidStat: fs.Stats | undefined = undefined;
+			try {
+				vapidStat = fs.statSync(vapidPath);
+			} catch {
+				// ignored on purpose, node v14.17.0 will give us {throwIfNoEntry: false}
+			}
 
-		try {
-			vapidStat = fs.statSync(vapidPath);
-		} catch {
-			// ignored on purpose, node v14.17.0 will give us {throwIfNoEntry: false}
-		}
+			if (vapidStat) {
+				const isWorldReadable = (vapidStat.mode & 0o004) !== 0;
 
-		if (vapidStat) {
-			const isWorldReadable = (vapidStat.mode & 0o004) !== 0;
+				if (isWorldReadable) {
+					log.warn(
+						vapidPath,
+						"is world readable.",
+						"The file contains secrets. Please fix the permissions."
+					);
 
-			if (isWorldReadable) {
-				log.warn(
-					vapidPath,
-					"is world readable.",
-					"The file contains secrets. Please fix the permissions."
-				);
+					if (os.platform() !== "win32") {
+						log.warn(`run \`chmod o= "${vapidPath}"\` to correct it.`);
+					}
+				}
 
-				if (os.platform() !== "win32") {
-					log.warn(`run \`chmod o= "${vapidPath}"\` to correct it.`);
+				const data = fs.readFileSync(vapidPath, "utf-8");
+				const parsedData = JSON.parse(data);
+
+				if (
+					typeof parsedData.publicKey === "string" &&
+					typeof parsedData.privateKey === "string"
+				) {
+					this.vapidKeys = {
+						publicKey: parsedData.publicKey,
+						privateKey: parsedData.privateKey,
+					};
 				}
 			}
 
-			const data = fs.readFileSync(vapidPath, "utf-8");
-			const parsedData = JSON.parse(data);
+			if (!this.vapidKeys) {
+				this.vapidKeys = WebPushAPI.generateVAPIDKeys();
 
-			if (
-				typeof parsedData.publicKey === "string" &&
-				typeof parsedData.privateKey === "string"
-			) {
-				this.vapidKeys = {
-					publicKey: parsedData.publicKey,
-					privateKey: parsedData.privateKey,
-				};
+				fs.writeFileSync(vapidPath, JSON.stringify(this.vapidKeys, null, "\t"), {
+					mode: 0o600,
+				});
+
+				log.info("New VAPID key pair has been generated for use with push subscription.");
 			}
-		}
-
-		if (!this.vapidKeys) {
-			this.vapidKeys = WebPushAPI.generateVAPIDKeys();
-
-			fs.writeFileSync(vapidPath, JSON.stringify(this.vapidKeys, null, "\t"), {
-				mode: 0o600,
-			});
-
-			log.info("New VAPID key pair has been generated for use with push subscription.");
 		}
 
 		WebPushAPI.setVapidDetails(

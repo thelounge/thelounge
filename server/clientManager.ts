@@ -4,7 +4,6 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 
-import Auth from "./plugins/auth";
 import Client, {UserConfig} from "./client";
 import Config from "./config";
 import WebPush from "./plugins/webpush";
@@ -16,22 +15,24 @@ class ClientManager {
 	sockets!: Server;
 	identHandler: any;
 	webPush!: WebPush;
+	publicMode!: boolean;
 
 	constructor() {
 		this.clients = [];
 	}
 
-	init(identHandler, sockets: Server) {
+	init(identHandler, publicMode: boolean, sockets: Server) {
 		this.sockets = sockets;
 		this.identHandler = identHandler;
-		this.webPush = new WebPush();
+		this.webPush = new WebPush(Config.values, Config.getVapidPath());
+		this.publicMode = publicMode;
 
 		if (!Config.values.public) {
 			this.loadUsers();
 
 			// LDAP does not have user commands, and users are dynamically
 			// created upon logon, so we don't need to watch for new files
-			if (!Config.values.ldap.enable) {
+			if (!Config.values.ldap.enable && !Config.values.oidc?.enable) {
 				this.autoloadUsers();
 			}
 		}
@@ -74,15 +75,7 @@ class ClientManager {
 			return true;
 		});
 
-		// This callback is used by Auth plugins to load users they deem acceptable
-		const callbackLoadUser = (user) => {
-			this.loadUser(user);
-		};
-
-		if (!Auth.loadUsers(users, callbackLoadUser)) {
-			// Fallback to loading all users
-			users.forEach((name) => this.loadUser(name));
-		}
+		users.forEach((name) => this.loadUser(name));
 	}
 
 	autoloadUsers() {
@@ -110,8 +103,8 @@ class ClientManager {
 		});
 	}
 
-	loadUser(name: string) {
-		const userConfig = this.readUserConfig(name);
+	loadUser(name: string, silentOnError = false) {
+		const userConfig = this.readUserConfig(name, silentOnError);
 
 		if (!userConfig) {
 			return;
@@ -151,7 +144,11 @@ class ClientManager {
 			.map((file) => file.slice(0, -5));
 	};
 
-	addUser(name: string, password: string | null, enableLog?: boolean) {
+	addUser(name: string, password: string | null, enableLog?: boolean, silentIfExists?: boolean) {
+		if (this.publicMode) {
+			return true;
+		}
+
 		if (path.basename(name) !== name) {
 			throw new Error(`${name} is an invalid username.`);
 		}
@@ -159,7 +156,10 @@ class ClientManager {
 		const userPath = Config.getUserConfigPath(name);
 
 		if (fs.existsSync(userPath)) {
-			log.error(`User ${colors.green(name)} already exists.`);
+			if (!silentIfExists) {
+				log.error(`User ${colors.green(name)} already exists.`);
+			}
+
 			return false;
 		}
 
@@ -222,6 +222,10 @@ class ClientManager {
 	}
 
 	saveUser(client: Client, callback?: (err?: any) => void) {
+		if (this.publicMode) {
+			return true;
+		}
+
 		const {newUser, newHash} = this.getDataToSave(client);
 
 		// Do not write to disk if the exported data hasn't actually changed
@@ -263,11 +267,20 @@ class ClientManager {
 		return true;
 	}
 
-	readUserConfig(name: string) {
+	readUserConfig(name: string, silentOnError = false) {
+		if (this.publicMode) {
+			return {
+				log: false,
+			} as UserConfig;
+		}
+
 		const userPath = Config.getUserConfigPath(name);
 
 		if (!fs.existsSync(userPath)) {
-			log.error(`Tried to read non-existing user ${colors.green(name)}`);
+			if (!silentOnError) {
+				log.error(`Tried to read non-existing user ${colors.green(name)}`);
+			}
+
 			return false;
 		}
 
@@ -275,7 +288,9 @@ class ClientManager {
 			const data = fs.readFileSync(userPath, "utf-8");
 			return JSON.parse(data) as UserConfig;
 		} catch (e: any) {
-			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
+			if (!silentOnError) {
+				log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
+			}
 		}
 
 		return false;

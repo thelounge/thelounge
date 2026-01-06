@@ -2,10 +2,11 @@ import pkg from "../package.json";
 import _ from "lodash";
 import path from "path";
 import os from "os";
-import fs from "fs";
+import fs, {readFileSync} from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import {fileURLToPath} from "node:url";
 
 export type Hostmask = {
 	nick: string;
@@ -24,6 +25,7 @@ const Helper = {
 	compareHostmask,
 	compareWithWildcard,
 	catch_to_error,
+	loadSecretValue,
 
 	password: {
 		hash: passwordHash,
@@ -119,7 +121,7 @@ function passwordHash(password: string) {
 }
 
 function passwordCompare(password: string, expected: string) {
-	return bcrypt.compare(password, expected);
+	return bcrypt.compareSync(password, expected);
 }
 
 function parseHostmask(hostmask: string): Hostmask {
@@ -197,4 +199,40 @@ function catch_to_error(prefix: string, err: any): Error {
 	}
 
 	return new Error(`${prefix}: ${msg}`);
+}
+
+// Enables secure loading of secrets. If on Kubernetes, a file URL to a mounted secret should be passed.
+// Otherwise, env://ENV_VAR can be used to load from an environment variable.
+function loadSecretValue(urlStr: string, configKey: string): string {
+	if (!urlStr) {
+		throw new Error(`Reading secret ref from config key ${configKey}: missing URL`);
+	}
+
+	const url = new URL(urlStr);
+
+	if (!url) {
+		throw new Error(`Reading secret ref from config key ${configKey}: invalid URL ${urlStr}`);
+	}
+
+	if (url.protocol === "file:") {
+		const filePath = fileURLToPath(url);
+
+		return readFileSync(filePath).toString().trim();
+	}
+
+	if (url.protocol === "env:") {
+		const value = process.env[url.hostname];
+
+		if (value === undefined || value.length === 0) {
+			throw new Error(
+				`Reading secret ref from config key ${configKey}: No environmental variable ${url.hostname}`
+			);
+		}
+
+		return value!;
+	}
+
+	throw new Error(
+		`Reading secret ref from config key ${configKey}: Unsupported secret reference scheme ${url.protocol}`
+	);
 }

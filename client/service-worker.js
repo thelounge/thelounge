@@ -4,7 +4,7 @@
 "use strict";
 
 const cacheName = "__HASH__";
-const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
+const excludedPathsFromCache = /^(?:socket\.io|callback|api|login|storage|uploads|cdn-cgi)\/?/;
 
 self.addEventListener("install", function () {
 	self.skipWaiting();

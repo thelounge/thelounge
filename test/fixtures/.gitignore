@@ -3,6 +3,8 @@
 .thelounge/logs/
 .thelounge/certificates/
 .thelounge/sts-policies.json
+.thelounge/session-secret.json
+.thelounge/thelounge.sqlite
 
 # Fixtures contain fake packages, stored in a fake node_modules folder
 !.thelounge/packages/node_modules/

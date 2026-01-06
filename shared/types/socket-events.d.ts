@@ -24,8 +24,6 @@ interface ServerToClientEvents {
 	"auth:failed": NoPayloadEventHandler;
 	"auth:success": NoPayloadEventHandler;
 
-	"upload:auth": (token: string) => void;
-
 	changelog: EventHandler<SharedChangelogData>;
 	"changelog:newversion": NoPayloadEventHandler;
 
@@ -83,7 +81,7 @@ interface ServerToClientEvents {
 	"msg:special": EventHandler<{chan: number; data?: Record<string, any>}>;
 	msg: EventHandler<{msg: SharedMsg; chan: number; highlight?: number; unread?: number}>;
 
-	init: EventHandler<{active: number; networks: SharedNetwork[]; token?: string}>;
+	init: EventHandler<{active: number; networks: SharedNetwork[]}>;
 
 	"search:results": (response: SearchResponse) => void;
 
@@ -102,11 +100,8 @@ interface ServerToClientEvents {
 }
 
 type AuthPerformData =
-	| Record<string, never> // funny way of saying an empty object
-	| {user: string; password: string}
+	| Record<string, never>
 	| {
-			user: string;
-			token: string;
 			lastMessage: number;
 			openChannel: number | null;
 			hasConfig: boolean;
@@ -128,9 +123,6 @@ interface ClientToServerEvents {
 	names: EventHandler<{target: number}>;
 
 	input: EventHandler<{target: number; text: string}>;
-
-	"upload:auth": NoPayloadEventHandler;
-	"upload:ping": (token: string) => void;
 
 	"mute:change": EventHandler<{target: number; setMutedTo: boolean}>;
 
@@ -167,7 +159,7 @@ interface ClientToServerEvents {
 	"network:edit": (data: Record<string, any>) => void;
 	"network:new": (data: Record<string, any>) => void;
 
-	"sign-out": (token?: string) => void;
+	"sign-out": (tokenToSignOut: string) => void;
 
 	"history:clear": EventHandler<{target: number}>;
 
