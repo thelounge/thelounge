@@ -33,3 +33,21 @@
 		border-radius: 0;
 	}
 }
+
+/* Search Form */
+form.message-search input {
+	color: inherit;
+	background-color: #fafafa;
+}
+
+form.message-search input::placeholder {
+	color: rgba(0, 0, 0, 0.35);
+}
+
+form.message-search .input-wrapper {
+	background: var(--window-bg-color);
+}
+
+#chat form.message-search button {
+	color: #607992;
+}
