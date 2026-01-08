@@ -116,7 +116,7 @@
     "@types/web-push": "3.3.2",
     "@types/webpack-env": "1.16.4",
     "@types/webpack-hot-middleware": "2.25.6",
-    "@types/ws": "8.5.12",
+    "@types/ws": "8.18.1",
     "@typescript-eslint/eslint-plugin": "7.8.0",
     "@typescript-eslint/parser": "7.8.0",
     "@vue/runtime-dom": "3.2.33",
