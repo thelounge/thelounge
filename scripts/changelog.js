@@ -46,10 +46,10 @@ node scripts/changelog <version>
 "use strict";
 
 const _ = require("lodash");
-const colors = require("chalk");
+const colors = require("chalk").default;
 const fs = require("fs");
 const path = require("path");
-const got = require("got");
+const got = require("got").default;
 const dayjs = require("dayjs");
 const semver = require("semver");
 const util = require("util");
