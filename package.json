@@ -131,7 +131,7 @@
     "cssnano": "5.0.17",
     "dayjs": "1.10.8",
     "emoji-regex": "10.2.1",
-    "eslint": "8.57.0",
+    "eslint": "8.57.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-define-config": "2.1.0",
     "eslint-plugin-vue": "9.25.0",
