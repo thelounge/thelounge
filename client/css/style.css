@@ -2018,10 +2018,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 100%;
 }
 
-#sign-in .password-container .reveal-password {
-	top: 31px;
-}
-
 .password-container .reveal-password {
 	position: absolute;
 	top: 2px;
