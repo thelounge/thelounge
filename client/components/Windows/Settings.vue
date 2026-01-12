@@ -45,6 +45,25 @@ export default defineComponent({
 				value = (event.target as HTMLInputElement).value;
 			}
 
+			// Handle nested settings
+			if (name.includes(".")) {
+				const [parentKey, childKey] = name.split(".");
+				const currentParentValue = store.state.settings[parentKey];
+
+				if (typeof currentParentValue === "object" && currentParentValue !== null) {
+					const newParentValue = {
+						...currentParentValue,
+						[childKey]: value,
+					};
+					void store.dispatch("settings/update", {
+						name: parentKey,
+						value: newParentValue,
+						sync: true,
+					});
+					return;
+				}
+			}
+
 			void store.dispatch("settings/update", {name, value, sync: true});
 		};
 
