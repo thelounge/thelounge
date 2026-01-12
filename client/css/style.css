@@ -50,6 +50,7 @@
 html {
 	box-sizing: border-box;
 	-webkit-tap-highlight-color: transparent; /* remove tap highlight on touch devices */
+	padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
 }
 
 *,
@@ -2214,6 +2215,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: relative;
 }
 
+@media screen and (orientation: landscape) {
+	/* Pad the form with safe area insets. */
+	#form {
+		padding-bottom: env(safe-area-inset-bottom)
+	}
+
+	/* When the form becomes focused, remove the safe area insets padding. A bit of a hack, but seems to work. */
+	#form:focus-within {
+		padding-bottom: 6px; /* Reset to the default padding */
+	}
+}
+
 #user-visible-error {
 	font-size: 14px;
 	line-height: 1.5;
@@ -2275,6 +2288,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #form #upload[disabled],
 #form #submit[disabled] {
 	opacity: 0.5;
+}
+
+#mentions-popup-container {
+	margin-top: env(safe-area-inset-top);
 }
 
 #mentions-popup-container,
@@ -2642,6 +2659,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		display: flex;
 		background: var(--body-bg-color);
 		height: 100%;
+		padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 		position: absolute;
 		left: -220px;
 		z-index: 10;
@@ -2940,3 +2958,4 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	justify-content: center;
 	align-items: center;
 }
+
