@@ -3,6 +3,7 @@ import {IrcEventHandler} from "../../client";
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
+import {decodeSmartEncoding} from "./encoding";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -51,6 +52,17 @@ export default <IrcEventHandler>function (irc, network) {
 			data.idleTime = Date.now() - data.idle * 1000;
 			// Absolute datetime in milliseconds when nick logged on.
 			data.logonTime = data.logon * 1000;
+
+			// Apply smart encoding detection for ISO-8859-1/15 compatibility
+			// on fields that may contain non-ASCII text
+			if (data.real_name) {
+				data.real_name = decodeSmartEncoding(data.real_name);
+			}
+
+			if (data.away) {
+				data.away = decodeSmartEncoding(data.away);
+			}
+
 			msg = new Msg({
 				type: MessageType.WHOIS,
 				whois: data,

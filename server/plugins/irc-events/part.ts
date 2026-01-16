@@ -2,6 +2,7 @@ import {IrcEventHandler} from "../../client";
 
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
+import {decodeSmartEncoding} from "./encoding";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -18,10 +19,11 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		const user = chan.getUser(data.nick);
+		// Apply smart encoding detection for ISO-8859-1/15 compatibility
 		const msg = new Msg({
 			type: MessageType.PART,
 			time: data.time,
-			text: data.message || "",
+			text: decodeSmartEncoding(data.message || ""),
 			hostmask: data.ident + "@" + data.hostname,
 			from: user,
 			self: data.nick === irc.user.nick,

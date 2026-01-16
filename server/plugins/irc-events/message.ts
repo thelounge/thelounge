@@ -8,6 +8,7 @@ import User from "../../models/user";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 import {MessageEventArgs} from "irc-framework";
+import {decodeSmartEncoding} from "./encoding";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
@@ -49,6 +50,11 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	function handleMessage(data: HandleInput) {
+		// Apply smart encoding detection to handle ISO-8859-1/15 messages from
+		// older IRC clients (like mIRC) that don't use UTF-8.
+		// This converts the latin1-decoded message to proper UTF-8 when possible.
+		data.message = decodeSmartEncoding(data.message);
+
 		let chan: Chan | undefined;
 		let from: User;
 		let highlight = false;

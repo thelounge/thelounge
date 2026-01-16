@@ -2,6 +2,7 @@ import {IrcEventHandler} from "../../client";
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
+import {decodeSmartEncoding} from "./encoding";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -10,13 +11,16 @@ export default <IrcEventHandler>function (irc, network) {
 	irc.on("back", (data) => handleAway(MessageType.BACK, data));
 
 	function handleAway(type: MessageType, data) {
+		// Apply smart encoding detection for ISO-8859-1/15 compatibility
+		// Note: data.message is used directly for chan.userAway due to existing type quirks
 		const away = data.message;
+		const awayDecoded = decodeSmartEncoding(away);
 
 		if (data.self) {
 			const msg = new Msg({
 				self: true,
 				type: type,
-				text: away,
+				text: awayDecoded,
 				time: data.time,
 			});
 
@@ -46,7 +50,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 					const msg = new Msg({
 						type: type,
-						text: away || "",
+						text: awayDecoded || "",
 						time: data.time,
 						from: user,
 					});
@@ -59,11 +63,11 @@ export default <IrcEventHandler>function (irc, network) {
 				case ChanType.CHANNEL: {
 					user = chan.findUser(data.nick);
 
-					if (!user || user.away === away) {
+					if (!user || user.away === awayDecoded) {
 						return;
 					}
 
-					user.away = away;
+					user.away = awayDecoded;
 
 					break;
 				}

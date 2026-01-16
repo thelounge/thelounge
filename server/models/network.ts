@@ -302,6 +302,12 @@ class Network {
 			// it will keep trying for well over an hour (plus the timeouts)
 			auto_reconnect_max_retries: 30,
 
+			// Use latin1 encoding to preserve raw bytes from the IRC server.
+			// This allows smart encoding detection in the message handler to
+			// properly handle both UTF-8 and ISO-8859-1/15 encoded messages.
+			// Many older IRC clients (like mIRC) use ISO-8859-1/15 instead of UTF-8.
+			encoding: "latin1",
+
 			// TODO: this type should be set after setIrcFrameworkOptions
 		}) as NetworkWithIrcFramework["irc"];
 
@@ -311,6 +317,26 @@ class Network {
 			"znc.in/self-message", // Legacy echo-message for ZNC
 			"znc.in/playback", // See http://wiki.znc.in/Playback
 		]);
+
+		// Patch the transport to send messages as UTF-8 while receiving as latin1.
+		// This allows us to properly display messages from legacy ISO-8859-1 clients
+		// while still sending our own messages as UTF-8 for modern clients.
+		this.irc.on("socket connected", () => {
+			const transport = this.irc?.connection?.transport;
+
+			if (transport && transport.writeLine) {
+				const originalWriteLine = transport.writeLine.bind(transport);
+
+				transport.writeLine = (line: string, cb?: () => void) => {
+					// Always send as UTF-8, regardless of receive encoding
+					if (transport.socket && transport.isConnected()) {
+						transport.socket.write(line + "\r\n", "utf8", cb);
+					} else if (cb) {
+						process.nextTick(cb);
+					}
+				};
+			}
+		});
 	}
 
 	setIrcFrameworkOptions(this: NetworkWithIrcFramework, client: Client) {

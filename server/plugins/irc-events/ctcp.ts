@@ -5,6 +5,7 @@ import Msg from "../../models/msg";
 import User from "../../models/user";
 import pkg from "../../../package.json";
 import {MessageType} from "../../../shared/types/msg";
+import {decodeSmartEncoding} from "./encoding";
 
 const ctcpResponses = {
 	CLIENTINFO: () =>
@@ -35,11 +36,12 @@ export default <IrcEventHandler>function (irc, network) {
 			chan = lobby;
 		}
 
+		// Apply smart encoding detection for ISO-8859-1/15 compatibility
 		const msg = new Msg({
 			type: MessageType.CTCP,
 			time: data.time,
 			from: chan.getUser(data.nick),
-			ctcpMessage: data.message,
+			ctcpMessage: decodeSmartEncoding(data.message),
 		});
 		chan.pushMessage(client, msg, true);
 	});
@@ -75,12 +77,13 @@ export default <IrcEventHandler>function (irc, network) {
 				}
 
 				// Let user know someone is making a CTCP request against their nick
+				// Apply smart encoding detection for ISO-8859-1/15 compatibility
 				const msg = new Msg({
 					type: MessageType.CTCP_REQUEST,
 					time: data.time,
 					from: new User({nick: target}),
 					hostmask: data.ident + "@" + data.hostname,
-					ctcpMessage: data.message,
+					ctcpMessage: decodeSmartEncoding(data.message),
 				});
 				lobby.pushMessage(client, msg, true);
 			},
