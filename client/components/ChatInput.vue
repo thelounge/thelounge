@@ -15,13 +15,7 @@
 			@keypress.enter.exact.prevent="onSubmit"
 			@blur="onBlur"
 		/>
-		<span
-			v-if="store.state.serverConfiguration?.fileUpload"
-			id="upload-tooltip"
-			class="tooltipped tooltipped-w tooltipped-no-touch"
-			aria-label="Upload file"
-			@click="openFileUpload"
-		>
+		<template v-if="store.state.serverConfiguration?.fileUpload">
 			<input
 				id="upload-input"
 				ref="uploadInput"
@@ -32,23 +26,24 @@
 			/>
 			<button
 				id="upload"
+				class="tooltipped tooltipped-w tooltipped-no-touch"
 				type="button"
 				aria-label="Upload file"
 				:disabled="!store.state.isConnected"
-			/>
-		</span>
-		<span
-			id="submit-tooltip"
+				@click="openFileUpload"
+			>
+				<span />
+			</button>
+		</template>
+		<button
+			id="submit"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
+			type="submit"
 			aria-label="Send message"
+			:disabled="!store.state.isConnected"
 		>
-			<button
-				id="submit"
-				type="submit"
-				aria-label="Send message"
-				:disabled="!store.state.isConnected"
-			/>
-		</span>
+			<span />
+		</button>
 	</form>
 </template>
 

@@ -299,8 +299,8 @@ p {
 #settings .extra-help,
 #settings #play::before,
 #settings .settings-menu .icon::before,
-#form #upload::before,
-#form #submit::before,
+#form #upload span::before,
+#form #submit span::before,
 #chat .msg[data-type="away"] .from::before,
 #chat .msg[data-type="back"] .from::before,
 #chat .msg[data-type="invite"] .from::before,
@@ -404,8 +404,8 @@ p {
 
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
 
-#form #upload::before { content: "\f0c6"; /* https://fontawesome.com/icons/paperclip?style=solid */ }
-#form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
+#form #upload span::before { content: "\f0c6"; /* https://fontawesome.com/icons/paperclip?style=solid */ }
+#form #submit span::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
 #chat .msg[data-type="away"] .from::before,
 #chat .msg[data-type="back"] .from::before {
@@ -600,13 +600,13 @@ p {
 }
 
 #form button,
-.header button,
+.header button span,
 .reveal-password span {
 	transition: opacity 0.2s;
 }
 
 #form button:hover,
-.header button:hover,
+.header button:hover span,
 .reveal-password span:hover {
 	opacity: 0.6;
 }
