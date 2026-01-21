@@ -1,6 +1,6 @@
 <template>
 	<span class="content">
-		<p>
+		<p v-if="message.whois.nick">
 			<Username :user="{nick: message.whois.nick}" />
 			<span v-if="message.whois.whowas"> is offline, last information:</span>
 		</p>
@@ -11,13 +11,15 @@
 				<dd>{{ message.whois.account }}</dd>
 			</template>
 
-			<dt>Host mask:</dt>
-			<dd class="hostmask">
-				<ParsedMessage
-					:network="network"
-					:text="message.whois.ident + '@' + message.whois.hostname"
-				/>
-			</dd>
+			<template v-if="message.whois.ident && message.whois.hostname">
+				<dt>Host mask:</dt>
+				<dd class="hostmask">
+					<ParsedMessage
+						:network="network"
+						:text="message.whois.ident + '@' + message.whois.hostname"
+					/>
+				</dd>
+			</template>
 
 			<template v-if="message.whois.actual_hostname">
 				<dt>Actual host:</dt>
