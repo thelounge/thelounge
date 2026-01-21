@@ -490,7 +490,31 @@ function fetch(uri: string, headers: Record<string, string>) {
 
 function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
 	try {
-		const url = new URL(link, baseLink);
+		let url = new URL(link, baseLink);
+
+		// Use the FediLinks protocol to fetch some web+ links
+		if (/^web\+(ap|feed):$/.test(url.protocol)) {
+			// ew, why is this not RFC 3986
+			// no worries, we can copy over from https://github.com/fedi-to/fc-dll/blob/default/src/lib.rs#L109
+			const targetParam = url.toString();
+			const asIfHttps = targetParam.replace(/^web\+[a-z]+/, "https");
+
+			if (
+				!asIfHttps.startsWith("https://") ||
+				asIfHttps.startsWith("https:///") ||
+				asIfHttps.startsWith("https://\\")
+			) {
+				return undefined;
+			}
+
+			url = new URL(asIfHttps);
+			url.pathname = "/.well-known/protocol-handler";
+			url.username = "";
+			url.password = "";
+			url.hash = "";
+			url.search = "";
+			url.searchParams.append("target", targetParam);
+		}
 
 		// Only fetch http and https links
 		if (url.protocol !== "http:" && url.protocol !== "https:") {
