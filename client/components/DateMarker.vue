@@ -1,8 +1,8 @@
 <template>
 	<div :aria-label="localeDate" class="date-marker-container tooltipped tooltipped-s">
-		<div class="date-marker">
-			<span :aria-label="friendlyDate()" class="date-marker-text" />
-		</div>
+		<h4 class="date-marker">
+			<span class="date-marker-text">{{ friendlyDate() }}</span>
+		</h4>
 	</div>
 </template>
 

@@ -2,17 +2,16 @@
 	<aside id="sidebar" ref="sidebar">
 		<div class="scrollable-area">
 			<div class="logo-container">
+				<h1 class="sr-only">The Lounge</h1>
 				<img
 					:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg.svg`"
 					class="logo"
-					alt="The Lounge"
-					role="presentation"
+					alt=""
 				/>
 				<img
 					:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg-inverted.svg`"
 					class="logo-inverted"
-					alt="The Lounge"
-					role="presentation"
+					alt=""
 				/>
 				<span
 					v-if="isDevelopment"
