@@ -69,7 +69,7 @@
     "is-utf8": "0.2.1",
     "ldapjs": "2.3.3",
     "linkify-it": "3.0.3",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "mime-types": "2.1.35",
     "node-forge": "1.3.1",
     "package-json": "7.0.0",
