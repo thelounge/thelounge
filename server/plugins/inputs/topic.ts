@@ -19,6 +19,14 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 		return;
 	}
 
+	const cleanArgs = args.map((s) => s.trim()).filter((s) => s !== "");
+
+	if (cleanArgs.length === 0) {
+		irc.raw("TOPIC", chan.name);
+		return;
+	}
+
+	// we use the non trimmed args here, the user may have added white space on purpose
 	irc.setTopic(chan.name, args.join(" "));
 	return true;
 };
