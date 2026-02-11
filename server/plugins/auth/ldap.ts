@@ -2,7 +2,7 @@ import ldap, {SearchOptions} from "ldapjs";
 import colors from "chalk";
 
 import log from "../../log";
-import Config from "../../config";
+import Config, {ConfigType} from "../../config";
 import type {AuthHandler} from "../auth";
 
 function ldapAuthCommon(
@@ -234,6 +234,186 @@ function ldapLoadUsers(users: string[], callbackLoadUser) {
 
 function isLdapEnabled() {
 	return !Config.values.public && Config.values.ldap.enable;
+}
+
+export type LdapConfig = ConfigType["ldap"];
+
+import type {
+	AuthProvider,
+	AuthenticateParams,
+	AuthResult,
+	AuthStartParams,
+	AuthStartInfo,
+	DisconnectParams,
+	GetValidUsersParams,
+	LogoutParams,
+	LogoutInfo,
+} from "./types";
+
+export class SimpleLDAPAuthProvider implements AuthProvider {
+	name = "ldap";
+	canChangePassword = false;
+
+	async init(): Promise<void> {}
+
+	getValidUsers({users}: GetValidUsersParams): Promise<string[]> {
+		// Simple LDAP can't test for user existence without the user's
+		// unhashed password, so return all users unchanged
+		return Promise.resolve(users);
+	}
+
+	authStart(_params: AuthStartParams): AuthStartInfo {
+		return {};
+	}
+
+	async authenticate({
+		manager,
+		client,
+		username,
+		password,
+	}: AuthenticateParams): Promise<AuthResult> {
+		return new Promise((resolve) => {
+			simpleLdapAuth(username, password, (valid) => {
+				if (valid && !client) {
+					manager.addUser(username, null, true);
+				}
+
+				if (valid) {
+					resolve({success: true, username});
+				} else {
+					resolve({success: false});
+				}
+			});
+		});
+	}
+
+	logout(_params: LogoutParams): LogoutInfo {
+		return {};
+	}
+
+	disconnect(_params: DisconnectParams): void {}
+}
+
+export class AdvancedLDAPAuthProvider implements AuthProvider {
+	name = "ldap";
+	canChangePassword = false;
+
+	config: LdapConfig;
+
+	constructor(config: LdapConfig) {
+		this.config = config;
+	}
+
+	async init(): Promise<void> {}
+
+	async getValidUsers({users}: GetValidUsersParams): Promise<string[]> {
+		return new Promise((resolve) => {
+			const validUsers: string[] = [];
+
+			const ldapclient = ldap.createClient({
+				url: this.config.url,
+				tlsOptions: this.config.tlsOptions,
+			});
+
+			const base = this.config.searchDN.base;
+
+			ldapclient.on("error", function (err: Error) {
+				log.error(`Unable to connect to LDAP server: ${err.toString()}`);
+				resolve(users);
+			});
+
+			ldapclient.bind(
+				this.config.searchDN.rootDN,
+				this.config.searchDN.rootPassword,
+				(err) => {
+					if (err) {
+						log.error("Invalid LDAP root credentials");
+						resolve(users);
+						return;
+					}
+
+					const userSet = new Set(users);
+
+					const searchOptions: SearchOptions = {
+						scope: this.config.searchDN.scope,
+						filter: `${this.config.searchDN.filter}`,
+						attributes: [this.config.primaryKey],
+						paged: true,
+					};
+
+					ldapclient.search(base, searchOptions, function (err2, res) {
+						if (err2) {
+							log.error(`LDAP search error: ${err2?.toString()}`);
+							resolve(users);
+							return;
+						}
+
+						res.on("searchEntry", function (entry) {
+							const user = entry.attributes[0].vals[0].toString();
+
+							if (userSet.has(user)) {
+								validUsers.push(user);
+							}
+						});
+
+						res.on("error", function (err3) {
+							log.error(`LDAP error: ${err3.toString()}`);
+							ldapclient.unbind();
+							resolve(users);
+						});
+
+						res.on("end", function () {
+							const validSet = new Set(validUsers);
+
+							users.forEach((user) => {
+								if (!validSet.has(user)) {
+									log.warn(
+										`No account info in LDAP for ${colors.bold(
+											user
+										)} but user config file exists`
+									);
+								}
+							});
+
+							ldapclient.unbind();
+							resolve(validUsers);
+						});
+					});
+				}
+			);
+		});
+	}
+
+	authStart(_params: AuthStartParams): AuthStartInfo {
+		return {};
+	}
+
+	async authenticate({
+		manager,
+		client,
+		username,
+		password,
+	}: AuthenticateParams): Promise<AuthResult> {
+		return new Promise((resolve) => {
+			advancedLdapAuth(username, password, (valid) => {
+				if (valid && !client) {
+					manager.addUser(username, null, true);
+				}
+
+				if (valid) {
+					resolve({success: true, username});
+				} else {
+					resolve({success: false});
+				}
+			});
+		});
+	}
+
+	logout(_params: LogoutParams): LogoutInfo {
+		return {};
+	}
+
+	disconnect(_params: DisconnectParams): void {}
 }
 
 export default {
