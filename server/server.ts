@@ -470,6 +470,26 @@ function initializeClient(
 		}
 	});
 
+	socket.on("messages:around", (data) => {
+		if (_.isPlainObject(data)) {
+			const result = client.messagesAround(data);
+
+			if (result !== null) {
+				socket.emit("messages:around", result);
+			}
+		}
+	});
+
+	socket.on("more:newer", (data) => {
+		if (_.isPlainObject(data)) {
+			const result = client.moreNewer(data);
+
+			if (result !== null) {
+				socket.emit("more:newer", result);
+			}
+		}
+	});
+
 	socket.on("network:new", (data) => {
 		if (_.isPlainObject(data)) {
 			// prevent people from overriding webirc settings

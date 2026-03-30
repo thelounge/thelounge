@@ -19,6 +19,7 @@ export type ClientMessage = SharedMsg;
 
 type ClientChan = Omit<SharedChan, "messages"> & {
 	moreHistoryAvailable: boolean;
+	moreNewerAvailable: boolean;
 	editTopic: boolean;
 	messages: ClientMessage[];
 

@@ -623,6 +623,63 @@ class Client {
 		};
 	}
 
+	messagesAround(data) {
+		const client = this;
+		const target = client.find(data.target);
+
+		if (!target) {
+			return null;
+		}
+
+		const chan = target.chan;
+		const index = chan.messages.findIndex((val) => val.id === data.msgId);
+
+		if (index < 0) {
+			return null;
+		}
+
+		// Get 50 messages before and 50 after the target
+		const startIndex = Math.max(0, index - 50);
+		const endIndex = Math.min(chan.messages.length, index + 51);
+		const messages = chan.messages.slice(startIndex, endIndex);
+
+		return {
+			chan: chan.id,
+			messages: messages,
+			totalMessages: chan.messages.length,
+			moreHistoryBefore: startIndex > 0,
+			msgId: data.msgId,
+		};
+	}
+
+	moreNewer(data) {
+		const client = this;
+		const target = client.find(data.target);
+
+		if (!target) {
+			return null;
+		}
+
+		const chan = target.chan;
+		const index = chan.messages.findIndex((val) => val.id === data.lastId);
+
+		if (index < 0) {
+			return null;
+		}
+
+		// Get up to 100 messages after the given ID
+		const startIndex = index + 1;
+		const endIndex = Math.min(chan.messages.length, startIndex + 100);
+		const messages = chan.messages.slice(startIndex, endIndex);
+
+		return {
+			chan: chan.id,
+			messages: messages,
+			totalMessages: chan.messages.length,
+			moreAfter: endIndex < chan.messages.length,
+		};
+	}
+
 	clearHistory(data) {
 		const client = this;
 		const target = client.find(data.target);

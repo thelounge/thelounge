@@ -54,6 +54,17 @@
 				/>
 			</template>
 		</div>
+		<div v-show="channel.moreNewerAvailable" class="show-more show-newer">
+			<button
+				ref="loadNewerButton"
+				:disabled="channel.historyLoading || !store.state.isConnected"
+				class="btn"
+				@click="onShowNewerClick"
+			>
+				<span v-if="channel.historyLoading">Loading…</span>
+				<span v-else>Show newer messages</span>
+			</button>
+		</div>
 	</div>
 </template>
 
@@ -109,7 +120,9 @@ export default defineComponent({
 
 		const chat = ref<HTMLDivElement | null>(null);
 		const loadMoreButton = ref<HTMLButtonElement | null>(null);
+		const loadNewerButton = ref<HTMLButtonElement | null>(null);
 		const historyObserver = ref<IntersectionObserver | null>(null);
+		const newerObserver = ref<IntersectionObserver | null>(null);
 		const skipNextScrollEvent = ref(false);
 
 		const isWaitingForNextTick = ref(false);
@@ -160,6 +173,37 @@ export default defineComponent({
 			});
 		};
 
+		const onShowNewerClick = () => {
+			if (!store.state.isConnected) {
+				return;
+			}
+
+			const messages = props.channel.messages;
+
+			if (messages.length === 0) {
+				return;
+			}
+
+			const lastMessage = messages[messages.length - 1].id;
+
+			props.channel.historyLoading = true;
+
+			socket.emit("more:newer", {
+				target: props.channel.id,
+				lastId: lastMessage,
+			});
+		};
+
+		const onNewerButtonObserved = (entries: IntersectionObserverEntry[]) => {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) {
+					return;
+				}
+
+				onShowNewerClick();
+			});
+		};
+
 		nextTick(() => {
 			if (!chat.value) {
 				return;
@@ -167,6 +211,10 @@ export default defineComponent({
 
 			if (window.IntersectionObserver) {
 				historyObserver.value = new window.IntersectionObserver(onLoadButtonObserved, {
+					root: chat.value,
+				});
+
+				newerObserver.value = new window.IntersectionObserver(onNewerButtonObserved, {
 					root: chat.value,
 				});
 			}
@@ -371,6 +419,10 @@ export default defineComponent({
 				if (historyObserver.value && loadMoreButton.value) {
 					historyObserver.value.observe(loadMoreButton.value);
 				}
+
+				if (newerObserver.value && loadNewerButton.value) {
+					newerObserver.value.observe(loadNewerButton.value);
+				}
 			});
 		});
 
@@ -378,12 +430,17 @@ export default defineComponent({
 			() => props.channel.id,
 			() => {
 				props.channel.scrolledToBottom = true;
+				props.channel.moreNewerAvailable = false;
 
 				// Re-add the intersection observer to trigger the check again on channel switch
-				// Otherwise if last channel had the button visible, switching to a new channel won't trigger the history
 				if (historyObserver.value && loadMoreButton.value) {
 					historyObserver.value.unobserve(loadMoreButton.value);
 					historyObserver.value.observe(loadMoreButton.value);
+				}
+
+				if (newerObserver.value && loadNewerButton.value) {
+					newerObserver.value.unobserve(loadNewerButton.value);
+					newerObserver.value.observe(loadNewerButton.value);
 				}
 			}
 		);
@@ -419,13 +476,19 @@ export default defineComponent({
 			if (historyObserver.value) {
 				historyObserver.value.disconnect();
 			}
+
+			if (newerObserver.value) {
+				newerObserver.value.disconnect();
+			}
 		});
 
 		return {
 			chat,
 			store,
 			onShowMoreClick,
+			onShowNewerClick,
 			loadMoreButton,
+			loadNewerButton,
 			onCopy,
 			condensedMessages,
 			shouldDisplayDateMarker,
