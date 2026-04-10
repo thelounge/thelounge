@@ -415,7 +415,7 @@ describe("SQLite Message Storage", function () {
 		}
 	});
 
-	it("should be able to downgrade", async function () {
+	it("should be able to downgrade", function () {
 		for (const rollback of rollbacks.slice().reverse()) {
 			if (rollback.rollback_forbidden) {
 				throw Error(
