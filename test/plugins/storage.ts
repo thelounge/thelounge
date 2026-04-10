@@ -5,7 +5,7 @@ import {expect} from "chai";
 import util from "../util";
 import Config from "../../server/config";
 import storage from "../../server/plugins/storage";
-import link from "../../server/plugins/irc-events/link";
+import link, {_testing} from "../../server/plugins/irc-events/link";
 import {Request, Response} from "express";
 
 describe("Image storage", function () {
@@ -34,6 +34,7 @@ describe("Image storage", function () {
 	)}/${correctSvgHash.substring(4)}.svg`;
 
 	before(function (done) {
+		_testing.disableSSRFProtection = true;
 		this.app = util.createWebserver();
 		this.app.get("/real-test-image.png", function (req, res) {
 			res.sendFile(testImagePath);
@@ -50,6 +51,7 @@ describe("Image storage", function () {
 	});
 
 	after(function (done) {
+		_testing.disableSSRFProtection = false;
 		this.connection.close(done);
 	});
 

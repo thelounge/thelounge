@@ -39,6 +39,9 @@ export function isPrivateIP(ip: string): boolean {
 	return PRIVATE_IP_RANGES.some((r) => r.test(ip));
 }
 
+// Allows tests to disable SSRF protection when the test server runs on localhost
+export const _testing = {disableSSRFProtection: false};
+
 function safeDnsLookup(
 	hostname: string,
 	options: any,
@@ -52,7 +55,7 @@ function safeDnsLookup(
 			return cb(err, address, family);
 		}
 
-		if (isPrivateIP(address)) {
+		if (!_testing.disableSSRFProtection && isPrivateIP(address)) {
 			return cb(
 				new Error(`Blocked request to private IP address: ${address}`),
 				address,
@@ -553,7 +556,7 @@ export function normalizeURL(link: string, baseLink?: string, disallowHttp = fal
 		}
 
 		// Block IP literals pointing to private/reserved ranges (defense-in-depth for SSRF)
-		if (isIP(url.hostname) && isPrivateIP(url.hostname)) {
+		if (!_testing.disableSSRFProtection && isIP(url.hostname) && isPrivateIP(url.hostname)) {
 			return undefined;
 		}
 

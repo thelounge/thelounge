@@ -2,7 +2,7 @@ import path from "path";
 import {expect} from "chai";
 import util from "../util";
 import Config from "../../server/config";
-import link from "../../server/plugins/irc-events/link";
+import link, {_testing} from "../../server/plugins/irc-events/link";
 import {LinkPreview} from "../../shared/types/msg";
 
 describe("Link plugin", function () {
@@ -23,6 +23,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 	let app;
 
 	beforeEach(function (done) {
+		_testing.disableSSRFProtection = true;
 		app = util.createWebserver();
 		app.get("/real-test-image.png", function (req, res) {
 			res.sendFile(path.resolve(__dirname, "../../client/img/logo-grey-bg-120x120px.png"));
@@ -42,6 +43,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 	});
 
 	afterEach(function (done) {
+		_testing.disableSSRFProtection = false;
 		this.connection.close(done);
 	});
 
