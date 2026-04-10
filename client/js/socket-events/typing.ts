@@ -19,7 +19,7 @@ socket.on("typing", function (data) {
 
 	const channel = receivingChannel.channel;
 	const nick = data.nick;
-	const key = `${data.network}-${data.chan}-${nick}`;
+	const key = `${data.chan}-${nick}`;
 
 	const existing = typingTimeouts.get(key);
 
@@ -62,6 +62,14 @@ socket.on("msg", function (data) {
 	const nick = data.msg.from?.nick;
 
 	if (nick) {
+		const key = `${data.chan}-${nick}`;
+		const timeout = typingTimeouts.get(key);
+
+		if (timeout) {
+			clearTimeout(timeout);
+			typingTimeouts.delete(key);
+		}
+
 		removeTypingNick(receivingChannel.channel, nick);
 	}
 });

@@ -479,6 +479,11 @@ function initializeClient(
 		}
 
 		const {network, chan} = target;
+
+		if (chan.type !== ChanType.CHANNEL && chan.type !== ChanType.QUERY) {
+			return;
+		}
+
 		const irc = network.irc;
 
 		if (!irc?.network?.cap?.isEnabled("message-tags")) {

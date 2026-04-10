@@ -36,7 +36,7 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		// https://ircv3.net/specs/client-tags/typing
-		const typing = data.tags["+typing"] || data.tags["+draft/typing"];
+		const typing = (data.tags["+typing"] || data.tags["+draft/typing"]) as TypingStatus;
 
 		if (typing && VALID_TYPING_STATUSES.has(typing)) {
 			client.emit("typing", {

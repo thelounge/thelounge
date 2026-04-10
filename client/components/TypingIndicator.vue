@@ -6,11 +6,19 @@
 </template>
 
 <style>
+.chat-input-wrapper {
+	position: relative;
+}
+
 .typing-indicator {
-	padding: 2px 10px;
-	font-size: 0.85em;
+	position: absolute;
+	bottom: 100%;
+	left: 0;
+	right: 0;
+	padding: 3px 10px;
+	font-size: 0.8em;
 	color: var(--body-color-muted);
-	min-height: 1.4em;
+	pointer-events: none;
 	display: flex;
 	align-items: center;
 	gap: 4px;

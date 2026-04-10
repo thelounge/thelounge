@@ -144,10 +144,7 @@ export default defineComponent({
 				return;
 			}
 
-			if (
-				props.channel.type !== ChanType.CHANNEL &&
-				props.channel.type !== ChanType.QUERY
-			) {
+			if (props.channel.type !== ChanType.CHANNEL && props.channel.type !== ChanType.QUERY) {
 				return;
 			}
 
