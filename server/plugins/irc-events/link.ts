@@ -2,6 +2,8 @@ import * as cheerio from "cheerio";
 import got from "got";
 import {URL} from "url";
 import mime from "mime-types";
+import {isIP} from "net";
+import {lookup} from "dns";
 
 import log from "../../log";
 import Config from "../../config";
@@ -18,6 +20,49 @@ type FetchRequest = {
 	size: number;
 };
 const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
+
+// Private/reserved IP ranges that should not be fetched (SSRF protection)
+const PRIVATE_IP_RANGES = [
+	/^127\./, // loopback
+	/^10\./, // class A private
+	/^172\.(1[6-9]|2\d|3[01])\./, // class B private
+	/^192\.168\./, // class C private
+	/^169\.254\./, // link-local (cloud metadata)
+	/^0\./, // "this" network
+	/^100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\./, // carrier-grade NAT
+	/^::1$/, // IPv6 loopback
+	/^f[cd]/i, // IPv6 unique local
+	/^fe80:/i, // IPv6 link-local
+];
+
+export function isPrivateIP(ip: string): boolean {
+	return PRIVATE_IP_RANGES.some((r) => r.test(ip));
+}
+
+function safeDnsLookup(
+	hostname: string,
+	options: any,
+	callback?: any
+): void {
+	const cb = typeof options === "function" ? options : callback;
+	const opts = typeof options === "function" ? {} : options;
+
+	lookup(hostname, opts, (err: any, address: string, family: number) => {
+		if (err) {
+			return cb(err, address, family);
+		}
+
+		if (isPrivateIP(address)) {
+			return cb(
+				new Error(`Blocked request to private IP address: ${address}`),
+				address,
+				family
+			);
+		}
+
+		cb(null, address, family);
+	});
+}
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
@@ -422,6 +467,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 				timeout: prefetchTimeout || 5000, // milliseconds
 				headers: getRequestHeaders(headers),
 				localAddress: Config.values.bind,
+				lookup: safeDnsLookup,
 			});
 
 			gotStream
@@ -488,7 +534,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 	return promise;
 }
 
-function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
+export function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
 	try {
 		const url = new URL(link, baseLink);
 
@@ -503,6 +549,11 @@ function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
 
 		// Do not fetch links without hostname or ones that contain authorization
 		if (!url.hostname || url.username || url.password) {
+			return undefined;
+		}
+
+		// Block IP literals pointing to private/reserved ranges (defense-in-depth for SSRF)
+		if (isIP(url.hostname) && isPrivateIP(url.hostname)) {
 			return undefined;
 		}
 
