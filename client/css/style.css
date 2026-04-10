@@ -1279,9 +1279,8 @@ textarea.input {
 	transition: transform 0.2s, opacity 0.2s;
 	cursor: pointer;
 	background: none;
-	padding: 0;
 	border: none;
-	appearance: none;
+	padding: 0;
 }
 
 .scroll-down-shown {
