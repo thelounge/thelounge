@@ -113,7 +113,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		this.initDone = new Deferred();
 	}
 
-	async _enable(connection_string: string) {
+	_enable(connection_string: string) {
 		this.database = new DatabaseSync(connection_string, {
 			enableForeignKeyConstraints: true,
 		});
@@ -227,11 +227,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	// helper method that vacuums the db, meant to be used by migration related cli commands
-	async vacuum() {
+	vacuum() {
 		this.database.exec("VACUUM");
 	}
 
-	async close() {
+	close() {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -249,7 +249,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 				where version > ?
 				order by version desc, step asc`
 			)
-			.all(since_version) as {version: number; rollback_forbidden: number; statement: string}[];
+			.all(since_version) as {
+			version: number;
+			rollback_forbidden: number;
+			statement: string;
+		}[];
 
 		const result: Rollback[] = [];
 
