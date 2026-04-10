@@ -24,7 +24,7 @@
 			@keydown.enter.prevent="clickActiveItem"
 		>
 			<!-- TODO: type -->
-			<template v-for="(item, id) of (items as any)" :key="item.name">
+			<template v-for="(item, id) of items as any" :key="item.name">
 				<li
 					:id="`context-menu-item-${id}`"
 					:class="[

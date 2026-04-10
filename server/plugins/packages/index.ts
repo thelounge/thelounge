@@ -124,7 +124,7 @@ function loadPackage(packageName: string) {
 		packageInfo = JSON.parse(fs.readFileSync(path.join(packagePath, "package.json"), "utf-8"));
 
 		if (!packageInfo.thelounge) {
-			throw "'thelounge' is not present in package.json";
+			throw new Error("'thelounge' is not present in package.json");
 		}
 
 		if (
@@ -133,9 +133,12 @@ function loadPackage(packageName: string) {
 				includePrerelease: true, // our pre-releases should respect the semver guarantees
 			})
 		) {
-			throw `v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`;
+			throw new Error(
+				`v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`
+			);
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		packageFile = require(packagePath);
 	} catch (e: any) {
 		log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import {Server as wsServer} from "ws";
 import express, {NextFunction, Request, Response} from "express";
+import type {ServeStaticOptions} from "serve-static";
 import fs from "fs";
 import path from "path";
 import {Server as ioServer, Socket as ioSocket} from "socket.io";
@@ -76,9 +77,10 @@ export default async function (
 	})`);
 	log.info(`Configuration file: ${colors.green(Config.getConfigPath())}`);
 
-	const staticOptions = {
+	const staticOptions: ServeStaticOptions = {
 		redirect: false,
 		maxAge: 86400 * 1000,
+		dotfiles: "allow",
 	};
 
 	const app = express();
@@ -188,7 +190,6 @@ export default async function (
 		};
 	}
 
-	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 	server.on("error", (err) => log.error(`${err}`));
 
 	server.listen(listenParams, () => {
@@ -229,7 +230,6 @@ export default async function (
 		});
 
 		sockets.on("connect", (socket) => {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
 
 			if (Config.values.public) {

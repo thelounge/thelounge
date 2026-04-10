@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 // @ts-nocheck
 // eslint-disable
 
@@ -263,7 +262,7 @@ declare module "irc-framework" {
 
 		on(eventType: "mode", cb: (event: ModeEventArgs) => any): this;
 
-		on(eventType: "socket close", cb: (event: Record<string, unknown>) => any): this;
+		on(eventType: "socket close", cb: (error: Error) => any): this;
 
 		on(eventType: "socket connected", cb: (event: Record<string, unknown>) => any): this;
 

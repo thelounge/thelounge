@@ -107,7 +107,7 @@ export function generateChannelContextMenu(
 								target: channel.id,
 								text: "/disconnect",
 							}),
-				  }
+					}
 				: {
 						label: "Connect",
 						type: "item",
@@ -117,7 +117,7 @@ export function generateChannelContextMenu(
 								target: channel.id,
 								text: "/connect",
 							}),
-				  },
+					},
 		];
 	}
 

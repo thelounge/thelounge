@@ -12,13 +12,13 @@ program
 	.on("--help", Utils.extraHelp)
 	.argument("<name>", "name of the user")
 	.option("--password [password]", "new password, will be prompted if not specified")
-	.action(function (name, cmdObj) {
+	.action(async function (name, cmdObj) {
 		if (!fs.existsSync(Config.getUsersPath())) {
 			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		// eslint-disable-next-line @typescript-eslint/no-require-imports
 		const ClientManager = require("../../clientManager").default;
 		const users = new ClientManager().getUsers();
 
@@ -37,19 +37,12 @@ program
 			return;
 		}
 
-		log.prompt(
-			{
-				text: "Enter new password:",
-				silent: true,
-			},
-			function (err, password) {
-				if (err) {
-					return;
-				}
+		const password = await log.prompt({
+			text: "Enter new password:",
+			silent: true,
+		});
 
-				change(name, password);
-			}
-		);
+		change(name, password);
 	});
 
 function change(name, password) {

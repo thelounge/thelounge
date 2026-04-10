@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-const got = require("got");
+const got = require("got").default;
 const path = require("path");
 const fs = require("fs");
 

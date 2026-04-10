@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import log from "../log";
 import colors from "chalk";
 import semver from "semver";
@@ -6,9 +5,9 @@ import Helper from "../helper";
 import Config from "../config";
 import Utils from "./utils";
 import {Command} from "commander";
-import {FullMetadata} from "package-json";
+import {FullVersion} from "package-json";
 
-type CustomMetadata = FullMetadata & {
+type CustomMetadata = FullVersion & {
 	thelounge: {
 		supports: string;
 	};
@@ -106,12 +105,16 @@ program
 							// the lockfile properly. We need to run an install in that case
 							// even though that's supposed to be done by the add subcommand
 							return Utils.executeYarnCommand("install").catch((err) => {
-								throw `Failed to update lockfile after package install ${err}`;
+								throw new Error(
+									`Failed to update lockfile after package install ${err}`
+								);
 							});
 						}
 					})
 					.catch((code) => {
-						throw `Failed to install ${colors.red(humanVersion)}. Exit code: ${code}`;
+						throw new Error(
+							`Failed to install ${colors.red(humanVersion)}. Exit code: ${code}`
+						);
 					});
 			})
 			.catch((e) => {

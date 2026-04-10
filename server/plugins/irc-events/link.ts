@@ -139,11 +139,10 @@ function parseHtml(preview, res, client: Client) {
 	});
 }
 
-// TODO: type $
-function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> {
+function parseHtmlMedia($: cheerio.CheerioAPI, preview, client: Client): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
-			reject();
+			reject(new Error("media preview disabled"));
 			return;
 		}
 
@@ -158,7 +157,7 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 			!openGraphType.startsWith("video") &&
 			!openGraphType.startsWith("music")
 		) {
-			reject();
+			reject(new Error(`og:type="${openGraphType}" is not a media type`));
 			return;
 		}
 
@@ -167,7 +166,7 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 				return;
 			}
 
-			$(`meta[property="og:${type}:type"]`).each(function (this: cheerio.Element, i: number) {
+			$(`meta[property="og:${type}:type"]`).each(function (i: number) {
 				const mimeType = $(this).attr("content");
 
 				if (!mimeType) {
@@ -201,7 +200,7 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 					})
 						.then((resMedia) => {
 							if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
-								return reject();
+								return reject(new Error(`invalid media type "${resMedia.type}"`));
 							}
 
 							preview.type = type;
@@ -218,7 +217,7 @@ function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> 
 		});
 
 		if (!foundMedia) {
-			reject();
+			reject(new Error("no media content found"));
 		}
 	});
 }
@@ -418,8 +417,8 @@ function fetch(uri: string, headers: Record<string, string>) {
 
 		try {
 			const gotStream = got.stream(uri, {
-				retry: 0,
-				timeout: prefetchTimeout || 5000, // milliseconds
+				retry: {limit: 0},
+				timeout: {request: prefetchTimeout || 5000}, // milliseconds
 				headers: getRequestHeaders(headers),
 				localAddress: Config.values.bind,
 			});
@@ -447,7 +446,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 							"prefetchMaxSearchSize" in Config.values
 								? Config.values.prefetchMaxSearchSize * 1024
 								: // set to the previous size if config option is unset
-								  50 * 1024;
+									50 * 1024;
 					}
 				})
 				.on("error", (e) => reject(e))
@@ -475,6 +474,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 					resolve({data: buffer, type, size});
 				});
 		} catch (e: any) {
+			// eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
 			return reject(e);
 		}
 	});
