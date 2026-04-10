@@ -3379,7 +3379,7 @@ colord@^2.9.1, colord@^2.9.2:
   resolved "https://registry.yarnpkg.com/colord/-/colord-2.9.2.tgz#25e2bacbbaa65991422c07ea209e2089428effb1"
   integrity sha512-Uqbg+J445nc1TKn4FoDPS6ZZqAvEDnwrH42yo8B40JSOgSLxMZ/gt3h4nmCtPLQeXhjJJkqBx7SCY35WnIixaQ==
 
-colorette@^2.0.14:
+colorette@^2.0.10, colorette@^2.0.14:
   version "2.0.20"
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.20.tgz#9eb793e6833067f7235902fcd3b09917a000a95a"
   integrity sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==
@@ -6105,7 +6105,7 @@ memfs@^3.4.1:
   dependencies:
     fs-monkey "^1.0.3"
 
-memfs@^4.56.10:
+memfs@^4.43.1:
   version "4.57.1"
   resolved "https://registry.yarnpkg.com/memfs/-/memfs-4.57.1.tgz#5ccee42e2aab1cf086c45baf9c4ef1ff4fffb123"
   integrity sha512-WvzrWPwMQT+PtbX2Et64R4qXKK0fj/8pO85MrUCzymX3twwCiJCdvntW3HdhG1teLJcHDDLIKx5+c3HckWYZtQ==
@@ -6198,7 +6198,7 @@ mime-types@2.1.35, mime-types@^2.1.27, mime-types@~2.1.24, mime-types@~2.1.34:
   dependencies:
     mime-db "1.52.0"
 
-mime-types@^3.0.2:
+mime-types@^3.0.1:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-3.0.2.tgz#39002d4182575d5af036ffa118100f2524b2e2ab"
   integrity sha512-Lbgzdk0h4juoQ9fCKXW4by0UJqj+nOOrI9MJ1sSj4nI8aI2eo1qmvQEie4VD1glsS250n15LsWsYtCugiStS5A==
@@ -9382,16 +9382,17 @@ webpack-cli@6.0.1:
     rechoir "^0.8.0"
     webpack-merge "^6.0.1"
 
-webpack-dev-middleware@8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-8.0.3.tgz#5f246bf8024069bbe2cf7d9bded55ca1aeafe9fe"
-  integrity sha512-zWrde9VZDiRaFuWsjHO40wm9LxxtXEk8DdzFXdU7eU5ZpiANnZZDBbZgN3guxbEoKqUHd9YupBmynyioz42nkA==
+webpack-dev-middleware@7.4.5:
+  version "7.4.5"
+  resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-7.4.5.tgz#d4e8720aa29cb03bc158084a94edb4594e3b7ac0"
+  integrity sha512-uxQ6YqGdE4hgDKNf7hUiPXOdtkXvBJXrfEGYSx7P7LC8hnUYGK70X6xQXUvXeNyBDDcsiQXpG2m3G9vxowaEuA==
   dependencies:
-    memfs "^4.56.10"
-    mime-types "^3.0.2"
+    colorette "^2.0.10"
+    memfs "^4.43.1"
+    mime-types "^3.0.1"
     on-finished "^2.4.1"
     range-parser "^1.2.1"
-    schema-utils "^4.3.3"
+    schema-utils "^4.0.0"
 
 webpack-hot-middleware@2.26.1:
   version "2.26.1"
