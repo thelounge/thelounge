@@ -15,13 +15,18 @@
 	bottom: 100%;
 	left: 0;
 	right: 0;
-	padding: 3px 10px;
+	padding: 8px 10px 4px;
 	font-size: 0.8em;
 	color: var(--body-color-muted);
+	background: linear-gradient(to top, var(--window-bg-color) 40%, transparent);
 	pointer-events: none;
 	display: flex;
 	align-items: center;
 	gap: 4px;
+}
+
+.userlist-open .typing-indicator {
+	right: calc(var(--userlist-width) + 1px);
 }
 
 .typing-dots {

@@ -25,6 +25,9 @@
 	/* Background color of the main window */
 	--window-bg-color: #fff;
 
+	/* Width of the user list sidebar */
+	--userlist-width: 180px;
+
 	/* Text color for <h2> and <h3> headings in windows */
 	--window-heading-color: #6c797a;
 
@@ -1225,7 +1228,7 @@ textarea.input {
 
 #chat .userlist {
 	border-left: 1px solid #e7e7e7;
-	width: 180px;
+	width: var(--userlist-width);
 	display: none;
 	flex-direction: column;
 	flex-shrink: 0;
@@ -2695,7 +2698,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		height: 100%;
 		position: absolute;
 		right: 0;
-		transform: translateX(180px);
+		transform: translateX(var(--userlist-width));
 		transition: transform 0.2s;
 		z-index: 1;
 	}
