@@ -1585,6 +1585,16 @@ textarea.input {
 	color: #e74c3c;
 }
 
+#chat .msg[data-type="warn"],
+#chat .msg[data-type="warn"] .from {
+	color: #f39c12;
+}
+
+#chat .msg[data-type="note"],
+#chat .msg[data-type="note"] .from {
+	color: #3498db;
+}
+
 #chat .chat-view[data-type="channel"] .msg.highlight {
 	background-color: var(--highlight-bg-color);
 	border-left: 5px solid var(--highlight-border-color);

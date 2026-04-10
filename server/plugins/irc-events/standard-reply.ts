@@ -7,7 +7,12 @@ export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("standard reply", function (data) {
-		const type = data.type === "FAIL" ? MessageType.ERROR : MessageType.NOTICE;
+		const typeMap: Record<string, MessageType> = {
+			FAIL: MessageType.ERROR,
+			WARN: MessageType.WARN,
+			NOTE: MessageType.NOTE,
+		};
+		const type = typeMap[data.type] || MessageType.ERROR;
 
 		let target = network.getLobby();
 
