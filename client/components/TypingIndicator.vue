@@ -1,5 +1,5 @@
 <template>
-	<div v-if="typingText" class="typing-indicator" :style="indicatorStyle">
+	<div v-if="typingText" class="typing-indicator">
 		<span class="typing-dots"><span /><span /><span /></span>
 		{{ typingText }}
 	</div>
@@ -40,27 +40,7 @@ export default defineComponent({
 			return `${nicks[0]} and ${nicks.length - 1} others are typing...`;
 		});
 
-		const indicatorStyle = computed(() => {
-			if (window.innerWidth <= 768) {
-				return {};
-			}
-
-			const settings = store.state.settings;
-			let timeWidth = 55;
-
-			if (settings.showSeconds && settings.use12hClock) {
-				timeWidth = 90;
-			} else if (settings.showSeconds || settings.use12hClock) {
-				timeWidth = 75;
-			}
-
-			// .time padding-left + width + .from padding-left + width + padding-right + .content border-left + padding-left
-			const offset = 10 + timeWidth + 10 + 134 + 10 + 1 + 10;
-
-			return {"padding-left": `${offset}px`};
-		});
-
-		return {typingText, indicatorStyle};
+		return {typingText};
 	},
 });
 </script>
@@ -75,6 +55,7 @@ export default defineComponent({
 	align-items: center;
 	gap: 4px;
 }
+
 
 .typing-dots {
 	display: inline-flex;
