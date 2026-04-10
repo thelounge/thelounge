@@ -1767,17 +1767,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-overflow-scrolling: touch;
 }
 
-#chat .names .user {
-	display: block;
-	line-height: 1.6;
-	padding: 0 16px;
-	white-space: nowrap;
-}
-
 /* Status icon in user list */
 #chat .names .user {
 	display: flex;
 	align-items: center;
+	line-height: 1.6;
+	padding: 0 16px;
+	white-space: nowrap;
 }
 
 #chat .names .status {

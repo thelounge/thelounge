@@ -3,7 +3,7 @@
 	<ChannelWrapper ref="wrapper" v-bind="$props">
 		<span class="name">{{ channel.name }}</span>
 		<StatusIcon
-			v-if="channel.type === 'query' && network.status.connected"
+			v-if="showStatusIcon"
 			:online="channel.isOnline"
 			:away="!!channel.userAway"
 		/>
@@ -61,10 +61,18 @@ export default defineComponent({
 	},
 	setup(props) {
 		const unreadCount = computed(() => roundBadgeNumber(props.channel.unread));
+		const showStatusIcon = computed(
+			() =>
+				props.channel.type === "query" &&
+				props.network.status.connected &&
+				props.network.serverOptions?.MONITOR !== 0 &&
+				props.channel.isOnline !== undefined
+		);
 		const close = useCloseChannel(props.channel);
 
 		return {
 			unreadCount,
+			showStatusIcon,
 			close,
 		};
 	},
