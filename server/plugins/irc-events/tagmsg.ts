@@ -1,8 +1,7 @@
 import {IrcEventHandler} from "../../client";
 import Helper from "../../helper";
 import {ChanType} from "../../../shared/types/chan";
-import type {TypingStatus} from "../../../shared/types/typing";
-import {VALID_TYPING_STATUSES} from "../../../shared/types/typing";
+import {VALID_TYPING_STATUSES, TypingStatus} from "../../../shared/types/typing";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;

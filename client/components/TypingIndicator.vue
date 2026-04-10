@@ -5,46 +5,6 @@
 	</div>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent, PropType} from "vue";
-import type {ClientChan} from "../js/types";
-import {useStore} from "../js/store";
-
-export default defineComponent({
-	name: "TypingIndicator",
-	props: {
-		channel: {type: Object as PropType<ClientChan>, required: true},
-	},
-	setup(props) {
-		const store = useStore();
-
-		const typingText = computed(() => {
-			if (!store.state.settings.typing) {
-				return "";
-			}
-
-			const nicks = props.channel.typingNicks;
-
-			if (nicks.length === 0) {
-				return "";
-			}
-
-			if (nicks.length === 1) {
-				return `${nicks[0]} is typing...`;
-			}
-
-			if (nicks.length === 2) {
-				return `${nicks[0]} and ${nicks[1]} are typing...`;
-			}
-
-			return `${nicks[0]} and ${nicks.length - 1} others are typing...`;
-		});
-
-		return {typingText};
-	},
-});
-</script>
-
 <style>
 .typing-indicator {
 	padding: 2px 10px;
@@ -92,3 +52,43 @@ export default defineComponent({
 	}
 }
 </style>
+
+<script lang="ts">
+import {computed, defineComponent, PropType} from "vue";
+import type {ClientChan} from "../js/types";
+import {useStore} from "../js/store";
+
+export default defineComponent({
+	name: "TypingIndicator",
+	props: {
+		channel: {type: Object as PropType<ClientChan>, required: true},
+	},
+	setup(props) {
+		const store = useStore();
+
+		const typingText = computed(() => {
+			if (!store.state.settings.typing) {
+				return "";
+			}
+
+			const nicks = props.channel.typingNicks;
+
+			if (nicks.length === 0) {
+				return "";
+			}
+
+			if (nicks.length === 1) {
+				return `${nicks[0]} is typing...`;
+			}
+
+			if (nicks.length === 2) {
+				return `${nicks[0]} and ${nicks[1]} are typing...`;
+			}
+
+			return `${nicks[0]} and ${nicks.length - 1} others are typing...`;
+		});
+
+		return {typingText};
+	},
+});
+</script>
