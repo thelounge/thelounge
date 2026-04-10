@@ -107,6 +107,16 @@ export default defineComponent({
 		let lastTypingSent = 0;
 		let typingPauseTimeout: ReturnType<typeof setTimeout> | null = null;
 
+		const clearTypingPauseTimeout = () => {
+			if (typingPauseTimeout !== null) {
+				clearTimeout(typingPauseTimeout);
+				typingPauseTimeout = null;
+			}
+		};
+
+		onUnmounted(() => {
+			clearTypingPauseTimeout();
+		});
 		const setInputSize = () => {
 			void nextTick(() => {
 				if (!input.value) {
@@ -243,6 +253,7 @@ export default defineComponent({
 				typingPauseTimeout = null;
 			}
 
+			sendTypingStatus("done");
 			lastTypingSent = 0;
 		};
 
