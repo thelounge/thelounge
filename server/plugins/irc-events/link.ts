@@ -52,20 +52,25 @@ function safeDnsLookup(
 
 	lookup(hostname, opts, (err: any, address: string, family: number) => {
 		if (err) {
-			return cb(err, address, family);
+			cb(err, address, family);
+
+			return;
 		}
 
 		if (!_testing.disableSSRFProtection && isPrivateIP(address)) {
-			return cb(
+			cb(
 				new Error(`Blocked request to private IP address: ${address}`),
 				address,
 				family
 			);
+
+			return;
 		}
 
 		cb(null, address, family);
 	});
 }
+
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
