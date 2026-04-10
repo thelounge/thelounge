@@ -42,11 +42,7 @@ export function isPrivateIP(ip: string): boolean {
 // Allows tests to disable SSRF protection when the test server runs on localhost
 export const _testing = {disableSSRFProtection: false};
 
-function safeDnsLookup(
-	hostname: string,
-	options: any,
-	callback?: any
-): void {
+function safeDnsLookup(hostname: string, options: any, callback?: any): void {
 	const cb = typeof options === "function" ? options : callback;
 	const opts = typeof options === "function" ? {} : options;
 
@@ -58,11 +54,7 @@ function safeDnsLookup(
 		}
 
 		if (!_testing.disableSSRFProtection && isPrivateIP(address)) {
-			cb(
-				new Error(`Blocked request to private IP address: ${address}`),
-				address,
-				family
-			);
+			cb(new Error(`Blocked request to private IP address: ${address}`), address, family);
 
 			return;
 		}
