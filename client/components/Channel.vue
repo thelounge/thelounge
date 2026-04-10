@@ -65,7 +65,6 @@ export default defineComponent({
 			() =>
 				props.channel.type === "query" &&
 				props.network.status.connected &&
-				props.network.serverOptions?.MONITOR !== 0 &&
 				props.channel.isOnline !== undefined
 		);
 		const close = useCloseChannel(props.channel);
