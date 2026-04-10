@@ -470,7 +470,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
 
 		let select =
-			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ESCAPE \'@\'';
+			"SELECT msg, type, time, network, channel FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
 		const params: any[] = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
