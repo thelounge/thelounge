@@ -212,6 +212,7 @@ describe("Chan", function () {
 				"type",
 				"unread",
 				// the following are there in special cases, need to fix the types
+				"isOnline",
 				"num_users",
 				"special",
 				"closed",
