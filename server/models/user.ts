@@ -8,7 +8,7 @@ class User {
 	away!: string;
 	nick!: string;
 	lastMessage!: number;
-	bot!: boolean;
+	isBot!: boolean;
 
 	constructor(attr: Partial<User>, prefix?: Prefix) {
 		_.defaults(this, attr, {
@@ -16,7 +16,7 @@ class User {
 			away: "",
 			nick: "",
 			lastMessage: 0,
-			bot: false,
+			isBot: false,
 		});
 
 		Object.defineProperty(this, "mode", {
@@ -39,7 +39,7 @@ class User {
 			nick: this.nick,
 			modes: this.modes,
 			lastMessage: this.lastMessage,
-			bot: this.bot,
+			isBot: this.isBot,
 		};
 	}
 }
