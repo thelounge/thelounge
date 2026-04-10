@@ -85,7 +85,7 @@
     "yarn": "1.22.22"
   },
   "optionalDependencies": {
-    "sqlite3": "5.1.7"
+    "sqlite3": "6.0.1"
   },
   "devDependencies": {
     "@babel/core": "7.17.10",
@@ -111,7 +111,6 @@
     "@types/read": "0.0.32",
     "@types/semver": "7.3.9",
     "@types/sortablejs": "1.15.8",
-    "@types/sqlite3": "3.1.11",
     "@types/ua-parser-js": "0.7.39",
     "@types/uuid": "8.3.4",
     "@types/web-push": "3.3.2",
