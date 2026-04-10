@@ -89,6 +89,8 @@ interface ServerToClientEvents {
 
 	quit: EventHandler<{network: string}>;
 
+	typing: EventHandler<{network: string; chan: number; nick: string; status: "active" | "paused" | "done"}>;
+
 	error: (error: any) => void;
 
 	connecting: NoPayloadEventHandler;
@@ -172,6 +174,8 @@ interface ClientToServerEvents {
 	"history:clear": EventHandler<{target: number}>;
 
 	search: EventHandler<SearchQuery>;
+
+	typing: EventHandler<{target: number; status: "active" | "paused" | "done"}>;
 }
 
 interface InterServerEvents {}

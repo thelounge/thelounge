@@ -116,6 +116,7 @@
 		>
 			{{ store.state.currentUserVisibleError }}
 		</div>
+		<TypingIndicator :channel="channel" />
 		<ChatInput :network="network" :channel="channel" />
 	</div>
 </template>
@@ -127,6 +128,7 @@ import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
+import TypingIndicator from "./TypingIndicator.vue";
 import SidebarToggle from "./SidebarToggle.vue";
 import MessageSearchForm from "./MessageSearchForm.vue";
 import ListBans from "./Special/ListBans.vue";
@@ -145,6 +147,7 @@ export default defineComponent({
 		MessageList,
 		ChatInput,
 		ChatUserList,
+		TypingIndicator,
 		SidebarToggle,
 		MessageSearchForm,
 	},

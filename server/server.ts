@@ -460,6 +460,33 @@ function initializeClient(
 		}
 	});
 
+	socket.on("typing", (data) => {
+		if (!_.isPlainObject(data)) {
+			return;
+		}
+
+		const status = data.status;
+
+		if (status !== "active" && status !== "paused" && status !== "done") {
+			return;
+		}
+
+		const target = client.find(data.target);
+
+		if (!target) {
+			return;
+		}
+
+		const {network, chan} = target;
+		const irc = network.irc;
+
+		if (!irc?.network?.cap?.isEnabled("message-tags")) {
+			return;
+		}
+
+		irc.tagmsg(chan.name, {"+typing": status});
+	});
+
 	socket.on("more", (data) => {
 		if (_.isPlainObject(data)) {
 			const history = client.more(data);
