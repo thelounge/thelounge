@@ -85,9 +85,12 @@ describe("Nickname highlights", function () {
 		network.setNick("ve");
 
 		expect("what a naïve idea").to.not.match(network.highlightRegex as any);
+		// Decomposed form: nai + combining diaeresis + ve
+		expect("what a nai\u0308ve idea").to.not.match(network.highlightRegex as any);
 
 		network.setNick("ber");
 
 		expect("über cool").to.not.match(network.highlightRegex as any);
+		expect("u\u0308ber cool").to.not.match(network.highlightRegex as any);
 	});
 });
