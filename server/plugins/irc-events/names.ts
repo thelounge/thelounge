@@ -38,8 +38,8 @@ export default <IrcEventHandler>function (irc, network) {
 		data.users.forEach((whoUser) => {
 			const user = chan.findUser(whoUser.nick);
 
-			if (user && whoUser.bot && !user.bot) {
-				user.bot = true;
+			if (user && whoUser.isBot && !user.isBot) {
+				user.isBot = true;
 				changed = true;
 			}
 		});

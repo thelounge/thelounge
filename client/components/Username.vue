@@ -7,7 +7,7 @@
 		@click.prevent="openContextMenu"
 		@contextmenu.prevent="openContextMenu"
 		><slot>{{ mode }}{{ user.nick }}</slot
-		><span v-if="user.bot" class="user-bot-indicator" title="Bot"> [bot]</span></span
+		><span v-if="user.isBot" class="user-bot-indicator" title="Bot"> [bot]</span></span
 	>
 </template>
 

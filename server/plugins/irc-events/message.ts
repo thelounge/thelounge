@@ -134,8 +134,8 @@ export default <IrcEventHandler>function (irc, network) {
 			for (const ch of network.channels) {
 				const user = ch.findUser(data.nick);
 
-				if (user && !user.bot) {
-					user.bot = true;
+				if (user && !user.isBot) {
+					user.isBot = true;
 					updatedChannelIds.add(ch.id);
 				}
 			}
