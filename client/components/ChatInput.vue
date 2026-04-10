@@ -2,6 +2,7 @@
 	<form id="form" method="post" action="" @submit.prevent="onSubmit">
 		<span id="upload-progressbar" />
 		<span id="nick">{{ network.nick }}</span>
+		<label for="input" class="sr-only">Message input</label>
 		<textarea
 			id="input"
 			ref="input"
@@ -10,7 +11,7 @@
 			enterkeyhint="send"
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
-			:aria-label="getInputPlaceholder(channel)"
+			aria-label="Message input"
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit"
 			@blur="onBlur"
@@ -41,6 +42,7 @@
 			id="submit-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Send message"
+			role="presentation"
 		>
 			<button
 				id="submit"
