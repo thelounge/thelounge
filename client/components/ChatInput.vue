@@ -144,6 +144,13 @@ export default defineComponent({
 				return;
 			}
 
+			if (
+				props.channel.type !== ChanType.CHANNEL &&
+				props.channel.type !== ChanType.QUERY
+			) {
+				return;
+			}
+
 			const now = Date.now();
 
 			if (status === "active" && now - lastTypingSent < TYPING_THROTTLE_MS) {
