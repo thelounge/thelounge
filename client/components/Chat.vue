@@ -37,7 +37,7 @@
 					</div>
 					<span
 						v-else
-						:title="channel.topic"
+						:title="plainTopic"
 						:class="{topic: true, empty: !channel.topic}"
 						@dblclick="editTopic"
 						><ParsedMessage
@@ -137,6 +137,7 @@ import {defineComponent, PropType, ref, computed, watch, nextTick, onMounted, Co
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
 import {SpecialChanType, ChanType} from "../../shared/types/chan";
+import parseStyle from "../js/helpers/ircmessageparser/parseStyle";
 
 export default defineComponent({
 	name: "Chat",
@@ -159,6 +160,18 @@ export default defineComponent({
 
 		const messageList = ref<typeof MessageList>();
 		const topicInput = ref<HTMLInputElement | null>(null);
+
+		const plainTopic = computed(() => {
+			const topic = props.channel.topic;
+
+			if (!topic) {
+				return "";
+			}
+
+			return parseStyle(topic)
+				.map((fragment) => fragment.text)
+				.join("");
+		});
 
 		const specialComponent = computed(() => {
 			switch (props.channel.special) {
@@ -262,6 +275,7 @@ export default defineComponent({
 			store,
 			messageList,
 			topicInput,
+			plainTopic,
 			specialComponent,
 			hideUserVisibleError,
 			editTopic,
