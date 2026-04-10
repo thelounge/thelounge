@@ -24,8 +24,7 @@ class TextFileMessageStorage implements MessageStorage {
 		this.isEnabled = true;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/require-await
-	async close() {
+	close() {
 		this.isEnabled = false;
 	}
 

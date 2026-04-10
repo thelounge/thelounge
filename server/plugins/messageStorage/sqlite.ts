@@ -139,7 +139,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		try {
-			await this._enable(sqlitePath);
+			this._enable(sqlitePath);
 		} finally {
 			this.initDone.resolve(); // unblock the instance methods
 		}
@@ -305,7 +305,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		return version;
 	}
 
-	async downgrade_to(version: number) {
+	downgrade_to(version: number): number {
 		if (version <= 0) {
 			throw Error(`${version} is not a valid version to downgrade to`);
 		}
@@ -325,9 +325,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		return new_version;
 	}
 
-	async downgrade() {
-		const res = await this.downgrade_to(currentSchemaVersion);
-		return res;
+	downgrade() {
+		return this.downgrade_to(currentSchemaVersion);
 	}
 
 	insert_rollback_since(version: number) {
@@ -451,7 +450,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
 
 		let select =
-			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ESCAPE \'@\'';
+			"SELECT msg, type, time, network, channel FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
 		const params: (string | number)[] = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {

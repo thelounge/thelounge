@@ -778,7 +778,11 @@ class Client {
 		});
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.close().catch((e) => log.error(e));
+			try {
+				messageStorage.close();
+			} catch (e: any) {
+				log.error(e);
+			}
 		}
 	}
 

@@ -113,14 +113,14 @@ describe("SQLite migrations", function () {
 describe("SQLite unit tests", function () {
 	let store: MessageStorage;
 
-	beforeEach(async function () {
+	beforeEach(function () {
 		store = new MessageStorage("testUser");
-		await store._enable(":memory:");
+		store._enable(":memory:");
 		store.initDone.resolve();
 	});
 
-	afterEach(async function () {
-		await store.close();
+	afterEach(function () {
+		store.close();
 	});
 
 	it("deletes messages when asked to", async function () {
@@ -423,13 +423,13 @@ describe("SQLite Message Storage", function () {
 				);
 			}
 
-			const new_version = await store.downgrade_to(rollback.version);
+			const new_version = store.downgrade_to(rollback.version);
 			expect(new_version).to.equal(rollback.version);
 		}
 	});
 
-	it("should close database", async function () {
-		await store.close();
+	it("should close database", function () {
+		store.close();
 		expect(fs.existsSync(expectedPath)).to.be.true;
 	});
 });

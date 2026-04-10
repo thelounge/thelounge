@@ -16,7 +16,7 @@ interface MessageStorage {
 
 	enable(): Promise<void>;
 
-	close(): Promise<void>;
+	close(): void;
 
 	index(network: Network, channel: Channel, msg: Message): Promise<void>;
 

@@ -3,7 +3,7 @@
 	<head>
 
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<meta name="viewport" content="width=device-width, user-scalable=no, interactive-widget=resizes-content">
 
 	<link rel="preload" as="script" href="js/loading-error-handlers.js?v=<%- cacheBust %>">
 	<link rel="preload" as="script" href="js/bundle.vendor.js?v=<%- cacheBust %>">

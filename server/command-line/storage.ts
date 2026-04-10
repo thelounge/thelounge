@@ -63,7 +63,7 @@ async function migrateUser(manager: ClientManager, user: string) {
 
 	const sqlite = new SqliteMessageStorage(user);
 	await sqlite.enable(); // enable runs migrations
-	await sqlite.close();
+	sqlite.close();
 	log.info("user", user, "migrated successfully");
 }
 
@@ -113,10 +113,10 @@ async function cleanUser(manager: ClientManager, user: string) {
 	log.info("running a vacuum now, this might take a while");
 
 	if (num_deleted > 0) {
-		await sqlite.vacuum();
+		sqlite.vacuum();
 	}
 
-	await sqlite.close();
+	sqlite.close();
 	log.info(`cleaning messages for ${user} has been successful`);
 }
 

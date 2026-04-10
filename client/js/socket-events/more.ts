@@ -22,7 +22,7 @@ socket.on("more", async (data) => {
 	);
 	channel.moreHistoryAvailable =
 		data.totalMessages > channel.messages.length + data.messages.length;
-	channel.messages.unshift(...data.messages);
+	channel.messages = data.messages.concat(channel.messages);
 
 	await nextTick();
 	channel.historyLoading = false;
