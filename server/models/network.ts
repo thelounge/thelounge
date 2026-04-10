@@ -697,8 +697,16 @@ class Network {
 			return;
 		}
 
-		this.irc.removeMonitor(target);
+		const wasMonitored = this.monitorList.includes(target);
+
 		this.monitorList = this.monitorList.filter((monitored) => monitored !== target);
+		this.toBeMonitored = this.toBeMonitored.filter((pending) => pending !== target);
+
+		if (!wasMonitored) {
+			return;
+		}
+
+		this.irc.removeMonitor(target);
 
 		if (this.toBeMonitored.length > 0) {
 			this.monitor(this.toBeMonitored.shift()!);

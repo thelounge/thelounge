@@ -3,7 +3,7 @@
 		:class="['status', 'tooltipped tooltipped-no-touch', tooltipDirClass]"
 		:aria-label="ariaLabel"
 	>
-		<span :class="{online: online, offline: !online, away: away}" />
+		<span :class="statusClass" />
 	</div>
 </template>
 
@@ -54,6 +54,16 @@ export default defineComponent({
 			() => `tooltipped-${props.tooltipDir ? props.tooltipDir : "w"}`
 		);
 
+		const statusClass = computed(() => {
+			if (props.away) {
+				return "away";
+			} else if (props.online) {
+				return "online";
+			}
+
+			return "offline";
+		});
+
 		const ariaLabel = computed(() => {
 			if (props.away) {
 				return "Away";
@@ -66,6 +76,7 @@ export default defineComponent({
 
 		return {
 			tooltipDirClass,
+			statusClass,
 			ariaLabel,
 		};
 	},

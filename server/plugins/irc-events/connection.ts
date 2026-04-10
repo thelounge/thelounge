@@ -213,8 +213,10 @@ export default <IrcEventHandler>function (irc, network) {
 			network.serverOptions.CHANTYPES = data.options.CHANTYPES;
 		}
 
+		const monitor = Number(data.options.MONITOR);
+
 		network.serverOptions.NETWORK = data.options.NETWORK;
-		network.serverOptions.MONITOR = data.options.MONITOR;
+		network.serverOptions.MONITOR = Number.isFinite(monitor) ? monitor : 0;
 
 		client.emit("network:options", {
 			network: network.uuid,

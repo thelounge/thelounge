@@ -8,11 +8,13 @@ export default <IrcEventHandler>function (irc, network) {
 		const changedChannels: string[] = [];
 
 		for (const nick of data.nicks) {
+			const normalizedNick = nick.toLowerCase();
+
 			for (const channel of network.channels) {
-				if (channel.type === ChanType.QUERY && channel.name === nick) {
+				if (channel.type === ChanType.QUERY && channel.name.toLowerCase() === normalizedNick) {
 					channel.isOnline = true;
 					changedChannels.push(channel.name);
-					continue;
+					break;
 				}
 			}
 		}
@@ -26,11 +28,13 @@ export default <IrcEventHandler>function (irc, network) {
 		const changedChannels: string[] = [];
 
 		for (const nick of data.nicks) {
+			const normalizedNick = nick.toLowerCase();
+
 			for (const channel of network.channels) {
-				if (channel.type === ChanType.QUERY && channel.name === nick) {
+				if (channel.type === ChanType.QUERY && channel.name.toLowerCase() === normalizedNick) {
 					channel.isOnline = false;
 					changedChannels.push(channel.name);
-					continue;
+					break;
 				}
 			}
 		}
