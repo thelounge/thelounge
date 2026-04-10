@@ -26,7 +26,7 @@ type HandleInput = {
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
-	return {...data, type: type};
+	return {...data, type: type, msgid: data.tags?.msgid};
 }
 
 export default <IrcEventHandler>function (irc, network) {
