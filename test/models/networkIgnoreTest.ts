@@ -36,8 +36,9 @@ describe("Network#isIgnoredUser", function () {
 			when: Date.now(),
 		});
 
-		expect(network.isIgnoredUser({nick: "anyone", ident: "any", hostname: "spammer.example.com"}))
-			.to.be.true;
+		expect(
+			network.isIgnoredUser({nick: "anyone", ident: "any", hostname: "spammer.example.com"})
+		).to.be.true;
 		expect(network.isIgnoredUser({nick: "anyone", ident: "any", hostname: "good.example.com"}))
 			.to.be.false;
 	});

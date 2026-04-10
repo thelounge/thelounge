@@ -60,9 +60,7 @@ describe("extractInputHistory helper", function () {
 	});
 
 	it("should return empty array for no matching messages", function () {
-		const messages = [
-			{self: false, text: "nope", type: MessageType.MESSAGE},
-		];
+		const messages = [{self: false, text: "nope", type: MessageType.MESSAGE}];
 
 		const result = extractInputHistory(messages as any, 100);
 		expect(result).to.be.empty;
