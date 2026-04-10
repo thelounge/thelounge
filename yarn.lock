@@ -5176,10 +5176,9 @@ ipaddr.js@1.9.1:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-irc-framework@4.14.0:
+irc-framework@kiwiirc/irc-framework#9578e59:
   version "4.14.0"
-  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.14.0.tgz#1854229c61e71bc3ca44c504afa4f31ace2c10de"
-  integrity sha512-lNujDAxy9kcu89WbU5H7IDWly64aD1B9nN9AV5M6btfx88qyQuyH16j1tjS40nmkQH6ld6vvaihKRn9cjk1JrA==
+  resolved "https://codeload.github.com/kiwiirc/irc-framework/tar.gz/9578e59a1056499e4a03a0f0fd2c260e9aadc541"
   dependencies:
     buffer "^6.0.3"
     core-js "^3.38.1"
