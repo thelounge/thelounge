@@ -52,6 +52,7 @@ const events = [
 	"topic",
 	"welcome",
 	"whois",
+	"standard-reply",
 ];
 
 type ClientPushSubscription = {
