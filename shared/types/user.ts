@@ -5,5 +5,5 @@ export type SharedUser = {
 	away: string;
 	nick: string;
 	lastMessage: number;
-	bot: boolean;
+	isBot: boolean;
 };
