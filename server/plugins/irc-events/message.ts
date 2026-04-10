@@ -126,8 +126,12 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		// https://ircv3.net/specs/extensions/bot-mode
-		if (data.tags && "bot" in data.tags) {
+		if (data.tags && "bot" in data.tags && !from.isBot) {
 			from.isBot = true;
+
+			client.emit("users", {
+				chan: chan.id,
+			});
 		}
 
 		// msg is constructed down here because `from` is being copied in the constructor
