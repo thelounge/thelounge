@@ -57,6 +57,7 @@ export default <IrcEventHandler>function (irc, network) {
 				if (network.serverOptions.MONITOR > 0) {
 					network.monitor(chan.name);
 				}
+
 				return;
 			}
 
