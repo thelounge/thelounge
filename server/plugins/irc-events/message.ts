@@ -125,26 +125,8 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		// https://ircv3.net/specs/extensions/bot-mode
-		if (data.tags && "bot" in data.tags && !from.isBot) {
+		if (data.tags && "bot" in data.tags) {
 			from.isBot = true;
-
-			const updatedChannelIds = new Set<number>();
-
-			// Update bot status in all channels this user is in
-			for (const ch of network.channels) {
-				const user = ch.findUser(data.nick);
-
-				if (user && !user.isBot) {
-					user.isBot = true;
-					updatedChannelIds.add(ch.id);
-				}
-			}
-
-			for (const channelId of updatedChannelIds) {
-				client.emit("users", {
-					chan: channelId,
-				});
-			}
 		}
 
 		// msg is constructed down here because `from` is being copied in the constructor
