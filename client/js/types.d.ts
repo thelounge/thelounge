@@ -50,8 +50,10 @@ type NetChan = {
 	network: ClientNetwork;
 };
 
-type ClientMention = SharedMention & {
-	localetime: string; // TODO: this needs to go the way of the dodo, nothing but a single component uses it
+type ClientMention = SharedMention;
+
+type ResolvedMention = SharedMention & {
+	localetime: string;
 	channel: NetChan | null;
 };
 
