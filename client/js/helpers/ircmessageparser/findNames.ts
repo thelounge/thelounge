@@ -2,6 +2,11 @@ import {Part} from "./merge";
 
 const nickRegExp = /([\w[\]\\`^{|}-]+)/g;
 
+// Intl.Segmenter prevents false nick matches inside words with apostrophes (e.g. "it's")
+// or non-ASCII characters
+// h/t John: https://github.com/thelounge/thelounge/issues/2008#issuecomment-1045417049
+const segmenter = new Intl.Segmenter(undefined, {granularity: "word"});
+
 export type NamePart = Part & {
 	nick: string;
 };
@@ -14,10 +19,8 @@ function findNames(text: string, nicks: string[]): NamePart[] {
 		return result;
 	}
 
-	// Intl.Segmenter prevents false nick matches inside words with apostrophes (e.g. "it's")
-	// or non-ASCII characters
-	// h/t John: https://github.com/thelounge/thelounge/issues/2008#issuecomment-1045417049
-	const segmenter = new Intl.Segmenter(undefined, {granularity: "word"});
+	const nickSet = new Set(nicks);
+
 	const wordSegments: Array<{start: number; end: number}> = [];
 
 	for (const segment of segmenter.segment(text)) {
@@ -32,7 +35,7 @@ function findNames(text: string, nicks: string[]): NamePart[] {
 	let match: RegExpExecArray | null;
 
 	while ((match = nickRegExp.exec(text))) {
-		if (nicks.indexOf(match[1]) > -1) {
+		if (nickSet.has(match[1])) {
 			const matchStart = match.index;
 			const matchEnd = match.index + match[1].length;
 
@@ -42,12 +45,12 @@ function findNames(text: string, nicks: string[]): NamePart[] {
 			let valid = true;
 
 			for (const seg of wordSegments) {
-				if (seg.start < matchStart && matchStart < seg.end) {
-					valid = false;
-					break;
-				}
+				if (seg.start > matchEnd) break;
 
-				if (seg.start < matchEnd && matchEnd < seg.end) {
+				if (
+					(seg.start < matchStart && matchStart < seg.end) ||
+					(seg.start < matchEnd && matchEnd < seg.end)
+				) {
 					valid = false;
 					break;
 				}

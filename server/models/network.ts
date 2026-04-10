@@ -490,7 +490,6 @@ class Network {
 				// or by a Unicode letter/number
 				"(?!'\\p{L})(?:[^\\p{L}\\p{N}]|$)",
 
-			// case insensitive, unicode mode
 			"iu"
 		);
 
