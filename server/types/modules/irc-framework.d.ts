@@ -281,7 +281,19 @@ declare module "irc-framework" {
 
 		on(eventType: "irc error", cb: (event: IrcErrorEventArgs) => any): this;
 
-		on(eventType: "tagmsg", cb: (event: {nick: string; ident: string; hostname: string; target: string; tags: {[key: string]: string}; time?: number; account?: any; batch?: any}) => any): this;
+		on(
+			eventType: "tagmsg",
+			cb: (event: {
+				nick: string;
+				ident: string;
+				hostname: string;
+				target: string;
+				tags: {[key: string]: string};
+				time?: number;
+				account?: any;
+				batch?: any;
+			}) => any
+		): this;
 	}
 	export class Message {
 		// TODO: What is actually in it and what was in the event?

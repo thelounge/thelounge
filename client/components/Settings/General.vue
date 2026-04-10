@@ -74,11 +74,7 @@
 		<div>
 			<h2>Typing indicators</h2>
 			<label class="opt">
-				<input
-					:checked="store.state.settings.typing"
-					type="checkbox"
-					name="typing"
-				/>
+				<input :checked="store.state.settings.typing" type="checkbox" name="typing" />
 				Send and display typing indicators
 			</label>
 		</div>

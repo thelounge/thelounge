@@ -56,7 +56,6 @@ export default defineComponent({
 	gap: 4px;
 }
 
-
 .typing-dots {
 	display: inline-flex;
 	gap: 2px;

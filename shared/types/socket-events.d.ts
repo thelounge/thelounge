@@ -89,7 +89,12 @@ interface ServerToClientEvents {
 
 	quit: EventHandler<{network: string}>;
 
-	typing: EventHandler<{network: string; chan: number; nick: string; status: "active" | "paused" | "done"}>;
+	typing: EventHandler<{
+		network: string;
+		chan: number;
+		nick: string;
+		status: "active" | "paused" | "done";
+	}>;
 
 	error: (error: any) => void;
 
