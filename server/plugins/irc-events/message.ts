@@ -128,18 +128,23 @@ export default <IrcEventHandler>function (irc, network) {
 		if (data.tags && "bot" in data.tags && !from.bot) {
 			from.bot = true;
 
+			const updatedChannelIds = new Set<number>();
+
 			// Update bot status in all channels this user is in
 			for (const ch of network.channels) {
 				const user = ch.findUser(data.nick);
 
 				if (user && !user.bot) {
 					user.bot = true;
+					updatedChannelIds.add(ch.id);
 				}
 			}
 
-			client.emit("users", {
-				chan: chan.id,
-			});
+			for (const channelId of updatedChannelIds) {
+				client.emit("users", {
+					chan: channelId,
+				});
+			}
 		}
 
 		// msg is constructed down here because `from` is being copied in the constructor
