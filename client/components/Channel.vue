@@ -62,7 +62,10 @@ export default defineComponent({
 	setup(props) {
 		const unreadCount = computed(() => roundBadgeNumber(props.channel.unread));
 		const showStatusIcon = computed(
-			() => props.channel.type === "query" && props.network.status.connected
+			() =>
+				props.channel.type === "query" &&
+				props.network.status.connected &&
+				props.channel.isOnline !== null
 		);
 		const close = useCloseChannel(props.channel);
 

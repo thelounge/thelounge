@@ -33,7 +33,7 @@ class Chan {
 	type!: ChanType;
 	state!: ChanState;
 
-	isOnline?: boolean;
+	isOnline?: boolean | null;
 	userAway!: string | null;
 	special?: SpecialChanType;
 	data?: any;
@@ -58,7 +58,7 @@ class Chan {
 		});
 
 		if (this.type === ChanType.QUERY) {
-			this.isOnline = this.isOnline ?? false;
+			this.isOnline = this.isOnline ?? null;
 		}
 	}
 

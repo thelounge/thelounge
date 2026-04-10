@@ -698,11 +698,7 @@ class Network {
 			return;
 		}
 
-		if (!this.serverOptions.MONITOR || this.serverOptions.MONITOR <= 0) {
-			return;
-		}
-
-		if (this.monitorList.length >= this.serverOptions.MONITOR) {
+		if (this.serverOptions.MONITOR > 0 && this.monitorList.length >= this.serverOptions.MONITOR) {
 			this.toBeMonitored.push(target);
 			return;
 		}

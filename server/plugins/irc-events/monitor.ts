@@ -13,6 +13,7 @@ export default <IrcEventHandler>function (irc, network) {
 			for (const channel of network.channels) {
 				if (channel.type === ChanType.QUERY && channel.name.toLowerCase() === normalizedNick) {
 					channel.isOnline = true;
+
 					changedChannels.push(channel.name);
 					break;
 				}

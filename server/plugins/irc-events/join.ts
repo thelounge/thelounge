@@ -20,6 +20,26 @@ export default <IrcEventHandler>function (irc, network) {
 				if (user) {
 					user.away = whoUser.away ? "away" : "";
 				}
+
+				// Sync away status to matching query channels
+				const awayStr = whoUser.away ? "away" : "";
+				const nickLower = whoUser.nick.toLowerCase();
+
+				for (const queryChan of network.channels) {
+					if (
+						queryChan.type === ChanType.QUERY &&
+						queryChan.name.toLowerCase() === nickLower &&
+						queryChan.userAway !== awayStr
+					) {
+						queryChan.userAway = awayStr || null;
+
+						client.emit("user:away", {
+							chan: queryChan.id,
+							nick: whoUser.nick,
+							away: awayStr,
+						});
+					}
+				}
 			}
 
 			client.emit("users", {

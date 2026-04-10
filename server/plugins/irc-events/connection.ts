@@ -119,6 +119,11 @@ export default <IrcEventHandler>function (irc, network) {
 		network.channels.forEach((chan) => {
 			chan.users = new Map();
 			chan.state = ChanState.PARTED;
+
+			if (chan.type === ChanType.QUERY) {
+				chan.isOnline = null;
+				chan.userAway = null;
+			}
 		});
 
 		if (error) {
