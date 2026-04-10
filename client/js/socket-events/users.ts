@@ -15,19 +15,18 @@ socket.on("users", function (data) {
 	}
 });
 
-socket.on("user:away", ({chan, nick, away}: {chan: string; nick: string; away?: string | null}) => {
+socket.on("user:away", ({chan, nick, away}) => {
 	const channel = store.getters.findChannel(chan);
-	const normalizedAway = away ? away : null;
 
 	if (channel) {
-		channel.channel.userAway = normalizedAway;
+		channel.channel.userAway = away || undefined;
 
 		const user = channel.channel.users.find(
 			(u) => u.nick.toLowerCase() === nick.toLowerCase()
 		);
 
 		if (user) {
-			user.away = normalizedAway;
+			user.away = away;
 		}
 	}
 });
