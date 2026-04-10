@@ -58,7 +58,7 @@ class Chan {
 		});
 
 		if (this.type === ChanType.QUERY) {
-			this.isOnline = this.isOnline ?? false;
+			this.isOnline = this.isOnline ?? undefined;
 		}
 	}
 
