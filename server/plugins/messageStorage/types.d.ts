@@ -1,5 +1,3 @@
-import type {Database} from "sqlite3";
-
 import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";
 import {Network} from "../../models/network";

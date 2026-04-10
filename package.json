@@ -84,9 +84,6 @@
     "web-push": "3.4.5",
     "yarn": "1.22.22"
   },
-  "optionalDependencies": {
-    "sqlite3": "6.0.1"
-  },
   "devDependencies": {
     "@babel/core": "7.17.10",
     "@babel/plugin-transform-runtime": "7.18.2",
@@ -107,7 +104,7 @@
     "@types/mime-types": "2.1.4",
     "@types/mocha": "9.1.1",
     "@types/mousetrap": "1.6.15",
-    "@types/node": "17.0.45",
+    "@types/node": "22.19.17",
     "@types/read": "0.0.32",
     "@types/semver": "7.3.9",
     "@types/sortablejs": "1.15.8",

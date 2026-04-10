@@ -11,7 +11,7 @@ import MessageStorage, {
 	necessaryMigrations,
 	rollbacks,
 } from "../../server/plugins/messageStorage/sqlite";
-import sqlite3 from "sqlite3";
+import {DatabaseSync} from "node:sqlite";
 import {DeletionRequest} from "../../server/plugins/messageStorage/types";
 
 const orig_schema = [
@@ -50,44 +50,26 @@ const v1_dummy_messages = [
 ];
 
 describe("SQLite migrations", function () {
-	let db: sqlite3.Database;
+	let db: DatabaseSync;
 
-	function serialize_run(stmt: string, ...params: any[]): Promise<void> {
-		return new Promise((resolve, reject) => {
-			db.serialize(() => {
-				db.run(stmt, params, (err) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve();
-				});
-			});
-		});
-	}
-
-	before(async function () {
-		db = new sqlite3.Database(":memory:");
+	before(function () {
+		db = new DatabaseSync(":memory:");
 
 		for (const stmt of orig_schema) {
-			await serialize_run(stmt);
+			db.exec(stmt);
 		}
 
+		const insert = db.prepare(
+			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)"
+		);
+
 		for (const msg of v1_dummy_messages) {
-			await serialize_run(
-				"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
-				msg.network,
-				msg.channel,
-				msg.time,
-				msg.type,
-				msg.msg
-			);
+			insert.run(msg.network, msg.channel, msg.time, msg.type, msg.msg);
 		}
 	});
 
-	after(function (done) {
-		db.close(done);
+	after(function () {
+		db.close();
 	});
 
 	it("has a down migration for every migration", function () {
@@ -97,20 +79,20 @@ describe("SQLite migrations", function () {
 		);
 	});
 
-	it("has working up-migrations", async function () {
+	it("has working up-migrations", function () {
 		const to_execute = necessaryMigrations(v1_schema_version);
 		expect(to_execute.length).to.eq(migrations.length);
-		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+		db.exec("BEGIN EXCLUSIVE TRANSACTION");
 
 		for (const stmt of to_execute.map((m) => m.stmts).flat()) {
-			await serialize_run(stmt);
+			db.exec(stmt);
 		}
 
-		await serialize_run("COMMIT TRANSACTION");
+		db.exec("COMMIT TRANSACTION");
 	});
 
-	it("has working down-migrations", async function () {
-		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+	it("has working down-migrations", function () {
+		db.exec("BEGIN EXCLUSIVE TRANSACTION");
 
 		for (const rollback of rollbacks.slice().reverse()) {
 			if (rollback.rollback_forbidden) {
@@ -120,11 +102,11 @@ describe("SQLite migrations", function () {
 			}
 
 			for (const stmt of rollback.stmts) {
-				await serialize_run(stmt);
+				db.exec(stmt);
 			}
 		}
 
-		await serialize_run("COMMIT TRANSACTION");
+		db.exec("COMMIT TRANSACTION");
 	});
 });
 
@@ -242,36 +224,6 @@ describe("SQLite Message Storage", function () {
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
 
-	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.get(stmt, params, (err, row) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(row);
-				});
-			});
-		});
-	}
-
-	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.all(stmt, params, (err, rows) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(rows);
-				});
-			});
-		});
-	}
-
 	before(function (done) {
 		store = new MessageStorage("testUser");
 
@@ -305,16 +257,17 @@ describe("SQLite Message Storage", function () {
 		store.isEnabled = true;
 	});
 
-	it("should insert schema version to options table", async function () {
-		const row = await db_get_one("SELECT value FROM options WHERE name = 'schema_version'");
+	it("should insert schema version to options table", function () {
+		const row = store.database
+			.prepare("SELECT value FROM options WHERE name = 'schema_version'")
+			.get() as {value: string};
 		expect(row.value).to.equal(currentSchemaVersion.toString());
 	});
 
-	it("should insert migrations", async function () {
-		const row = await db_get_one(
-			"SELECT id, version FROM migrations WHERE version = ?",
-			currentSchemaVersion
-		);
+	it("should insert migrations", function () {
+		const row = store.database
+			.prepare("SELECT id, version FROM migrations WHERE version = ?")
+			.get(currentSchemaVersion) as {id: number; version: number} | undefined;
 		expect(row).to.not.be.undefined;
 	});
 
