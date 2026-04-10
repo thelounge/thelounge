@@ -29,6 +29,7 @@ declare module "irc-framework" {
 		hostname: string;
 		ident: string;
 		message: string;
+		msgid?: string;
 		nick: string;
 		reply: (message: string) => void;
 		tags: {[key: string]: string};

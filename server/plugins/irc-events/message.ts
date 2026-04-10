@@ -23,6 +23,7 @@ type HandleInput = {
 	message: string;
 	group?: string;
 	tags?: {[key: string]: string};
+	msgid?: string;
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
@@ -138,6 +139,7 @@ export default <IrcEventHandler>function (irc, network) {
 			from: from,
 			highlight: highlight,
 			users: [],
+			msgid: data.msgid,
 		});
 
 		if (showInActive) {
