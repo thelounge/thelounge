@@ -19,6 +19,8 @@ socket.on("user:away", ({chan, nick, away}) => {
 	const channel = store.getters.findChannel(chan);
 
 	if (channel) {
+		channel.channel.userAway = away;
+
 		const user = channel.channel.users.find(
 			(u) => u.nick.toLowerCase() === nick.toLowerCase()
 		);

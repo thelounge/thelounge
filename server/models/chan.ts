@@ -34,7 +34,7 @@ class Chan {
 	state!: ChanState;
 
 	isOnline?: boolean;
-	userAway?: boolean;
+	userAway!: string | null;
 	special?: SpecialChanType;
 	data?: any;
 	closed?: boolean;
@@ -54,6 +54,7 @@ class Chan {
 			highlight: 0,
 			users: new Map(),
 			muted: false,
+			userAway: null,
 		});
 
 		if (this.type === ChanType.QUERY) {

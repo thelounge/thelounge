@@ -166,6 +166,7 @@ class Network {
 					{symbol: "+", mode: "v"},
 				]),
 				NETWORK: "",
+				MONITOR: 0,
 			},
 
 			proxyHost: "",
@@ -566,7 +567,11 @@ class Network {
 
 		this.channels.splice(index, 0, newChan);
 
-		if (newChan.type === ChanType.QUERY && this.irc?.connected) {
+		if (
+			newChan.type === ChanType.QUERY &&
+			this.irc?.connected &&
+			this.serverOptions.MONITOR > 0
+		) {
 			if (!this.monitorList.includes(newChan.name)) {
 				this.monitor(newChan.name);
 			}
@@ -678,12 +683,26 @@ class Network {
 		});
 	}
 
+	normalizeMonitorTarget(target: string) {
+		return target.toLowerCase();
+	}
+
 	monitor(target: string) {
 		if (!this.irc) {
 			return;
 		}
 
-		if (this.serverOptions.MONITOR && this.monitorList.length >= this.serverOptions.MONITOR) {
+		target = this.normalizeMonitorTarget(target);
+
+		if (this.monitorList.includes(target) || this.toBeMonitored.includes(target)) {
+			return;
+		}
+
+		if (!this.serverOptions.MONITOR || this.serverOptions.MONITOR <= 0) {
+			return;
+		}
+
+		if (this.monitorList.length >= this.serverOptions.MONITOR) {
 			this.toBeMonitored.push(target);
 			return;
 		}
@@ -696,6 +715,8 @@ class Network {
 		if (!this.irc) {
 			return;
 		}
+
+		target = this.normalizeMonitorTarget(target);
 
 		const wasMonitored = this.monitorList.includes(target);
 

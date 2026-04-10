@@ -42,6 +42,12 @@ export default <IrcEventHandler>function (irc, network) {
 					// because query windows have no users
 					chan.userAway = away;
 
+					client.emit("user:away", {
+						chan: chan.id,
+						nick: data.nick,
+						away: away,
+					});
+
 					user = chan.getUser(data.nick);
 
 					const msg = new Msg({
