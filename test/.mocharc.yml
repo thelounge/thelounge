@@ -8,6 +8,6 @@ require:
   - "ts-node/register"
   # - "jsdom-global/register"
   - "test/fixtures/env.ts"
-globals:
+global:
   - "__VUE_PROD_DEVTOOLS__"
   - "__VUE__"
