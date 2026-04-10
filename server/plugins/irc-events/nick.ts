@@ -38,6 +38,21 @@ export default <IrcEventHandler>function (irc, network) {
 					network.removeMonitor(chan.name);
 					chan.name = data.new_nick;
 					network.monitor(data.new_nick);
+
+					const nickMsg = new Msg({
+						time: data.time,
+						from: chan.getUser(data.nick),
+						type: MessageType.NICK,
+						new_nick: data.new_nick,
+					});
+					chan.pushMessage(client, nickMsg);
+
+					client.emit("channel:rename", {
+						chan: chan.id,
+						name: data.new_nick,
+					});
+
+					client.save();
 				}
 
 				return;

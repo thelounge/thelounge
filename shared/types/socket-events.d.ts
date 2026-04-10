@@ -30,6 +30,7 @@ interface ServerToClientEvents {
 	"changelog:newversion": NoPayloadEventHandler;
 
 	"channel:state": EventHandler<{chan: number; state: ChanState}>;
+	"channel:rename": EventHandler<{chan: number; name: string}>;
 
 	"change-password": EventHandler<{success: boolean; error?: any}>;
 
