@@ -75,7 +75,7 @@
 			<h2>Typing indicators</h2>
 			<label class="opt">
 				<input :checked="store.state.settings.typing" type="checkbox" name="typing" />
-				Send and display typing indicators
+				Send and display typing indicators (when supported)
 			</label>
 		</div>
 		<div v-if="!store.state.serverConfiguration?.public">
