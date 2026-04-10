@@ -117,6 +117,7 @@ export default defineComponent({
 		onUnmounted(() => {
 			clearTypingPauseTimeout();
 		});
+
 		const setInputSize = () => {
 			void nextTick(() => {
 				if (!input.value) {
