@@ -1,5 +1,9 @@
 <template>
-	<div v-if="typingText" class="typing-indicator">
+	<div
+		v-if="typingText"
+		class="typing-indicator"
+		:class="{'typing-indicator-gradient': !channel.scrolledToBottom}"
+	>
 		<span class="typing-dots"><span /><span /><span /></span>
 		{{ typingText }}
 	</div>
@@ -18,11 +22,14 @@
 	padding: 8px 10px 4px;
 	font-size: 0.8em;
 	color: var(--body-color-muted);
-	background: linear-gradient(to top, var(--window-bg-color) 40%, transparent);
 	pointer-events: none;
 	display: flex;
 	align-items: center;
 	gap: 4px;
+}
+
+.typing-indicator-gradient {
+	background: linear-gradient(to top, var(--window-bg-color) 40%, transparent);
 }
 
 .userlist-open .typing-indicator {
