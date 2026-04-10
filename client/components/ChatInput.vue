@@ -41,8 +41,7 @@
 		<span
 			id="submit-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
-			aria-label="Send message"
-			role="presentation"
+			data-tooltip="Send message"
 		>
 			<button
 				id="submit"

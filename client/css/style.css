@@ -2,6 +2,12 @@
 @import "fontawesome.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
 
+/* Allow tooltips via data-tooltip instead of aria-label to avoid
+   duplicating accessible names on wrapper + child elements */
+.tooltipped[data-tooltip]::after {
+	content: attr(data-tooltip);
+}
+
 :root {
 	/* Main text color */
 	--body-color: #222;
