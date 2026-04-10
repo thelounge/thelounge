@@ -567,14 +567,8 @@ class Network {
 
 		this.channels.splice(index, 0, newChan);
 
-		if (
-			newChan.type === ChanType.QUERY &&
-			this.irc?.connected &&
-			this.serverOptions.MONITOR > 0
-		) {
-			if (!this.monitorList.includes(newChan.name)) {
-				this.monitor(newChan.name);
-			}
+		if (newChan.type === ChanType.QUERY && this.irc?.connected) {
+			this.monitor(newChan.name);
 		}
 
 		return index;

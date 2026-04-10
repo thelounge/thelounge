@@ -26,7 +26,7 @@ socket.on("user:away", ({chan, nick, away}) => {
 		);
 
 		if (user) {
-			user.away = away;
+			user.away = away || "";
 		}
 	}
 });
