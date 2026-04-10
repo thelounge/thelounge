@@ -54,7 +54,9 @@ export default <IrcEventHandler>function (irc, network) {
 
 		network.channels.forEach((chan) => {
 			if (chan.type === ChanType.QUERY) {
-				network.monitor(chan.name);
+				if (network.serverOptions.MONITOR > 0) {
+					network.monitor(chan.name);
+				}
 				return;
 			}
 
