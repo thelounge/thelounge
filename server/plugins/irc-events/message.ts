@@ -124,7 +124,7 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 		}
 
-		// Mark user as bot if the message has the @bot tag (IRCv3 bot-mode)
+		// https://ircv3.net/specs/extensions/bot-mode
 		if (data.tags && "bot" in data.tags && !from.isBot) {
 			from.isBot = true;
 
