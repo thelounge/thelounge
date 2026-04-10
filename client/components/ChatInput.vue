@@ -64,6 +64,7 @@ import {watch, defineComponent, nextTick, onMounted, PropType, ref, onUnmounted}
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
 import {ChanType} from "../../shared/types/chan";
+import type {TypingStatus} from "../../shared/types/typing";
 
 const TYPING_THROTTLE_MS = 3000;
 
@@ -128,7 +129,7 @@ export default defineComponent({
 			});
 		};
 
-		const sendTypingStatus = (status: "active" | "paused" | "done") => {
+		const sendTypingStatus = (status: TypingStatus) => {
 			if (!store.state.settings.typing || !store.state.isConnected) {
 				return;
 			}

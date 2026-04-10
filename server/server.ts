@@ -18,6 +18,7 @@ import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
+import {VALID_TYPING_STATUSES} from "../shared/types/typing";
 
 import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
@@ -467,7 +468,7 @@ function initializeClient(
 
 		const status = data.status;
 
-		if (status !== "active" && status !== "paused" && status !== "done") {
+		if (!VALID_TYPING_STATUSES.has(status)) {
 			return;
 		}
 

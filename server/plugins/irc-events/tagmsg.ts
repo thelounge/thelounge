@@ -1,8 +1,8 @@
 import {IrcEventHandler} from "../../client";
 import Helper from "../../helper";
 import {ChanType} from "../../../shared/types/chan";
-
-const VALID_TYPING_STATUSES = new Set(["active", "paused", "done"]);
+import type {TypingStatus} from "../../../shared/types/typing";
+import {VALID_TYPING_STATUSES} from "../../../shared/types/typing";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -44,7 +44,7 @@ export default <IrcEventHandler>function (irc, network) {
 				network: network.uuid,
 				chan: chan.id,
 				nick: data.nick,
-				status: typing as "active" | "paused" | "done",
+				status: typing as TypingStatus,
 			});
 		}
 	});

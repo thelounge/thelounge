@@ -1,3 +1,4 @@
+import type {TypingStatus} from "./typing";
 import {SharedMention} from "./mention";
 import {ChanState, SharedChan} from "./chan";
 import {SharedNetwork, SharedServerOptions} from "./network";
@@ -93,7 +94,7 @@ interface ServerToClientEvents {
 		network: string;
 		chan: number;
 		nick: string;
-		status: "active" | "paused" | "done";
+		status: TypingStatus;
 	}>;
 
 	error: (error: any) => void;
@@ -180,7 +181,7 @@ interface ClientToServerEvents {
 
 	search: EventHandler<SearchQuery>;
 
-	typing: EventHandler<{target: number; status: "active" | "paused" | "done"}>;
+	typing: EventHandler<{target: number; status: TypingStatus}>;
 }
 
 interface InterServerEvents {}
