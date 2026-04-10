@@ -4,6 +4,7 @@ import {MessageType, LinkPreview, UserInMessage} from "../../shared/types/msg";
 class Msg {
 	from!: UserInMessage;
 	id!: number;
+	msgid?: string;
 	previews!: LinkPreview[];
 	text!: string;
 	type!: MessageType;
