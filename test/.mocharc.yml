@@ -4,8 +4,9 @@ recursive: true
 reporter: dot
 ignore: "test/client/**"
 extension: ["ts", "js"]
+node-option:
+  - "import=tsx"
 require:
-  - "ts-node/register"
   # - "jsdom-global/register"
   - "test/fixtures/env.ts"
 global:
