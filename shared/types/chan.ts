@@ -36,7 +36,7 @@ export type SharedChan = {
 	state: ChanState;
 
 	isOnline?: boolean;
-	userAway?: boolean;
+	userAway?: string | null;
 	special?: SpecialChanType;
 	data?: any;
 	closed?: boolean;
