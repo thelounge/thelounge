@@ -1774,6 +1774,19 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	white-space: nowrap;
 }
 
+/* Status icon in user list */
+#chat .names .user {
+	display: flex;
+	align-items: center;
+}
+
+#chat .names .status {
+	width: auto;
+	height: auto;
+	margin-left: auto;
+	margin-right: 0;
+}
+
 #chat .user-mode {
 	margin-bottom: 15px;
 }
@@ -1787,6 +1800,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding: 5px 16px;
 	position: sticky;
 	top: 0;
+	z-index: 1;
 }
 
 #chat .user-mode.owner::before {

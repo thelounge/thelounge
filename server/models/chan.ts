@@ -223,6 +223,7 @@ class Chan {
 			state: this.state,
 
 			isOnline: this.isOnline,
+			userAway: this.userAway,
 			special: this.special,
 			data: this.data,
 			closed: this.closed,

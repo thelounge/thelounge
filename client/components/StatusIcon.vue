@@ -14,6 +14,9 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	flex-shrink: 0;
+	margin-left: 4px;
+	z-index: 0;
 }
 
 .online::after,

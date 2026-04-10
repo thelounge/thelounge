@@ -5,6 +5,7 @@
 		<StatusIcon
 			v-if="channel.type === 'query' && network.status.connected"
 			:online="channel.isOnline"
+			:away="!!channel.userAway"
 		/>
 		<span
 			v-if="channel.unread"
