@@ -77,6 +77,9 @@ interface ServerToClientEvents {
 
 	users: EventHandler<{chan: number}>;
 
+	"users:online": EventHandler<{changedChannels: string[]; networkId: string}>;
+	"users:offline": EventHandler<{changedChannels: string[]; networkId: string}>;
+
 	more: EventHandler<{chan: number; messages: SharedMsg[]; totalMessages: number}>;
 
 	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;

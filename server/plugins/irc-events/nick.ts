@@ -2,6 +2,7 @@ import {IrcEventHandler} from "../../client";
 
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -29,6 +30,16 @@ export default <IrcEventHandler>function (irc, network) {
 			const user = chan.findUser(data.nick);
 
 			if (typeof user === "undefined") {
+				// Update monitor list for query channels that match the old nick
+				if (
+					chan.type === ChanType.QUERY &&
+					chan.name.toLowerCase() === data.nick.toLowerCase()
+				) {
+					network.removeMonitor(data.nick);
+					chan.name = data.new_nick;
+					network.monitor(data.new_nick);
+				}
+
 				return;
 			}
 

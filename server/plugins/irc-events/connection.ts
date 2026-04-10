@@ -53,6 +53,11 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		network.channels.forEach((chan) => {
+			if (chan.type === ChanType.QUERY) {
+				network.monitor(chan.name);
+				return;
+			}
+
 			if (chan.type !== ChanType.CHANNEL) {
 				return;
 			}
@@ -107,6 +112,9 @@ export default <IrcEventHandler>function (irc, network) {
 			client.manager.identHandler.removeSocket(identSocketId);
 			identSocketId = 0;
 		}
+
+		network.monitorList = [];
+		network.toBeMonitored = [];
 
 		network.channels.forEach((chan) => {
 			chan.users = new Map();
@@ -204,6 +212,7 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		network.serverOptions.NETWORK = data.options.NETWORK;
+		network.serverOptions.MONITOR = data.options.MONITOR;
 
 		client.emit("network:options", {
 			network: network.uuid,
