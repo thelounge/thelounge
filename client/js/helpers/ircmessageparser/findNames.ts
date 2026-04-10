@@ -45,7 +45,9 @@ function findNames(text: string, nicks: string[]): NamePart[] {
 			let valid = true;
 
 			for (const seg of wordSegments) {
-				if (seg.start > matchEnd) break;
+				if (seg.start > matchEnd) {
+					break;
+				}
 
 				if (
 					(seg.start < matchStart && matchStart < seg.end) ||
