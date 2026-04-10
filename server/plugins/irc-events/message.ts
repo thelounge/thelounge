@@ -22,6 +22,7 @@ type HandleInput = {
 	from_server?: boolean;
 	message: string;
 	group?: string;
+	tags?: {[key: string]: string};
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
@@ -121,6 +122,24 @@ export default <IrcEventHandler>function (irc, network) {
 			} else if (chan.type === ChanType.CHANNEL) {
 				from.lastMessage = data.time || Date.now();
 			}
+		}
+
+		// Mark user as bot if the message has the @bot tag (IRCv3 bot-mode)
+		if (data.tags && "bot" in data.tags && !from.bot) {
+			from.bot = true;
+
+			// Update bot status in all channels this user is in
+			for (const ch of network.channels) {
+				const user = ch.findUser(data.nick);
+
+				if (user && !user.bot) {
+					user.bot = true;
+				}
+			}
+
+			client.emit("users", {
+				chan: chan.id,
+			});
 		}
 
 		// msg is constructed down here because `from` is being copied in the constructor
