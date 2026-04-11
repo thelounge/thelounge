@@ -36,12 +36,9 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 
 			if (replyTo) {
 				// irc.action() doesn't support tags, send as raw PRIVMSG with CTCP ACTION
-				irc.sendMessage(
-					"PRIVMSG",
-					chan.name,
-					"\x01ACTION " + text + "\x01",
-					{"+reply": replyTo}
-				);
+				irc.sendMessage("PRIVMSG", chan.name, "\x01ACTION " + text + "\x01", {
+					"+reply": replyTo,
+				});
 			} else {
 				irc.action(chan.name, text);
 			}

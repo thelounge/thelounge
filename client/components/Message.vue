@@ -55,11 +55,7 @@
 					:channel="channel"
 				/>
 				<div v-if="canReply && message.msgid" class="msg-actions">
-					<button
-						class="msg-action-reply"
-						aria-label="Reply"
-						@click.stop="startReply"
-					/>
+					<button class="msg-action-reply" aria-label="Reply" @click.stop="startReply" />
 				</div>
 			</span>
 		</template>
@@ -102,11 +98,7 @@
 					:channel="channel"
 				/>
 				<div v-if="canReply && message.msgid" class="msg-actions">
-					<button
-						class="msg-action-reply"
-						aria-label="Reply"
-						@click.stop="startReply"
-					/>
+					<button class="msg-action-reply" aria-label="Reply" @click.stop="startReply" />
 				</div>
 			</span>
 		</template>
@@ -191,9 +183,7 @@ export default defineComponent({
 		const canReply = computed(() => {
 			const t = props.message.type;
 			return (
-				t === MessageType.MESSAGE ||
-				t === MessageType.ACTION ||
-				t === MessageType.NOTICE
+				t === MessageType.MESSAGE || t === MessageType.ACTION || t === MessageType.NOTICE
 			);
 		});
 
