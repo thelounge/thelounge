@@ -7,7 +7,7 @@ const PAUSED_TIMEOUT_MS = 30000;
 const typingTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
 socket.on("typing", function (data) {
-	if (!store.state.settings.typing) {
+	if (store.state.settings.typing === "off") {
 		return;
 	}
 

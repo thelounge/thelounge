@@ -141,7 +141,7 @@ export default defineComponent({
 		};
 
 		const sendTypingStatus = (status: TypingStatus) => {
-			if (!store.state.settings.typing || !store.state.isConnected) {
+			if (store.state.settings.typing !== "on" || !store.state.isConnected) {
 				return;
 			}
 

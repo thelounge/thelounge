@@ -87,7 +87,7 @@ export default defineComponent({
 		const store = useStore();
 
 		const typingText = computed(() => {
-			if (!store.state.settings.typing) {
+			if (store.state.settings.typing === "off") {
 				return "";
 			}
 

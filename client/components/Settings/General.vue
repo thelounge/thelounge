@@ -73,10 +73,17 @@
 		</div>
 		<div>
 			<h2>Typing indicators</h2>
-			<label class="opt">
-				<input :checked="store.state.settings.typing" type="checkbox" name="typing" />
-				Send and display typing indicators (when supported)
-			</label>
+			<label for="typing" class="sr-only">Typing indicators</label>
+			<select
+				id="typing"
+				:value="store.state.settings.typing"
+				name="typing"
+				class="input"
+			>
+				<option value="on">Send &amp; receive</option>
+				<option value="receive">Receive only</option>
+				<option value="off">Off</option>
+			</select>
 		</div>
 		<div v-if="!store.state.serverConfiguration?.public">
 			<h2>Automatic away message</h2>
