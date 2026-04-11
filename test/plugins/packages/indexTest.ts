@@ -1,20 +1,18 @@
 import log from "../../../server/log";
-import {expect} from "vitest";
+import {expect, vi} from "vitest";
 import TestUtil from "../../util";
 import sinon from "ts-sinon";
-import packagePlugin from "../../../server/plugins/packages";
 
-let packages: typeof packagePlugin;
+let packages: typeof import("../../../server/plugins/packages").default;
 
 describe("packages", function () {
 	let logInfoStub: sinon.SinonStub<string[], void>;
 
-	beforeEach(function () {
+	beforeEach(async function () {
 		logInfoStub = sinon.stub(log, "info");
 
-		delete require.cache[require.resolve("../../../server/plugins/packages")];
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		packages = require("../../../server/plugins/packages").default;
+		vi.resetModules();
+		packages = (await import("../../../server/plugins/packages")).default;
 	});
 
 	afterEach(function () {
