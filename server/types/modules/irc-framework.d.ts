@@ -177,11 +177,16 @@ declare module "irc-framework" {
 
 		changeNick(nick: string): void;
 
-		sendMessage(commandName: string, target: string, message: string): string[];
+		sendMessage(
+			commandName: string,
+			target: string,
+			message: string,
+			tags?: {[key: string]: string}
+		): string[];
 
-		say(target: string, message: string): string[];
+		say(target: string, message: string, tags?: {[key: string]: string}): string[];
 
-		notice(target: string, message: string): string[];
+		notice(target: string, message: string, tags?: {[key: string]: string}): string[];
 
 		join(channel: string, key?: string): void;
 

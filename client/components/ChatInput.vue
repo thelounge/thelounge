@@ -1,5 +1,18 @@
 <template>
 	<form id="form" method="post" action="" @submit.prevent="onSubmit">
+		<div v-if="channel.replyingTo" class="reply-bar">
+			<span class="reply-bar-text">
+				Replying to <strong>{{ channel.replyingTo.nick }}</strong>
+			</span>
+			<button
+				class="reply-bar-close"
+				type="button"
+				aria-label="Cancel reply"
+				@click="cancelReply"
+			>
+				&times;
+			</button>
+		</div>
 		<span id="upload-progressbar" />
 		<span id="nick">{{ network.nick }}</span>
 		<textarea
@@ -191,7 +204,9 @@ export default defineComponent({
 				}
 			}
 
-			socket.emit("input", {target, text});
+			const replyTo = props.channel.replyingTo?.msgid;
+			socket.emit("input", {target, text, ...(replyTo && {replyTo})});
+			props.channel.replyingTo = null;
 		};
 
 		const onUploadInputChange = () => {
@@ -208,8 +223,39 @@ export default defineComponent({
 			uploadInput.value?.click();
 		};
 
+		const cancelReply = () => {
+			props.channel.replyingTo = null;
+		};
+
+		const onReplyStart = (data: {msgid: string; nick: string; text: string}) => {
+			if (!data.msgid) {
+				return;
+			}
+
+			props.channel.replyingTo = {
+				msgid: data.msgid,
+				nick: data.nick || "Unknown",
+				text: data.text || "",
+			};
+
+			// Pre-fill with "nick: " so clients without +reply support
+			// can still see who the reply is directed at
+			if (!props.channel.pendingMessage && data.nick && input.value) {
+				props.channel.pendingMessage = data.nick + ": ";
+				input.value.value = props.channel.pendingMessage;
+				setInputSize();
+			}
+
+			input.value?.focus();
+		};
+
 		const blurInput = () => {
 			input.value?.blur();
+		};
+
+		const onEscape = () => {
+			cancelReply();
+			blurInput();
 		};
 
 		const onBlur = () => {
@@ -235,7 +281,8 @@ export default defineComponent({
 		);
 
 		onMounted(() => {
-			eventbus.on("escapekey", blurInput);
+			eventbus.on("escapekey", onEscape);
+			eventbus.on("reply:start", onReplyStart);
 
 			if (store.state.settings.autocomplete) {
 				if (!input.value) {
@@ -328,7 +375,8 @@ export default defineComponent({
 		});
 
 		onUnmounted(() => {
-			eventbus.off("escapekey", blurInput);
+			eventbus.off("escapekey", onEscape);
+			eventbus.off("reply:start", onReplyStart);
 
 			if (autocompletionRef.value) {
 				autocompletionRef.value.destroy();
@@ -352,6 +400,7 @@ export default defineComponent({
 			getInputPlaceholder,
 			onSubmit,
 			setPendingMessage,
+			cancelReply,
 		};
 	},
 });

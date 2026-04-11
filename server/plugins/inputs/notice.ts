@@ -10,7 +10,11 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let targetName = args[0];
 	let message = args.slice(1).join(" ");
 
-	network.irc.notice(targetName, message);
+	const replyTo = this._pendingReplyTo;
+	const tags: Record<string, string> | undefined = replyTo
+		? {"+reply": replyTo}
+		: undefined;
+	network.irc.notice(targetName, message, tags);
 
 	// If the IRCd does not support echo-message, simulate the message
 	// being sent back to us.
@@ -34,6 +38,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			target: targetName,
 			group: targetGroup,
 			message: message,
+			tags: replyTo ? {"+reply": replyTo} : {},
 		});
 	}
 

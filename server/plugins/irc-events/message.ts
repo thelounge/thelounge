@@ -23,10 +23,11 @@ type HandleInput = {
 	message: string;
 	group?: string;
 	msgid?: string;
+	replyTo?: string;
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
-	return {...data, type: type, msgid: data.tags?.msgid};
+	return {...data, type: type, msgid: data.tags?.msgid, replyTo: data.tags?.["+reply"]};
 }
 
 export default <IrcEventHandler>function (irc, network) {
@@ -134,7 +135,17 @@ export default <IrcEventHandler>function (irc, network) {
 			highlight: highlight,
 			users: [],
 			msgid: data.msgid,
+			replyTo: data.replyTo,
 		});
+
+		if (data.replyTo && chan) {
+			const parentMsg = chan.messages.find((m) => m.msgid === data.replyTo);
+
+			if (parentMsg) {
+				msg.replyToNick = parentMsg.from?.nick;
+				msg.replyToText = parentMsg.text?.substring(0, 200);
+			}
+		}
 
 		if (showInActive) {
 			msg.showInActive = true;

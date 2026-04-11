@@ -7,11 +7,17 @@
 				self: message.self,
 				highlight: message.highlight || focused,
 				'previous-source': isPreviousSource,
+				'has-reply-context': !!message.replyTo,
 			},
 		]"
 		:data-type="message.type"
 		:data-command="message.command"
 		:data-from="message.from && message.from.nick"
+		:data-msgid="message.msgid"
+		@touchstart.passive="onTouchStart"
+		@touchend="onTouchEnd"
+		@touchmove="onTouchCancel"
+		@touchcancel="onTouchCancel"
 	>
 		<span
 			aria-hidden="true"
@@ -48,6 +54,13 @@
 					:link="preview"
 					:channel="channel"
 				/>
+				<div v-if="canReply && message.msgid" class="msg-actions">
+					<button
+						class="msg-action-reply"
+						aria-label="Reply"
+						@click.stop="startReply"
+					/>
+				</div>
 			</span>
 		</template>
 		<template v-else>
@@ -88,17 +101,37 @@
 					:link="preview"
 					:channel="channel"
 				/>
+				<div v-if="canReply && message.msgid" class="msg-actions">
+					<button
+						class="msg-action-reply"
+						aria-label="Reply"
+						@click.stop="startReply"
+					/>
+				</div>
 			</span>
 		</template>
+		<div v-if="message.replyTo" class="reply-context" @click="scrollToParent">
+			<span class="reply-context-content">
+				<template v-if="message.replyToNick">
+					<span class="reply-context-label">In reply to</span>
+					<span class="reply-context-nick">{{ message.replyToNick }}</span>
+					<span v-if="message.replyToText" class="reply-context-text">{{
+						message.replyToText
+					}}</span>
+				</template>
+				<span v-else class="reply-context-unknown">In reply to a message</span>
+			</span>
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, PropType} from "vue";
+import {computed, defineComponent, onBeforeUnmount, PropType} from "vue";
 import dayjs from "dayjs";
 
 import constants from "../js/constants";
 import localetime from "../js/helpers/localetime";
+import eventbus from "../js/eventbus";
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
@@ -106,6 +139,7 @@ import MessageTypes from "./MessageTypes";
 import StatusmsgMarker from "./StatusmsgMarker.vue";
 
 import type {ClientChan, ClientMessage, ClientNetwork} from "../js/types";
+import {MessageType} from "../../shared/types/msg";
 import {useStore} from "../js/store";
 
 MessageTypes.ParsedMessage = ParsedMessage;
@@ -128,6 +162,7 @@ export default defineComponent({
 	},
 	setup(props) {
 		const store = useStore();
+		let longPressTimer: ReturnType<typeof setTimeout> | null = null;
 
 		const timeFormat = computed(() => {
 			let format: keyof typeof constants.timeFormats;
@@ -153,6 +188,15 @@ export default defineComponent({
 			return "message-" + (props.message.type || "invalid"); // TODO: force existence of type in sharedmsg
 		});
 
+		const canReply = computed(() => {
+			const t = props.message.type;
+			return (
+				t === MessageType.MESSAGE ||
+				t === MessageType.ACTION ||
+				t === MessageType.NOTICE
+			);
+		});
+
 		const isAction = () => {
 			if (!props.message.type) {
 				return false;
@@ -161,12 +205,74 @@ export default defineComponent({
 			return typeof MessageTypes["message-" + props.message.type] !== "undefined";
 		};
 
+		const startReply = () => {
+			eventbus.emit("reply:start", {
+				msgid: props.message.msgid,
+				nick: props.message.from?.nick,
+				text: props.message.text,
+			});
+		};
+
+		const scrollToParent = () => {
+			if (!props.message.replyTo) {
+				return;
+			}
+
+			const el = document.querySelector(
+				`.msg[data-msgid="${CSS.escape(props.message.replyTo)}"]`
+			);
+
+			if (el) {
+				el.scrollIntoView({block: "center", behavior: "smooth"});
+				el.classList.add("highlight");
+				setTimeout(() => el.classList.remove("highlight"), 2000);
+			}
+		};
+
+		const onTouchStart = () => {
+			if (props.message.msgid && canReply.value) {
+				longPressTimer = setTimeout(() => {
+					longPressTimer = null;
+					startReply();
+				}, 500);
+			}
+		};
+
+		const clearLongPress = () => {
+			if (longPressTimer !== null) {
+				clearTimeout(longPressTimer);
+				longPressTimer = null;
+			}
+		};
+
+		const onTouchEnd = (e: TouchEvent) => {
+			if (longPressTimer === null && props.message.msgid && canReply.value) {
+				e.preventDefault();
+			}
+
+			clearLongPress();
+		};
+
+		const onTouchCancel = () => {
+			clearLongPress();
+		};
+
+		onBeforeUnmount(() => {
+			clearLongPress();
+		});
+
 		return {
 			timeFormat,
 			messageTime,
 			messageTimeLocale,
 			messageComponent,
+			canReply,
 			isAction,
+			startReply,
+			scrollToParent,
+			onTouchStart,
+			onTouchEnd,
+			onTouchCancel,
 		};
 	},
 });
