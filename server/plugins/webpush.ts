@@ -6,14 +6,12 @@ import Config from "../config";
 import Client from "../client";
 import * as os from "os";
 
-// TODO: use a static import once thelounge migrates to ESM
-// import { generateVAPIDKeys, sendNotification, type PushSubscription, type VapidDetails } from "web-push-neo";
 import type {PushSubscription, VapidDetails} from "web-push-neo";
 
 type WebPushNeo = typeof import("web-push-neo");
 
-// Prevent TypeScript from transforming import() into require() for ESM-only packages
-// eslint-disable-next-line @typescript-eslint/no-implied-eval
+// Prevent TypeScript from transforming import() into require() for ESM-only packages. Super ugly.
+// eslint-disable-next-line @typescript-eslint/no-implied-eval, no-use-before-define
 const importEsm = new Function("specifier", "return import(specifier)") as <T>(
 	specifier: string
 ) => Promise<T>;
@@ -100,7 +98,7 @@ class WebPush {
 					return;
 				}
 
-				this.pushSingle(client, pushSubscription, payload);
+				void this.pushSingle(client, pushSubscription, payload);
 			}
 		});
 	}
