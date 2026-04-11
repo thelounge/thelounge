@@ -148,7 +148,6 @@ export default <IrcEventHandler>function (irc, network) {
 
 				// Replies to our own messages should highlight like a mention
 				if (parentMsg.self && !msg.self) {
-					highlight = true;
 					msg.highlight = true;
 				}
 			}
