@@ -439,9 +439,9 @@ function indexRequest(_req: Request, res: Response) {
 			};
 
 			res.send(_.template(file)(config));
-		} catch (error) {
-			const err = error as Error;
-			log.error(`failed to build index response: ${err.name}, ${err.message}`);
+		} catch (e) {
+			const buildErr = e as Error;
+			log.error(`failed to build index response: ${buildErr.name}, ${buildErr.message}`);
 			res.sendStatus(500);
 		}
 	});

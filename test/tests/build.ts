@@ -60,10 +60,7 @@ describe("public folder", function () {
 	});
 
 	it("service worker has cacheName set", function () {
-		const contents = fs.readFileSync(
-			path.join(publicFolder, "service-worker.js"),
-			"utf8"
-		);
+		const contents = fs.readFileSync(path.join(publicFolder, "service-worker.js"), "utf8");
 		expect(contents.includes("const cacheName")).to.be.true;
 		expect(contents.includes("__HASH__")).to.be.false;
 	});

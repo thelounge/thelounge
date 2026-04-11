@@ -255,7 +255,9 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 				const invalid_url = _makeUrl("nonexistent-test-image.png");
 				app.get("/thumb", function (req, res) {
-					res.send(`<title>Google</title><meta property='og:image' content='${invalid_url}>`);
+					res.send(
+						`<title>Google</title><meta property='og:image' content='${invalid_url}>`
+					);
 				});
 				const message = irc.createMessage({
 					text: _makeUrl("thumb"),
@@ -420,7 +422,9 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 			const invalid_url = _makeUrl("this-image-does-not-exist.png");
 			app.get("/thumb-404", function (req, res) {
-				res.send(`<title>404 image</title><meta property='og:image' content='${invalid_url}>`);
+				res.send(
+					`<title>404 image</title><meta property='og:image' content='${invalid_url}>`
+				);
 			});
 
 			irc.once("msg:preview", function (data) {
@@ -551,7 +555,9 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			const msg_url = _makeUrl("msg");
 			const image_url = _makeUrl("image-url.png");
 			app.get("/msg", function (req, res) {
-				res.send(`<title>404 image</title><meta property='og:image' content='${image_url}'>`);
+				res.send(
+					`<title>404 image</title><meta property='og:image' content='${image_url}'>`
+				);
 			});
 
 			app.get("/image-url.png", function (req, res) {

@@ -53,7 +53,7 @@ describe("Server", function () {
 			const response = await got(webURL);
 			expect(response.statusCode).to.equal(200);
 			expect(response.body).to.include("<title>The Lounge</title>");
-			expect(response.body).to.include("type=\"module\"");
+			expect(response.body).to.include('type="module"');
 		});
 
 		it("should serve static content correctly", async () => {
@@ -67,7 +67,6 @@ describe("Server", function () {
 	});
 
 	describe("WebSockets", function () {
-
 		let client: ReturnType<typeof io>;
 
 		beforeEach(() => {
@@ -89,69 +88,74 @@ describe("Server", function () {
 			client.close();
 		});
 
-		it("should emit authorized message", () => new Promise<void>((resolve) => {
-			client.on("auth:success", () => resolve());
-		}));
+		it("should emit authorized message", () =>
+			new Promise<void>((resolve) => {
+				client.on("auth:success", () => resolve());
+			}));
 
-		it("should create network", () => new Promise<void>((resolve) => {
-			client.on("init", () => {
-				client.emit("network:new", {
-					username: "test-user",
-					realname: "The Lounge Test",
-					nick: "test-user",
-					join: "#thelounge, #spam",
-					name: "Test Network",
-					host: Config.values.host,
-					port: 6667,
+		it("should create network", () =>
+			new Promise<void>((resolve) => {
+				client.on("init", () => {
+					client.emit("network:new", {
+						username: "test-user",
+						realname: "The Lounge Test",
+						nick: "test-user",
+						join: "#thelounge, #spam",
+						name: "Test Network",
+						host: Config.values.host,
+						port: 6667,
+					});
 				});
-			});
 
-			client.on("network", (data) => {
-				expect(data.network).to.exist;
-				expect(data.network.nick).to.equal("test-user");
-				expect(data.network.name).to.equal("Test Network");
-				expect(data.network.channels).to.have.lengthOf(3);
-				expect(data.network.channels[0].name).to.equal("Test Network");
-				expect(data.network.channels[1].name).to.equal("#thelounge");
-				expect(data.network.channels[2].name).to.equal("#spam");
-				resolve();
-			});
-		}));
+				client.on("network", (data) => {
+					expect(data.network).to.exist;
+					expect(data.network.nick).to.equal("test-user");
+					expect(data.network.name).to.equal("Test Network");
+					expect(data.network.channels).to.have.lengthOf(3);
+					expect(data.network.channels[0].name).to.equal("Test Network");
+					expect(data.network.channels[1].name).to.equal("#thelounge");
+					expect(data.network.channels[2].name).to.equal("#spam");
+					resolve();
+				});
+			}));
 
-		it("should emit configuration message", () => new Promise<void>((resolve) => {
-			client.on("configuration", (data) => {
-				// Private key defined in vapid.json is "01020304050607080910111213141516" for this public key.
-				expect(data.applicationServerKey).to.equal(
-					"BM0eTDpvDnH7ewlHuXWcPTE1NjlJ06XWIS1cQeBTZmsg4EDx5sOpY7kdX1pniTo8RakL3UdfFuIbC8_zog_BWIM"
-				);
+		it("should emit configuration message", () =>
+			new Promise<void>((resolve) => {
+				client.on("configuration", (data) => {
+					// Private key defined in vapid.json is "01020304050607080910111213141516" for this public key.
+					expect(data.applicationServerKey).to.equal(
+						"BM0eTDpvDnH7ewlHuXWcPTE1NjlJ06XWIS1cQeBTZmsg4EDx5sOpY7kdX1pniTo8RakL3UdfFuIbC8_zog_BWIM"
+					);
 
-				expect(data.public).to.equal(true);
-				expect(data.defaultTheme).to.equal("default");
-				expect(data.themes).to.be.an("array");
-				expect(data.lockNetwork).to.equal(false);
-				expect(data.useHexIp).to.equal(false);
+					expect(data.public).to.equal(true);
+					expect(data.defaultTheme).to.equal("default");
+					expect(data.themes).to.be.an("array");
+					expect(data.lockNetwork).to.equal(false);
+					expect(data.useHexIp).to.equal(false);
 
-				resolve();
-			});
-		}));
+					resolve();
+				});
+			}));
 
-		it("should emit push subscription state message", () => new Promise<void>((resolve) => {
-			client.on("push:issubscribed", (data) => {
-				expect(data).to.be.false;
+		it("should emit push subscription state message", () =>
+			new Promise<void>((resolve) => {
+				client.on("push:issubscribed", (data) => {
+					expect(data).to.be.false;
 
-				resolve();
-			});
-		}));
+					resolve();
+				});
+			}));
 
-		it("should emit init message", () => new Promise<void>((resolve) => {
-			client.on("init", (data) => {
-				expect(data.active).to.equal(-1);
-				expect(data.networks).to.be.an("array");
-				expect(data.networks).to.be.empty;
-				expect(data.token).to.be.undefined;
+		it("should emit init message", () =>
+			new Promise<void>((resolve) => {
+				client.on("init", (data) => {
+					expect(data.active).to.equal(-1);
+					expect(data.networks).to.be.an("array");
+					expect(data.networks).to.be.empty;
+					expect(data.token).to.be.undefined;
 
-				resolve();
-			});
-		}));
+					resolve();
+				});
+			}));
 	});
 });

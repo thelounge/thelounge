@@ -2,7 +2,6 @@ import {expect} from "vitest";
 import Helper from "../../server/helper";
 
 describe("Client passwords", function () {
-
 	const inputPassword = "my$Super@Cool Password";
 
 	it("hashed password should match", function () {

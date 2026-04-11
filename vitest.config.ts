@@ -15,7 +15,17 @@ export default defineConfig({
 		__VUE_OPTIONS_API__: false,
 	},
 	test: {
-		include: ["test/**/*Test.ts", "test/**/*test.ts", "test/tests/**/*.ts", "test/server.ts", "test/client.ts", "test/commands/**/*.ts", "test/models/**/*.ts", "test/plugins/**/*.ts", "test/shared/**/*.ts"],
+		include: [
+			"test/**/*Test.ts",
+			"test/**/*test.ts",
+			"test/tests/**/*.ts",
+			"test/server.ts",
+			"test/client.ts",
+			"test/commands/**/*.ts",
+			"test/models/**/*.ts",
+			"test/plugins/**/*.ts",
+			"test/shared/**/*.ts",
+		],
 		exclude: ["test/fixtures/**", "test/public/**"],
 		environment: "node",
 		setupFiles: ["test/fixtures/env.ts"],

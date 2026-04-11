@@ -44,4 +44,9 @@ function getVersionCacheBust() {
 	return _cacheBust;
 }
 
-module.exports = {getVersion, getVersionNumber: () => pkg.version, getVersionCacheBust, getGitCommit};
+module.exports = {
+	getVersion,
+	getVersionNumber: () => pkg.version,
+	getVersionCacheBust,
+	getGitCommit,
+};
