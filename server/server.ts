@@ -417,27 +417,33 @@ function indexRequest(_req: Request, res: Response) {
 			return;
 		}
 
-		let jsFile: string;
-		let cssFiles: string[];
+		try {
+			let jsFile: string;
+			let cssFiles: string[];
 
-		if (isDev) {
-			// In dev mode, Vite serves files directly; CSS is injected via JS
-			jsFile = "/js/vue.ts";
-			cssFiles = [];
-		} else {
-			const assets = getAssetPaths();
-			jsFile = assets.js;
-			cssFiles = assets.css;
+			if (isDev) {
+				// In dev mode, Vite serves files directly; CSS is injected via JS
+				jsFile = "/js/vue.ts";
+				cssFiles = [];
+			} else {
+				const assets = getAssetPaths();
+				jsFile = assets.js;
+				cssFiles = assets.css;
+			}
+
+			const config: IndexTemplateConfiguration = {
+				...getServerConfiguration(),
+				cacheBust: Helper.getVersionCacheBust(),
+				jsFile,
+				cssFiles,
+			};
+
+			res.send(_.template(file)(config));
+		} catch (error) {
+			const err = error as Error;
+			log.error(`failed to build index response: ${err.name}, ${err.message}`);
+			res.sendStatus(500);
 		}
-
-		const config: IndexTemplateConfiguration = {
-			...getServerConfiguration(),
-			cacheBust: Helper.getVersionCacheBust(),
-			jsFile,
-			cssFiles,
-		};
-
-		res.send(_.template(file)(config));
 	});
 }
 
