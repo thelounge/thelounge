@@ -6,8 +6,6 @@ import link from "../../server/plugins/irc-events/link";
 import {LinkPreview} from "../../shared/types/msg";
 
 describe("Link plugin", function () {
-	// Increase timeout due to unpredictable I/O on CI services
-
 	const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.\
 Vivamus at pretium mauris. Aenean eu orci id erat pulvinar\
 commodo cursus ac augue. Ut dui quam, tempus ac felis et,\

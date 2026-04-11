@@ -134,8 +134,6 @@ function testLdapAuth() {
 }
 
 describe("LDAP authentication plugin", function () {
-	// Increase timeout due to unpredictable I/O on CI services
-
 	let server: ldap.Server;
 	let logInfoStub: sinon.SinonStub<string[], void>;
 

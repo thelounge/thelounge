@@ -235,8 +235,6 @@ describe("SQLite unit tests", function () {
 });
 
 describe("SQLite Message Storage", function () {
-	// Increase timeout due to unpredictable I/O on CI services
-
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
 
