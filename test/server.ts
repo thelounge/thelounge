@@ -12,7 +12,7 @@ import ClientManager from "../server/clientManager";
 describe("Server", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 
-	let server;
+	let server: import("http").Server;
 	let logInfoStub: sinon.SinonStub<string[], void>;
 	let logWarnStub: sinon.SinonStub<string[], void>;
 	let checkForUpdatesStub: sinon.SinonStub<[manager: ClientManager], void>;
