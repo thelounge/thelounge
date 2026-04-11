@@ -4,16 +4,27 @@ const crypto = require("crypto");
 const {execSync} = require("child_process");
 const pkg = require("../package.json");
 
+let _gitCommit;
+let _gitCommitFetched = false;
+
 function getGitCommit() {
+	if (_gitCommitFetched) {
+		return _gitCommit;
+	}
+
+	_gitCommitFetched = true;
+
 	try {
-		return execSync("git rev-parse --short HEAD", {
+		_gitCommit = execSync("git rev-parse --short HEAD", {
 			encoding: "utf-8",
 			timeout: 2000,
 			stdio: ["ignore", "pipe", "ignore"],
 		}).trim();
 	} catch {
-		return null;
+		_gitCommit = null;
 	}
+
+	return _gitCommit;
 }
 
 function getVersion() {
@@ -22,9 +33,15 @@ function getVersion() {
 	return gitCommit ? `source (${gitCommit} / ${version})` : version;
 }
 
+let _cacheBust;
+
 function getVersionCacheBust() {
-	const hash = crypto.createHash("sha256").update(getVersion()).digest("hex");
-	return hash.substring(0, 10);
+	if (!_cacheBust) {
+		const hash = crypto.createHash("sha256").update(getVersion()).digest("hex");
+		_cacheBust = hash.substring(0, 10);
+	}
+
+	return _cacheBust;
 }
 
 module.exports = {getVersion, getVersionNumber: () => pkg.version, getVersionCacheBust, getGitCommit};

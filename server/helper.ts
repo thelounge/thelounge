@@ -4,15 +4,10 @@ import os from "os";
 import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
-
-// Resolve path that works from both source (server/) and compiled (dist/server/)
-const versionPath =
-	process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development"
-		? path.resolve(__dirname, "..", "scripts", "version")
-		: path.resolve(__dirname, "..", "..", "scripts", "version");
+import fromRoot from "./rootpath";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const versionUtils = require(versionPath) as {
+const versionUtils = require(fromRoot("scripts", "version")) as {
 	getVersion: () => string;
 	getVersionNumber: () => string;
 	getVersionCacheBust: () => string;
