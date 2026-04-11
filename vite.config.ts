@@ -30,10 +30,8 @@ export default defineConfig(({mode}) => ({
 	build: {
 		outDir: path.resolve(__dirname, "public"),
 		emptyOutDir: true,
-		manifest: true,
 		sourcemap: true,
 		rollupOptions: {
-			input: path.resolve(__dirname, "client/js/vue.ts"),
 			output: {
 				manualChunks: (id) => {
 					if (id.includes("node_modules")) {

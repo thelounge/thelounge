@@ -22,21 +22,12 @@ describe("public folder", function () {
 		expect(fs.existsSync(path.join(publicFolder, "audio", "pop.wav"))).to.be.true;
 	});
 
-	it("index HTML file is not copied", function () {
-		expect(fs.existsSync(path.join(publicFolder, "index.html"))).to.be.false;
-		expect(fs.existsSync(path.join(publicFolder, "index.html.tpl"))).to.be.false;
-	});
+	it("index HTML is built with Vite-injected assets", function () {
+		expect(fs.existsSync(path.join(publicFolder, "index.html"))).to.be.true;
 
-	it("vite manifest is generated", function () {
-		expect(fs.existsSync(path.join(publicFolder, ".vite", "manifest.json"))).to.be.true;
-
-		const manifest = JSON.parse(
-			fs.readFileSync(path.join(publicFolder, ".vite", "manifest.json"), "utf-8")
-		);
-		const entry = manifest["js/vue.ts"];
-		expect(entry).to.exist;
-		expect(entry.isEntry).to.be.true;
-		expect(entry.file).to.be.a("string");
+		const html = fs.readFileSync(path.join(publicFolder, "index.html"), "utf-8");
+		expect(html).to.include("<!--thelounge-theme-->");
+		expect(html).to.include('<script type="module"');
 	});
 
 	it("javascript assets are built", function () {
@@ -50,7 +41,6 @@ describe("public folder", function () {
 		expect(fs.existsSync(path.join(publicFolder, "themes", "default.css"))).to.be.true;
 		expect(fs.existsSync(path.join(publicFolder, "themes", "morning.css"))).to.be.true;
 
-		// CSS is output by Vite into the assets folder
 		const assets = fs.readdirSync(path.join(publicFolder, "assets"));
 		expect(assets.some((f: string) => f.endsWith(".css"))).to.be.true;
 	});

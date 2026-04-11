@@ -13,12 +13,12 @@ import Client from "./client";
 import ClientManager from "./clientManager";
 import Uploader from "./plugins/uploader";
 import Helper from "./helper";
-import Config, {ConfigType} from "./config";
+import Config from "./config";
 import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
-import {getAssetPaths} from "./plugins/manifest";
+import {injectServerConfig} from "./plugins/html-config";
 
 import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
@@ -45,15 +45,8 @@ type ServerOptions = {
 	dev: boolean;
 };
 
-type ServerConfiguration = ConfigType & {
-	stylesheets: string[];
-};
-
-type IndexTemplateConfiguration = ServerConfiguration & {
-	cacheBust: string;
-	jsFile: string;
-	cssFiles: string[];
-};
+// Cached built HTML (production only — read once at startup)
+let cachedHtml: string | null = null;
 
 type Socket = ioSocket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
 export type Server = ioServer<
@@ -407,44 +400,29 @@ function forceNoCacheRequest(_req: Request, res: Response, next: NextFunction) {
 	return next();
 }
 
+function getBaseHtml(): string {
+	if (cachedHtml) {
+		return cachedHtml;
+	}
+
+	cachedHtml = fs.readFileSync(
+		Utils.getFileFromRelativeToRoot("public", "index.html"),
+		"utf-8"
+	);
+
+	return cachedHtml;
+}
+
 function indexRequest(_req: Request, res: Response) {
-	res.setHeader("Content-Type", "text/html");
-
-	fs.readFile(Utils.getFileFromRelativeToRoot("client/index.html.tpl"), "utf-8", (err, file) => {
-		if (err) {
-			log.error(`failed to server index request: ${err.name}, ${err.message}`);
-			res.sendStatus(500);
-			return;
-		}
-
-		try {
-			let jsFile: string;
-			let cssFiles: string[];
-
-			if (isDev) {
-				// In dev mode, Vite serves files directly; CSS is injected via JS
-				jsFile = "/js/vue.ts";
-				cssFiles = [];
-			} else {
-				const assets = getAssetPaths();
-				jsFile = assets.js;
-				cssFiles = assets.css;
-			}
-
-			const config: IndexTemplateConfiguration = {
-				...getServerConfiguration(),
-				cacheBust: Helper.getVersionCacheBust(),
-				jsFile,
-				cssFiles,
-			};
-
-			res.send(_.template(file)(config));
-		} catch (e) {
-			const buildErr = e as Error;
-			log.error(`failed to build index response: ${buildErr.name}, ${buildErr.message}`);
-			res.sendStatus(500);
-		}
-	});
+	try {
+		const html = injectServerConfig(getBaseHtml());
+		res.setHeader("Content-Type", "text/html");
+		res.send(html);
+	} catch (e) {
+		const err = e as Error;
+		log.error(`failed to serve index request: ${err.name}, ${err.message}`);
+		res.sendStatus(500);
+	}
 }
 
 function initializeClient(
@@ -938,9 +916,6 @@ function getClientConfiguration(): SharedConfiguration | LockedSharedConfigurati
 	return result;
 }
 
-function getServerConfiguration(): ServerConfiguration {
-	return {...Config.values, ...{stylesheets: packages.getStylesheets()}};
-}
 
 function performAuthentication(this: Socket, data: AuthPerformData) {
 	if (!_.isPlainObject(data)) {
