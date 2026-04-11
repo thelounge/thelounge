@@ -10,10 +10,6 @@
 (function () {
 	const msg = document.getElementById("loading-page-message");
 
-	if (msg) {
-		msg.textContent = "Loading the app…";
-	}
-
 	document.getElementById("loading-reload")?.addEventListener("click", () => location.reload());
 
 	const displayReload = () => {
