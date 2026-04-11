@@ -20,6 +20,7 @@ export function toClientChan(shared: SharedNetworkChan): ClientChan {
 		usersOutdated: shared.type === ChanType.CHANNEL ? true : false,
 		moreHistoryAvailable: shared.totalMessages > shared.messages.length,
 		inputHistory: history,
+		replyingTo: null,
 		messages: sharedMsgToClientMsg(messages),
 	};
 	return channel;

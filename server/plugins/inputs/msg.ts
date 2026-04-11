@@ -93,7 +93,11 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		return true;
 	}
 
-	network.irc.say(targetName, msg);
+	const replyTo = this._pendingReplyTo;
+	const tags: Record<string, string> | undefined = replyTo
+		? {"+reply": replyTo}
+		: undefined;
+	network.irc.say(targetName, msg, tags);
 
 	// If the IRCd does not support echo-message, simulate the message
 	// being sent back to us.
@@ -116,6 +120,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 				target: targetName,
 				group: targetGroup,
 				message: msg,
+				tags: replyTo ? {"+reply": replyTo} : {},
 			});
 		}
 	}

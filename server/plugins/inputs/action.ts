@@ -24,14 +24,27 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 		case "slap":
 			text = "slaps " + args[0] + " around a bit with a large trout";
 		/* fall through */
-		case "me":
+
+		case "me": {
 			if (args.length === 0) {
 				break;
 			}
 
 			text = text || args.join(" ");
 
-			irc.action(chan.name, text);
+			const replyTo = this._pendingReplyTo;
+
+			if (replyTo) {
+				// irc.action() doesn't support tags, send as raw PRIVMSG with CTCP ACTION
+				irc.sendMessage(
+					"PRIVMSG",
+					chan.name,
+					"\x01ACTION " + text + "\x01",
+					{"+reply": replyTo}
+				);
+			} else {
+				irc.action(chan.name, text);
+			}
 
 			// If the IRCd does not support echo-message, simulate the message
 			// being sent back to us.
@@ -40,10 +53,12 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 					nick: irc.user.nick,
 					target: chan.name,
 					message: text,
+					tags: replyTo ? {"+reply": replyTo} : {},
 				});
 			}
 
 			break;
+		}
 	}
 
 	return true;

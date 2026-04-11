@@ -104,6 +104,7 @@ class Client {
 	highlightRegex!: RegExp | null;
 	highlightExceptionRegex!: RegExp | null;
 	messageProvider?: SqliteMessageStorage;
+	_pendingReplyTo?: string;
 
 	fileHash!: string;
 
@@ -513,7 +514,9 @@ class Client {
 				return;
 			}
 
+			this._pendingReplyTo = data.replyTo;
 			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
+			this._pendingReplyTo = undefined;
 			return;
 		}
 
