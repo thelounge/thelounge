@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {Server as wsServer} from "ws";
+import ws from "ws";
 import express, {NextFunction, Request, Response} from "express";
 import fs from "fs";
 import path from "path";
@@ -223,7 +223,7 @@ export default async function (
 		}
 
 		const sockets: Server = new ioServer(server, {
-			wsEngine: wsServer,
+			wsEngine: ws.Server,
 			cookie: false,
 			serveClient: false,
 
