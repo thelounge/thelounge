@@ -1,6 +1,6 @@
 import log from "../server/log";
 import Config from "../server/config";
-import {expect} from "vitest";
+import {expect, vi} from "vitest";
 import got from "got";
 import io from "socket.io-client";
 import util from "./util";
@@ -45,9 +45,9 @@ describe("Server", function () {
 		checkForUpdatesStub.restore();
 		await new Promise<void>((resolve) => server.close(() => resolve()));
 
-		// Let pending lazy imports (e.g. IRC event plugins) settle before
-		// Vitest tears down the environment
-		await new Promise((resolve) => setTimeout(resolve, 100));
+		// Wait for lazy dynamic imports (IRC event plugins → mime-types etc.)
+		// to settle before Vitest tears down the environment
+		await vi.dynamicImportSettled();
 	});
 
 	const webURL = `http://${Config.values.host}:${Config.values.port}/`;
