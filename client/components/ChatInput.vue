@@ -11,7 +11,6 @@
 			enterkeyhint="send"
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
-			aria-label="Message input"
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit"
 			@blur="onBlur"
