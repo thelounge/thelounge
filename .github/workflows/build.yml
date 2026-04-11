@@ -3,7 +3,11 @@ name: Build
 permissions:
   contents: read
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
