@@ -48,16 +48,6 @@ const router = createRouter({
 					name: "General",
 					path: "",
 					component: GeneralSettings,
-					beforeEnter(_to, _from, next) {
-						const config = store.state.serverConfiguration;
-
-						if (config?.public && !config?.fileUpload) {
-							next({name: "Appearance"});
-							return;
-						}
-
-						next();
-					},
 				},
 				{
 					name: "Appearance",
@@ -69,14 +59,6 @@ const router = createRouter({
 					path: "account",
 					component: AccountSettings,
 					props: true,
-					beforeEnter(_to, _from, next) {
-						if (store.state.serverConfiguration?.public) {
-							next({name: "Appearance"});
-							return;
-						}
-
-						next();
-					},
 				},
 				{
 					name: "Notifications",
