@@ -8,6 +8,7 @@
 			dir="auto"
 			class="mousetrap"
 			enterkeyhint="send"
+			autocomplete="off"
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
