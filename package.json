@@ -49,7 +49,6 @@
     "./.thelounge_home",
     "./index.js",
     "./yarn.lock",
-    "./client/index.html",
     "./dist/package.json",
     "./dist/**/*.js",
     "./public/**"
