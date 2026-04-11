@@ -14,6 +14,12 @@ export default defineConfig({
 		__VUE_PROD_DEVTOOLS__: false,
 		__VUE_OPTIONS_API__: false,
 	},
+	ssr: {
+		// Prevent teardown race: these get lazy-loaded by server IRC event plugins
+		// and can resolve after Vitest's environment is torn down
+		// This fixes errors like "Error: EnvironmentTeardownError: Cannot load '/node_modules/mime-types/index.js' imported"
+		external: ["mime-types", "mime-db"],
+	},
 	test: {
 		include: [
 			"test/**/*Test.ts",
