@@ -102,7 +102,15 @@
 				</div>
 			</span>
 		</template>
-		<div v-if="message.replyTo" class="reply-context" @click="scrollToParent">
+		<div
+			v-if="message.replyTo"
+			class="reply-context"
+			role="button"
+			tabindex="0"
+			@click="scrollToParent"
+			@keydown.enter.prevent="scrollToParent"
+			@keydown.space.prevent="scrollToParent"
+		>
 			<span class="reply-context-content">
 				<template v-if="message.replyToNick">
 					<span class="reply-context-label">In reply to</span>
@@ -213,9 +221,15 @@ export default defineComponent({
 			);
 
 			if (el) {
+				const wasHighlighted = el.classList.contains("highlight");
+
 				el.scrollIntoView({block: "center", behavior: "smooth"});
 				el.classList.add("highlight");
-				setTimeout(() => el.classList.remove("highlight"), 2000);
+				setTimeout(() => {
+					if (!wasHighlighted) {
+						el.classList.remove("highlight");
+					}
+				}, 2000);
 			}
 		};
 
