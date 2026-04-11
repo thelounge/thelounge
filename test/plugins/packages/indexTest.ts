@@ -1,9 +1,13 @@
+import path from "path";
 import log from "../../../server/log";
 import {expect, vi} from "vitest";
 import TestUtil from "../../util";
 import sinon from "ts-sinon";
+import Config from "../../../server/config";
 
-let packages: typeof import("../../../server/plugins/packages").default;
+type PackagesModule = typeof import("../../../server/plugins/packages").default;
+
+let packages: PackagesModule;
 
 describe("packages", function () {
 	let logInfoStub: sinon.SinonStub<string[], void>;
@@ -11,12 +15,20 @@ describe("packages", function () {
 	beforeEach(async function () {
 		logInfoStub = sinon.stub(log, "info");
 
+		// Reset modules to get fresh packages state, then re-setup Config
 		vi.resetModules();
+
+		// Re-import config and set home so packages can find the fixture
+		const freshConfig = (await import("../../../server/config")).default;
+		const home = path.join(process.cwd(), "test", "fixtures", ".thelounge");
+		freshConfig.setHome(home);
+
 		packages = (await import("../../../server/plugins/packages")).default;
 	});
 
 	afterEach(function () {
 		logInfoStub.restore();
+		vi.restoreAllMocks();
 	});
 
 	describe(".getStylesheets", function () {
@@ -44,12 +56,14 @@ describe("packages", function () {
 	});
 
 	describe(".loadPackages", function () {
-		it("should display report about loading packages", function () {
-			// Mock `log.info` to extract its effect into a string
+		it("should display report about loading packages", async function () {
+			// Need to stub the fresh log instance from the re-imported module
 			logInfoStub.restore();
+
+			const freshLog = (await import("../../../server/log")).default;
 			let stdout = "";
 			logInfoStub = sinon
-				.stub(log, "info")
+				.stub(freshLog, "info")
 				.callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
 			packages.loadPackages();
 
