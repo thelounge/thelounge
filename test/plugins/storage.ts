@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import {expect} from "chai";
+import {expect} from "vitest";
 import util from "../util";
 import Config from "../../server/config";
 import storage from "../../server/plugins/storage";
@@ -10,10 +10,8 @@ import {Request, Response} from "express";
 
 describe("Image storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
-	this.slow(300);
 
-	const testImagePath = path.resolve("client/img/logo-grey-bg-120x120px.png");
+	const testImagePath = path.resolve("client/public/img/logo-grey-bg-120x120px.png");
 	const correctImageHash = crypto
 		.createHash("sha256")
 		.update(fs.readFileSync(testImagePath))
@@ -23,7 +21,7 @@ describe("Image storage", function () {
 		2
 	)}/${correctImageHash.substring(2, 4)}/${correctImageHash.substring(4)}.png`;
 
-	const testSvgPath = path.resolve("client/img/logo-grey-bg.svg");
+	const testSvgPath = path.resolve("client/public/img/logo-grey-bg.svg");
 	const correctSvgHash = crypto
 		.createHash("sha256")
 		.update(fs.readFileSync(testSvgPath))
@@ -33,7 +31,7 @@ describe("Image storage", function () {
 		4
 	)}/${correctSvgHash.substring(4)}.svg`;
 
-	before(function (done) {
+	beforeAll(function (done) {
 		this.app = util.createWebserver();
 		this.app.get("/real-test-image.png", function (req, res) {
 			res.sendFile(testImagePath);
@@ -49,11 +47,11 @@ describe("Image storage", function () {
 		this._makeUrl = (_path: string): string => `http://${this.host}:${this.port}/${_path}`;
 	});
 
-	after(function (done) {
+	afterAll(function (done) {
 		this.connection.close(done);
 	});
 
-	after(function (done) {
+	afterAll(function (done) {
 		// After storage tests run, remove the remaining empty
 		// storage folder so we return to the clean state
 		const dir = Config.getStoragePath();

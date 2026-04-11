@@ -1,6 +1,6 @@
 "use strict";
 
-import config from "../../../defaults/config.js";
+const config = require("../../../defaults/config.js");
 
 config.defaults.name = "Example IRC Server";
 config.defaults.host = "irc.example.com";

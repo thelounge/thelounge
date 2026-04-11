@@ -1,5 +1,5 @@
 import path from "path";
-import {expect} from "chai";
+import {expect} from "vitest";
 import util from "../util";
 import Config from "../../server/config";
 import link from "../../server/plugins/irc-events/link";
@@ -7,8 +7,6 @@ import {LinkPreview} from "../../shared/types/msg";
 
 describe("Link plugin", function () {
 	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
-	this.slow(300);
 
 	const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.\
 Vivamus at pretium mauris. Aenean eu orci id erat pulvinar\
@@ -25,7 +23,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 	beforeEach(function (done) {
 		app = util.createWebserver();
 		app.get("/real-test-image.png", function (req, res) {
-			res.sendFile(path.resolve("client/img/logo-grey-bg-120x120px.png"));
+			res.sendFile(path.resolve("client/public/img/logo-grey-bg-120x120px.png"));
 		});
 		this.connection = app.listen(0, "127.0.0.1", () => {
 			this.port = this.connection.address().port;

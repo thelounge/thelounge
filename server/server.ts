@@ -18,6 +18,7 @@ import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
+import {getAssetPaths} from "./plugins/manifest";
 
 import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
@@ -50,6 +51,8 @@ type ServerConfiguration = ConfigType & {
 
 type IndexTemplateConfiguration = ServerConfiguration & {
 	cacheBust: string;
+	jsFile: string;
+	cssFiles: string[];
 };
 
 type Socket = ioSocket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
@@ -64,6 +67,7 @@ export type Server = ioServer<
 const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager: ClientManager | null = null;
+let isDev = false;
 
 export default async function (
 	options: ServerOptions = {
@@ -83,8 +87,10 @@ export default async function (
 
 	const app = express();
 
+	isDev = options.dev;
+
 	if (options.dev) {
-		(await import("./plugins/dev-server")).default(app);
+		await (await import("./plugins/dev-server")).default(app);
 	}
 
 	app.set("env", "production")
@@ -93,8 +99,6 @@ export default async function (
 		.use(addSecurityHeaders)
 		.get("/", indexRequest)
 		.get("/service-worker.js", forceNoCacheRequest)
-		.get("/js/bundle.js.map", forceNoCacheRequest)
-		.get("/css/style.css.map", forceNoCacheRequest)
 		.use(express.static(Utils.getFileFromRelativeToRoot("public"), staticOptions))
 		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
 
@@ -373,7 +377,7 @@ function addSecurityHeaders(_req: Request, res: Response, next: NextFunction) {
 		"form-action 'self'", // 'self' to fix saving passwords in Firefox, even though login is handled in javascript
 		"connect-src 'self' ws: wss:", // allow self for polling; websockets
 		"style-src 'self' https: 'unsafe-inline'", // allow inline due to use in irc hex colors
-		"script-src 'self'", // javascript
+		isDev ? "script-src 'self' 'unsafe-eval'" : "script-src 'self'", // javascript
 		"worker-src 'self'", // service worker
 		"manifest-src 'self'", // manifest.json
 		"font-src 'self' https:", // allow loading fonts from secure sites (e.g. google fonts)
@@ -413,9 +417,24 @@ function indexRequest(_req: Request, res: Response) {
 			return;
 		}
 
+		let jsFile: string;
+		let cssFiles: string[];
+
+		if (isDev) {
+			// In dev mode, Vite serves files directly; CSS is injected via JS
+			jsFile = "/js/vue.ts";
+			cssFiles = [];
+		} else {
+			const assets = getAssetPaths();
+			jsFile = assets.js;
+			cssFiles = assets.css;
+		}
+
 		const config: IndexTemplateConfiguration = {
 			...getServerConfiguration(),
-			...{cacheBust: Helper.getVersionCacheBust()},
+			cacheBust: Helper.getVersionCacheBust(),
+			jsFile,
+			cssFiles,
 		};
 
 		res.send(_.template(file)(config));

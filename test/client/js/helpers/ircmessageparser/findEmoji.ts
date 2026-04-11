@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import findEmoji from "../../../../../client/js/helpers/ircmessageparser/findEmoji";
 
 describe("findEmoji", () => {

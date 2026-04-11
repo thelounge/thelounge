@@ -6,10 +6,10 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, interactive-widget=resizes-content">
 
 	<link rel="preload" as="script" href="js/loading-error-handlers.js?v=<%- cacheBust %>">
-	<link rel="preload" as="script" href="js/bundle.vendor.js?v=<%- cacheBust %>">
-	<link rel="preload" as="script" href="js/bundle.js?v=<%- cacheBust %>">
 
-	<link rel="stylesheet" href="css/style.css?v=<%- cacheBust %>">
+	<% _.forEach(cssFiles, function(css) { %>
+	<link rel="stylesheet" href="<%- css %>">
+	<% }); %>
 	<link id="theme" rel="stylesheet" href="themes/<%- theme %>.css" data-server-theme="<%- theme %>">
 	<% _.forEach(stylesheets, function(css) { %>
 		<link rel="stylesheet" href="packages/<%- css %>">
@@ -63,7 +63,6 @@
 			</div>
 		</div>
 		<script src="js/loading-error-handlers.js?v=<%- cacheBust %>"></script>
-		<script src="js/bundle.vendor.js?v=<%- cacheBust %>"></script>
-		<script src="js/bundle.js?v=<%- cacheBust %>"></script>
+		<script type="module" src="<%- jsFile %>"></script>
 	</body>
 </html>

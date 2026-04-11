@@ -2,7 +2,7 @@ import log from "../../../server/log";
 import ldapAuth from "../../../server/plugins/auth/ldap";
 import Config from "../../../server/config";
 import ldap from "ldapjs";
-import {expect} from "chai";
+import {expect} from "vitest";
 import TestUtil from "../../util";
 import ClientManager from "../../../server/clientManager";
 import sinon from "ts-sinon";
@@ -132,18 +132,16 @@ function testLdapAuth() {
 
 describe("LDAP authentication plugin", function () {
 	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(TestUtil.isRunningOnCI() ? 25000 : 5000);
-	this.slow(300);
 
 	let server: ldap.Server;
 	let logInfoStub: sinon.SinonStub<string[], void>;
 
-	before(function (done) {
+	beforeAll(function (done) {
 		logInfoStub = sinon.stub(log, "info");
 		server = startLdapServer(done);
 	});
 
-	after(function () {
+	afterAll(function () {
 		server.close(() => {
 			// no-op
 		});

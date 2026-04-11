@@ -1,5 +1,5 @@
 import log from "../../../server/log";
-import {expect} from "chai";
+import {expect} from "vitest";
 import TestUtil from "../../util";
 import sinon from "ts-sinon";
 import packagePlugin from "../../../server/plugins/packages";

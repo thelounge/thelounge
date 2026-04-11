@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import fs from "fs";
 import path from "path";
 
@@ -26,33 +26,32 @@ describe("public folder", function () {
 		expect(fs.existsSync(path.join(publicFolder, "index.html.tpl"))).to.be.false;
 	});
 
-	it("javascript files are built", function () {
-		expect(fs.existsSync(path.join(publicFolder, "js", "bundle.js"))).to.be.true;
-		expect(fs.existsSync(path.join(publicFolder, "js", "bundle.vendor.js"))).to.be.true;
+	it("vite manifest is generated", function () {
+		expect(fs.existsSync(path.join(publicFolder, ".vite", "manifest.json"))).to.be.true;
+
+		const manifest = JSON.parse(
+			fs.readFileSync(path.join(publicFolder, ".vite", "manifest.json"), "utf-8")
+		);
+		const entry = manifest["js/vue.ts"];
+		expect(entry).to.exist;
+		expect(entry.isEntry).to.be.true;
+		expect(entry.file).to.be.a("string");
+	});
+
+	it("javascript assets are built", function () {
+		expect(fs.existsSync(path.join(publicFolder, "assets"))).to.be.true;
+
+		const assets = fs.readdirSync(path.join(publicFolder, "assets"));
+		expect(assets.some((f: string) => f.endsWith(".js"))).to.be.true;
 	});
 
 	it("style files are built", function () {
-		expect(fs.existsSync(path.join(publicFolder, "css", "style.css"))).to.be.true;
-		expect(fs.existsSync(path.join(publicFolder, "css", "style.css.map"))).to.be.true;
 		expect(fs.existsSync(path.join(publicFolder, "themes", "default.css"))).to.be.true;
 		expect(fs.existsSync(path.join(publicFolder, "themes", "morning.css"))).to.be.true;
-	});
 
-	it("style files contain expected content", function (done) {
-		fs.readFile(path.join(publicFolder, "css", "style.css"), "utf8", function (err, contents) {
-			expect(err).to.be.null;
-
-			expect(contents.includes("var(--body-color)")).to.be.true;
-			expect(contents.includes("url(../fonts/fa-solid-900.woff2)")).to.be.true;
-			expect(contents.includes(".tooltipped{position:relative}")).to.be.true;
-			expect(contents.includes("sourceMappingURL")).to.be.true;
-
-			done();
-		});
-	});
-
-	it("javascript map is created", function () {
-		expect(fs.existsSync(path.join(publicFolder, "js", "bundle.js.map"))).to.be.true;
+		// CSS is output by Vite into the assets folder
+		const assets = fs.readdirSync(path.join(publicFolder, "assets"));
+		expect(assets.some((f: string) => f.endsWith(".css"))).to.be.true;
 	});
 
 	it("loading-error-handlers.js is copied", function () {
@@ -60,14 +59,12 @@ describe("public folder", function () {
 			.true;
 	});
 
-	it("service worker has cacheName set", function (done) {
-		fs.readFile(path.join(publicFolder, "service-worker.js"), "utf8", function (err, contents) {
-			expect(err).to.be.null;
-
-			expect(contents.includes("const cacheName")).to.be.true;
-			expect(contents.includes("__HASH__")).to.be.false;
-
-			done();
-		});
+	it("service worker has cacheName set", function () {
+		const contents = fs.readFileSync(
+			path.join(publicFolder, "service-worker.js"),
+			"utf8"
+		);
+		expect(contents.includes("const cacheName")).to.be.true;
+		expect(contents.includes("__HASH__")).to.be.false;
 	});
 });

@@ -1,6 +1,6 @@
 import log from "../server/log";
 import Config from "../server/config";
-import {expect} from "chai";
+import {expect} from "vitest";
 import got from "got";
 import io from "socket.io-client";
 import util from "./util";
@@ -11,14 +11,13 @@ import ClientManager from "../server/clientManager";
 
 describe("Server", function () {
 	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 
 	let server;
 	let logInfoStub: sinon.SinonStub<string[], void>;
 	let logWarnStub: sinon.SinonStub<string[], void>;
 	let checkForUpdatesStub: sinon.SinonStub<[manager: ClientManager], void>;
 
-	before(async function () {
+	beforeAll(async function () {
 		logInfoStub = sinon.stub(log, "info");
 		logWarnStub = sinon.stub(log, "warn").callsFake((...args: string[]) => {
 			// vapid.json permissions do not survive in git
@@ -38,13 +37,13 @@ describe("Server", function () {
 		server = await (await import("../server/server")).default({} as any);
 	});
 
-	after(function (done) {
+	afterAll(async function () {
 		// Tear down test fixtures in the order they were setup,
 		// in case setup crashed for any reason
 		logInfoStub.restore();
 		logWarnStub.restore();
 		checkForUpdatesStub.restore();
-		server.close(done);
+		await new Promise<void>((resolve) => server.close(() => resolve()));
 	});
 
 	const webURL = `http://${Config.values.host}:${Config.values.port}/`;
@@ -54,7 +53,7 @@ describe("Server", function () {
 			const response = await got(webURL);
 			expect(response.statusCode).to.equal(200);
 			expect(response.body).to.include("<title>The Lounge</title>");
-			expect(response.body).to.include("js/bundle.js");
+			expect(response.body).to.include("type=\"module\"");
 		});
 
 		it("should serve static content correctly", async () => {
@@ -68,7 +67,6 @@ describe("Server", function () {
 	});
 
 	describe("WebSockets", function () {
-		this.slow(300);
 
 		let client: ReturnType<typeof io>;
 

@@ -1,11 +1,17 @@
-import pkg from "../package.json";
 import _ from "lodash";
 import path from "path";
 import os from "os";
 import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const versionUtils = require("../scripts/version") as {
+	getVersion: () => string;
+	getVersionNumber: () => string;
+	getVersionCacheBust: () => string;
+	getGitCommit: () => string | null;
+};
 
 export type Hostmask = {
 	nick: string;
@@ -15,10 +21,10 @@ export type Hostmask = {
 
 const Helper = {
 	expandHome,
-	getVersion,
-	getVersionCacheBust,
-	getVersionNumber,
-	getGitCommit,
+	getVersion: versionUtils.getVersion,
+	getVersionCacheBust: versionUtils.getVersionCacheBust,
+	getVersionNumber: versionUtils.getVersionNumber,
+	getGitCommit: versionUtils.getGitCommit,
 	ip2hex,
 	parseHostmask,
 	compareHostmask,
@@ -33,51 +39,6 @@ const Helper = {
 };
 
 export default Helper;
-
-function getVersion() {
-	const gitCommit = getGitCommit();
-	const version = `v${pkg.version}`;
-	return gitCommit ? `source (${gitCommit} / ${version})` : version;
-}
-
-function getVersionNumber() {
-	return pkg.version;
-}
-
-let _fetchedGitCommit = false;
-let _gitCommit: string | null = null;
-
-function getGitCommit() {
-	if (_fetchedGitCommit) {
-		return _gitCommit;
-	}
-
-	_fetchedGitCommit = true;
-
-	// --git-dir ".git" makes git only check current directory for `.git`, and not travel upwards
-	// We set cwd to the location of `index.js` as soon as the process is started
-	try {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		_gitCommit = require("child_process")
-			.execSync(
-				'git --git-dir ".git" rev-parse --short HEAD', // Returns hash of current commit
-				{stdio: ["ignore", "pipe", "ignore"]}
-			)
-			.toString()
-			.trim();
-		return _gitCommit;
-	} catch (e: any) {
-		// Not a git repository or git is not installed
-		_gitCommit = null;
-		return null;
-	}
-}
-
-function getVersionCacheBust() {
-	const hash = crypto.createHash("sha256").update(Helper.getVersion()).digest("hex");
-
-	return hash.substring(0, 10);
-}
 
 function ip2hex(address: string) {
 	// no ipv6 support

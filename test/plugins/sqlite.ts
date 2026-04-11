@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {expect} from "chai";
+import {expect} from "vitest";
 import util from "../util";
 import Msg from "../../server/models/msg";
 import {MessageType} from "../../shared/types/msg";
@@ -67,7 +67,7 @@ describe("SQLite migrations", function () {
 		});
 	}
 
-	before(async function () {
+	beforeAll(async function () {
 		db = new sqlite3.Database(":memory:");
 
 		for (const stmt of orig_schema) {
@@ -86,7 +86,7 @@ describe("SQLite migrations", function () {
 		}
 	});
 
-	after(function (done) {
+	afterAll(function (done) {
 		db.close(done);
 	});
 
@@ -236,8 +236,6 @@ describe("SQLite unit tests", function () {
 
 describe("SQLite Message Storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
-	this.slow(300);
 
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
@@ -272,7 +270,7 @@ describe("SQLite Message Storage", function () {
 		});
 	}
 
-	before(function (done) {
+	beforeAll(function (done) {
 		store = new MessageStorage("testUser");
 
 		// Delete database file from previous test run
@@ -283,7 +281,7 @@ describe("SQLite Message Storage", function () {
 		}
 	});
 
-	after(function (done) {
+	afterAll(function (done) {
 		// After tests run, remove the logs folder
 		// so we return to the clean state
 		fs.unlinkSync(expectedPath);
