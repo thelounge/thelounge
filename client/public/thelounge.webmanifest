@@ -1,0 +1,53 @@
+{
+	"name": "The Lounge",
+	"short_name": "The Lounge",
+	"description": "Self-hosted web IRC client",
+	"start_url": ".",
+	"display": "standalone",
+	"theme_color": "#415364",
+	"background_color": "#415364",
+	"icons": [
+		{
+			"src": "img/logo-grey-bg-120x120px.png",
+			"type": "image/png",
+			"purpose": "maskable any",
+			"sizes": "120x120"
+		},
+		{
+			"src": "img/logo-grey-bg-152x152px.png",
+			"type": "image/png",
+			"purpose": "maskable any",
+			"sizes": "152x152"
+		},
+		{
+			"src": "img/logo-grey-bg-167x167px.png",
+			"type": "image/png",
+			"purpose": "maskable any",
+			"sizes": "167x167"
+		},
+		{
+			"src": "img/logo-grey-bg-180x180px.png",
+			"type": "image/png",
+			"purpose": "maskable any",
+			"sizes": "180x180"
+		},
+		{
+			"src": "img/logo-grey-bg-192x192px.png",
+			"type": "image/png",
+			"purpose": "maskable any",
+			"sizes": "192x192"
+		},
+		{
+			"src": "img/logo-grey-bg-512x512px.png",
+			"type": "image/png",
+			"purpose": "maskable any",
+			"sizes": "512x512"
+		},
+		{
+			"src": "img/logo-grey-bg.svg",
+			"type": "image/svg+xml",
+			"purpose": "maskable any",
+			"sizes": "513x513"
+		}
+	]
+}

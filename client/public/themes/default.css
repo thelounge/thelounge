@@ -1,0 +1,35 @@
+#loading .window {
+	margin: 5px;
+}
+
+#viewport {
+	padding: 5px;
+}
+
+#viewport.menu-open {
+	padding-left: 0;
+}
+
+.window {
+	border-radius: 5px;
+	box-shadow: 0 0 25px rgb(0 0 0 / 50%);
+}
+
+@media (max-width: 768px) {
+	#loading .window {
+		margin: 0;
+	}
+
+	#viewport,
+	#viewport.menu-open {
+		padding: 0;
+	}
+
+	#footer .icon {
+		border-radius: 0;
+	}
+
+	.window {
+		border-radius: 0;
+	}
+}

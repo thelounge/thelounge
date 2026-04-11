@@ -5,5 +5,5 @@ yarn-error.log*
 package-lock.json
 
 coverage/
-public/
+/public/
 dist/
