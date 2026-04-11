@@ -30,7 +30,7 @@
     "test:vitest": "vitest run",
     "watch": "vite build --watch",
     "githooks-install": "git config core.hooksPath scripts/git-hooks",
-    "postinstall": "cp node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff* client/public/fonts/"
+    "postinstall": "mkdir -p client/public/fonts && cp node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff* client/public/fonts/"
   },
   "keywords": [
     "lounge",
