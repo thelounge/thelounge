@@ -11,10 +11,11 @@ import type {PushSubscription, VapidDetails} from "web-push-neo";
 type WebPushNeo = typeof import("web-push-neo");
 
 // Prevent TypeScript from transforming import() into require() for ESM-only packages. Super ugly.
-// eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-use-before-define
+/* eslint-disable @typescript-eslint/no-implied-eval, no-use-before-define */
 const importEsm = new Function("specifier", "return import(specifier)") as <T>(
 	specifier: string
 ) => Promise<T>;
+/* eslint-enable @typescript-eslint/no-implied-eval, no-use-before-define */
 
 class WebPush {
 	vapidKeys?: {
