@@ -21,7 +21,10 @@
 				<p v-else>You have no recent mentions.</p>
 			</template>
 			<template v-for="message in resolvedMessages" v-else :key="message.msgId">
-				<div :class="['msg', message.type]">
+				<div
+					:class="['msg', message.type, {'mention-clickable': !!message.channel}]"
+					@click="goToMention(message)"
+				>
 					<div class="mentions-info">
 						<div>
 							<span class="from">
@@ -44,7 +47,7 @@
 								<button
 									class="msg-dismiss"
 									aria-label="Dismiss this mention"
-									@click="dismissMention(message)"
+									@click.stop="dismissMention(message)"
 								></button>
 							</span>
 						</div>
@@ -90,6 +93,15 @@
 .mentions-popup .msg {
 	margin-bottom: 15px;
 	user-select: text;
+}
+
+.mentions-popup .msg.mention-clickable {
+	cursor: pointer;
+}
+
+.mentions-popup .msg.mention-clickable:hover {
+	background-color: var(--highlight-bg-color);
+	border-radius: 5px;
 }
 
 .mentions-popup .msg:last-child {
@@ -152,8 +164,9 @@ import eventbus from "../js/eventbus";
 import localetime from "../js/helpers/localetime";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import {computed, watch, defineComponent, ref, onMounted, onUnmounted} from "vue";
+import {computed, watch, defineComponent, ref, onMounted, onUnmounted, nextTick} from "vue";
 import {useStore} from "../js/store";
+import {switchToChannel} from "../js/router";
 import {ClientMention} from "../js/types";
 
 dayjs.extend(relativeTime);
@@ -204,6 +217,47 @@ export default defineComponent({
 			socket.emit("mentions:dismiss_all");
 		};
 
+		const scrollToMessage = (msgId: number) => {
+			const el = document.getElementById(`msg-${msgId}`);
+
+			if (el) {
+				el.scrollIntoView({behavior: "smooth", block: "center"});
+			}
+		};
+
+		const goToMention = (message: ClientMention) => {
+			if (!message.channel) {
+				return;
+			}
+
+			isOpen.value = false;
+			switchToChannel(message.channel.channel);
+
+			// Give the channel time to render, then try to scroll
+			setTimeout(() => {
+				const el = document.getElementById(`msg-${message.msgId}`);
+
+				if (el) {
+					el.scrollIntoView({behavior: "smooth", block: "center"});
+				} else {
+					// Message not in loaded buffer, request from server
+					socket.emit("messages:around", {
+						target: message.chanId,
+						msgId: message.msgId,
+					});
+				}
+			}, 200);
+		};
+
+		const onScrollToMention = (msgId: number) => {
+			void nextTick().then(() => {
+				// Small delay to let the DOM update with new messages
+				setTimeout(() => {
+					scrollToMessage(msgId);
+				}, 100);
+			});
+		};
+
 		const containerClick = (event: Event) => {
 			if (event.currentTarget === event.target) {
 				isOpen.value = false;
@@ -226,11 +280,13 @@ export default defineComponent({
 		onMounted(() => {
 			eventbus.on("mentions:toggle", togglePopup);
 			eventbus.on("escapekey", closePopup);
+			eventbus.on("mentions:scrollTo", onScrollToMention);
 		});
 
 		onUnmounted(() => {
 			eventbus.off("mentions:toggle", togglePopup);
 			eventbus.off("escapekey", closePopup);
+			eventbus.off("mentions:scrollTo", onScrollToMention);
 		});
 
 		return {
@@ -240,6 +296,7 @@ export default defineComponent({
 			messageTime,
 			dismissMention,
 			dismissAllMentions,
+			goToMention,
 			containerClick,
 		};
 	},
