@@ -20,335 +20,363 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 	let app;
 
-	beforeEach(function (done) {
-		app = util.createWebserver();
-		app.get("/real-test-image.png", function (req, res) {
-			res.sendFile(path.resolve("client/public/img/logo-grey-bg-120x120px.png"));
-		});
-		this.connection = app.listen(0, "127.0.0.1", () => {
-			this.port = this.connection.address().port;
-			this.host = this.connection.address().address;
-			done();
-		});
+	beforeEach(function () {
+		return new Promise<void>((resolve) => {
+			app = util.createWebserver();
+			app.get("/real-test-image.png", function (req, res) {
+				res.sendFile(path.resolve("client/public/img/logo-grey-bg-120x120px.png"));
+			});
+			this.connection = app.listen(0, "127.0.0.1", () => {
+				this.port = this.connection.address().port;
+				this.host = this.connection.address().address;
+				resolve();
+			});
 
-		this._makeUrl = (_path: string): string => `http://${this.host}:${this.port}/${_path}`;
+			this._makeUrl = (_path: string): string => `http://${this.host}:${this.port}/${_path}`;
 
-		this.irc = util.createClient();
-		this.network = util.createNetwork();
+			this.irc = util.createClient();
+			this.network = util.createNetwork();
 
-		Config.values.prefetchStorage = false;
-	});
-
-	afterEach(function (done) {
-		this.connection.close(done);
-	});
-
-	it("should be able to fetch basic information about URLs", function (done) {
-		const url = this._makeUrl("basic");
-		const message = this.irc.createMessage({
-			text: url,
-		});
-
-		link(this.irc, this.network.channels[0], message, message.text);
-
-		expect(message.previews).to.deep.equal([
-			{
-				body: "",
-				head: "",
-				link: url,
-				thumb: "",
-				size: -1,
-				type: "loading",
-				shown: null,
-			},
-		]);
-
-		app.get("/basic", function (req, res) {
-			res.send(
-				"<title>test title</title><meta name='description' content='simple description'>"
-			);
-		});
-
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.type).to.equal("link");
-			expect(data.preview.head).to.equal("test title");
-			expect(data.preview.body).to.equal("simple description");
-			expect(data.preview.link).to.equal(url);
-
-			expect(message.previews).to.deep.equal([data.preview]);
-			done();
+			Config.values.prefetchStorage = false;
 		});
 	});
 
-	it("should be able to display body for text/plain", function (done) {
-		const url = this._makeUrl("basic-text");
-		const message = this.irc.createMessage({
-			text: url,
-		});
-
-		link(this.irc, this.network.channels[0], message, message.text);
-
-		expect(message.previews).to.deep.equal([
-			{
-				body: "",
-				head: "",
-				link: url,
-				thumb: "",
-				size: -1,
-				type: "loading",
-				shown: null,
-			},
-		]);
-
-		app.get("/basic-text", function (req, res) {
-			res.type("text").send(loremIpsum);
-		});
-
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.type).to.equal("link");
-			expect(data.preview.head).to.equal("Untitled page");
-			expect(data.preview.body).to.equal(loremIpsum.substring(0, 300));
-			expect(data.preview.body).to.have.length(300);
-			expect(data.preview.link).to.equal(url);
-
-			expect(message.previews).to.deep.equal([data.preview]);
-			done();
+	afterEach(function () {
+		return new Promise<void>((resolve) => {
+			this.connection.close(() => resolve());
 		});
 	});
 
-	it("should truncate head and body", function (done) {
-		const url = this._makeUrl("truncate");
-		const message = this.irc.createMessage({
-			text: url,
-		});
+	it("should be able to fetch basic information about URLs", function () {
+		return new Promise<void>((resolve) => {
+			const url = this._makeUrl("basic");
+			const message = this.irc.createMessage({
+				text: url,
+			});
 
-		link(this.irc, this.network.channels[0], message, message.text);
+			link(this.irc, this.network.channels[0], message, message.text);
 
-		app.get("/truncate", function (req, res) {
-			res.send(
-				`<title>${loremIpsum}</title><meta name='description' content='${loremIpsum}'>`
-			);
-		});
+			expect(message.previews).to.deep.equal([
+				{
+					body: "",
+					head: "",
+					link: url,
+					thumb: "",
+					size: -1,
+					type: "loading",
+					shown: null,
+				},
+			]);
 
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.type).to.equal("link");
-			expect(data.preview.head).to.equal(loremIpsum.substring(0, 100));
-			expect(data.preview.body).to.equal(loremIpsum.substring(0, 300));
-			expect(data.preview.link).to.equal(url);
+			app.get("/basic", function (req, res) {
+				res.send(
+					"<title>test title</title><meta name='description' content='simple description'>"
+				);
+			});
 
-			expect(message.previews).to.deep.equal([data.preview]);
-			done();
-		});
-	});
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.type).to.equal("link");
+				expect(data.preview.head).to.equal("test title");
+				expect(data.preview.body).to.equal("simple description");
+				expect(data.preview.link).to.equal(url);
 
-	it("should prefer og:title over title", function (done) {
-		const message = this.irc.createMessage({
-			text: this._makeUrl("basic-og"),
-		});
-
-		link(this.irc, this.network.channels[0], message, message.text);
-
-		app.get("/basic-og", function (req, res) {
-			res.send("<title>test</title><meta property='og:title' content='opengraph test'>");
-		});
-
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.head).to.equal("opengraph test");
-			done();
+				expect(message.previews).to.deep.equal([data.preview]);
+				resolve();
+			});
 		});
 	});
 
-	it("should find only the first matching tag", function (done) {
-		const message = this.irc.createMessage({
-			text: this._makeUrl("duplicate-tags"),
-		});
+	it("should be able to display body for text/plain", function () {
+		return new Promise<void>((resolve) => {
+			const url = this._makeUrl("basic-text");
+			const message = this.irc.createMessage({
+				text: url,
+			});
 
-		link(this.irc, this.network.channels[0], message, message.text);
+			link(this.irc, this.network.channels[0], message, message.text);
 
-		app.get("/duplicate-tags", function (req, res) {
-			res.send(
-				"<title>test</title><title>magnifying glass icon</title><meta name='description' content='desc1'><meta name='description' content='desc2'>"
-			);
-		});
+			expect(message.previews).to.deep.equal([
+				{
+					body: "",
+					head: "",
+					link: url,
+					thumb: "",
+					size: -1,
+					type: "loading",
+					shown: null,
+				},
+			]);
 
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.head).to.equal("test");
-			expect(data.preview.body).to.equal("desc1");
-			done();
+			app.get("/basic-text", function (req, res) {
+				res.type("text").send(loremIpsum);
+			});
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.type).to.equal("link");
+				expect(data.preview.head).to.equal("Untitled page");
+				expect(data.preview.body).to.equal(loremIpsum.substring(0, 300));
+				expect(data.preview.body).to.have.length(300);
+				expect(data.preview.link).to.equal(url);
+
+				expect(message.previews).to.deep.equal([data.preview]);
+				resolve();
+			});
 		});
 	});
 
-	it("should prefer og:description over description", function (done) {
-		const message = this.irc.createMessage({
-			text: this._makeUrl("description-og"),
-		});
+	it("should truncate head and body", function () {
+		return new Promise<void>((resolve) => {
+			const url = this._makeUrl("truncate");
+			const message = this.irc.createMessage({
+				text: url,
+			});
 
-		link(this.irc, this.network.channels[0], message, message.text);
+			link(this.irc, this.network.channels[0], message, message.text);
 
-		app.get("/description-og", function (req, res) {
-			res.send(
-				"<meta name='description' content='simple description'><meta property='og:description' content='opengraph description'>"
-			);
-		});
+			app.get("/truncate", function (req, res) {
+				res.send(
+					`<title>${loremIpsum}</title><meta name='description' content='${loremIpsum}'>`
+				);
+			});
 
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.body).to.equal("opengraph description");
-			done();
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.type).to.equal("link");
+				expect(data.preview.head).to.equal(loremIpsum.substring(0, 100));
+				expect(data.preview.body).to.equal(loremIpsum.substring(0, 300));
+				expect(data.preview.link).to.equal(url);
+
+				expect(message.previews).to.deep.equal([data.preview]);
+				resolve();
+			});
 		});
 	});
 
-	it("should find og:image with full url", function (done) {
-		const message = this.irc.createMessage({
-			text: this._makeUrl("thumb"),
+	it("should prefer og:title over title", function () {
+		return new Promise<void>((resolve) => {
+			const message = this.irc.createMessage({
+				text: this._makeUrl("basic-og"),
+			});
+
+			link(this.irc, this.network.channels[0], message, message.text);
+
+			app.get("/basic-og", function (req, res) {
+				res.send("<title>test</title><meta property='og:title' content='opengraph test'>");
+			});
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.head).to.equal("opengraph test");
+				resolve();
+			});
 		});
+	});
 
-		link(this.irc, this.network.channels[0], message, message.text);
+	it("should find only the first matching tag", function () {
+		return new Promise<void>((resolve) => {
+			const message = this.irc.createMessage({
+				text: this._makeUrl("duplicate-tags"),
+			});
 
-		const url = this._makeUrl("real-test-image.png");
-		app.get("/thumb", function (req, res) {
-			res.send(`<title>Google</title><meta property='og:image' content='${url}'>`);
+			link(this.irc, this.network.channels[0], message, message.text);
+
+			app.get("/duplicate-tags", function (req, res) {
+				res.send(
+					"<title>test</title><title>magnifying glass icon</title><meta name='description' content='desc1'><meta name='description' content='desc2'>"
+				);
+			});
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.head).to.equal("test");
+				expect(data.preview.body).to.equal("desc1");
+				resolve();
+			});
 		});
+	});
 
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.head).to.equal("Google");
-			expect(data.preview.thumb).to.equal(url);
-			done();
+	it("should prefer og:description over description", function () {
+		return new Promise<void>((resolve) => {
+			const message = this.irc.createMessage({
+				text: this._makeUrl("description-og"),
+			});
+
+			link(this.irc, this.network.channels[0], message, message.text);
+
+			app.get("/description-og", function (req, res) {
+				res.send(
+					"<meta name='description' content='simple description'><meta property='og:description' content='opengraph description'>"
+				);
+			});
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.body).to.equal("opengraph description");
+				resolve();
+			});
+		});
+	});
+
+	it("should find og:image with full url", function () {
+		return new Promise<void>((resolve) => {
+			const message = this.irc.createMessage({
+				text: this._makeUrl("thumb"),
+			});
+
+			link(this.irc, this.network.channels[0], message, message.text);
+
+			const url = this._makeUrl("real-test-image.png");
+			app.get("/thumb", function (req, res) {
+				res.send(`<title>Google</title><meta property='og:image' content='${url}'>`);
+			});
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.head).to.equal("Google");
+				expect(data.preview.thumb).to.equal(url);
+				resolve();
+			});
 		});
 	});
 
 	describe("test disableMediaPreview", function () {
-		beforeEach(function (done) {
+		beforeEach(function () {
 			Config.values.disableMediaPreview = true;
-			done();
 		});
-		afterEach(function (done) {
+		afterEach(function () {
 			Config.values.disableMediaPreview = false;
-			done();
 		});
-		it("should ignore og:image if disableMediaPreview", function (done) {
-			app.get("/nonexistent-test-image.png", function () {
-				throw "Should not fetch image";
-			});
+		it("should ignore og:image if disableMediaPreview", function () {
+			return new Promise<void>((resolve) => {
+				app.get("/nonexistent-test-image.png", function () {
+					throw "Should not fetch image";
+				});
 
-			const invalid_url = this._makeUrl("nonexistent-test-image.png");
-			app.get("/thumb", function (req, res) {
-				res.send(`<title>Google</title><meta property='og:image' content='${invalid_url}>`);
+				const invalid_url = this._makeUrl("nonexistent-test-image.png");
+				app.get("/thumb", function (req, res) {
+					res.send(`<title>Google</title><meta property='og:image' content='${invalid_url}>`);
+				});
+				const message = this.irc.createMessage({
+					text: this._makeUrl("thumb"),
+				});
+
+				link(this.irc, this.network.channels[0], message, message.text);
+
+				this.irc.once("msg:preview", function (data) {
+					expect(data.preview.head).to.equal("Google");
+					expect(data.preview.type).to.equal("link");
+					expect(data.preview.thumb).to.equal("");
+					resolve();
+				});
 			});
+		});
+		it("should ignore og:video if disableMediaPreview", function () {
+			return new Promise<void>((resolve) => {
+				app.get("/nonexistent-video.mp4", function () {
+					throw "Should not fetch video";
+				});
+
+				const invalid_url = this._makeUrl("nonexistent-video.mp4");
+				app.get("/thumb", function (req, res) {
+					res.send(
+						`<title>Google</title><meta property='og:video:type' content='video/mp4'><meta property='og:video' content='${invalid_url}'>`
+					);
+				});
+				const message = this.irc.createMessage({
+					text: this._makeUrl("thumb"),
+				});
+
+				link(this.irc, this.network.channels[0], message, message.text);
+
+				this.irc.once("msg:preview", function (data) {
+					expect(data.preview.head).to.equal("Google");
+					expect(data.preview.type).to.equal("link");
+					resolve();
+				});
+			});
+		});
+	});
+
+	it("should find image_src", function () {
+		return new Promise<void>((resolve) => {
 			const message = this.irc.createMessage({
-				text: this._makeUrl("thumb"),
+				text: this._makeUrl("thumb-image-src"),
 			});
 
 			link(this.irc, this.network.channels[0], message, message.text);
 
-			this.irc.once("msg:preview", function (data) {
-				expect(data.preview.head).to.equal("Google");
-				expect(data.preview.type).to.equal("link");
-				expect(data.preview.thumb).to.equal("");
-				done();
-			});
-		});
-		it("should ignore og:video if disableMediaPreview", function (done) {
-			app.get("/nonexistent-video.mp4", function () {
-				throw "Should not fetch video";
+			const url = this._makeUrl("real-test-image.png");
+			app.get("/thumb-image-src", function (req, res) {
+				res.send(`<link rel='image_src' href='${url}'>`);
 			});
 
-			const invalid_url = this._makeUrl("nonexistent-video.mp4");
-			app.get("/thumb", function (req, res) {
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.thumb).to.equal(url);
+				resolve();
+			});
+		});
+	});
+
+	it("should correctly resolve relative protocol", function () {
+		return new Promise<void>((resolve) => {
+			const message = this.irc.createMessage({
+				text: this._makeUrl("thumb-image-src"),
+			});
+
+			link(this.irc, this.network.channels[0], message, message.text);
+
+			const real_image_url = this._makeUrl("real-test-image.png");
+			app.get("/thumb-image-src", function (req, res) {
+				res.send(`<link rel='image_src' href='${real_image_url}'>`);
+			});
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.thumb).to.equal(real_image_url);
+				resolve();
+			});
+		});
+	});
+
+	it("should resolve url correctly for relative url", function () {
+		return new Promise<void>((resolve) => {
+			const relative_thumb_url = this._makeUrl("relative-thumb");
+			const message = this.irc.createMessage({
+				text: relative_thumb_url,
+			});
+
+			link(this.irc, this.network.channels[0], message, message.text);
+
+			app.get("/relative-thumb", function (req, res) {
 				res.send(
-					`<title>Google</title><meta property='og:video:type' content='video/mp4'><meta property='og:video' content='${invalid_url}'>`
+					"<title>test relative image</title><meta property='og:image' content='/real-test-image.png'>"
 				);
 			});
+			const real_image_url = this._makeUrl("real-test-image.png");
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.thumb).to.equal(real_image_url);
+				expect(data.preview.head).to.equal("test relative image");
+				expect(data.preview.link).to.equal(relative_thumb_url);
+				resolve();
+			});
+		});
+	});
+
+	it("should send untitled page if there is a thumbnail", function () {
+		return new Promise<void>((resolve) => {
+			const real_image_url = this._makeUrl("real-test-image.png");
+			const thumb_no_title_url = this._makeUrl("thumb-no-title");
 			const message = this.irc.createMessage({
-				text: this._makeUrl("thumb"),
+				text: thumb_no_title_url,
 			});
 
 			link(this.irc, this.network.channels[0], message, message.text);
 
-			this.irc.once("msg:preview", function (data) {
-				expect(data.preview.head).to.equal("Google");
-				expect(data.preview.type).to.equal("link");
-				done();
+			app.get("/thumb-no-title", function (req, res) {
+				res.send(`<meta property='og:image' content='${real_image_url}'>`);
 			});
-		});
-	});
 
-	it("should find image_src", function (done) {
-		const message = this.irc.createMessage({
-			text: this._makeUrl("thumb-image-src"),
-		});
-
-		link(this.irc, this.network.channels[0], message, message.text);
-
-		const url = this._makeUrl("real-test-image.png");
-		app.get("/thumb-image-src", function (req, res) {
-			res.send(`<link rel='image_src' href='${url}'>`);
-		});
-
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.thumb).to.equal(url);
-			done();
-		});
-	});
-
-	it("should correctly resolve relative protocol", function (done) {
-		const message = this.irc.createMessage({
-			text: this._makeUrl("thumb-image-src"),
-		});
-
-		link(this.irc, this.network.channels[0], message, message.text);
-
-		const real_image_url = this._makeUrl("real-test-image.png");
-		app.get("/thumb-image-src", function (req, res) {
-			res.send(`<link rel='image_src' href='${real_image_url}'>`);
-		});
-
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.thumb).to.equal(real_image_url);
-			done();
-		});
-	});
-
-	it("should resolve url correctly for relative url", function (done) {
-		const relative_thumb_url = this._makeUrl("relative-thumb");
-		const message = this.irc.createMessage({
-			text: relative_thumb_url,
-		});
-
-		link(this.irc, this.network.channels[0], message, message.text);
-
-		app.get("/relative-thumb", function (req, res) {
-			res.send(
-				"<title>test relative image</title><meta property='og:image' content='/real-test-image.png'>"
-			);
-		});
-		const real_image_url = this._makeUrl("real-test-image.png");
-
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.thumb).to.equal(real_image_url);
-			expect(data.preview.head).to.equal("test relative image");
-			expect(data.preview.link).to.equal(relative_thumb_url);
-			done();
-		});
-	});
-
-	it("should send untitled page if there is a thumbnail", function (done) {
-		const real_image_url = this._makeUrl("real-test-image.png");
-		const thumb_no_title_url = this._makeUrl("thumb-no-title");
-		const message = this.irc.createMessage({
-			text: thumb_no_title_url,
-		});
-
-		link(this.irc, this.network.channels[0], message, message.text);
-
-		app.get("/thumb-no-title", function (req, res) {
-			res.send(`<meta property='og:image' content='${real_image_url}'>`);
-		});
-
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.head).to.equal("Untitled page");
-			expect(data.preview.thumb).to.equal(real_image_url);
-			expect(data.preview.link).to.equal(thumb_no_title_url);
-			done();
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.head).to.equal("Untitled page");
+				expect(data.preview.thumb).to.equal(real_image_url);
+				expect(data.preview.link).to.equal(thumb_no_title_url);
+				resolve();
+			});
 		});
 	});
 

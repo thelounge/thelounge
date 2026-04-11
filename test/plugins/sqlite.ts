@@ -86,8 +86,8 @@ describe("SQLite migrations", function () {
 		}
 	});
 
-	afterAll(function (done) {
-		db.close(done);
+	afterAll(async function () {
+		await new Promise<void>((resolve) => db.close(() => resolve()));
 	});
 
 	it("has a down migration for every migration", function () {
@@ -270,22 +270,26 @@ describe("SQLite Message Storage", function () {
 		});
 	}
 
-	beforeAll(function (done) {
+	beforeAll(async function () {
 		store = new MessageStorage("testUser");
 
 		// Delete database file from previous test run
 		if (fs.existsSync(expectedPath)) {
-			fs.unlink(expectedPath, done);
-		} else {
-			done();
+			await new Promise<void>((resolve, reject) =>
+				fs.unlink(expectedPath, (err) => (err ? reject(err) : resolve()))
+			);
 		}
 	});
 
-	afterAll(function (done) {
+	afterAll(async function () {
 		// After tests run, remove the logs folder
 		// so we return to the clean state
 		fs.unlinkSync(expectedPath);
-		fs.rmdir(path.join(Config.getHomePath(), "logs"), done);
+		await new Promise<void>((resolve, reject) =>
+			fs.rmdir(path.join(Config.getHomePath(), "logs"), (err) =>
+				err ? reject(err) : resolve()
+			)
+		);
 	});
 
 	it("should create database file", async function () {

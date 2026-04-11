@@ -89,11 +89,11 @@ describe("Server", function () {
 			client.close();
 		});
 
-		it("should emit authorized message", (done) => {
-			client.on("auth:success", done);
-		});
+		it("should emit authorized message", () => new Promise<void>((resolve) => {
+			client.on("auth:success", () => resolve());
+		}));
 
-		it("should create network", (done) => {
+		it("should create network", () => new Promise<void>((resolve) => {
 			client.on("init", () => {
 				client.emit("network:new", {
 					username: "test-user",
@@ -114,11 +114,11 @@ describe("Server", function () {
 				expect(data.network.channels[0].name).to.equal("Test Network");
 				expect(data.network.channels[1].name).to.equal("#thelounge");
 				expect(data.network.channels[2].name).to.equal("#spam");
-				done();
+				resolve();
 			});
-		});
+		}));
 
-		it("should emit configuration message", (done) => {
+		it("should emit configuration message", () => new Promise<void>((resolve) => {
 			client.on("configuration", (data) => {
 				// Private key defined in vapid.json is "01020304050607080910111213141516" for this public key.
 				expect(data.applicationServerKey).to.equal(
@@ -131,27 +131,27 @@ describe("Server", function () {
 				expect(data.lockNetwork).to.equal(false);
 				expect(data.useHexIp).to.equal(false);
 
-				done();
+				resolve();
 			});
-		});
+		}));
 
-		it("should emit push subscription state message", (done) => {
+		it("should emit push subscription state message", () => new Promise<void>((resolve) => {
 			client.on("push:issubscribed", (data) => {
 				expect(data).to.be.false;
 
-				done();
+				resolve();
 			});
-		});
+		}));
 
-		it("should emit init message", (done) => {
+		it("should emit init message", () => new Promise<void>((resolve) => {
 			client.on("init", (data) => {
 				expect(data.active).to.equal(-1);
 				expect(data.networks).to.be.an("array");
 				expect(data.networks).to.be.empty;
 				expect(data.token).to.be.undefined;
 
-				done();
+				resolve();
 			});
-		});
+		}));
 	});
 });
