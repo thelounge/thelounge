@@ -44,6 +44,10 @@ describe("Server", function () {
 		logWarnStub.restore();
 		checkForUpdatesStub.restore();
 		await new Promise<void>((resolve) => server.close(() => resolve()));
+
+		// Let pending lazy imports (e.g. IRC event plugins) settle before
+		// Vitest tears down the environment
+		await new Promise((resolve) => setTimeout(resolve, 100));
 	});
 
 	const webURL = `http://${Config.values.host}:${Config.values.port}/`;
