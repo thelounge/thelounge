@@ -4,6 +4,6 @@
 	font-weight: normal;
 	font-style: normal;
 	src:
-		url("/fonts/fa-solid-900.woff2") format("woff2"),
-		url("/fonts/fa-solid-900.woff") format("woff");
+		url("@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2") format("woff2"),
+		url("@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff") format("woff");
 }

@@ -29,8 +29,7 @@
     "test": "run-p --aggregate-output --continue-on-error lint:* test:vitest",
     "test:vitest": "vitest run",
     "watch": "vite build --watch",
-    "githooks-install": "git config core.hooksPath scripts/git-hooks",
-    "postinstall": "node scripts/copy-fonts.js"
+    "githooks-install": "git config core.hooksPath scripts/git-hooks"
   },
   "keywords": [
     "lounge",

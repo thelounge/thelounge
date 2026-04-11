@@ -5,9 +5,10 @@ import path from "path";
 describe("public folder", function () {
 	const publicFolder = path.join(process.cwd(), "public");
 
-	it("font awesome files are copied", function () {
-		expect(fs.existsSync(path.join(publicFolder, "fonts", "fa-solid-900.woff"))).to.be.true;
-		expect(fs.existsSync(path.join(publicFolder, "fonts", "fa-solid-900.woff2"))).to.be.true;
+	it("font awesome files are bundled", function () {
+		const assets = fs.readdirSync(path.join(publicFolder, "assets"));
+		expect(assets.some((f: string) => f.includes("fa-solid-900") && f.endsWith(".woff2"))).to
+			.be.true;
 	});
 
 	it("files in root folder are copied", function () {
