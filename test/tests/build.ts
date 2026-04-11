@@ -26,7 +26,7 @@ describe("public folder", function () {
 		expect(fs.existsSync(path.join(publicFolder, "index.html"))).to.be.true;
 
 		const html = fs.readFileSync(path.join(publicFolder, "index.html"), "utf-8");
-		expect(html).to.include("<!--thelounge-theme-->");
+		expect(html).to.include("</head>");
 		expect(html).to.include('<script type="module"');
 	});
 

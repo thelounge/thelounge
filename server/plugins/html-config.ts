@@ -15,10 +15,14 @@ export function injectServerConfig(html: string): string {
 		.map((css) => `\t<link rel="stylesheet" href="packages/${escapeAttr(css)}">`)
 		.join("\n");
 
+	// Inject theme/package CSS after Vite's styles so theme overrides take effect
+	const headInsert = [themeLink, packageLinks, `<style id="user-specified-css"></style>`]
+		.filter(Boolean)
+		.join("\n\t");
+
 	return html
-		.replace("<!--thelounge-theme-->", themeLink)
+		.replace("</head>", `\t${headInsert}\n\t</head>`)
 		.replace(/<!--thelounge-themecolor-->/g, themeColor)
-		.replace("<!--thelounge-packages-->", packageLinks)
 		.replace("<!--thelounge-bodyclass-->", Config.values.public ? "public" : "")
 		.replace(
 			"<!--thelounge-transports-->",
