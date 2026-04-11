@@ -256,7 +256,7 @@ export default async function (
 			Config.values.themeColor = defaultTheme.themeColor;
 		}
 
-		new Identification((identHandler, err) => {
+		new Identification(async (identHandler, err) => {
 			if (err) {
 				log.error(`Could not start identd server, ${err.message}`);
 				process.exit(1);
@@ -265,7 +265,7 @@ export default async function (
 				process.exit(1);
 			}
 
-			manager.init(identHandler, sockets);
+			await manager.init(identHandler, sockets);
 		});
 
 		// Handle ctrl+c and kill gracefully

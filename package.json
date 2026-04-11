@@ -81,7 +81,7 @@
     "tlds": "1.228.0",
     "ua-parser-js": "1.0.39",
     "uuid": "8.3.2",
-    "web-push": "3.4.5",
+    "web-push-neo": "0.1.2",
     "yarn": "1.22.22"
   },
   "optionalDependencies": {
@@ -113,7 +113,6 @@
     "@types/sortablejs": "1.15.8",
     "@types/ua-parser-js": "0.7.39",
     "@types/uuid": "8.3.4",
-    "@types/web-push": "3.3.2",
     "@types/webpack-env": "1.16.4",
     "@types/webpack-hot-middleware": "2.25.6",
     "@types/ws": "8.5.12",
