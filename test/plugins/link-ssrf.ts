@@ -17,9 +17,8 @@ describe("SSRF protection", function () {
 		it("should block class B private range (172.16-31.x.x)", function () {
 			expect(isPrivateIP("172.16.0.1")).to.be.true;
 			expect(isPrivateIP("172.31.255.255")).to.be.true;
-			// 172.15.x and 172.32.x are public
-			expect(isPrivateIP("172.15.0.1")).to.be.false;
-			expect(isPrivateIP("172.32.0.1")).to.be.false;
+			expect(isPrivateIP("172.15.255.255")).to.be.false;
+			expect(isPrivateIP("172.32.0.0")).to.be.false;
 		});
 
 		it("should block class C private range (192.168.x.x)", function () {
@@ -40,9 +39,7 @@ describe("SSRF protection", function () {
 		it("should block carrier-grade NAT (100.64-127.x.x)", function () {
 			expect(isPrivateIP("100.64.0.1")).to.be.true;
 			expect(isPrivateIP("100.127.255.255")).to.be.true;
-			// 100.63.x is public
 			expect(isPrivateIP("100.63.255.255")).to.be.false;
-			// 100.128.x is public
 			expect(isPrivateIP("100.128.0.1")).to.be.false;
 		});
 
@@ -59,11 +56,27 @@ describe("SSRF protection", function () {
 			expect(isPrivateIP("fe80::1")).to.be.true;
 		});
 
+		it("should block IPv6-mapped IPv4 private addresses", function () {
+			expect(isPrivateIP("::ffff:127.0.0.1")).to.be.true;
+			expect(isPrivateIP("::ffff:10.0.0.1")).to.be.true;
+			expect(isPrivateIP("::ffff:169.254.169.254")).to.be.true;
+			expect(isPrivateIP("::ffff:192.168.1.1")).to.be.true;
+		});
+
+		it("should block IPv6-mapped IPv4 with brackets from URL parsing", function () {
+			expect(isPrivateIP("[::ffff:127.0.0.1]")).to.be.true;
+			expect(isPrivateIP("[::1]")).to.be.true;
+		});
+
 		it("should allow public IP addresses", function () {
 			expect(isPrivateIP("8.8.8.8")).to.be.false;
 			expect(isPrivateIP("1.1.1.1")).to.be.false;
 			expect(isPrivateIP("93.184.216.34")).to.be.false;
 			expect(isPrivateIP("203.0.113.1")).to.be.false;
+		});
+
+		it("should allow public IPv6-mapped IPv4 addresses", function () {
+			expect(isPrivateIP("::ffff:8.8.8.8")).to.be.false;
 		});
 	});
 
@@ -76,9 +89,23 @@ describe("SSRF protection", function () {
 			expect(normalizeURL("http://172.16.0.1:8080/")).to.be.undefined;
 		});
 
+		it("should reject alternative IP representations normalized by URL parser", function () {
+			// Decimal integer (169085621 = 10.20.10.181 — private)
+			expect(normalizeURL("http://169085621/")).to.be.undefined;
+			// Hex (0x7f000001 = 127.0.0.1)
+			expect(normalizeURL("http://0x7f000001/")).to.be.undefined;
+			// Octal (0177.0.0.1 = 127.0.0.1)
+			expect(normalizeURL("http://0177.0.0.1/")).to.be.undefined;
+		});
+
 		it("should reject private IPs with https", function () {
 			expect(normalizeURL("https://127.0.0.1/")).to.be.undefined;
 			expect(normalizeURL("https://10.0.0.1/")).to.be.undefined;
+		});
+
+		it("should reject IPv6-mapped private IPs", function () {
+			expect(normalizeURL("http://[::ffff:127.0.0.1]/")).to.be.undefined;
+			expect(normalizeURL("http://[::ffff:169.254.169.254]/")).to.be.undefined;
 		});
 
 		it("should allow public IP literals", function () {

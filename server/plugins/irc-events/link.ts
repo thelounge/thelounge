@@ -21,22 +21,98 @@ type FetchRequest = {
 };
 const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
 
-// Private/reserved IP ranges that should not be fetched (SSRF protection)
-const PRIVATE_IP_RANGES = [
-	/^127\./, // loopback
-	/^10\./, // class A private
-	/^172\.(1[6-9]|2\d|3[01])\./, // class B private
-	/^192\.168\./, // class C private
-	/^169\.254\./, // link-local (cloud metadata)
-	/^0\./, // "this" network
-	/^100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\./, // carrier-grade NAT
-	/^::1$/, // IPv6 loopback
-	/^f[cd]/i, // IPv6 unique local
-	/^fe80:/i, // IPv6 link-local
+// Private/reserved IPv4 ranges as [start, end] of 32-bit integers (SSRF protection)
+const PRIVATE_IPV4_RANGES: [number, number][] = [
+	[0x00000000, 0x00ffffff], // 0.0.0.0/8 — "this" network
+	[0x0a000000, 0x0affffff], // 10.0.0.0/8 — class A private
+	[0x64400000, 0x647fffff], // 100.64.0.0/10 — carrier-grade NAT
+	[0x7f000000, 0x7fffffff], // 127.0.0.0/8 — loopback
+	[0xa9fe0000, 0xa9feffff], // 169.254.0.0/16 — link-local (cloud metadata)
+	[0xac100000, 0xac1fffff], // 172.16.0.0/12 — class B private
+	[0xc0a80000, 0xc0a8ffff], // 192.168.0.0/16 — class C private
 ];
 
+function parseIPv4(ip: string): number | null {
+	const parts = ip.split(".");
+
+	if (parts.length !== 4) {
+		return null;
+	}
+
+	let result = 0;
+
+	for (const part of parts) {
+		const num = Number(part);
+
+		if (!Number.isInteger(num) || num < 0 || num > 255) {
+			return null;
+		}
+
+		result = (result << 8) | num;
+	}
+
+	// Convert to unsigned 32-bit integer
+	return result >>> 0;
+}
+
+function extractIPv4FromIPv6(ip: string): string | null {
+	const lower = ip.toLowerCase();
+
+	// Handle dotted-decimal form: ::ffff:a.b.c.d or ::a.b.c.d
+	const v4Dotted = lower.match(/^::(?:ffff:)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+
+	if (v4Dotted) {
+		return v4Dotted[1];
+	}
+
+	// Handle hex form: ::ffff:HHHH:HHHH (as normalized by URL parser)
+	const v4Hex = lower.match(/^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+
+	if (v4Hex) {
+		const high = parseInt(v4Hex[1], 16);
+		const low = parseInt(v4Hex[2], 16);
+
+		return `${(high >> 8) & 0xff}.${high & 0xff}.${(low >> 8) & 0xff}.${low & 0xff}`;
+	}
+
+	return null;
+}
+
+function isPrivateIPv6(ip: string): boolean {
+	const lower = ip.toLowerCase();
+
+	return (
+		lower === "::1" || // loopback
+		lower.startsWith("fc") || // unique local (fc00::/7)
+		lower.startsWith("fd") ||
+		lower.startsWith("fe80") // link-local
+	);
+}
+
 export function isPrivateIP(ip: string): boolean {
-	return PRIVATE_IP_RANGES.some((r) => r.test(ip));
+	// Strip IPv6 brackets if present (from URL parsing)
+	const cleanIP = ip.startsWith("[") && ip.endsWith("]") ? ip.slice(1, -1) : ip;
+
+	// Check for IPv6-mapped/compatible IPv4 addresses
+	const mappedV4 = extractIPv4FromIPv6(cleanIP);
+
+	if (mappedV4) {
+		const num = parseIPv4(mappedV4);
+
+		if (num !== null) {
+			return PRIVATE_IPV4_RANGES.some(([start, end]) => num >= start && num <= end);
+		}
+	}
+
+	// Check IPv4
+	const ipv4 = parseIPv4(cleanIP);
+
+	if (ipv4 !== null) {
+		return PRIVATE_IPV4_RANGES.some(([start, end]) => ipv4 >= start && ipv4 <= end);
+	}
+
+	// Check IPv6
+	return isPrivateIPv6(cleanIP);
 }
 
 // Allows tests to disable SSRF protection when the test server runs on localhost
@@ -553,7 +629,13 @@ export function normalizeURL(link: string, baseLink?: string, disallowHttp = fal
 		}
 
 		// Block IP literals pointing to private/reserved ranges (defense-in-depth for SSRF)
-		if (!_testing.disableSSRFProtection && isIP(url.hostname) && isPrivateIP(url.hostname)) {
+		// url.hostname includes brackets for IPv6 (e.g. "[::1]"), strip them for isIP check
+		const bareHost =
+			url.hostname.startsWith("[") && url.hostname.endsWith("]")
+				? url.hostname.slice(1, -1)
+				: url.hostname;
+
+		if (!_testing.disableSSRFProtection && isIP(bareHost) && isPrivateIP(bareHost)) {
 			return undefined;
 		}
 
