@@ -510,8 +510,12 @@ class Client {
 			}
 
 			this._pendingReplyTo = data.replyTo;
-			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
-			this._pendingReplyTo = undefined;
+
+			try {
+				plugin.input.apply(client, [target.network, target.chan, cmd, args]);
+			} finally {
+				this._pendingReplyTo = undefined;
+			}
 			return;
 		}
 
