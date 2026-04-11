@@ -7,3 +7,4 @@ package-lock.json
 coverage/
 /public/
 dist/
+client/public/fonts/*.woff*
