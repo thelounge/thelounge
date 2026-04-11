@@ -69,6 +69,7 @@ export default defineConfig(({mode}) => ({
 				compilerOptions: {
 					preserveWhitespace: false,
 				},
+				transformAssetUrls: false,
 			},
 		}),
 		serviceWorkerPlugin(mode),
