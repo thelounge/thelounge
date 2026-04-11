@@ -154,7 +154,13 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {computed, watch, defineComponent, ref, onMounted, onUnmounted} from "vue";
 import {useStore} from "../js/store";
-import type {ResolvedMention} from "../js/types";
+import type {SharedMention} from "../../shared/types/mention";
+import type {NetChan} from "../js/types";
+
+type MentionWithContext = SharedMention & {
+	localetime: string;
+	channel: NetChan | null;
+};
 
 dayjs.extend(relativeTime);
 
@@ -191,7 +197,7 @@ export default defineComponent({
 			return dayjs(time).fromNow();
 		};
 
-		const dismissMention = (message: ResolvedMention) => {
+		const dismissMention = (message: MentionWithContext) => {
 			store.state.mentions.splice(
 				store.state.mentions.findIndex((m) => m.msgId === message.msgId),
 				1

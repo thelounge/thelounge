@@ -52,11 +52,6 @@ type NetChan = {
 
 type ClientMention = SharedMention;
 
-type ResolvedMention = SharedMention & {
-	localetime: string;
-	channel: NetChan | null;
-};
-
 type ClientLinkPreview = LinkPreview & {
 	sourceLoaded?: boolean;
 };
