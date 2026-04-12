@@ -41,6 +41,7 @@ export default defineComponent({
 
 			if (network) {
 				network.name = network.channels[0].name = data.name;
+
 				switchToChannel(network.channels[0]);
 			}
 		};
