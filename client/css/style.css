@@ -2,6 +2,8 @@
 @import "fontawesome.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
 
+@import "settings.css";
+
 :root {
 	/* Main text color */
 	--body-color: #222;
