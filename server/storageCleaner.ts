@@ -101,6 +101,7 @@ export class StorageCleaner {
 			}
 		}
 
+		// need to recheck here as the field may have changed since the await
 		if (this.isStopped) {
 			return;
 		}
