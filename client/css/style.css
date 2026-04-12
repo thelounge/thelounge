@@ -1283,6 +1283,11 @@ textarea.input {
 	padding: 0;
 }
 
+.scroll-down:focus:not(:focus-visible)::before,
+.scroll-down:focus:not(:focus-visible)::after {
+	display: none;
+}
+
 .scroll-down-shown {
 	opacity: 1;
 	transform: none;
