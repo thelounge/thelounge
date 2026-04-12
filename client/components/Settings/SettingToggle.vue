@@ -1,12 +1,12 @@
 <template>
 	<div class="setting-row">
-		<label :for="name" class="setting-row-text">
+		<label :for="'setting-' + name" class="setting-row-text">
 			<div class="setting-row-label">{{ label }}</div>
 			<div v-if="description" class="setting-row-description">{{ description }}</div>
 		</label>
 		<div class="setting-toggle">
 			<input
-				:id="name"
+				:id="'setting-' + name"
 				:checked="checked"
 				:disabled="disabled"
 				:name="name"

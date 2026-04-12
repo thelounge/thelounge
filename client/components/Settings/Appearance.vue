@@ -1,30 +1,24 @@
 <template>
 	<div>
-		<!-- Theme -->
-		<div class="setting-card">
-			<h2 class="setting-card-title">Theme</h2>
-			<div>
-				<label for="theme-select" class="sr-only">Theme</label>
-				<select
-					id="theme-select"
-					:value="store.state.settings.theme"
-					name="theme"
-					class="input"
+		<SettingCard title="Theme">
+			<label for="theme-select" class="sr-only">Theme</label>
+			<select
+				id="theme-select"
+				:value="store.state.settings.theme"
+				name="theme"
+				class="input"
+			>
+				<option
+					v-for="theme in store.state.serverConfiguration?.themes"
+					:key="theme.name"
+					:value="theme.name"
 				>
-					<option
-						v-for="theme in store.state.serverConfiguration?.themes"
-						:key="theme.name"
-						:value="theme.name"
-					>
-						{{ theme.displayName }}
-					</option>
-				</select>
-			</div>
-		</div>
+					{{ theme.displayName }}
+				</option>
+			</select>
+		</SettingCard>
 
-		<!-- Messages -->
-		<div class="setting-card">
-			<h2 class="setting-card-title">Messages</h2>
+		<SettingCard title="Messages">
 			<SettingToggle
 				name="motd"
 				label="Show MOTD"
@@ -43,11 +37,9 @@
 				description="Display timestamps in 12-hour format instead of 24-hour"
 				:checked="store.state.settings.use12hClock"
 			/>
-		</div>
+		</SettingCard>
 
-		<!-- Link previews -->
-		<div v-if="store.state.serverConfiguration?.prefetch" class="setting-card">
-			<h2 class="setting-card-title">Link previews</h2>
+		<SettingCard v-if="store.state.serverConfiguration?.prefetch" title="Link previews">
 			<SettingToggle
 				name="media"
 				label="Auto-expand media"
@@ -60,15 +52,13 @@
 				description="Automatically show link previews for URLs"
 				:checked="store.state.settings.links"
 			/>
-		</div>
+		</SettingCard>
 
-		<!-- Status messages -->
-		<div class="setting-card">
-			<h2 id="label-status-messages" class="setting-card-title">Status messages</h2>
-			<div class="setting-row-description" style="margin-bottom: 4px">
+		<SettingCard title="Status messages">
+			<div class="setting-card-intro">
 				Control how joins, parts, quits, kicks, nick changes, and mode changes appear
 			</div>
-			<div class="setting-radio-pills" role="group" aria-labelledby="label-status-messages">
+			<div class="setting-radio-pills" role="group" aria-label="Status messages">
 				<label class="setting-radio-pill">
 					<input
 						:checked="store.state.settings.statusMessages === 'shown'"
@@ -97,11 +87,9 @@
 					<span class="pill-label">Hide</span>
 				</label>
 			</div>
-		</div>
+		</SettingCard>
 
-		<!-- Visual aids -->
-		<div class="setting-card">
-			<h2 class="setting-card-title">Visual aids</h2>
+		<SettingCard title="Visual aids">
 			<SettingToggle
 				name="coloredNicks"
 				label="Colored nicknames"
@@ -130,12 +118,10 @@
 				class="input"
 				placeholder="e.g. , "
 			/>
-		</div>
+		</SettingCard>
 
-		<!-- Custom stylesheet -->
-		<div class="setting-card">
-			<h2 class="setting-card-title">Custom stylesheet</h2>
-			<div class="setting-row-description" style="margin-bottom: 4px">
+		<SettingCard title="Custom stylesheet">
+			<div class="setting-card-intro">
 				Override any style with your own CSS
 			</div>
 			<label for="user-specified-css-input" class="sr-only">
@@ -148,7 +134,7 @@
 				name="userStyles"
 				placeholder="/* Add your custom CSS here */"
 			/>
-		</div>
+		</SettingCard>
 	</div>
 </template>
 
@@ -161,11 +147,13 @@ textarea#user-specified-css-input {
 <script lang="ts">
 import {defineComponent} from "vue";
 import {useStore} from "../../js/store";
+import SettingCard from "./SettingCard.vue";
 import SettingToggle from "./SettingToggle.vue";
 
 export default defineComponent({
 	name: "AppearanceSettings",
 	components: {
+		SettingCard,
 		SettingToggle,
 	},
 	setup() {

@@ -1,47 +1,50 @@
 <template>
 	<div>
 		<!-- Push notifications -->
-		<div v-if="!store.state.serverConfiguration?.public" class="setting-card">
-			<h2 class="setting-card-title">Push notifications</h2>
-			<div class="setting-row-description" style="margin-bottom: 8px">
-				Receive notifications even when The Lounge is not open
+		<SettingCard
+			v-if="!store.state.serverConfiguration?.public"
+			title="Push notifications"
+		>
+			<div class="setting-action-row">
+				<div class="setting-card-intro">
+					Receive notifications even when The Lounge is not open
+				</div>
+				<button
+					id="pushNotifications"
+					type="button"
+					class="btn btn-small"
+					:disabled="
+						store.state.pushNotificationState !== 'supported' &&
+						store.state.pushNotificationState !== 'subscribed'
+					"
+					@click="onPushButtonClick"
+				>
+					<template v-if="store.state.pushNotificationState === 'subscribed'">
+						Unsubscribe from push notifications
+					</template>
+					<template v-else-if="store.state.pushNotificationState === 'loading'">
+						Loading…
+					</template>
+					<template v-else> Subscribe to push notifications </template>
+				</button>
+				<div
+					v-if="store.state.pushNotificationState === 'nohttps'"
+					class="setting-info-panel error"
+				>
+					<strong>Warning:</strong> Push notifications are only supported over HTTPS
+					connections.
+				</div>
+				<div
+					v-if="store.state.pushNotificationState === 'unsupported'"
+					class="setting-info-panel error"
+				>
+					<strong>Warning:</strong> Push notifications are not supported by your browser.
+				</div>
 			</div>
-			<button
-				id="pushNotifications"
-				type="button"
-				class="btn"
-				:disabled="
-					store.state.pushNotificationState !== 'supported' &&
-					store.state.pushNotificationState !== 'subscribed'
-				"
-				@click="onPushButtonClick"
-			>
-				<template v-if="store.state.pushNotificationState === 'subscribed'">
-					Unsubscribe from push notifications
-				</template>
-				<template v-else-if="store.state.pushNotificationState === 'loading'">
-					Loading…
-				</template>
-				<template v-else> Subscribe to push notifications </template>
-			</button>
-			<div
-				v-if="store.state.pushNotificationState === 'nohttps'"
-				class="setting-info-panel error"
-			>
-				<strong>Warning:</strong> Push notifications are only supported over HTTPS
-				connections.
-			</div>
-			<div
-				v-if="store.state.pushNotificationState === 'unsupported'"
-				class="setting-info-panel error"
-			>
-				<strong>Warning:</strong> Push notifications are not supported by your browser.
-			</div>
-		</div>
+		</SettingCard>
 
 		<!-- Browser notifications & sound -->
-		<div class="setting-card">
-			<h2 class="setting-card-title">Notifications</h2>
+		<SettingCard title="Notifications">
 			<SettingToggle
 				name="desktopNotifications"
 				label="Browser notifications"
@@ -84,11 +87,13 @@
 				description="Send a notification for every message, not just mentions"
 				:checked="store.state.settings.notifyAllMessages"
 			/>
-		</div>
+		</SettingCard>
 
 		<!-- Highlights -->
-		<div v-if="!store.state.serverConfiguration?.public" class="setting-card">
-			<h2 class="setting-card-title">Highlights</h2>
+		<SettingCard
+			v-if="!store.state.serverConfiguration?.public"
+			title="Highlights"
+		>
 			<div>
 				<label for="highlights" class="setting-row-text">
 					<div class="setting-row-label">Custom highlights</div>
@@ -123,37 +128,25 @@
 					placeholder="e.g. bot, service"
 				/>
 			</div>
-		</div>
+		</SettingCard>
 	</div>
 </template>
 
 <script lang="ts">
-import {computed, defineComponent} from "vue";
+import {defineComponent} from "vue";
 import {useStore} from "../../js/store";
 import webpush from "../../js/webpush";
+import SettingCard from "./SettingCard.vue";
 import SettingToggle from "./SettingToggle.vue";
 
 export default defineComponent({
 	name: "NotificationSettings",
 	components: {
+		SettingCard,
 		SettingToggle,
 	},
 	setup() {
 		const store = useStore();
-
-		const isIOS = computed(
-			() =>
-				[
-					"iPad Simulator",
-					"iPhone Simulator",
-					"iPod Simulator",
-					"iPad",
-					"iPhone",
-					"iPod",
-				].includes(navigator.platform) ||
-				// iPad on iOS 13 detection
-				(navigator.userAgent.includes("Mac") && "ontouchend" in document)
-		);
 
 		const playNotification = () => {
 			const pop = new Audio();
@@ -168,7 +161,6 @@ export default defineComponent({
 		};
 
 		return {
-			isIOS,
 			store,
 			playNotification,
 			onPushButtonClick,

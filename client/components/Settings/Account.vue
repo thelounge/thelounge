@@ -1,16 +1,16 @@
 <template>
 	<div>
 		<!-- Change password -->
-		<div
+		<SettingCard
 			v-if="
 				!store.state.serverConfiguration?.public &&
 				!store.state.serverConfiguration?.ldapEnabled
 			"
-			class="setting-card"
+			title="Change password"
+			title-id="label-change-password"
 			role="group"
 			aria-labelledby="label-change-password"
 		>
-			<h2 id="label-change-password" class="setting-card-title">Change password</h2>
 			<div class="password-container">
 				<label for="current-password" class="sr-only"> Enter current password </label>
 				<RevealPassword v-slot:default="slotProps">
@@ -66,16 +66,18 @@
 				{{ passwordErrors[passwordChangeStatus.error] }}
 			</div>
 			<div>
-				<button type="submit" class="btn" @click.prevent="changePassword">
+				<button type="submit" class="btn btn-small" @click.prevent="changePassword">
 					Change password
 				</button>
 			</div>
-		</div>
+		</SettingCard>
 
 		<!-- Sessions -->
-		<div v-if="!store.state.serverConfiguration?.public" class="setting-card" role="group">
-			<h2 class="setting-card-title">Sessions</h2>
-
+		<SettingCard
+			v-if="!store.state.serverConfiguration?.public"
+			title="Sessions"
+			role="group"
+		>
 			<h3>Current session</h3>
 			<Session v-if="currentSession" :session="currentSession" />
 
@@ -99,7 +101,7 @@
 				:key="session.token"
 				:session="session"
 			/>
-		</div>
+		</SettingCard>
 	</div>
 </template>
 
@@ -107,6 +109,7 @@
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
+import SettingCard from "./SettingCard.vue";
 import {computed, defineComponent, onMounted, ref} from "vue";
 import {useStore} from "../../js/store";
 
@@ -115,6 +118,7 @@ export default defineComponent({
 	components: {
 		RevealPassword,
 		Session,
+		SettingCard,
 	},
 	setup() {
 		const store = useStore();

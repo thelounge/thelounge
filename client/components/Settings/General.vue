@@ -1,40 +1,37 @@
 <template>
 	<div>
 		<!-- Native app -->
-		<div v-if="canRegisterProtocol || hasInstallPromptEvent" class="setting-card">
-			<h2 class="setting-card-title">Native app</h2>
+		<SettingCard v-if="canRegisterProtocol || hasInstallPromptEvent" title="Native app">
 			<div v-if="hasInstallPromptEvent" class="setting-action-row">
-				<div class="setting-row-description" style="margin-bottom: 8px">
+				<div class="setting-card-intro">
 					Install The Lounge as a standalone app on your device
 				</div>
-				<button type="button" class="btn" @click.prevent="nativeInstallPrompt">
+				<button type="button" class="btn btn-small" @click.prevent="nativeInstallPrompt">
 					Add to Home screen
 				</button>
 			</div>
 			<div v-if="canRegisterProtocol" class="setting-action-row">
-				<div class="setting-row-description" style="margin-bottom: 8px">
+				<div class="setting-card-intro">
 					Handle irc:// links directly in The Lounge
 				</div>
-				<button type="button" class="btn" @click.prevent="registerProtocol">
+				<button type="button" class="btn btn-small" @click.prevent="registerProtocol">
 					Register as irc:// handler
 				</button>
 			</div>
-		</div>
+		</SettingCard>
 
 		<!-- File uploads -->
-		<div v-if="store.state.serverConfiguration?.fileUpload" class="setting-card">
-			<h2 class="setting-card-title">File uploads</h2>
+		<SettingCard v-if="store.state.serverConfiguration?.fileUpload" title="File uploads">
 			<SettingToggle
 				name="uploadCanvas"
 				label="Strip image metadata"
 				description="Re-render images to remove EXIF data before uploading. May affect orientation in older browsers."
 				:checked="store.state.settings.uploadCanvas"
 			/>
-		</div>
+		</SettingCard>
 
 		<!-- Settings sync -->
-		<div v-if="!store.state.serverConfiguration?.public" class="setting-card">
-			<h2 class="setting-card-title">Settings sync</h2>
+		<SettingCard v-if="!store.state.serverConfiguration?.public" title="Settings sync">
 			<SettingToggle
 				name="syncSettings"
 				label="Sync settings across devices"
@@ -58,11 +55,10 @@
 					</p>
 				</div>
 			</template>
-		</div>
+		</SettingCard>
 
 		<!-- Away message -->
-		<div v-if="!store.state.serverConfiguration?.public" class="setting-card">
-			<h2 class="setting-card-title">Away message</h2>
+		<SettingCard v-if="!store.state.serverConfiguration?.public" title="Away message">
 			<label for="awayMessage" class="setting-row-text">
 				<div class="setting-row-description">
 					Automatically set this away message when The Lounge is not open
@@ -76,7 +72,7 @@
 				class="input"
 				placeholder="Away message"
 			/>
-		</div>
+		</SettingCard>
 	</div>
 </template>
 
@@ -84,6 +80,7 @@
 import {computed, defineComponent, onMounted, ref} from "vue";
 import {useStore} from "../../js/store";
 import {BeforeInstallPromptEvent} from "../../js/types";
+import SettingCard from "./SettingCard.vue";
 import SettingToggle from "./SettingToggle.vue";
 
 let installPromptEvent: BeforeInstallPromptEvent | null = null;
@@ -96,6 +93,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
 export default defineComponent({
 	name: "GeneralSettings",
 	components: {
+		SettingCard,
 		SettingToggle,
 	},
 	setup() {

@@ -3,22 +3,32 @@
 /* ── Cards ───────────────────────────────────────────────── */
 
 .setting-card {
+	background-color: #f7f8f9;
 	background-color: color-mix(in srgb, var(--body-bg-color) 6%, var(--window-bg-color));
-	border: 1px solid color-mix(in srgb, var(--body-color) 8%, var(--window-bg-color));
+	border: 1px solid #edeef0;
+	border-color: color-mix(in srgb, var(--body-color) 8%, var(--window-bg-color));
 	border-radius: 8px;
-	padding: 16px 20px;
+	padding: 10px 20px 16px;
 	margin-bottom: 16px;
 }
 
 .setting-card-title {
-	font-size: 13px;
+	font-size: 11px;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	color: var(--body-color-muted);
-	margin: 0 0 12px;
+	margin: 0 0 8px;
 	padding: 0;
 	border: none;
+}
+
+/* Description used as a card intro (outside a setting-row) */
+.setting-card-intro {
+	font-size: 13px;
+	color: var(--body-color-muted);
+	line-height: 1.4;
+	margin-bottom: 8px;
 }
 
 /* ── Setting rows ────────────────────────────────────────── */
@@ -32,7 +42,8 @@
 }
 
 .setting-row + .setting-row {
-	border-top: 1px solid color-mix(in srgb, var(--body-color) 6%, var(--window-bg-color));
+	border-top: 1px solid #f0f1f2;
+	border-top-color: color-mix(in srgb, var(--body-color) 6%, var(--window-bg-color));
 }
 
 .setting-row-text {
@@ -83,6 +94,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
+	background-color: #ccc;
 	background-color: color-mix(in srgb, var(--body-color) 20%, var(--window-bg-color));
 	border-radius: 11px;
 	transition: background-color 0.2s;
@@ -132,10 +144,10 @@
 
 .setting-radio-pills {
 	display: flex;
-	gap: 0;
 	border-radius: 6px;
 	overflow: hidden;
-	border: 1px solid color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
+	border: 1px solid #ddd;
+	border-color: color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
 	margin-top: 8px;
 }
 
@@ -168,7 +180,8 @@
 }
 
 .setting-radio-pill + .setting-radio-pill .pill-label {
-	border-left: 1px solid color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
+	border-left: 1px solid #ddd;
+	border-left-color: color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
 }
 
 .setting-radio-pill input:checked + .pill-label {
@@ -198,7 +211,8 @@
 }
 
 .setting-action-row + .setting-action-row {
-	border-top: 1px solid color-mix(in srgb, var(--body-color) 6%, var(--window-bg-color));
+	border-top: 1px solid #f0f1f2;
+	border-top-color: color-mix(in srgb, var(--body-color) 6%, var(--window-bg-color));
 }
 
 .setting-action-row .btn {
@@ -216,7 +230,9 @@
 }
 
 .setting-info-panel.warning {
+	background-color: #fdf6ec;
 	background-color: color-mix(in srgb, #f0ad4e 12%, var(--window-bg-color));
+	color: #8a6d3b;
 	color: color-mix(in srgb, #8a6d3b 80%, var(--body-color));
 }
 
@@ -240,13 +256,13 @@
 /* ── Override old settings styles ─────────────────────────── */
 
 #settings h2 {
-	border-bottom: none;
-	font-size: 13px;
+	font-size: 11px;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	color: var(--body-color-muted);
-	margin: 0 0 12px;
+	border-bottom: none;
+	margin: 0 0 8px;
 	padding: 0;
 }
 
@@ -265,6 +281,12 @@
 	margin-bottom: 0;
 }
 
+/* Buttons following inputs or password fields need breathing room */
+#settings .setting-card .password-container + .feedback,
+#settings .setting-card .password-container ~ div > .btn {
+	margin-top: 12px;
+}
+
 /* ── Session list inside cards ───────────────────────────── */
 
 #settings .setting-card h3 {
@@ -280,9 +302,45 @@
 
 /* ── Responsive ──────────────────────────────────────────── */
 
+@media screen and (max-width: calc(768px + 320px)) {
+	/* On mobile, the nav becomes static — align it as horizontal pills */
+	.settings-menu {
+		padding-bottom: 8px;
+		margin-bottom: 8px;
+		border-bottom: 1px solid #edeef0;
+		border-bottom-color: color-mix(in srgb, var(--body-color) 8%, var(--window-bg-color));
+	}
+
+	.settings-menu ul {
+		display: flex;
+		gap: 4px;
+		justify-content: center;
+	}
+
+	.settings-menu li {
+		font-size: 14px;
+	}
+
+	.settings-menu button {
+		padding: 6px 14px;
+		border-radius: 6px;
+		text-align: center;
+	}
+
+	.settings-menu button.active {
+		background-color: var(--button-color);
+		color: var(--button-text-color-hover);
+	}
+
+	/* Hide the icon pseudo-elements on mobile pills */
+	.settings-menu button::before {
+		display: none;
+	}
+}
+
 @media screen and (max-width: 480px) {
 	.setting-card {
-		padding: 12px 14px;
+		padding: 8px 14px 12px;
 	}
 
 	.setting-radio-pills {
@@ -291,6 +349,7 @@
 
 	.setting-radio-pill + .setting-radio-pill .pill-label {
 		border-left: none;
-		border-top: 1px solid color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
+		border-top: 1px solid #ddd;
+		border-top-color: color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
 	}
 }

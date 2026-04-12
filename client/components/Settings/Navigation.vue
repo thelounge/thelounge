@@ -29,6 +29,10 @@
 		margin: 0 auto;
 		padding: 0 15px;
 	}
+
+	.settings-menu > h2 {
+		display: none;
+	}
 }
 
 .settings-menu ul {
