@@ -18,8 +18,9 @@ describe("public folder", function () {
 		expect(fs.existsSync(path.join(publicFolder, "thelounge.webmanifest"))).to.be.true;
 	});
 
-	it("audio files are copied", function () {
-		expect(fs.existsSync(path.join(publicFolder, "audio", "pop.wav"))).to.be.true;
+	it("audio files are bundled as assets", function () {
+		const assets = fs.readdirSync(path.join(publicFolder, "assets"));
+		expect(assets.some((f: string) => f.includes("pop") && f.endsWith(".wav"))).to.be.true;
 	});
 
 	it("index HTML is built with Vite-injected assets", function () {
