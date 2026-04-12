@@ -82,9 +82,6 @@
     "web-push": "3.4.5",
     "yarn": "1.22.22"
   },
-  "optionalDependencies": {
-    "sqlite3": "6.0.1"
-  },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.15.4",
     "@textcomplete/core": "0.1.10",

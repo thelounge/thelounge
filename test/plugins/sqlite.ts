@@ -11,7 +11,7 @@ import MessageStorage, {
 	necessaryMigrations,
 	rollbacks,
 } from "../../server/plugins/messageStorage/sqlite";
-import sqlite3 from "sqlite3";
+import {DatabaseSync} from "node:sqlite";
 import {DeletionRequest} from "../../server/plugins/messageStorage/types";
 
 const orig_schema = [
@@ -50,44 +50,26 @@ const v1_dummy_messages = [
 ];
 
 describe("SQLite migrations", function () {
-	let db: sqlite3.Database;
+	let db: DatabaseSync;
 
-	function serialize_run(stmt: string, ...params: any[]): Promise<void> {
-		return new Promise((resolve, reject) => {
-			db.serialize(() => {
-				db.run(stmt, params, (err) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve();
-				});
-			});
-		});
-	}
-
-	beforeAll(async function () {
-		db = new sqlite3.Database(":memory:");
+	beforeAll(function () {
+		db = new DatabaseSync(":memory:");
 
 		for (const stmt of orig_schema) {
-			await serialize_run(stmt);
+			db.exec(stmt);
 		}
 
+		const insert = db.prepare(
+			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)"
+		);
+
 		for (const msg of v1_dummy_messages) {
-			await serialize_run(
-				"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
-				msg.network,
-				msg.channel,
-				msg.time,
-				msg.type,
-				msg.msg
-			);
+			insert.run(msg.network, msg.channel, msg.time, msg.type, msg.msg);
 		}
 	});
 
-	afterAll(async function () {
-		await new Promise<void>((resolve) => db.close(() => resolve()));
+	afterAll(function () {
+		db.close();
 	});
 
 	it("has a down migration for every migration", function () {
@@ -97,20 +79,20 @@ describe("SQLite migrations", function () {
 		);
 	});
 
-	it("has working up-migrations", async function () {
+	it("has working up-migrations", function () {
 		const to_execute = necessaryMigrations(v1_schema_version);
 		expect(to_execute.length).to.eq(migrations.length);
-		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+		db.exec("BEGIN EXCLUSIVE TRANSACTION");
 
 		for (const stmt of to_execute.map((m) => m.stmts).flat()) {
-			await serialize_run(stmt);
+			db.exec(stmt);
 		}
 
-		await serialize_run("COMMIT TRANSACTION");
+		db.exec("COMMIT TRANSACTION");
 	});
 
-	it("has working down-migrations", async function () {
-		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+	it("has working down-migrations", function () {
+		db.exec("BEGIN EXCLUSIVE TRANSACTION");
 
 		for (const rollback of rollbacks.slice().reverse()) {
 			if (rollback.rollback_forbidden) {
@@ -120,35 +102,34 @@ describe("SQLite migrations", function () {
 			}
 
 			for (const stmt of rollback.stmts) {
-				await serialize_run(stmt);
+				db.exec(stmt);
 			}
 		}
 
-		await serialize_run("COMMIT TRANSACTION");
+		db.exec("COMMIT TRANSACTION");
 	});
 });
 
 describe("SQLite unit tests", function () {
 	let store: MessageStorage;
 
-	beforeEach(async function () {
+	beforeEach(function () {
 		store = new MessageStorage("testUser");
-		await store._enable(":memory:");
-		store.initDone.resolve();
+		store._enable(":memory:");
 	});
 
-	afterEach(async function () {
-		await store.close();
+	afterEach(function () {
+		store.close();
 	});
 
-	it("deletes messages when asked to", async function () {
+	it("deletes messages when asked to", function () {
 		const baseDate = new Date();
 
 		const net = {uuid: "testnet"} as any;
 		const chan = {name: "#channel"} as any;
 
 		for (let i = 0; i < 14; ++i) {
-			await store.index(
+			store.index(
 				net,
 				chan,
 				new Msg({
@@ -165,29 +146,29 @@ describe("SQLite unit tests", function () {
 			olderThanDays: 2,
 		};
 
-		let deleted = await store.deleteMessages(delReq);
+		let deleted = store.deleteMessages(delReq);
 		expect(deleted).to.equal(limit, "number of deleted messages doesn't match");
 
 		let id = 0;
-		let messages = await store.getMessages(net, chan, () => id++);
+		let messages = store.getMessages(net, chan, () => id++);
 		expect(messages.find((m) => m.text === "msg 13")).to.be.undefined; // oldest gets deleted first
 
 		// let's test if it properly cleans now
 		delReq.limit = 100;
-		deleted = await store.deleteMessages(delReq);
+		deleted = store.deleteMessages(delReq);
 		expect(deleted).to.equal(11, "number of deleted messages doesn't match");
-		messages = await store.getMessages(net, chan, () => id++);
+		messages = store.getMessages(net, chan, () => id++);
 		expect(messages.map((m) => m.text)).to.have.ordered.members(["msg 1", "msg 0"]);
 	});
 
-	it("deletes only the types it should", async function () {
+	it("deletes only the types it should", function () {
 		const baseDate = new Date();
 
 		const net = {uuid: "testnet"} as any;
 		const chan = {name: "#channel"} as any;
 
 		for (let i = 0; i < 6; ++i) {
-			await store.index(
+			store.index(
 				net,
 				chan,
 				new Msg({
@@ -211,11 +192,11 @@ describe("SQLite unit tests", function () {
 			olderThanDays: 0,
 		};
 
-		let deleted = await store.deleteMessages(delReq);
+		let deleted = store.deleteMessages(delReq);
 		expect(deleted).to.equal(3, "number of deleted messages doesn't match");
 
 		let id = 0;
-		let messages = await store.getMessages(net, chan, () => id++);
+		let messages = store.getMessages(net, chan, () => id++);
 		expect(messages.map((m) => m.type)).to.have.ordered.members([
 			MessageType.MESSAGE,
 			MessageType.PART,
@@ -227,9 +208,9 @@ describe("SQLite unit tests", function () {
 			MessageType.PART,
 			MessageType.MESSAGE,
 		];
-		deleted = await store.deleteMessages(delReq);
+		deleted = store.deleteMessages(delReq);
 		expect(deleted).to.equal(2, "number of deleted messages doesn't match");
-		messages = await store.getMessages(net, chan, () => id++);
+		messages = store.getMessages(net, chan, () => id++);
 		expect(messages.map((m) => m.type)).to.have.ordered.members([MessageType.AWAY]);
 	});
 });
@@ -238,88 +219,53 @@ describe("SQLite Message Storage", function () {
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
 
-	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.get(stmt, params, (err, row) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(row);
-				});
-			});
-		});
-	}
-
-	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.all(stmt, params, (err, rows) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(rows);
-				});
-			});
-		});
-	}
-
-	beforeAll(async function () {
+	beforeAll(function () {
 		store = new MessageStorage("testUser");
 
 		// Delete database file from previous test run
 		if (fs.existsSync(expectedPath)) {
-			await new Promise<void>((resolve, reject) =>
-				fs.unlink(expectedPath, (err) => (err ? reject(err) : resolve()))
-			);
+			fs.unlinkSync(expectedPath);
 		}
 	});
 
-	afterAll(async function () {
+	afterAll(function () {
 		// After tests run, remove the logs folder
 		// so we return to the clean state
 		fs.unlinkSync(expectedPath);
-		await new Promise<void>((resolve, reject) =>
-			fs.rmdir(path.join(Config.getHomePath(), "logs"), (err) =>
-				err ? reject(err) : resolve()
-			)
-		);
+		fs.rmdirSync(path.join(Config.getHomePath(), "logs"));
 	});
 
-	it("should create database file", async function () {
+	it("should create database file", function () {
 		expect(store.isEnabled).to.be.false;
 		expect(fs.existsSync(expectedPath)).to.be.false;
 
-		await store.enable();
+		store.enable();
 		expect(store.isEnabled).to.be.true;
 	});
 
-	it("should resolve an empty array when disabled", async function () {
+	it("should resolve an empty array when disabled", function () {
 		store.isEnabled = false;
-		const messages = await store.getMessages(null as any, null as any, null as any);
+		const messages = store.getMessages(null as any, null as any, null as any);
 		expect(messages).to.be.empty;
 		store.isEnabled = true;
 	});
 
-	it("should insert schema version to options table", async function () {
-		const row = await db_get_one("SELECT value FROM options WHERE name = 'schema_version'");
+	it("should insert schema version to options table", function () {
+		const row = store.database
+			.prepare("SELECT value FROM options WHERE name = 'schema_version'")
+			.get() as {value: string};
 		expect(row.value).to.equal(currentSchemaVersion.toString());
 	});
 
-	it("should insert migrations", async function () {
-		const row = await db_get_one(
-			"SELECT id, version FROM migrations WHERE version = ?",
-			currentSchemaVersion
-		);
+	it("should insert migrations", function () {
+		const row = store.database
+			.prepare("SELECT id, version FROM migrations WHERE version = ?")
+			.get(currentSchemaVersion) as {id: number; version: number} | undefined;
 		expect(row).to.not.be.undefined;
 	});
 
-	it("should store a message", async function () {
-		await store.index(
+	it("should store a message", function () {
+		store.index(
 			{
 				uuid: "this-is-a-network-guid",
 			} as any,
@@ -333,9 +279,9 @@ describe("SQLite Message Storage", function () {
 		);
 	});
 
-	it("should retrieve previously stored message", async function () {
+	it("should retrieve previously stored message", function () {
 		let msgid = 0;
-		const messages = await store.getMessages(
+		const messages = store.getMessages(
 			{
 				uuid: "this-is-a-network-guid",
 			} as any,
@@ -351,14 +297,14 @@ describe("SQLite Message Storage", function () {
 		expect(msg.time.getTime()).to.equal(123456789);
 	});
 
-	it("should retrieve latest LIMIT messages in order", async function () {
+	it("should retrieve latest LIMIT messages in order", function () {
 		const originalMaxHistory = Config.values.maxHistory;
 
 		try {
 			Config.values.maxHistory = 2;
 
 			for (let i = 0; i < 200; ++i) {
-				await store.index(
+				store.index(
 					{uuid: "retrieval-order-test-network"} as any,
 					{name: "#channel"} as any,
 					new Msg({
@@ -369,7 +315,7 @@ describe("SQLite Message Storage", function () {
 			}
 
 			let msgId = 0;
-			const messages = await store.getMessages(
+			const messages = store.getMessages(
 				{uuid: "retrieval-order-test-network"} as any,
 				{name: "#channel"} as any,
 				() => msgId++
@@ -381,13 +327,13 @@ describe("SQLite Message Storage", function () {
 		}
 	});
 
-	it("should search messages", async function () {
+	it("should search messages", function () {
 		const originalMaxHistory = Config.values.maxHistory;
 
 		try {
 			Config.values.maxHistory = 2;
 
-			const search = await store.search({
+			const search = store.search({
 				searchTerm: "msg",
 				networkUuid: "retrieval-order-test-network",
 				channelName: "",
@@ -406,9 +352,9 @@ describe("SQLite Message Storage", function () {
 		}
 	});
 
-	it("should search messages with escaped wildcards", async function () {
-		async function assertResults(query: string, expected: string[]) {
-			const search = await store.search({
+	it("should search messages with escaped wildcards", function () {
+		function assertResults(query: string, expected: string[]) {
+			const search = store.search({
 				searchTerm: query,
 				networkUuid: "this-is-a-network-guid2",
 				channelName: "",
@@ -422,7 +368,7 @@ describe("SQLite Message Storage", function () {
 		try {
 			Config.values.maxHistory = 3;
 
-			await store.index(
+			store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -431,7 +377,7 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			await store.index(
+			store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -440,7 +386,7 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			await store.index(
+			store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -449,20 +395,20 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			await assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]);
-			await assertResults("%", ["foo % bar _ baz"]);
-			await assertResults("foo % bar ", ["foo % bar _ baz"]);
-			await assertResults("_", ["foo % bar _ baz"]);
-			await assertResults("bar _ baz", ["foo % bar _ baz"]);
-			await assertResults("%%", []);
-			await assertResults("@%", []);
-			await assertResults("@", ["bar @ baz"]);
+			assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]);
+			assertResults("%", ["foo % bar _ baz"]);
+			assertResults("foo % bar ", ["foo % bar _ baz"]);
+			assertResults("_", ["foo % bar _ baz"]);
+			assertResults("bar _ baz", ["foo % bar _ baz"]);
+			assertResults("%%", []);
+			assertResults("@%", []);
+			assertResults("@", ["bar @ baz"]);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 
-	it("should be able to downgrade", async function () {
+	it("should be able to downgrade", function () {
 		for (const rollback of rollbacks.slice().reverse()) {
 			if (rollback.rollback_forbidden) {
 				throw Error(
@@ -470,13 +416,13 @@ describe("SQLite Message Storage", function () {
 				);
 			}
 
-			const new_version = await store.downgrade_to(rollback.version);
+			const new_version = store.downgrade_to(rollback.version);
 			expect(new_version).to.equal(rollback.version);
 		}
 	});
 
-	it("should close database", async function () {
-		await store.close();
+	it("should close database", function () {
+		store.close();
 		expect(fs.existsSync(expectedPath)).to.be.true;
 	});
 });
