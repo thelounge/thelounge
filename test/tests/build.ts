@@ -7,8 +7,8 @@ describe("public folder", function () {
 
 	it("font awesome files are bundled", function () {
 		const assets = fs.readdirSync(path.join(publicFolder, "assets"));
-		expect(assets.some((f: string) => f.includes("fa-solid-900") && f.endsWith(".woff2"))).to
-			.be.true;
+		expect(assets.some((f: string) => f.includes("fa-solid-900") && f.endsWith(".woff2"))).to.be
+			.true;
 	});
 
 	it("files in root folder are copied", function () {

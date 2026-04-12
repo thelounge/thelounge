@@ -405,10 +405,7 @@ function getBaseHtml(): string {
 		return cachedHtml;
 	}
 
-	cachedHtml = fs.readFileSync(
-		Utils.getFileFromRelativeToRoot("public", "index.html"),
-		"utf-8"
-	);
+	cachedHtml = fs.readFileSync(Utils.getFileFromRelativeToRoot("public", "index.html"), "utf-8");
 
 	return cachedHtml;
 }
@@ -915,7 +912,6 @@ function getClientConfiguration(): SharedConfiguration | LockedSharedConfigurati
 
 	return result;
 }
-
 
 function performAuthentication(this: Socket, data: AuthPerformData) {
 	if (!_.isPlainObject(data)) {
