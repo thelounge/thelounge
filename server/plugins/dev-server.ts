@@ -18,6 +18,7 @@ export default async (app: express.Application) => {
 
 	app.use(vite.middlewares);
 
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	app.get("/", async (req, res) => {
 		const rawHtml = fs.readFileSync(fromRoot("client", "index.html"), "utf-8");
 		const html = await vite.transformIndexHtml(req.url, rawHtml);
