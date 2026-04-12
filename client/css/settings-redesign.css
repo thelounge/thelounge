@@ -1,6 +1,4 @@
-/* Settings page redesign — cards, toggles, setting rows, radio pills */
-
-/* ── Cards ───────────────────────────────────────────────── */
+/* Cards */
 
 .setting-card {
 	background-color: #f7f8f9;
@@ -18,12 +16,12 @@
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	color: var(--body-color-muted);
-	margin: 0 0 8px;
+	margin: 0 0 4px;
 	padding: 0;
 	border: none;
 }
 
-/* Description used as a card intro (outside a setting-row) */
+/* Card intro text (outside a setting-row) */
 .setting-card-intro {
 	font-size: 13px;
 	color: var(--body-color-muted);
@@ -31,7 +29,7 @@
 	margin-bottom: 8px;
 }
 
-/* ── Setting rows ────────────────────────────────────────── */
+/* Setting rows */
 
 .setting-row {
 	display: flex;
@@ -65,7 +63,7 @@
 	margin-top: 2px;
 }
 
-/* ── Toggle switch (CSS-only) ────────────────────────────── */
+/* Toggle switch */
 
 .setting-toggle {
 	position: relative;
@@ -76,7 +74,6 @@
 }
 
 .setting-toggle input[type="checkbox"] {
-	/* Keep accessible but visually hidden */
 	opacity: 0;
 	width: 100%;
 	height: 100%;
@@ -135,12 +132,11 @@
 	cursor: not-allowed;
 }
 
-/* Dim the entire row when the toggle is disabled */
 .setting-row:has(.setting-toggle input:disabled) .setting-row-text {
 	opacity: 0.5;
 }
 
-/* ── Radio pills (status messages) ───────────────────────── */
+/* Radio pills */
 
 .setting-radio-pills {
 	display: flex;
@@ -193,7 +189,7 @@
 	box-shadow: inset 0 0 0 2px rgb(132 206 136 / 50%);
 }
 
-/* ── Text inputs inside setting cards ────────────────────── */
+/* Text inputs inside cards */
 
 .setting-card .input {
 	margin-bottom: 0;
@@ -204,7 +200,7 @@
 	margin-top: 8px;
 }
 
-/* ── Inline action row (buttons inside cards) ────────────── */
+/* Action rows */
 
 .setting-action-row {
 	padding: 10px 0;
@@ -219,7 +215,7 @@
 	margin-bottom: 0;
 }
 
-/* ── Info/warning panels inside cards ────────────────────── */
+/* Info/warning panels */
 
 .setting-info-panel {
 	padding: 10px 12px;
@@ -253,7 +249,7 @@
 	margin-bottom: 0;
 }
 
-/* ── Override old settings styles ─────────────────────────── */
+/* Override old .window h2 styles */
 
 #settings h2 {
 	font-size: 11px;
@@ -262,16 +258,15 @@
 	letter-spacing: 0.5px;
 	color: var(--body-color-muted);
 	border-bottom: none;
-	margin: 0 0 8px;
+	margin: 0 0 4px;
 	padding: 0;
 }
 
-/* First card after navigation shouldn't have extra top margin */
 #settings .container > form > div > .setting-card:first-child {
 	margin-top: 0;
 }
 
-/* ── Password form overrides ─────────────────────────────── */
+/* Password form */
 
 #settings .setting-card .password-container {
 	margin-bottom: 8px;
@@ -281,13 +276,12 @@
 	margin-bottom: 0;
 }
 
-/* Buttons following inputs or password fields need breathing room */
 #settings .setting-card .password-container + .feedback,
 #settings .setting-card .password-container ~ div > .btn {
 	margin-top: 12px;
 }
 
-/* ── Session list inside cards ───────────────────────────── */
+/* Session list */
 
 #settings .setting-card h3 {
 	font-size: 14px;
@@ -300,10 +294,9 @@
 	margin-top: 0;
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
+/* Responsive - mobile nav */
 
 @media screen and (max-width: calc(768px + 320px)) {
-	/* On mobile, the nav becomes static — align it as horizontal pills */
 	.settings-menu {
 		padding-bottom: 8px;
 		margin-bottom: 8px;
@@ -332,11 +325,12 @@
 		color: var(--button-text-color-hover);
 	}
 
-	/* Hide the icon pseudo-elements on mobile pills */
 	.settings-menu button::before {
 		display: none;
 	}
 }
+
+/* Responsive - small screens */
 
 @media screen and (max-width: 480px) {
 	.setting-card {

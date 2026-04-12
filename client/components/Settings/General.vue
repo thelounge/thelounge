@@ -59,19 +59,22 @@
 
 		<!-- Away message -->
 		<SettingCard v-if="!store.state.serverConfiguration?.public" title="Away message">
-			<label for="awayMessage" class="setting-row-text">
-				<div class="setting-row-description">
-					Automatically set this away message when The Lounge is not open
-				</div>
-			</label>
-			<input
-				id="awayMessage"
-				:value="store.state.settings.awayMessage"
-				type="text"
-				name="awayMessage"
-				class="input"
-				placeholder="Away message"
-			/>
+			<div>
+				<label for="awayMessage" class="setting-row-text">
+					<div class="setting-row-label">Away message</div>
+					<div class="setting-row-description">
+						Automatically set when The Lounge is not open
+					</div>
+				</label>
+				<input
+					id="awayMessage"
+					:value="store.state.settings.awayMessage"
+					type="text"
+					name="awayMessage"
+					class="input"
+					placeholder="Away message"
+				/>
+			</div>
 		</SettingCard>
 	</div>
 </template>
