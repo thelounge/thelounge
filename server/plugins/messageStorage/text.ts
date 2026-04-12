@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import {mkdirSync, appendFileSync} from "fs";
 import path from "path";
 import filenamify from "filenamify";
