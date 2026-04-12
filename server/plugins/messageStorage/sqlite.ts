@@ -114,9 +114,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	_enable(connection_string: string) {
-		this.database = new DatabaseSync(connection_string, {
-			enableForeignKeyConstraints: true,
-		});
+		this.database = new DatabaseSync(connection_string);
 
 		try {
 			this.run_migrations();
