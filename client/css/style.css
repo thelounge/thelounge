@@ -796,6 +796,16 @@ background on hover (unless active) */
 	overflow: hidden;
 }
 
+.channel-list-item .network-icon {
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+	margin-right: 5px;
+	object-fit: contain;
+	border-radius: 2px;
+	align-self: center;
+}
+
 .channel-list-item[data-type="lobby"]:hover,
 .channel-list-item[data-type="lobby"].active {
 	color: #c0f8c3;

@@ -12,6 +12,14 @@
 		</button>
 		<span v-else class="collapse-network" />
 		<div class="lobby-wrap">
+			<img
+				v-if="network.serverOptions.DRAFT_ICON"
+				:src="network.serverOptions.DRAFT_ICON"
+				:alt="channel.name + ' icon'"
+				class="network-icon"
+				loading="lazy"
+				@error="($event.target as HTMLImageElement).style.display = 'none'"
+			/>
 			<span :title="channel.name" class="name">{{ channel.name }}</span>
 			<span
 				v-if="network.status.connected && !network.status.secure"

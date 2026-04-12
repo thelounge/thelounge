@@ -128,6 +128,7 @@ class Network {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
+		DRAFT_ICON: string;
 	};
 
 	// TODO: this is only available on export
@@ -162,6 +163,7 @@ class Network {
 					{symbol: "+", mode: "v"},
 				]),
 				NETWORK: "",
+				DRAFT_ICON: "",
 			},
 
 			proxyHost: "",

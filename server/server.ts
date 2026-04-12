@@ -384,7 +384,7 @@ function addSecurityHeaders(_req: Request, res: Response, next: NextFunction) {
 	// - https://user-images.githubusercontent.com is where we currently push our changelog screenshots
 	// - data: is required for the HTML5 video player
 	if (Config.values.prefetchStorage || !Config.values.prefetch) {
-		policies.push("img-src 'self' data: https://user-images.githubusercontent.com");
+		policies.push("img-src 'self' data: https:");
 		policies.unshift("block-all-mixed-content");
 	} else {
 		policies.push("img-src http: https: data:");

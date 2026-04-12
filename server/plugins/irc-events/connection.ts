@@ -205,6 +205,14 @@ export default <IrcEventHandler>function (irc, network) {
 
 		network.serverOptions.NETWORK = data.options.NETWORK;
 
+		const draftIcon = data.options["DRAFT/ICON"];
+
+		if (typeof draftIcon === "string" && draftIcon.startsWith("https://")) {
+			network.serverOptions.DRAFT_ICON = draftIcon;
+		} else {
+			network.serverOptions.DRAFT_ICON = "";
+		}
+
 		client.emit("network:options", {
 			network: network.uuid,
 			serverOptions: network.serverOptions,
