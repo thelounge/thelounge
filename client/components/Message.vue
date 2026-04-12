@@ -39,8 +39,22 @@
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">*&nbsp;</span></span>
 			<span class="content" dir="auto">
+				<span
+					v-if="message.replyTo && !parentInHistory"
+					class="reply-context disabled tooltipped tooltipped-e"
+					aria-label="Original message is no longer in scrollback"
+				>
+					<span class="reply-context-icon" aria-hidden="true" />
+					<template v-if="message.replyToNick">
+						<span class="reply-context-nick">{{ message.replyToNick }}</span>
+						<span v-if="message.replyToText" class="reply-context-text">{{
+							message.replyToText
+						}}</span>
+					</template>
+					<span v-else class="reply-context-unknown">In reply to a message</span>
+				</span>
 				<div
-					v-if="message.replyTo"
+					v-else-if="message.replyTo"
 					class="reply-context"
 					role="button"
 					tabindex="0"
@@ -48,6 +62,7 @@
 					@keydown.enter.prevent="scrollToParent"
 					@keydown.space.prevent="scrollToParent"
 				>
+					<span class="reply-context-icon" aria-hidden="true" />
 					<template v-if="message.replyToNick">
 						<span class="reply-context-nick">{{ message.replyToNick }}</span>
 						<span v-if="message.replyToText" class="reply-context-text">{{
@@ -95,8 +110,22 @@
 				</template>
 			</span>
 			<span class="content" dir="auto">
+				<span
+					v-if="message.replyTo && !parentInHistory"
+					class="reply-context disabled tooltipped tooltipped-e"
+					aria-label="Original message is no longer in scrollback"
+				>
+					<span class="reply-context-icon" aria-hidden="true" />
+					<template v-if="message.replyToNick">
+						<span class="reply-context-nick">{{ message.replyToNick }}</span>
+						<span v-if="message.replyToText" class="reply-context-text">{{
+							message.replyToText
+						}}</span>
+					</template>
+					<span v-else class="reply-context-unknown">In reply to a message</span>
+				</span>
 				<div
-					v-if="message.replyTo"
+					v-else-if="message.replyTo"
 					class="reply-context"
 					role="button"
 					tabindex="0"
@@ -104,6 +133,7 @@
 					@keydown.enter.prevent="scrollToParent"
 					@keydown.space.prevent="scrollToParent"
 				>
+					<span class="reply-context-icon" aria-hidden="true" />
 					<template v-if="message.replyToNick">
 						<span class="reply-context-nick">{{ message.replyToNick }}</span>
 						<span v-if="message.replyToText" class="reply-context-text">{{
@@ -130,7 +160,9 @@
 			</span>
 		</template>
 		<div v-if="canReply && message.msgid" class="msg-actions">
-			<button class="msg-action-reply" aria-label="Reply" @click.stop="startReply" />
+			<span class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Reply"
+				><button class="msg-action-reply" aria-label="Reply" @click.stop="startReply"
+			/></span>
 		</div>
 	</div>
 </template>
@@ -203,6 +235,14 @@ export default defineComponent({
 			return (
 				t === MessageType.MESSAGE || t === MessageType.ACTION || t === MessageType.NOTICE
 			);
+		});
+
+		const parentInHistory = computed(() => {
+			if (!props.message.replyTo || !props.channel) {
+				return false;
+			}
+
+			return props.channel.messages.some((m) => m.msgid === props.message.replyTo);
 		});
 
 		const isAction = () => {
@@ -281,6 +321,7 @@ export default defineComponent({
 			messageTimeLocale,
 			messageComponent,
 			canReply,
+			parentInHistory,
 			isAction,
 			startReply,
 			scrollToParent,

@@ -1618,24 +1618,34 @@ textarea.input {
 	cursor: pointer;
 	width: fit-content;
 	max-width: 100%;
+	position: relative;
 }
 
-#chat .msg .reply-context::before {
+#chat .msg .reply-context-icon::before {
 	content: "\f3e5"; /* fa-reply icon */
 	font: normal normal normal 10px/1 FontAwesome;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	color: #b0b0b0;
+}
+
+#chat .msg .reply-context-icon {
 	flex-shrink: 0;
 }
 
-#chat .msg .reply-context:hover {
+#chat .msg .reply-context:not(.disabled):hover {
 	background: rgb(0 0 0 / 4%);
 	color: var(--body-color);
 }
 
-#chat .msg .reply-context:hover::before {
+#chat .msg .reply-context:not(.disabled):hover .reply-context-icon::before {
 	color: var(--body-color-muted);
+}
+
+#chat .msg .reply-context.disabled {
+	cursor: default;
+	opacity: 0.6;
+	overflow: visible;
 }
 
 #chat .msg .reply-context-nick {
@@ -1676,7 +1686,8 @@ textarea.input {
 	transition: opacity 0.1s;
 }
 
-#chat .msg:hover .msg-actions {
+#chat .msg:hover .msg-actions,
+#chat .msg .msg-actions:focus-within {
 	opacity: 1;
 	pointer-events: auto;
 }
@@ -1687,16 +1698,22 @@ textarea.input {
 	border-radius: 3px;
 	color: var(--body-color-muted);
 	cursor: pointer;
-	font-size: 10px;
-	width: 22px;
-	height: 18px;
+	font-size: 14px;
+	width: 26px;
+	height: 24px;
 	padding: 0;
 	line-height: 1;
 }
 
-#chat .msg .msg-actions button:hover {
+#chat .msg .msg-actions button:hover,
+#chat .msg .msg-actions button:focus-visible {
 	background: rgb(0 0 0 / 6%);
 	color: var(--body-color);
+}
+
+#chat .msg .msg-actions button:focus-visible {
+	outline: 2px solid var(--link-color);
+	outline-offset: -1px;
 }
 
 #chat .msg .msg-action-reply::before {
