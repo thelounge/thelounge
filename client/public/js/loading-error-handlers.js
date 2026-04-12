@@ -10,6 +10,10 @@
 (function () {
 	const msg = document.getElementById("loading-page-message");
 
+	if (msg) {
+		msg.style.display = "";
+	}
+
 	document.getElementById("loading-reload")?.addEventListener("click", () => location.reload());
 
 	const displayReload = () => {
