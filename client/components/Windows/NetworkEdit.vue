@@ -40,12 +40,7 @@ export default defineComponent({
 			const network = store.getters.findNetwork(data.uuid);
 
 			if (network) {
-				// In public mode with lockNetwork, the name field is not in the form,
-				// so data.name will be undefined. Preserve the existing name in that case.
-				if (data.name) {
-					network.name = network.channels[0].name = data.name;
-				}
-
+				network.name = network.channels[0].name = data.name;
 				switchToChannel(network.channels[0]);
 			}
 		};

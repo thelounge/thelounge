@@ -311,6 +311,56 @@ describe("Network", function () {
 	});
 
 	describe("#edit(client, args)", function () {
+		it("should not emit wrong name in public mode with lockNetwork", function () {
+			Config.values.lockNetwork = true;
+			Config.values.public = true;
+
+			const defaultName = Config.values.defaults.name;
+			const network = new Network({name: defaultName, host: Config.values.defaults.host});
+			let emittedName: string | undefined;
+
+			(network as any).edit(
+				{
+					emit(name: string, data: any) {
+						if (name === "network:name") {
+							emittedName = data.name;
+						}
+					},
+					save() {},
+					messageStorage: [],
+				},
+				{
+					// In public mode, the form omits the name field
+					nick: "testNick",
+					host: Config.values.defaults.host,
+					port: String(Config.values.defaults.port),
+					tls: Config.values.defaults.tls,
+					rejectUnauthorized: Config.values.defaults.rejectUnauthorized,
+					username: "testuser",
+					password: "",
+					realname: "Test User",
+					sasl: "",
+					saslAccount: "",
+					saslPassword: "",
+					commands: "",
+					leaveMessage: "",
+				}
+			);
+
+			// Name should be preserved as the default, not changed to the host
+			expect(network.name).to.equal(defaultName);
+			expect(network.channels[0].name).to.equal(defaultName);
+
+			// network:name should either not be emitted (name unchanged)
+			// or if emitted, must contain the correct default name
+			if (emittedName !== undefined) {
+				expect(emittedName).to.equal(defaultName);
+			}
+
+			Config.values.lockNetwork = false;
+			Config.values.public = false;
+		});
+
 		it("should enforce correct types", function () {
 			let saveCalled = false;
 			let nameEmitCalled = false;
