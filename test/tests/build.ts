@@ -35,6 +35,10 @@ describe("public folder", function () {
 
 		const assets = fs.readdirSync(path.join(publicFolder, "assets"));
 		expect(assets.some((f: string) => f.endsWith(".js"))).to.be.true;
+
+		// Emoji data should be split into its own chunk
+		expect(assets.some((f: string) => f.startsWith("emoji-") && f.endsWith(".js"))).to.be
+			.true;
 	});
 
 	it("style files are built", function () {
