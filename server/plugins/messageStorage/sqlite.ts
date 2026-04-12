@@ -2,7 +2,7 @@ import {DatabaseSync} from "node:sqlite";
 
 import log from "../../log";
 import path from "path";
-import fs from "fs/promises";
+import {mkdirSync} from "fs";
 import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
 import Chan, {Channel} from "../../models/chan";
@@ -90,27 +90,14 @@ export const rollbacks: Rollback[] = [
 	},
 ];
 
-class Deferred {
-	resolve!: () => void;
-	promise: Promise<void>;
-
-	constructor() {
-		this.promise = new Promise((resolve) => {
-			this.resolve = resolve;
-		});
-	}
-}
-
 class SqliteMessageStorage implements SearchableMessageStorage {
 	isEnabled: boolean;
 	database!: DatabaseSync;
-	initDone: Deferred;
 	userName: string;
 
 	constructor(userName: string) {
 		this.userName = userName;
 		this.isEnabled = false;
-		this.initDone = new Deferred();
 	}
 
 	_enable(connection_string: string) {
@@ -126,21 +113,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		this.isEnabled = true;
 	}
 
-	async enable() {
+	enable() {
 		const logsPath = Config.getUserLogsPath();
 		const sqlitePath = path.join(logsPath, `${this.userName}.sqlite3`);
-
-		try {
-			await fs.mkdir(logsPath, {recursive: true});
-		} catch (e) {
-			throw Helper.catch_to_error("Unable to create logs directory", e);
-		}
-
-		try {
-			this._enable(sqlitePath);
-		} finally {
-			this.initDone.resolve(); // unblock the instance methods
-		}
+		mkdirSync(logsPath, {recursive: true});
+		this._enable(sqlitePath);
 	}
 
 	setup_new_db() {
@@ -355,9 +332,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 	}
 
-	async index(network: Network, channel: Chan, msg: Msg) {
-		await this.initDone.promise;
-
+	index(network: Network, channel: Chan, msg: Msg) {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -386,9 +361,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			);
 	}
 
-	async deleteChannel(network: Network, channel: Channel) {
-		await this.initDone.promise;
-
+	deleteChannel(network: Network, channel: Channel) {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -398,13 +371,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			.run(network.uuid, channel.name.toLowerCase());
 	}
 
-	async getMessages(
-		network: Network,
-		channel: Channel,
-		nextID: () => number
-	): Promise<Message[]> {
-		await this.initDone.promise;
-
+	getMessages(network: Network, channel: Channel, nextID: () => number): Message[] {
 		if (!this.isEnabled || Config.values.maxHistory === 0) {
 			return [];
 		}
@@ -434,9 +401,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		});
 	}
 
-	async search(query: SearchQuery): Promise<SearchResponse> {
-		await this.initDone.promise;
-
+	search(query: SearchQuery): SearchResponse {
 		if (!this.isEnabled) {
 			// this should never be hit as messageProvider is checked in client.search()
 			throw new Error(
@@ -481,8 +446,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		};
 	}
 
-	async deleteMessages(req: DeletionRequest): Promise<number> {
-		await this.initDone.promise;
+	deleteMessages(req: DeletionRequest): number {
 		let sql = "delete from messages where id in (select id from messages where\n";
 
 		// We roughly get a timestamp from N days before.
