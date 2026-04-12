@@ -19,7 +19,8 @@
 	bottom: 100%;
 	left: 0;
 	right: 0;
-	padding: 8px 10px 4px;
+	height: 24px;
+	padding: 0 24px;
 	font-size: 0.8em;
 	color: var(--body-color-muted);
 	pointer-events: none;

@@ -1310,7 +1310,7 @@ textarea.input {
 }
 
 #chat .messages {
-	padding: 10px 0 20px;
+	padding: 10px 0 24px;
 	touch-action: pan-y;
 }
 
@@ -1387,7 +1387,7 @@ textarea.input {
 
 #chat .time {
 	color: var(--body-color-muted);
-	padding-left: 10px;
+	padding-left: 24px;
 	width: 55px;
 	font-variant-numeric: tabular-nums;
 	box-sizing: content-box; /* highlights have a border-left */
@@ -1415,7 +1415,7 @@ textarea.input {
 	flex: 1 1 auto;
 	min-width: 0;
 	padding-left: 10px;
-	padding-right: 6px;
+	padding-right: 24px;
 	border-left: 1px solid #f6f6f6;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
 	text-align: left; /* so RTL text will still be aligned left, not right */
@@ -2746,7 +2746,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .messages {
 		display: block;
-		padding: 5px 0;
+		padding: 5px 0 18px;
 	}
 
 	#chat .msg {
