@@ -2136,7 +2136,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 /* Space between stacked label+input groups */
 .setting-card .input + .setting-row-text {
-	margin-top: 12px;
+	border-top: 1px solid #f0f1f2;
+	border-top-color: color-mix(in srgb, var(--body-color) 6%, var(--window-bg-color));
+	padding-top: 10px;
+	margin-top: 8px;
 }
 
 /* Label+input group following a toggle row gets the same separator */

@@ -67,21 +67,33 @@
 			>
 				<strong>Warning:</strong> Notifications are blocked by your browser.
 			</div>
-			<SettingToggle
-				name="notification"
-				label="Notification sound"
-				description="Play a sound when a notification is triggered"
-				:checked="store.state.settings.notification"
-			/>
-			<div class="setting-action-row">
-				<button
-					id="play"
-					type="button"
-					class="btn btn-small"
-					@click.prevent="playNotification"
-				>
-					Play sound
-				</button>
+			<div class="setting-row">
+				<label for="setting-notification" class="setting-row-text">
+					<div class="setting-row-label">Notification sound</div>
+					<div class="setting-row-description">
+						Play a sound when a notification is triggered
+					</div>
+					<button
+						id="play"
+						type="button"
+						class="btn btn-small"
+						style="margin-top: 6px; margin-bottom: 0"
+						@click.prevent="playNotification"
+					>
+						Play sound
+					</button>
+				</label>
+				<div class="setting-toggle">
+					<input
+						id="setting-notification"
+						:checked="store.state.settings.notification"
+						:name="'notification'"
+						type="checkbox"
+					/>
+					<div class="toggle-track">
+						<div class="toggle-thumb" />
+					</div>
+				</div>
 			</div>
 			<SettingToggle
 				name="notifyAllMessages"
