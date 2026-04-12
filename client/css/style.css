@@ -1600,55 +1600,8 @@ textarea.input {
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
-#chat .chat-view[data-type="channel"] .msg.highlight .reply-context::before {
-	width: 194px; /* 199px - 5px highlight border */
-}
-
-#chat.time-12h .chat-view[data-type="channel"] .msg.highlight .reply-context::before,
-#chat.time-seconds .chat-view[data-type="channel"] .msg.highlight .reply-context::before {
-	width: 214px;
-}
-
-#chat.time-seconds.time-12h .chat-view[data-type="channel"] .msg.highlight .reply-context::before {
-	width: 229px;
-}
-
-/* Reply context — tree-style "in reply to" under a message */
-#chat .msg.has-reply-context {
-	flex-wrap: wrap;
-}
-
+/* Reply context — compact preview above message text, inside .content */
 #chat .msg .reply-context {
-	flex-basis: 100%;
-	display: flex;
-	align-items: center;
-	cursor: pointer;
-	padding: 0 10px 2px;
-}
-
-/* Tree connector: ↳ indent to sit under the content column */
-#chat .msg .reply-context::before {
-	content: "↳";
-	flex: 0 0 auto;
-	/* Offset to align with content column start: .time width + .time padding + .from width + .from padding + content padding */
-	width: 199px; /* 55px + 10px + 134px */
-	text-align: right;
-	padding-right: 6px;
-	box-sizing: border-box;
-	color: #b0b0b0;
-	font-size: 13px;
-}
-
-#chat.time-12h .msg .reply-context::before,
-#chat.time-seconds .msg .reply-context::before {
-	width: 219px;
-}
-
-#chat.time-seconds.time-12h .msg .reply-context::before {
-	width: 234px;
-}
-
-#chat .msg .reply-context-content {
 	display: flex;
 	align-items: baseline;
 	gap: 4px;
@@ -1660,16 +1613,29 @@ textarea.input {
 	text-overflow: ellipsis;
 	min-width: 0;
 	padding: 1px 6px;
+	margin-bottom: 1px;
 	border-radius: 3px;
+	cursor: pointer;
+	width: fit-content;
+	max-width: 100%;
 }
 
-#chat .msg .reply-context:hover .reply-context-content {
+#chat .msg .reply-context::before {
+	content: "\f3e5"; /* fa-reply icon */
+	font: normal normal normal 10px/1 FontAwesome;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: #b0b0b0;
+	flex-shrink: 0;
+}
+
+#chat .msg .reply-context:hover {
 	background: rgb(0 0 0 / 4%);
 	color: var(--body-color);
 }
 
-#chat .msg .reply-context-label {
-	flex-shrink: 0;
+#chat .msg .reply-context:hover::before {
+	color: var(--body-color-muted);
 }
 
 #chat .msg .reply-context-nick {
@@ -1692,10 +1658,13 @@ textarea.input {
 	font-style: italic;
 }
 
-/* Message actions toolbar — hover toolbar for reply, reactions, etc. */
+/* Message actions toolbar — floating overlay, top-right of message */
 #chat .msg .msg-actions {
-	display: inline-flex;
+	display: flex;
 	gap: 1px;
+	position: absolute;
+	top: -8px;
+	right: 6px;
 	background: var(--window-bg-color);
 	border: 1px solid #d0d0d0;
 	border-radius: 4px;
@@ -1705,18 +1674,11 @@ textarea.input {
 	z-index: 1;
 	box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
 	transition: opacity 0.1s;
-	margin-left: 6px;
-	vertical-align: middle;
 }
 
 #chat .msg:hover .msg-actions {
 	opacity: 1;
 	pointer-events: auto;
-}
-
-#chat .msg:has(.reply-context:hover) .msg-actions {
-	opacity: 0;
-	pointer-events: none;
 }
 
 #chat .msg .msg-actions button {
@@ -2957,11 +2919,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#chat .condensed-summary .time,
 	#chat .condensed-summary .from {
 		display: none;
-	}
-
-	#chat .msg .reply-context::before {
-		width: auto;
-		padding-right: 4px;
 	}
 
 	#help .help-item .subject {

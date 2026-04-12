@@ -7,7 +7,6 @@
 				self: message.self,
 				highlight: message.highlight || focused,
 				'previous-source': isPreviousSource,
-				'has-reply-context': !!message.replyTo,
 			},
 		]"
 		:data-type="message.type"
@@ -40,6 +39,23 @@
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">*&nbsp;</span></span>
 			<span class="content" dir="auto">
+				<div
+					v-if="message.replyTo"
+					class="reply-context"
+					role="button"
+					tabindex="0"
+					@click="scrollToParent"
+					@keydown.enter.prevent="scrollToParent"
+					@keydown.space.prevent="scrollToParent"
+				>
+					<template v-if="message.replyToNick">
+						<span class="reply-context-nick">{{ message.replyToNick }}</span>
+						<span v-if="message.replyToText" class="reply-context-text">{{
+							message.replyToText
+						}}</span>
+					</template>
+					<span v-else class="reply-context-unknown">In reply to a message</span>
+				</div>
 				<StatusmsgMarker :group="message.statusmsgGroup" />
 				<Username
 					:user="message.from"
@@ -54,9 +70,6 @@
 					:link="preview"
 					:channel="channel"
 				/>
-				<div v-if="canReply && message.msgid" class="msg-actions">
-					<button class="msg-action-reply" aria-label="Reply" @click.stop="startReply" />
-				</div>
 			</span>
 		</template>
 		<template v-else>
@@ -82,6 +95,23 @@
 				</template>
 			</span>
 			<span class="content" dir="auto">
+				<div
+					v-if="message.replyTo"
+					class="reply-context"
+					role="button"
+					tabindex="0"
+					@click="scrollToParent"
+					@keydown.enter.prevent="scrollToParent"
+					@keydown.space.prevent="scrollToParent"
+				>
+					<template v-if="message.replyToNick">
+						<span class="reply-context-nick">{{ message.replyToNick }}</span>
+						<span v-if="message.replyToText" class="reply-context-text">{{
+							message.replyToText
+						}}</span>
+					</template>
+					<span v-else class="reply-context-unknown">In reply to a message</span>
+				</div>
 				<span
 					v-if="message.showInActive"
 					aria-label="This message was shown in your active channel"
@@ -97,30 +127,10 @@
 					:link="preview"
 					:channel="channel"
 				/>
-				<div v-if="canReply && message.msgid" class="msg-actions">
-					<button class="msg-action-reply" aria-label="Reply" @click.stop="startReply" />
-				</div>
 			</span>
 		</template>
-		<div
-			v-if="message.replyTo"
-			class="reply-context"
-			role="button"
-			tabindex="0"
-			@click="scrollToParent"
-			@keydown.enter.prevent="scrollToParent"
-			@keydown.space.prevent="scrollToParent"
-		>
-			<span class="reply-context-content">
-				<template v-if="message.replyToNick">
-					<span class="reply-context-label">In reply to</span>
-					<span class="reply-context-nick">{{ message.replyToNick }}</span>
-					<span v-if="message.replyToText" class="reply-context-text">{{
-						message.replyToText
-					}}</span>
-				</template>
-				<span v-else class="reply-context-unknown">In reply to a message</span>
-			</span>
+		<div v-if="canReply && message.msgid" class="msg-actions">
+			<button class="msg-action-reply" aria-label="Reply" @click.stop="startReply" />
 		</div>
 	</div>
 </template>
