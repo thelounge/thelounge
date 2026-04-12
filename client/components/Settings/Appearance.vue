@@ -102,31 +102,25 @@
 				description="Suggest nicknames, channels, and commands as you type"
 				:checked="store.state.settings.autocomplete"
 			/>
-			<div>
-				<label for="nickPostfix" class="setting-row-text">
-					<div class="setting-row-label">Nick autocomplete postfix</div>
-					<div class="setting-row-description">
-						Character added after a completed nickname (e.g. a comma)
-					</div>
-				</label>
-				<input
+			<label for="nickPostfix" class="setting-row-text">
+				<div class="setting-row-label">Nick autocomplete postfix</div>
+				<div class="setting-row-description">
+					Character added after a completed nickname (e.g. a comma)
+				</div>
+			</label>
+			<input
 				id="nickPostfix"
 				:value="store.state.settings.nickPostfix"
 				type="text"
 				name="nickPostfix"
 				class="input"
 				placeholder="e.g. , "
-				/>
-			</div>
+			/>
 		</SettingCard>
 
 		<SettingCard title="Custom stylesheet">
-			<div class="setting-card-intro">
-				Override any style with your own CSS
-			</div>
-			<label for="user-specified-css-input" class="sr-only">
-				Custom stylesheet
-			</label>
+			<div class="setting-card-intro">Override any style with your own CSS</div>
+			<label for="user-specified-css-input" class="sr-only"> Custom stylesheet </label>
 			<textarea
 				id="user-specified-css-input"
 				:value="store.state.settings.userStyles"

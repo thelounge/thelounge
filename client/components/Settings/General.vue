@@ -11,9 +11,7 @@
 				</button>
 			</div>
 			<div v-if="canRegisterProtocol" class="setting-action-row">
-				<div class="setting-card-intro">
-					Handle irc:// links directly in The Lounge
-				</div>
+				<div class="setting-card-intro">Handle irc:// links directly in The Lounge</div>
 				<button type="button" class="btn btn-small" @click.prevent="registerProtocol">
 					Register as irc:// handler
 				</button>
@@ -41,8 +39,8 @@
 			<template v-if="!store.state.settings.syncSettings">
 				<div v-if="store.state.serverHasSettings" class="setting-info-panel warning">
 					<p>
-						<strong>Warning:</strong> Enabling sync will override this client's
-						settings with those stored on the server.
+						<strong>Warning:</strong> Enabling sync will override this client's settings
+						with those stored on the server.
 					</p>
 					<button type="button" class="btn btn-small" @click="onForceSyncClick">
 						Sync settings and enable
@@ -50,8 +48,8 @@
 				</div>
 				<div v-else class="setting-info-panel warning">
 					<p>
-						No settings have been synced before. Enabling this will upload your
-						current settings as the starting point for other devices.
+						No settings have been synced before. Enabling this will upload your current
+						settings as the starting point for other devices.
 					</p>
 				</div>
 			</template>

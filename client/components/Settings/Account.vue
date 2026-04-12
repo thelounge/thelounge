@@ -73,11 +73,7 @@
 		</SettingCard>
 
 		<!-- Sessions -->
-		<SettingCard
-			v-if="!store.state.serverConfiguration?.public"
-			title="Sessions"
-			role="group"
-		>
+		<SettingCard v-if="!store.state.serverConfiguration?.public" title="Sessions" role="group">
 			<h3>Current session</h3>
 			<Session v-if="currentSession" :session="currentSession" />
 

@@ -1,10 +1,7 @@
 <template>
 	<div>
 		<!-- Push notifications -->
-		<SettingCard
-			v-if="!store.state.serverConfiguration?.public"
-			title="Push notifications"
-		>
+		<SettingCard v-if="!store.state.serverConfiguration?.public" title="Push notifications">
 			<div class="setting-action-row">
 				<div class="setting-card-intro">
 					Receive notifications even when The Lounge is not open
@@ -77,7 +74,12 @@
 				:checked="store.state.settings.notification"
 			/>
 			<div class="setting-action-row">
-				<button id="play" type="button" class="btn btn-small" @click.prevent="playNotification">
+				<button
+					id="play"
+					type="button"
+					class="btn btn-small"
+					@click.prevent="playNotification"
+				>
 					Play sound
 				</button>
 			</div>
@@ -90,44 +92,37 @@
 		</SettingCard>
 
 		<!-- Highlights -->
-		<SettingCard
-			v-if="!store.state.serverConfiguration?.public"
-			title="Highlights"
-		>
-			<div>
-				<label for="highlights" class="setting-row-text">
-					<div class="setting-row-label">Custom highlights</div>
-					<div class="setting-row-description">
-						Comma-separated words or phrases that trigger a highlight
-					</div>
-				</label>
-				<input
-					id="highlights"
-					:value="store.state.settings.highlights"
-					type="text"
-					name="highlights"
-					class="input"
-					autocomplete="off"
-					placeholder="e.g. word, some phrase, another"
-				/>
-			</div>
-			<div>
-				<label for="highlightExceptions" class="setting-row-text">
-					<div class="setting-row-label">Highlight exceptions</div>
-					<div class="setting-row-description">
-						Comma-separated words that will never trigger a highlight
-					</div>
-				</label>
-				<input
-					id="highlightExceptions"
-					:value="store.state.settings.highlightExceptions"
-					type="text"
-					name="highlightExceptions"
-					class="input"
-					autocomplete="off"
-					placeholder="e.g. bot, service"
-				/>
-			</div>
+		<SettingCard v-if="!store.state.serverConfiguration?.public" title="Highlights">
+			<label for="highlights" class="setting-row-text">
+				<div class="setting-row-label">Custom highlights</div>
+				<div class="setting-row-description">
+					Comma-separated words or phrases that trigger a highlight
+				</div>
+			</label>
+			<input
+				id="highlights"
+				:value="store.state.settings.highlights"
+				type="text"
+				name="highlights"
+				class="input"
+				autocomplete="off"
+				placeholder="e.g. word, some phrase, another"
+			/>
+			<label for="highlightExceptions" class="setting-row-text">
+				<div class="setting-row-label">Highlight exceptions</div>
+				<div class="setting-row-description">
+					Comma-separated words that will never trigger a highlight
+				</div>
+			</label>
+			<input
+				id="highlightExceptions"
+				:value="store.state.settings.highlightExceptions"
+				type="text"
+				name="highlightExceptions"
+				class="input"
+				autocomplete="off"
+				placeholder="e.g. bot, service"
+			/>
 		</SettingCard>
 	</div>
 </template>

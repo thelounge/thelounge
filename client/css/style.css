@@ -1,7 +1,6 @@
 @import "../../node_modules/normalize.css/normalize.css";
 @import "fontawesome.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
-@import "settings-redesign.css";
 
 :root {
 	/* Main text color */
@@ -2135,6 +2134,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 8px;
 }
 
+/* Space between stacked label+input groups */
+.setting-card .input + .setting-row-text {
+	margin-top: 12px;
+}
+
+/* Label+input group following a toggle row gets the same separator */
+.setting-row + .setting-row-text {
+	border-top: 1px solid #f0f1f2;
+	border-top-color: color-mix(in srgb, var(--body-color) 6%, var(--window-bg-color));
+	padding-top: 10px;
+}
+
 /* Action rows */
 
 .setting-action-row {
@@ -2201,15 +2212,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 0;
 }
 
-#settings #play {
-	font-size: 14px;
-	transition: opacity 0.2s;
-	color: var(--window-heading-color);
-}
-
-#settings #play:hover {
-	opacity: 0.8;
-}
 
 /* Password form */
 
@@ -2845,6 +2847,58 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 .tooltipped::after {
 	font-size: 12px;
+}
+
+/* Settings - mobile nav */
+@media screen and (max-width: calc(768px + 320px)) {
+	.settings-menu {
+		padding-bottom: 8px;
+		margin-bottom: 8px;
+		border-bottom: 1px solid #edeef0;
+		border-bottom-color: color-mix(in srgb, var(--body-color) 8%, var(--window-bg-color));
+	}
+
+	.settings-menu ul {
+		display: flex;
+		gap: 4px;
+		justify-content: center;
+	}
+
+	.settings-menu li {
+		font-size: 14px;
+	}
+
+	.settings-menu button {
+		padding: 6px 14px;
+		border-radius: 6px;
+		text-align: center;
+	}
+
+	.settings-menu button.active {
+		background-color: var(--button-color);
+		color: var(--button-text-color-hover);
+	}
+
+	.settings-menu button::before {
+		display: none;
+	}
+}
+
+/* Settings - small screens */
+@media screen and (max-width: 480px) {
+	.setting-card {
+		padding: 8px 14px 12px;
+	}
+
+	.setting-radio-pills {
+		flex-direction: column;
+	}
+
+	.setting-radio-pill + .setting-radio-pill .pill-label {
+		border-left: none;
+		border-top: 1px solid #ddd;
+		border-top-color: color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
+	}
 }
 
 @media (min-width: 480px) {
