@@ -1,0 +1,296 @@
+/* Settings page redesign — cards, toggles, setting rows, radio pills */
+
+/* ── Cards ───────────────────────────────────────────────── */
+
+.setting-card {
+	background-color: color-mix(in srgb, var(--body-bg-color) 6%, var(--window-bg-color));
+	border: 1px solid color-mix(in srgb, var(--body-color) 8%, var(--window-bg-color));
+	border-radius: 8px;
+	padding: 16px 20px;
+	margin-bottom: 16px;
+}
+
+.setting-card-title {
+	font-size: 13px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: var(--body-color-muted);
+	margin: 0 0 12px;
+	padding: 0;
+	border: none;
+}
+
+/* ── Setting rows ────────────────────────────────────────── */
+
+.setting-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 16px;
+	padding: 10px 0;
+}
+
+.setting-row + .setting-row {
+	border-top: 1px solid color-mix(in srgb, var(--body-color) 6%, var(--window-bg-color));
+}
+
+.setting-row-text {
+	flex: 1;
+	min-width: 0;
+}
+
+.setting-row-label {
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--body-color);
+	line-height: 1.4;
+}
+
+.setting-row-description {
+	font-size: 13px;
+	color: var(--body-color-muted);
+	line-height: 1.4;
+	margin-top: 2px;
+}
+
+/* ── Toggle switch (CSS-only) ────────────────────────────── */
+
+.setting-toggle {
+	position: relative;
+	flex-shrink: 0;
+	width: 40px;
+	height: 22px;
+	margin-top: 1px;
+}
+
+.setting-toggle input[type="checkbox"] {
+	/* Keep accessible but visually hidden */
+	opacity: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	cursor: pointer;
+	z-index: 1;
+}
+
+.setting-toggle .toggle-track {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: color-mix(in srgb, var(--body-color) 20%, var(--window-bg-color));
+	border-radius: 11px;
+	transition: background-color 0.2s;
+	pointer-events: none;
+}
+
+.setting-toggle .toggle-thumb {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 18px;
+	height: 18px;
+	background-color: var(--window-bg-color);
+	border-radius: 50%;
+	transition: transform 0.2s;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+}
+
+.setting-toggle input:checked + .toggle-track {
+	background-color: var(--button-color);
+}
+
+.setting-toggle input:checked + .toggle-track .toggle-thumb {
+	transform: translateX(18px);
+}
+
+.setting-toggle input:focus-visible + .toggle-track {
+	box-shadow: 0 0 0 3px rgb(132 206 136 / 50%);
+}
+
+.setting-toggle input:disabled + .toggle-track {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.setting-toggle input:disabled {
+	cursor: not-allowed;
+}
+
+/* Dim the entire row when the toggle is disabled */
+.setting-row:has(.setting-toggle input:disabled) .setting-row-text {
+	opacity: 0.5;
+}
+
+/* ── Radio pills (status messages) ───────────────────────── */
+
+.setting-radio-pills {
+	display: flex;
+	gap: 0;
+	border-radius: 6px;
+	overflow: hidden;
+	border: 1px solid color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
+	margin-top: 8px;
+}
+
+.setting-radio-pill {
+	flex: 1;
+	position: relative;
+}
+
+.setting-radio-pill input[type="radio"] {
+	opacity: 0;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	cursor: pointer;
+	z-index: 1;
+}
+
+.setting-radio-pill .pill-label {
+	display: block;
+	padding: 8px 12px;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	color: var(--body-color-muted);
+	background-color: transparent;
+	transition: background-color 0.15s, color 0.15s;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.setting-radio-pill + .setting-radio-pill .pill-label {
+	border-left: 1px solid color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
+}
+
+.setting-radio-pill input:checked + .pill-label {
+	background-color: var(--button-color);
+	color: var(--button-text-color-hover);
+}
+
+.setting-radio-pill input:focus-visible + .pill-label {
+	box-shadow: inset 0 0 0 2px rgb(132 206 136 / 50%);
+}
+
+/* ── Text inputs inside setting cards ────────────────────── */
+
+.setting-card .input {
+	margin-bottom: 0;
+	margin-top: 8px;
+}
+
+.setting-card textarea.input {
+	margin-top: 8px;
+}
+
+/* ── Inline action row (buttons inside cards) ────────────── */
+
+.setting-action-row {
+	padding: 10px 0;
+}
+
+.setting-action-row + .setting-action-row {
+	border-top: 1px solid color-mix(in srgb, var(--body-color) 6%, var(--window-bg-color));
+}
+
+.setting-action-row .btn {
+	margin-bottom: 0;
+}
+
+/* ── Info/warning panels inside cards ────────────────────── */
+
+.setting-info-panel {
+	padding: 10px 12px;
+	border-radius: 6px;
+	font-size: 13px;
+	line-height: 1.5;
+	margin-top: 8px;
+}
+
+.setting-info-panel.warning {
+	background-color: color-mix(in srgb, #f0ad4e 12%, var(--window-bg-color));
+	color: color-mix(in srgb, #8a6d3b 80%, var(--body-color));
+}
+
+.setting-info-panel.error {
+	color: #e74c3c;
+}
+
+.setting-info-panel p {
+	margin: 0 0 6px;
+}
+
+.setting-info-panel p:last-child {
+	margin-bottom: 0;
+}
+
+.setting-info-panel .btn {
+	margin-top: 8px;
+	margin-bottom: 0;
+}
+
+/* ── Override old settings styles ─────────────────────────── */
+
+#settings h2 {
+	border-bottom: none;
+	font-size: 13px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	color: var(--body-color-muted);
+	margin: 0 0 12px;
+	padding: 0;
+}
+
+/* First card after navigation shouldn't have extra top margin */
+#settings .container > form > div > .setting-card:first-child {
+	margin-top: 0;
+}
+
+/* ── Password form overrides ─────────────────────────────── */
+
+#settings .setting-card .password-container {
+	margin-bottom: 8px;
+}
+
+#settings .setting-card .password-container:last-of-type {
+	margin-bottom: 0;
+}
+
+/* ── Session list inside cards ───────────────────────────── */
+
+#settings .setting-card h3 {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--body-color);
+	margin: 16px 0 8px;
+}
+
+#settings .setting-card h3:first-child {
+	margin-top: 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media screen and (max-width: 480px) {
+	.setting-card {
+		padding: 12px 14px;
+	}
+
+	.setting-radio-pills {
+		flex-direction: column;
+	}
+
+	.setting-radio-pill + .setting-radio-pill .pill-label {
+		border-left: none;
+		border-top: 1px solid color-mix(in srgb, var(--body-color) 15%, var(--window-bg-color));
+	}
+}

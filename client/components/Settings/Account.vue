@@ -1,15 +1,16 @@
 <template>
 	<div>
+		<!-- Change password -->
 		<div
 			v-if="
 				!store.state.serverConfiguration?.public &&
 				!store.state.serverConfiguration?.ldapEnabled
 			"
-			id="change-password"
+			class="setting-card"
 			role="group"
 			aria-labelledby="label-change-password"
 		>
-			<h2 id="label-change-password">Change password</h2>
+			<h2 id="label-change-password" class="setting-card-title">Change password</h2>
 			<div class="password-container">
 				<label for="current-password" class="sr-only"> Enter current password </label>
 				<RevealPassword v-slot:default="slotProps">
@@ -20,7 +21,7 @@
 						:type="slotProps.isVisible ? 'text' : 'password'"
 						name="old_password"
 						class="input"
-						placeholder="Enter current password"
+						placeholder="Current password"
 					/>
 				</RevealPassword>
 			</div>
@@ -34,7 +35,7 @@
 						name="new_password"
 						autocomplete="new-password"
 						class="input"
-						placeholder="Enter desired new password"
+						placeholder="New password"
 					/>
 				</RevealPassword>
 			</div>
@@ -48,7 +49,7 @@
 						name="verify_password"
 						autocomplete="new-password"
 						class="input"
-						placeholder="Repeat new password"
+						placeholder="Confirm new password"
 					/>
 				</RevealPassword>
 			</div>
@@ -71,8 +72,9 @@
 			</div>
 		</div>
 
-		<div v-if="!store.state.serverConfiguration?.public" class="session-list" role="group">
-			<h2>Sessions</h2>
+		<!-- Sessions -->
+		<div v-if="!store.state.serverConfiguration?.public" class="setting-card" role="group">
+			<h2 class="setting-card-title">Sessions</h2>
 
 			<h3>Current session</h3>
 			<Session v-if="currentSession" :session="currentSession" />
@@ -105,7 +107,7 @@
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
-import {computed, defineComponent, onMounted, PropType, ref} from "vue";
+import {computed, defineComponent, onMounted, ref} from "vue";
 import {useStore} from "../../js/store";
 
 export default defineComponent({

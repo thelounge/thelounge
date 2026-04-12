@@ -45,25 +45,25 @@ const router = createRouter({
 			component: Settings,
 			children: [
 				{
-					name: "General",
+					name: "Appearance",
 					path: "",
-					component: GeneralSettings,
+					component: AppearanceSettings,
 				},
 				{
-					name: "Appearance",
-					path: "appearance",
-					component: AppearanceSettings,
+					name: "Notifications",
+					path: "notifications",
+					component: NotificationSettings,
+				},
+				{
+					name: "General",
+					path: "general",
+					component: GeneralSettings,
 				},
 				{
 					name: "Account",
 					path: "account",
 					component: AccountSettings,
 					props: true,
-				},
-				{
-					name: "Notifications",
-					path: "notifications",
-					component: NotificationSettings,
 				},
 			],
 		},

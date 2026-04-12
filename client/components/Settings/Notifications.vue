@@ -1,106 +1,100 @@
 <template>
 	<div>
-		<template v-if="!store.state.serverConfiguration?.public">
-			<h2>Push Notifications</h2>
-			<div>
-				<button
-					id="pushNotifications"
-					type="button"
-					class="btn"
-					:disabled="
-						store.state.pushNotificationState !== 'supported' &&
-						store.state.pushNotificationState !== 'subscribed'
-					"
-					@click="onPushButtonClick"
-				>
-					<template v-if="store.state.pushNotificationState === 'subscribed'">
-						Unsubscribe from push notifications
-					</template>
-					<template v-else-if="store.state.pushNotificationState === 'loading'">
-						Loading…
-					</template>
-					<template v-else> Subscribe to push notifications </template>
+		<!-- Push notifications -->
+		<div v-if="!store.state.serverConfiguration?.public" class="setting-card">
+			<h2 class="setting-card-title">Push notifications</h2>
+			<div class="setting-row-description" style="margin-bottom: 8px">
+				Receive notifications even when The Lounge is not open
+			</div>
+			<button
+				id="pushNotifications"
+				type="button"
+				class="btn"
+				:disabled="
+					store.state.pushNotificationState !== 'supported' &&
+					store.state.pushNotificationState !== 'subscribed'
+				"
+				@click="onPushButtonClick"
+			>
+				<template v-if="store.state.pushNotificationState === 'subscribed'">
+					Unsubscribe from push notifications
+				</template>
+				<template v-else-if="store.state.pushNotificationState === 'loading'">
+					Loading…
+				</template>
+				<template v-else> Subscribe to push notifications </template>
+			</button>
+			<div
+				v-if="store.state.pushNotificationState === 'nohttps'"
+				class="setting-info-panel error"
+			>
+				<strong>Warning:</strong> Push notifications are only supported over HTTPS
+				connections.
+			</div>
+			<div
+				v-if="store.state.pushNotificationState === 'unsupported'"
+				class="setting-info-panel error"
+			>
+				<strong>Warning:</strong> Push notifications are not supported by your browser.
+			</div>
+		</div>
+
+		<!-- Browser notifications & sound -->
+		<div class="setting-card">
+			<h2 class="setting-card-title">Notifications</h2>
+			<SettingToggle
+				name="desktopNotifications"
+				label="Browser notifications"
+				description="Show desktop notifications for mentions and private messages"
+				:checked="store.state.settings.desktopNotifications"
+				:disabled="store.state.desktopNotificationState === 'nohttps'"
+			/>
+			<div
+				v-if="store.state.desktopNotificationState === 'unsupported'"
+				class="setting-info-panel error"
+			>
+				<strong>Warning:</strong> Notifications are not supported by your browser.
+			</div>
+			<div
+				v-if="store.state.desktopNotificationState === 'nohttps'"
+				class="setting-info-panel error"
+			>
+				<strong>Warning:</strong> Notifications are only supported over HTTPS connections.
+			</div>
+			<div
+				v-if="store.state.desktopNotificationState === 'blocked'"
+				class="setting-info-panel error"
+			>
+				<strong>Warning:</strong> Notifications are blocked by your browser.
+			</div>
+			<SettingToggle
+				name="notification"
+				label="Notification sound"
+				description="Play a sound when a notification is triggered"
+				:checked="store.state.settings.notification"
+			/>
+			<div class="setting-action-row">
+				<button id="play" type="button" class="btn btn-small" @click.prevent="playNotification">
+					Play sound
 				</button>
-				<div v-if="store.state.pushNotificationState === 'nohttps'" class="error">
-					<strong>Warning</strong>: Push notifications are only supported over HTTPS
-					connections.
-				</div>
-				<div v-if="store.state.pushNotificationState === 'unsupported'" class="error">
-					<strong>Warning</strong>:
-					<span>Push notifications are not supported by your browser.</span>
-				</div>
 			</div>
-		</template>
-
-		<h2>Browser Notifications</h2>
-		<div>
-			<label class="opt">
-				<input
-					id="desktopNotifications"
-					:checked="store.state.settings.desktopNotifications"
-					:disabled="store.state.desktopNotificationState === 'nohttps'"
-					type="checkbox"
-					name="desktopNotifications"
-				/>
-				Enable browser notifications<br />
-				<div v-if="store.state.desktopNotificationState === 'unsupported'" class="error">
-					<strong>Warning</strong>: Notifications are not supported by your browser.
-				</div>
-				<div
-					v-if="store.state.desktopNotificationState === 'nohttps'"
-					id="warnBlockedDesktopNotifications"
-					class="error"
-				>
-					<strong>Warning</strong>: Notifications are only supported over HTTPS
-					connections.
-				</div>
-				<div
-					v-if="store.state.desktopNotificationState === 'blocked'"
-					id="warnBlockedDesktopNotifications"
-					class="error"
-				>
-					<strong>Warning</strong>: Notifications are blocked by your browser.
-				</div>
-			</label>
-		</div>
-		<div>
-			<label class="opt">
-				<input
-					:checked="store.state.settings.notification"
-					type="checkbox"
-					name="notification"
-				/>
-				Enable notification sound
-			</label>
-		</div>
-		<div>
-			<div class="opt">
-				<button id="play" @click.prevent="playNotification">Play sound</button>
-			</div>
+			<SettingToggle
+				name="notifyAllMessages"
+				label="Notify on all messages"
+				description="Send a notification for every message, not just mentions"
+				:checked="store.state.settings.notifyAllMessages"
+			/>
 		</div>
 
-		<div>
-			<label class="opt">
-				<input
-					:checked="store.state.settings.notifyAllMessages"
-					type="checkbox"
-					name="notifyAllMessages"
-				/>
-				Enable notification for all messages
-			</label>
-		</div>
-
-		<div v-if="!store.state.serverConfiguration?.public">
-			<label class="opt">
-				<label for="highlights" class="opt">
-					Custom highlights
-					<span
-						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="If a message contains any of these comma-separated
-expressions, it will trigger a highlight."
-					>
-						<button class="extra-help" />
-					</span>
+		<!-- Highlights -->
+		<div v-if="!store.state.serverConfiguration?.public" class="setting-card">
+			<h2 class="setting-card-title">Highlights</h2>
+			<div>
+				<label for="highlights" class="setting-row-text">
+					<div class="setting-row-label">Custom highlights</div>
+					<div class="setting-row-description">
+						Comma-separated words or phrases that trigger a highlight
+					</div>
 				</label>
 				<input
 					id="highlights"
@@ -109,23 +103,15 @@ expressions, it will trigger a highlight."
 					name="highlights"
 					class="input"
 					autocomplete="off"
-					placeholder="Comma-separated, e.g.: word, some more words, anotherword"
+					placeholder="e.g. word, some phrase, another"
 				/>
-			</label>
-		</div>
-
-		<div v-if="!store.state.serverConfiguration?.public">
-			<label class="opt">
-				<label for="highlightExceptions" class="opt">
-					Highlight exceptions
-					<span
-						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="If a message contains any of these comma-separated
-expressions, it will not trigger a highlight even if it contains
-your nickname or expressions defined in custom highlights."
-					>
-						<button class="extra-help" />
-					</span>
+			</div>
+			<div>
+				<label for="highlightExceptions" class="setting-row-text">
+					<div class="setting-row-label">Highlight exceptions</div>
+					<div class="setting-row-description">
+						Comma-separated words that will never trigger a highlight
+					</div>
 				</label>
 				<input
 					id="highlightExceptions"
@@ -134,9 +120,9 @@ your nickname or expressions defined in custom highlights."
 					name="highlightExceptions"
 					class="input"
 					autocomplete="off"
-					placeholder="Comma-separated, e.g.: word, some more words, anotherword"
+					placeholder="e.g. bot, service"
 				/>
-			</label>
+			</div>
 		</div>
 	</div>
 </template>
@@ -145,9 +131,13 @@ your nickname or expressions defined in custom highlights."
 import {computed, defineComponent} from "vue";
 import {useStore} from "../../js/store";
 import webpush from "../../js/webpush";
+import SettingToggle from "./SettingToggle.vue";
 
 export default defineComponent({
 	name: "NotificationSettings",
+	components: {
+		SettingToggle,
+	},
 	setup() {
 		const store = useStore();
 
