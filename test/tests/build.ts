@@ -45,9 +45,10 @@ describe("public folder", function () {
 		expect(assets.some((f: string) => f.endsWith(".css"))).to.be.true;
 	});
 
-	it("loading-error-handlers.js is copied", function () {
-		expect(fs.existsSync(path.join(publicFolder, "js", "loading-error-handlers.js"))).to.be
-			.true;
+	it("loading-error-handlers.js is copied and hashed", function () {
+		const jsFiles = fs.readdirSync(path.join(publicFolder, "js"));
+		expect(jsFiles.some((f: string) => f.startsWith("loading-error-handlers-") && f.endsWith(".js")))
+			.to.be.true;
 	});
 
 	it("service worker has cacheName set", function () {
