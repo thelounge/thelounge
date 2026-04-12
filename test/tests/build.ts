@@ -37,8 +37,7 @@ describe("public folder", function () {
 		expect(assets.some((f: string) => f.endsWith(".js"))).to.be.true;
 
 		// Emoji data should be split into its own chunk
-		expect(assets.some((f: string) => f.startsWith("emoji-") && f.endsWith(".js"))).to.be
-			.true;
+		expect(assets.some((f: string) => f.startsWith("emoji-") && f.endsWith(".js"))).to.be.true;
 	});
 
 	it("style files are built", function () {
@@ -51,8 +50,11 @@ describe("public folder", function () {
 
 	it("loading-error-handlers.js is copied and hashed", function () {
 		const jsFiles = fs.readdirSync(path.join(publicFolder, "js"));
-		expect(jsFiles.some((f: string) => f.startsWith("loading-error-handlers-") && f.endsWith(".js")))
-			.to.be.true;
+		expect(
+			jsFiles.some(
+				(f: string) => f.startsWith("loading-error-handlers-") && f.endsWith(".js")
+			)
+		).to.be.true;
 	});
 
 	it("service worker has cacheName set", function () {
