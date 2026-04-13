@@ -27,7 +27,7 @@
     "module": "commonjs" /* Specify what module code is generated. */,
     "rootDir": "./" /* Specify the root folder within your source files. */,
     "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
-    "ignoreDeprecations": "6.0" /* Silence TS 6.0 deprecation warnings for node10 moduleResolution. */,
+    "ignoreDeprecations": "6.0" /* TODO: we need to migrate to `node16` when upgrading to TypeScript 7.0. */,
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
     // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
