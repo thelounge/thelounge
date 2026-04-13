@@ -155,6 +155,7 @@ export default defineComponent({
 	setup(props) {
 		const store = useStore();
 		let longPressTimer: ReturnType<typeof setTimeout> | null = null;
+		let highlightTimer: ReturnType<typeof setTimeout> | null = null;
 
 		const timeFormat = computed(() => {
 			let format: keyof typeof constants.timeFormats;
@@ -229,7 +230,14 @@ export default defineComponent({
 
 				el.scrollIntoView({block: "center", behavior: "smooth"});
 				el.classList.add("highlight");
-				setTimeout(() => {
+
+				if (highlightTimer !== null) {
+					clearTimeout(highlightTimer);
+				}
+
+				highlightTimer = setTimeout(() => {
+					highlightTimer = null;
+
 					// We don't want to reset e.g. pings/keyword matches
 					if (!wasHighlighted) {
 						el.classList.remove("highlight");
@@ -268,6 +276,10 @@ export default defineComponent({
 
 		onBeforeUnmount(() => {
 			clearLongPress();
+
+			if (highlightTimer !== null) {
+				clearTimeout(highlightTimer);
+			}
 		});
 
 		return {

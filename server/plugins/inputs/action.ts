@@ -1,4 +1,4 @@
-import {PluginInputHandler, buildReplyTags} from "./index";
+import {PluginInputHandler} from "./index";
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
@@ -33,11 +33,14 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 
 			text = text || args.join(" ");
 
-			const reply = buildReplyTags(this._pendingReplyTo, network.serverOptions.supportsReply);
+			const replyTo = this._pendingReplyTo;
+			const replyTags = replyTo && network.serverOptions.supportsReply
+				? {"+reply": replyTo} : undefined;
 
-			if (reply.outgoing) {
-				// irc.action() doesn't support tags, send as raw PRIVMSG with CTCP ACTION
-				irc.sendMessage("PRIVMSG", chan.name, "\x01ACTION " + text + "\x01", reply.outgoing);
+			if (replyTags) {
+				// irc.action() doesn't support tags
+				// TODO: use action() once this merges: https://github.com/kiwiirc/irc-framework/pull/411
+				irc.sendMessage("PRIVMSG", chan.name, "\x01ACTION " + text + "\x01", replyTags);
 			} else {
 				irc.action(chan.name, text);
 			}
@@ -49,7 +52,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 					nick: irc.user.nick,
 					target: chan.name,
 					message: text,
-					tags: reply.echo,
+					tags: replyTo ? {"+reply": replyTo} : undefined,
 				});
 			}
 
