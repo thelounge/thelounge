@@ -1,4 +1,4 @@
-import {PluginInputHandler, buildReplyTags} from "./index";
+import {PluginInputHandler} from "./index";
 import Msg from "../../models/msg";
 import Chan from "../../models/chan";
 import {MessageType} from "../../../shared/types/msg";
@@ -93,8 +93,10 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		return true;
 	}
 
-	const reply = buildReplyTags(this._pendingReplyTo, network.serverOptions.supportsReply);
-	network.irc.say(targetName, msg, reply.outgoing);
+	const replyTo = this._pendingReplyTo;
+	const replyTags = replyTo && network.serverOptions.supportsReply
+		? {"+reply": replyTo} : undefined;
+	network.irc.say(targetName, msg, replyTags);
 
 	// If the IRCd does not support echo-message, simulate the message
 	// being sent back to us.
@@ -117,7 +119,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 				target: targetName,
 				group: targetGroup,
 				message: msg,
-				tags: reply.echo,
+				tags: replyTo ? {"+reply": replyTo} : undefined,
 			});
 		}
 	}

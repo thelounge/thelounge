@@ -192,6 +192,9 @@ export default defineComponent({
 				props.channel.inputHistory.pop();
 			}
 
+			const replyTo = props.channel.replyingTo?.msgid;
+			props.channel.replyingTo = null;
+
 			if (text[0] === "/") {
 				const args = text.substring(1).split(" ");
 				const cmd = args.shift()?.toLowerCase();
@@ -201,14 +204,11 @@ export default defineComponent({
 				}
 
 				if (Object.prototype.hasOwnProperty.call(commands, cmd) && commands[cmd](args)) {
-					props.channel.replyingTo = null;
 					return false;
 				}
 			}
 
-			const replyTo = props.channel.replyingTo?.msgid;
 			socket.emit("input", {target, text, ...(replyTo && {replyTo})});
-			props.channel.replyingTo = null;
 		};
 
 		const onUploadInputChange = () => {
