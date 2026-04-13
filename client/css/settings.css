@@ -280,7 +280,6 @@
 	margin-top: 0;
 }
 
-
 /* Password form */
 
 #settings .setting-card .password-container {
@@ -325,6 +324,7 @@
 #settings .setting-card h3:first-child {
 	margin-top: 0;
 }
+
 /* Settings - mobile nav */
 @media screen and (max-width: calc(768px + 320px)) {
 	.settings-menu {
@@ -359,7 +359,7 @@
 		display: none;
 	}
 }
-/* Settings - small screens */
+
 @media screen and (max-width: 480px) {
 	.setting-card {
 		padding: 8px 14px 12px;

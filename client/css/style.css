@@ -1,7 +1,7 @@
+/* prettier-ignore comment-empty-line-before */
 @import "../../node_modules/normalize.css/normalize.css";
 @import "fontawesome.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
-
 @import "settings.css";
 
 :root {
@@ -1935,7 +1935,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	cursor: help;
 }
 
-
 .password-container {
 	position: relative;
 }
@@ -2526,7 +2525,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .tooltipped::after {
 	font-size: 12px;
 }
-
 
 @media (min-width: 480px) {
 	/* Fade out for long usernames */
