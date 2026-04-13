@@ -120,6 +120,23 @@ const addPluginCommand = (packageInfo: PackageInfo, command: any, obj: any) => {
 	});
 };
 
+/**
+ * Build +reply tags from the pending reply state on the client.
+ * Returns `undefined` for outgoing tags if the server doesn't support +reply
+ * or there's no pending reply. The `echo` tags are always populated for the
+ * echo-message fallback (which is local-only and doesn't need server support).
+ */
+export function buildReplyTags(
+	pendingReplyTo: string | undefined,
+	supportsReply: boolean
+): {outgoing: Record<string, string> | undefined; echo: Record<string, string>} {
+	return {
+		outgoing:
+			pendingReplyTo && supportsReply ? {"+reply": pendingReplyTo} : undefined,
+		echo: pendingReplyTo ? {"+reply": pendingReplyTo} : {},
+	};
+}
+
 export default {
 	addPluginCommand,
 	getCommands,

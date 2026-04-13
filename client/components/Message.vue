@@ -181,6 +181,10 @@ export default defineComponent({
 		});
 
 		const canReply = computed(() => {
+			if (!props.network.serverOptions.supportsReply) {
+				return false;
+			}
+
 			const t = props.message.type;
 			return (
 				t === MessageType.MESSAGE || t === MessageType.ACTION || t === MessageType.NOTICE
