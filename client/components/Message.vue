@@ -39,38 +39,12 @@
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">*&nbsp;</span></span>
 			<span class="content" dir="auto">
-				<span
-					v-if="message.replyTo && !parentInHistory"
-					class="reply-context disabled tooltipped tooltipped-e"
-					aria-label="Original message is no longer in scrollback"
-				>
-					<span class="reply-context-icon" aria-hidden="true" />
-					<template v-if="message.replyToNick">
-						<span class="reply-context-nick">{{ message.replyToNick }}</span>
-						<span v-if="message.replyToText" class="reply-context-text">{{
-							message.replyToText
-						}}</span>
-					</template>
-					<span v-else class="reply-context-unknown">In reply to a message</span>
-				</span>
-				<div
-					v-else-if="message.replyTo"
-					class="reply-context"
-					role="button"
-					tabindex="0"
-					@click="scrollToParent"
-					@keydown.enter.prevent="scrollToParent"
-					@keydown.space.prevent="scrollToParent"
-				>
-					<span class="reply-context-icon" aria-hidden="true" />
-					<template v-if="message.replyToNick">
-						<span class="reply-context-nick">{{ message.replyToNick }}</span>
-						<span v-if="message.replyToText" class="reply-context-text">{{
-							message.replyToText
-						}}</span>
-					</template>
-					<span v-else class="reply-context-unknown">In reply to a message</span>
-				</div>
+				<ReplyContext
+					v-if="message.replyTo"
+					:message="message"
+					:parent-in-history="parentInHistory"
+					@scroll-to-parent="scrollToParent"
+				/>
 				<StatusmsgMarker :group="message.statusmsgGroup" />
 				<Username
 					:user="message.from"
@@ -110,38 +84,12 @@
 				</template>
 			</span>
 			<span class="content" dir="auto">
-				<span
-					v-if="message.replyTo && !parentInHistory"
-					class="reply-context disabled tooltipped tooltipped-e"
-					aria-label="Original message is no longer in scrollback"
-				>
-					<span class="reply-context-icon" aria-hidden="true" />
-					<template v-if="message.replyToNick">
-						<span class="reply-context-nick">{{ message.replyToNick }}</span>
-						<span v-if="message.replyToText" class="reply-context-text">{{
-							message.replyToText
-						}}</span>
-					</template>
-					<span v-else class="reply-context-unknown">In reply to a message</span>
-				</span>
-				<div
-					v-else-if="message.replyTo"
-					class="reply-context"
-					role="button"
-					tabindex="0"
-					@click="scrollToParent"
-					@keydown.enter.prevent="scrollToParent"
-					@keydown.space.prevent="scrollToParent"
-				>
-					<span class="reply-context-icon" aria-hidden="true" />
-					<template v-if="message.replyToNick">
-						<span class="reply-context-nick">{{ message.replyToNick }}</span>
-						<span v-if="message.replyToText" class="reply-context-text">{{
-							message.replyToText
-						}}</span>
-					</template>
-					<span v-else class="reply-context-unknown">In reply to a message</span>
-				</div>
+				<ReplyContext
+					v-if="message.replyTo"
+					:message="message"
+					:parent-in-history="parentInHistory"
+					@scroll-to-parent="scrollToParent"
+				/>
 				<span
 					v-if="message.showInActive"
 					aria-label="This message was shown in your active channel"
@@ -177,6 +125,7 @@ import eventbus from "../js/eventbus";
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
+import ReplyContext from "./ReplyContext.vue";
 import MessageTypes from "./MessageTypes";
 import StatusmsgMarker from "./StatusmsgMarker.vue";
 
@@ -192,6 +141,7 @@ export default defineComponent({
 	name: "Message",
 	components: {
 		...MessageTypes,
+		ReplyContext,
 		StatusmsgMarker,
 	},
 	props: {
@@ -276,6 +226,7 @@ export default defineComponent({
 				el.scrollIntoView({block: "center", behavior: "smooth"});
 				el.classList.add("highlight");
 				setTimeout(() => {
+					// We don't want to reset e.g. pings/keyword matches
 					if (!wasHighlighted) {
 						el.classList.remove("highlight");
 					}
