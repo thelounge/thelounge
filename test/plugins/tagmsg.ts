@@ -140,15 +140,6 @@ describe("tagmsg handler", function () {
 			emitTagmsg({tags: {"+typing": "done"}});
 		});
 
-		it("should support +draft/typing tag", function (done) {
-			client.on("typing", function (data: any) {
-				expect(data.status).to.equal("active");
-				done();
-			});
-
-			emitTagmsg({tags: {"+draft/typing": "active"}});
-		});
-
 		it("should ignore invalid typing statuses", function () {
 			let emitted = false;
 
