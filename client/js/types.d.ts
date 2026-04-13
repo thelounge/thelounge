@@ -1,5 +1,3 @@
-declare module "*.css";
-
 import {defineComponent} from "vue";
 
 import {SharedChan} from "../../shared/types/chan";
