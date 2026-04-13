@@ -94,6 +94,12 @@ interface ServerToClientEvents {
 		moreAfter: boolean;
 	}>;
 
+	"messages:latest": EventHandler<{
+		chan: number;
+		messages: SharedMsg[];
+		totalMessages: number;
+	}>;
+
 	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;
 	"msg:special": EventHandler<{chan: number; data?: Record<string, any>}>;
 	msg: EventHandler<{msg: SharedMsg; chan: number; highlight?: number; unread?: number}>;
@@ -170,6 +176,8 @@ interface ClientToServerEvents {
 	more: EventHandler<{target: number; lastId: number; condensed: boolean}>;
 
 	"messages:around": EventHandler<{target: number; msgId: number}>;
+
+	"messages:latest": EventHandler<{target: number}>;
 
 	"more:newer": EventHandler<{target: number; lastId: number}>;
 

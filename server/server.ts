@@ -490,6 +490,16 @@ function initializeClient(
 		}
 	});
 
+	socket.on("messages:latest", (data) => {
+		if (_.isPlainObject(data)) {
+			const result = client.messagesLatest(data);
+
+			if (result !== null) {
+				socket.emit("messages:latest", result);
+			}
+		}
+	});
+
 	socket.on("network:new", (data) => {
 		if (_.isPlainObject(data)) {
 			// prevent people from overriding webirc settings

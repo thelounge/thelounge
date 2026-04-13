@@ -680,6 +680,24 @@ class Client {
 		};
 	}
 
+	messagesLatest(data) {
+		const client = this;
+		const target = client.find(data.target);
+
+		if (!target) {
+			return null;
+		}
+
+		const chan = target.chan;
+		const messages = chan.messages.slice(-100);
+
+		return {
+			chan: chan.id,
+			messages: messages,
+			totalMessages: chan.messages.length,
+		};
+	}
+
 	clearHistory(data) {
 		const client = this;
 		const target = client.find(data.target);

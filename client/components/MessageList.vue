@@ -64,6 +64,12 @@
 				<span v-if="channel.historyLoading">Loading…</span>
 				<span v-else>Show newer messages</span>
 			</button>
+			<button
+				class="btn"
+				@click="onJumpToLatest"
+			>
+				Jump to latest
+			</button>
 		</div>
 	</div>
 </template>
@@ -191,6 +197,18 @@ export default defineComponent({
 			socket.emit("more:newer", {
 				target: props.channel.id,
 				lastId: lastMessage,
+			});
+		};
+
+		const onJumpToLatest = () => {
+			if (!store.state.isConnected) {
+				return;
+			}
+
+			props.channel.historyLoading = true;
+
+			socket.emit("messages:latest", {
+				target: props.channel.id,
 			});
 		};
 
@@ -487,6 +505,7 @@ export default defineComponent({
 			store,
 			onShowMoreClick,
 			onShowNewerClick,
+			onJumpToLatest,
 			loadMoreButton,
 			loadNewerButton,
 			onCopy,

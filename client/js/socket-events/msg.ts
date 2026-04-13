@@ -66,7 +66,11 @@ socket.on("msg", function (data) {
 		}
 	}
 
-	channel.messages.push(data.msg);
+	// Don't push messages into the buffer while browsing old history via mention jump,
+	// as it causes duplicates/gaps when loading newer messages from the server
+	if (!channel.moreNewerAvailable) {
+		channel.messages.push(data.msg);
+	}
 
 	if (data.msg.self) {
 		channel.firstUnread = data.msg.id;

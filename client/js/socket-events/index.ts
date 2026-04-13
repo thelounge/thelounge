@@ -24,6 +24,7 @@ import "./setting";
 import "./history_clear";
 import "./mentions";
 import "./messages_around";
+import "./messages_latest";
 import "./more_newer";
 import "./search";
 import "./mute_changed";
