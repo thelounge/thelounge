@@ -1594,7 +1594,7 @@ textarea.input {
 }
 
 #chat .chat-view[data-type="channel"] .msg.highlight .time {
-	padding-left: 5px;
+	padding-left: 19px;
 	color: #696969;
 }
 
@@ -2210,7 +2210,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-top: 1px solid #e7e7e7;
 	border-radius: 0;
 	margin: 0;
-	padding: 6px;
+	padding: 6px 6px 6px 18px;
 	background: white;
 	display: flex;
 	align-items: flex-end;
@@ -2752,6 +2752,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#chat .msg {
 		display: block;
 		padding: 2px 10px;
+	}
+
+	#form {
+		padding-left: 6px;
+	}
+
+	.typing-indicator {
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 
 	#chat .msg[data-type="condensed"] .msg {

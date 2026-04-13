@@ -1,8 +1,11 @@
 import socket from "../socket";
 import {store} from "../store";
 
-const ACTIVE_TIMEOUT_MS = 6000;
-const PAUSED_TIMEOUT_MS = 30000;
+// https://ircv3.net/specs/client-tags/typing#format
+// The spec suggests we "SHOULD" use 6 seconds for active and 30 for timeout,
+// but that feels fairly long. The spec is more what you'd call 'guidelines' than actual rules.
+const ACTIVE_TIMEOUT_MS = 4_000;
+const PAUSED_TIMEOUT_MS = 20_000;
 
 const typingTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
