@@ -191,8 +191,16 @@
 /* Text inputs inside cards */
 
 .setting-card .input {
+	background-color: #28333d;
+	color: var(--body-color);
+	border: 1px solid #28333d;
 	margin-bottom: 0;
 	margin-top: 8px;
+}
+
+.setting-card input::placeholder,
+.setting-card textarea::placeholder {
+	color: var(--body-color-muted);
 }
 
 .setting-card textarea.input {

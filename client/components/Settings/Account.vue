@@ -75,7 +75,11 @@
 		<!-- Sessions -->
 		<SettingCard v-if="!store.state.serverConfiguration?.public" title="Sessions" role="group">
 			<h3>Current session</h3>
-			<Session v-if="currentSession" :session="currentSession" />
+			<Session
+				v-if="currentSession"
+				:session="currentSession"
+				v-bind:class="'current-session'"
+			/>
 
 			<template v-if="activeSessions.length > 0">
 				<h3>Active sessions</h3>
