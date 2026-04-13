@@ -20,6 +20,11 @@
 	margin-left: calc(50% - 480px - 30px);
 }
 
+/* Other sessions have a `<p>` for their last used date below them; current-session does not. */
+.current-session .session-item-btn {
+	margin-top: 10px;
+}
+
 /** The calculation is mobile +  2/3 of container width. Fairly arbitrary. */
 @media screen and (max-width: calc(768px + 320px)) {
 	.settings-menu {

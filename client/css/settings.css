@@ -357,10 +357,10 @@
 		border-radius: 6px;
 		text-align: center;
 	}
-
+	
 	.settings-menu button.active {
 		background-color: var(--button-color);
-		color: var(--button-text-color-hover);
+		color: black;
 	}
 
 	.settings-menu button::before {
