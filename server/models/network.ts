@@ -485,15 +485,16 @@ class Network {
 	setNick(this: Network, nick: string) {
 		this.nick = nick;
 		this.highlightRegex = new RegExp(
-			// Do not match characters and numbers (unless IRC color)
-			"(?:^|[^a-z0-9]|\x03[0-9]{1,2})" +
+			// Do not match Unicode letters, numbers, or combining marks (unless IRC color code).
+			// Also reject apostrophe contractions (e.g. "it's" should not match nick "s").
+			"(?:^|[^\\p{L}\\p{N}\\p{M}]|\x03[0-9]{1,2})(?<!\\p{L}')" +
 				// Escape nickname, as it may contain regex stuff
 				_.escapeRegExp(nick) +
-				// Do not match characters and numbers
-				"(?:[^a-z0-9]|$)",
+				// Do not match if followed by apostrophe+letter (contraction)
+				// or by a Unicode letter/number/combining mark
+				"(?!'\\p{L})(?:[^\\p{L}\\p{N}\\p{M}]|$)",
 
-			// Case insensitive search
-			"i"
+			"iu"
 		);
 
 		if (this.keepNick === nick) {
