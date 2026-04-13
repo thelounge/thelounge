@@ -19,13 +19,13 @@ socket.on("typing", function (data) {
 
 	const channel = receivingChannel.channel;
 	const nick = data.nick;
-	const key = `${data.chan}-${nick}`;
+	const timeoutKey = `${data.chan}-${nick}`;
 
-	const existing = typingTimeouts.get(key);
+	const existing = typingTimeouts.get(timeoutKey);
 
 	if (existing) {
 		clearTimeout(existing);
-		typingTimeouts.delete(key);
+		typingTimeouts.delete(timeoutKey);
 	}
 
 	if (data.status === "done") {
@@ -40,9 +40,9 @@ socket.on("typing", function (data) {
 	const timeout = data.status === "active" ? ACTIVE_TIMEOUT_MS : PAUSED_TIMEOUT_MS;
 
 	typingTimeouts.set(
-		key,
+		timeoutKey,
 		setTimeout(() => {
-			typingTimeouts.delete(key);
+			typingTimeouts.delete(timeoutKey);
 			removeTypingNick(channel, nick);
 		}, timeout)
 	);
@@ -62,12 +62,12 @@ socket.on("msg", function (data) {
 	const nick = data.msg.from?.nick;
 
 	if (nick) {
-		const key = `${data.chan}-${nick}`;
-		const timeout = typingTimeouts.get(key);
+		const timeoutKey = `${data.chan}-${nick}`;
+		const timeout = typingTimeouts.get(timeoutKey);
 
 		if (timeout) {
 			clearTimeout(timeout);
-			typingTimeouts.delete(key);
+			typingTimeouts.delete(timeoutKey);
 		}
 
 		removeTypingNick(receivingChannel.channel, nick);

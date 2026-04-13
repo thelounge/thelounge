@@ -33,6 +33,7 @@
 	background: linear-gradient(to top, var(--window-bg-color) 40%, transparent);
 }
 
+/* We align just left of the userlist */
 .userlist-open .typing-indicator {
 	right: calc(var(--userlist-width) + 1px);
 }
@@ -41,22 +42,23 @@
 	display: inline-flex;
 	gap: 2px;
 	align-items: center;
-}
 
-.typing-dots span {
-	width: 4px;
-	height: 4px;
-	border-radius: 50%;
-	background: var(--body-color-muted);
-	animation: typing-bounce 1.4s infinite ease-in-out both;
-}
+	span {
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background: var(--body-color-muted);
+		animation: typing-bounce 1.4s infinite ease-in-out both;
+	}
 
-.typing-dots span:nth-child(1) {
-	animation-delay: -0.32s;
-}
+	/* Stagger the dots animation */
+	span:nth-child(1) {
+		animation-delay: -0.32s;
+	}
 
-.typing-dots span:nth-child(2) {
-	animation-delay: -0.16s;
+	span:nth-child(2) {
+		animation-delay: -0.16s;
+	}
 }
 
 @keyframes typing-bounce {
