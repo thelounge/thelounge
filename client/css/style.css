@@ -1600,7 +1600,8 @@ textarea.input {
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
-/* Reply context — compact preview above message text, inside .content */
+/* Show some context (for now, the message in question) above replys */
+/* TODO: we probably need to revisit this with draft/multiline */
 #chat .msg .reply-context {
 	display: flex;
 	align-items: baseline;

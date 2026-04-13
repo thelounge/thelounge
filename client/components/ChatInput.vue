@@ -200,6 +200,7 @@ export default defineComponent({
 				}
 
 				if (Object.prototype.hasOwnProperty.call(commands, cmd) && commands[cmd](args)) {
+					props.channel.replyingTo = null;
 					return false;
 				}
 			}
