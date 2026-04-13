@@ -15,10 +15,12 @@ program
 	.description("Migrate message storage where needed")
 	.on("--help", Utils.extraHelp)
 	.action(function (user) {
-		runMigrations(user).catch((err) => {
+		try {
+			runMigrations(user);
+		} catch (err: any) {
 			log.error(err.toString());
 			process.exit(1);
-		});
+		}
 	});
 
 program
@@ -27,13 +29,15 @@ program
 	.description("Delete messages from the DB based on the storage policy")
 	.on("--help", Utils.extraHelp)
 	.action(function (user) {
-		runCleaning(user).catch((err) => {
+		try {
+			runCleaning(user);
+		} catch (err: any) {
 			log.error(err.toString());
 			process.exit(1);
-		});
+		}
 	});
 
-async function runMigrations(user?: string) {
+function runMigrations(user?: string) {
 	const manager = new ClientManager();
 	const users = manager.getUsers();
 
@@ -46,14 +50,14 @@ async function runMigrations(user?: string) {
 	}
 
 	for (const name of users) {
-		await migrateUser(manager, name);
+		migrateUser(manager, name);
 		// if any migration fails we blow up,
 		// chances are the rest won't complete either
 	}
 }
 
 // runs sqlite migrations for a user, which must exist
-async function migrateUser(manager: ClientManager, user: string) {
+function migrateUser(manager: ClientManager, user: string) {
 	log.info("handling user", user);
 
 	if (!isUserLogEnabled(manager, user)) {
@@ -62,8 +66,8 @@ async function migrateUser(manager: ClientManager, user: string) {
 	}
 
 	const sqlite = new SqliteMessageStorage(user);
-	await sqlite.enable(); // enable runs migrations
-	await sqlite.close();
+	sqlite.enable();
+	sqlite.close();
 	log.info("user", user, "migrated successfully");
 }
 
@@ -78,7 +82,7 @@ function isUserLogEnabled(manager: ClientManager, user: string): boolean {
 	return conf.log;
 }
 
-async function runCleaning(user: string) {
+function runCleaning(user: string) {
 	const manager = new ClientManager();
 	const users = manager.getUsers();
 
@@ -91,13 +95,13 @@ async function runCleaning(user: string) {
 	}
 
 	for (const name of users) {
-		await cleanUser(manager, name);
+		cleanUser(manager, name);
 		// if any migration fails we blow up,
 		// chances are the rest won't complete either
 	}
 }
 
-async function cleanUser(manager: ClientManager, user: string) {
+function cleanUser(manager: ClientManager, user: string) {
 	log.info("handling user", user);
 
 	if (!isUserLogEnabled(manager, user)) {
@@ -106,17 +110,17 @@ async function cleanUser(manager: ClientManager, user: string) {
 	}
 
 	const sqlite = new SqliteMessageStorage(user);
-	await sqlite.enable();
+	sqlite.enable();
 	const cleaner = new StorageCleaner(sqlite);
-	const num_deleted = await cleaner.runDeletesNoLimit();
+	const num_deleted = cleaner.runDeletesNoLimit();
 	log.info(`deleted ${num_deleted} messages`);
 	log.info("running a vacuum now, this might take a while");
 
 	if (num_deleted > 0) {
-		await sqlite.vacuum();
+		sqlite.vacuum();
 	}
 
-	await sqlite.close();
+	sqlite.close();
 	log.info(`cleaning messages for ${user} has been successful`);
 }
 

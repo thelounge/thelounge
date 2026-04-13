@@ -478,6 +478,10 @@ class Network {
 		this.channels.forEach((channel) => channel.destroy());
 	}
 
+	isIgnoredUser(data: Hostmask) {
+		return this.ignoreList.some((entry) => Helper.compareHostmask(entry, data));
+	}
+
 	setNick(this: Network, nick: string) {
 		this.nick = nick;
 		this.highlightRegex = new RegExp(
