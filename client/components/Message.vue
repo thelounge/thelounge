@@ -34,6 +34,7 @@
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">*&nbsp;</span></span>
 			<span class="content" dir="auto">
+				<StatusmsgMarker :group="message.statusmsgGroup" />
 				<Username
 					:user="message.from"
 					:network="network"
@@ -78,12 +79,7 @@
 					class="msg-shown-in-active tooltipped tooltipped-e"
 					><span></span
 				></span>
-				<span
-					v-if="message.statusmsgGroup"
-					:aria-label="`This message was only shown to users with ${message.statusmsgGroup} mode`"
-					class="msg-statusmsg tooltipped tooltipped-e"
-					><span>{{ message.statusmsgGroup }}</span></span
-				>
+				<StatusmsgMarker :group="message.statusmsgGroup" />
 				<ParsedMessage :network="network" :message="message" />
 				<LinkPreview
 					v-for="preview in message.previews"
@@ -107,6 +103,7 @@ import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
+import StatusmsgMarker from "./StatusmsgMarker.vue";
 
 import type {ClientChan, ClientMessage, ClientNetwork} from "../js/types";
 import {useStore} from "../js/store";
@@ -117,7 +114,10 @@ MessageTypes.Username = Username;
 
 export default defineComponent({
 	name: "Message",
-	components: MessageTypes,
+	components: {
+		...MessageTypes,
+		StatusmsgMarker,
+	},
 	props: {
 		message: {type: Object as PropType<ClientMessage>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: false},

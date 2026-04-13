@@ -793,8 +793,8 @@ function initializeClient(
 			socket.emit("setting:all", clientSettings);
 		});
 
-		socket.on("search", async (query) => {
-			const results = await client.search(query);
+		socket.on("search", (query) => {
+			const results = client.search(query);
 			socket.emit("search:results", results);
 		});
 
