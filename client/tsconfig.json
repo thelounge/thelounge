@@ -13,7 +13,7 @@
   "compilerOptions": {
     "sourceMap": false /*Create source map files for emitted JavaScript files. See more: https://www.typescriptlang.org/tsconfig#sourceMap */,
     "jsx": "preserve" /* Specify what JSX code is generated. */,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": ["DOM", "ESNext"],
 
     // this enables stricter inference for data properties on `this`
     "strict": true,
