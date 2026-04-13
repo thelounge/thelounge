@@ -1,8 +1,20 @@
 <template>
-	<span
-		v-if="!parentInHistory"
-		class="reply-context disabled tooltipped tooltipped-e"
-		aria-label="Original message is no longer in scrollback"
+	<component
+		:is="parentInHistory ? 'div' : 'span'"
+		:class="[
+			'reply-context',
+			{
+				disabled: !parentInHistory,
+				tooltipped: !parentInHistory,
+				'tooltipped-e': !parentInHistory,
+			},
+		]"
+		:role="parentInHistory ? 'button' : undefined"
+		:tabindex="parentInHistory ? 0 : undefined"
+		:aria-label="!parentInHistory ? 'Original message is no longer in scrollback' : undefined"
+		@click="parentInHistory ? $emit('scroll-to-parent') : undefined"
+		@keydown.enter.prevent="parentInHistory ? $emit('scroll-to-parent') : undefined"
+		@keydown.space.prevent="parentInHistory ? $emit('scroll-to-parent') : undefined"
 	>
 		<span class="reply-context-icon" aria-hidden="true" />
 		<template v-if="message.replyToNick">
@@ -12,25 +24,7 @@
 			}}</span>
 		</template>
 		<span v-else class="reply-context-unknown">In reply to a message</span>
-	</span>
-	<div
-		v-else
-		class="reply-context"
-		role="button"
-		tabindex="0"
-		@click="$emit('scroll-to-parent')"
-		@keydown.enter.prevent="$emit('scroll-to-parent')"
-		@keydown.space.prevent="$emit('scroll-to-parent')"
-	>
-		<span class="reply-context-icon" aria-hidden="true" />
-		<template v-if="message.replyToNick">
-			<span class="reply-context-nick">{{ message.replyToNick }}</span>
-			<span v-if="message.replyToText" class="reply-context-text">{{
-				message.replyToText
-			}}</span>
-		</template>
-		<span v-else class="reply-context-unknown">In reply to a message</span>
-	</div>
+	</component>
 </template>
 
 <script lang="ts">

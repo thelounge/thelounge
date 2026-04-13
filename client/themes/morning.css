@@ -94,6 +94,31 @@ body {
 .irc-fg5 { color: #e969a7; }
 .irc-fg12 { color: #50a8ff; }
 
+/* Reply context & actions */
+#chat .msg .reply-context-icon::before {
+	color: #607080;
+}
+
+#chat .msg .msg-actions {
+	border-color: #28333d;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+}
+
+#chat .msg .msg-actions button {
+	color: #b7c5d1;
+}
+
+#chat .msg .msg-actions button:hover,
+#chat .msg .msg-actions button:focus-visible {
+	background: rgb(255 255 255 / 8%);
+	color: #f3f3f3;
+}
+
+#form .reply-bar {
+	background: #28333d;
+	border-bottom-color: #1e2830;
+}
+
 /* Message form */
 #form {
 	background-color: #28333d;

@@ -1,11 +1,11 @@
-import {PluginInputHandler} from "./index";
+import {PluginInputHandler, buildReplyTags} from "./index";
 import Msg from "../../models/msg";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 
 const commands = ["slap", "me"];
 
-const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
 	if (chan.type !== ChanType.CHANNEL && chan.type !== ChanType.QUERY) {
 		chan.pushMessage(
 			this,
@@ -18,6 +18,7 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 		return;
 	}
 
+	const irc = network.irc;
 	let text;
 
 	switch (cmd) {
@@ -32,13 +33,11 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 
 			text = text || args.join(" ");
 
-			const replyTo = this._pendingReplyTo;
+			const reply = buildReplyTags(this._pendingReplyTo, network.serverOptions.supportsReply);
 
-			if (replyTo) {
+			if (reply.outgoing) {
 				// irc.action() doesn't support tags, send as raw PRIVMSG with CTCP ACTION
-				irc.sendMessage("PRIVMSG", chan.name, "\x01ACTION " + text + "\x01", {
-					"+reply": replyTo,
-				});
+				irc.sendMessage("PRIVMSG", chan.name, "\x01ACTION " + text + "\x01", reply.outgoing);
 			} else {
 				irc.action(chan.name, text);
 			}
@@ -50,7 +49,7 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 					nick: irc.user.nick,
 					target: chan.name,
 					message: text,
-					tags: replyTo ? {"+reply": replyTo} : {},
+					tags: reply.echo,
 				});
 			}
 

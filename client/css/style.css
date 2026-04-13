@@ -1324,6 +1324,11 @@ textarea.input {
 	position: relative;
 }
 
+#chat .msg:has(.reply-context) {
+	align-items: flex-end;
+}
+
+
 #chat .unread-marker {
 	position: relative;
 	text-align: center;
@@ -1600,11 +1605,10 @@ textarea.input {
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
-/* Show some context (for now, the message in question) above replys */
-/* TODO: we probably need to revisit this with draft/multiline */
+/* Reply context — compact preview above message text, inside .content */
 #chat .msg .reply-context {
 	display: flex;
-	align-items: baseline;
+	align-items: center;
 	gap: 4px;
 	font-size: 0.8em;
 	line-height: 1.4;
@@ -1619,7 +1623,6 @@ textarea.input {
 	cursor: pointer;
 	width: fit-content;
 	max-width: 100%;
-	position: relative;
 }
 
 #chat .msg .reply-context-icon::before {

@@ -123,6 +123,7 @@ declare module "irc-framework" {
 
 			supports(feature: "MODES"): string;
 			supports(feature: string): boolean;
+			supportsTag(tag_name: string): boolean;
 		};
 		// End of added by Max
 
