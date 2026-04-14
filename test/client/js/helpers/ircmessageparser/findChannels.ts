@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import findChannels from "../../../../../client/js/helpers/ircmessageparser/findChannels";
 
 describe("findChannels", () => {

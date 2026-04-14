@@ -167,7 +167,7 @@ export default defineComponent({
 
 		const playNotification = () => {
 			const pop = new Audio();
-			pop.src = "audio/pop.wav";
+			pop.src = new URL("../../audio/pop.wav", import.meta.url).href;
 
 			// eslint-disable-next-line
 			pop.play();
