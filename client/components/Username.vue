@@ -8,13 +8,8 @@
 		@contextmenu.prevent="openContextMenu"
 		><template v-if="html"><span class="nick" v-html="html"></span></template
 		><template v-else>{{ mode }}{{ user.nick }}</template
-		><StatusIcon
-			v-if="includeStatusIcon"
-			:away="!!user.away"
-			tooltip-dir="w"
-			:online="true"
-		/></span
-	>
+		><StatusIcon v-if="includeStatusIcon" :away="!!user.away" tooltip-dir="w" :online="true"
+	/></span>
 </template>
 
 <script lang="ts">

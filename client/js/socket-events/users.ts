@@ -21,9 +21,7 @@ socket.on("user:away", ({chan, nick, away}) => {
 	if (channel) {
 		channel.channel.userAway = away || undefined;
 
-		const user = channel.channel.users.find(
-			(u) => u.nick.toLowerCase() === nick.toLowerCase()
-		);
+		const user = channel.channel.users.find((u) => u.nick.toLowerCase() === nick.toLowerCase());
 
 		if (user) {
 			user.away = away || "";

@@ -11,7 +11,10 @@ export default <IrcEventHandler>function (irc, network) {
 			const normalizedNick = nick.toLowerCase();
 
 			for (const channel of network.channels) {
-				if (channel.type === ChanType.QUERY && channel.name.toLowerCase() === normalizedNick) {
+				if (
+					channel.type === ChanType.QUERY &&
+					channel.name.toLowerCase() === normalizedNick
+				) {
 					channel.isOnline = true;
 
 					changedChannels.push(channel.name);
@@ -32,7 +35,10 @@ export default <IrcEventHandler>function (irc, network) {
 			const normalizedNick = nick.toLowerCase();
 
 			for (const channel of network.channels) {
-				if (channel.type === ChanType.QUERY && channel.name.toLowerCase() === normalizedNick) {
+				if (
+					channel.type === ChanType.QUERY &&
+					channel.name.toLowerCase() === normalizedNick
+				) {
 					channel.isOnline = false;
 					changedChannels.push(channel.name);
 					break;
