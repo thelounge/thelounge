@@ -215,6 +215,8 @@ declare module "irc-framework" {
 
 		action(target: string, message: string): string[];
 
+		tagmsg(target: string, tags: {[key: string]: string}): void;
+
 		whowas(target: string, cb?: (event: Event) => any): void;
 
 		whois(nick: string, cb: (event: any) => void): void;
@@ -298,6 +300,20 @@ declare module "irc-framework" {
 		on(
 			eventType: "users offline",
 			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
+		): this;
+
+		on(
+			eventType: "tagmsg",
+			cb: (event: {
+				nick: string;
+				ident: string;
+				hostname: string;
+				target: string;
+				tags: {[key: string]: string};
+				time?: number;
+				account?: any;
+				batch?: any;
+			}) => any
 		): this;
 	}
 	export class Message {

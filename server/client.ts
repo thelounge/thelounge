@@ -50,6 +50,7 @@ const events = [
 	"part",
 	"quit",
 	"sasl",
+	"tagmsg",
 	"topic",
 	"welcome",
 	"whois",
