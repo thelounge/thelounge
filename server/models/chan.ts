@@ -269,7 +269,11 @@ class Chan {
 		}
 
 		for (const messageStorage of client.messageStorage) {
-			messageStorage.index(target.network, targetChannel, msg).catch((e) => log.error(e));
+			try {
+				messageStorage.index(target.network, targetChannel, msg);
+			} catch (e: any) {
+				log.error(e);
+			}
 		}
 	}
 
@@ -296,38 +300,41 @@ class Chan {
 			return;
 		}
 
-		client.messageProvider
-			.getMessages(network, this, () => client.idMsg++)
-			.then((messages) => {
-				if (messages.length === 0) {
-					if (network.irc!.network.cap.isEnabled("znc.in/playback")) {
-						requestZncPlayback(this, network, 0);
-					}
-
-					return;
-				}
-
-				this.messages = messages.concat(this.messages);
-
-				if (!this.firstUnread) {
-					this.firstUnread = messages[messages.length - 1].id;
-				}
-
-				client.emit("more", {
-					chan: this.id,
-					messages: messages.slice(-100),
-					totalMessages: messages.length,
-				});
-
-				if (network.irc!.network.cap.isEnabled("znc.in/playback")) {
-					const from = Math.floor(messages[messages.length - 1].time.getTime() / 1000);
-
-					requestZncPlayback(this, network, from);
-				}
-			})
-			.catch((err: Error) =>
-				log.error(`Failed to load messages for ${client.name}: ${err.toString()}`)
+		try {
+			const messages = client.messageProvider.getMessages(
+				network,
+				this,
+				() => client.idMsg++
 			);
+
+			if (messages.length === 0) {
+				if (network.irc!.network.cap.isEnabled("znc.in/playback")) {
+					requestZncPlayback(this, network, 0);
+				}
+
+				return;
+			}
+
+			this.messages = messages.concat(this.messages);
+
+			if (!this.firstUnread) {
+				this.firstUnread = messages[messages.length - 1].id;
+			}
+
+			client.emit("more", {
+				chan: this.id,
+				messages: messages.slice(-100),
+				totalMessages: messages.length,
+			});
+
+			if (network.irc!.network.cap.isEnabled("znc.in/playback")) {
+				const from = Math.floor(messages[messages.length - 1].time.getTime() / 1000);
+
+				requestZncPlayback(this, network, from);
+			}
+		} catch (err: any) {
+			log.error(`Failed to load messages for ${client.name}: ${err.toString()}`);
+		}
 	}
 
 	isLoggable() {

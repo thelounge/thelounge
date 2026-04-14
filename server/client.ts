@@ -151,7 +151,11 @@ class Client {
 			}
 
 			for (const messageStorage of client.messageStorage) {
-				messageStorage.enable().catch((e) => log.error(e));
+				try {
+					messageStorage.enable();
+				} catch (e: any) {
+					log.error(e);
+				}
 			}
 		}
 
@@ -646,11 +650,15 @@ class Client {
 		}
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.deleteChannel(target.network, target.chan).catch((e) => log.error(e));
+			try {
+				messageStorage.deleteChannel(target.network, target.chan);
+			} catch (e: any) {
+				log.error(e);
+			}
 		}
 	}
 
-	async search(query: SearchQuery): Promise<SearchResponse> {
+	search(query: SearchQuery): SearchResponse {
 		if (!this.messageProvider?.isEnabled) {
 			return {
 				...query,
@@ -784,7 +792,11 @@ class Client {
 		});
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.close().catch((e) => log.error(e));
+			try {
+				messageStorage.close();
+			} catch (e: any) {
+				log.error(e);
+			}
 		}
 	}
 
