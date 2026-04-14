@@ -2,6 +2,7 @@
 	<!-- TODO: investigate -->
 	<ChannelWrapper ref="wrapper" v-bind="$props">
 		<span class="name">{{ channel.name }}</span>
+		<StatusIcon v-if="showStatusIcon" :online="channel.isOnline" :away="!!channel.userAway" />
 		<span
 			v-if="channel.unread"
 			:class="{highlight: channel.highlight && !channel.muted}"
@@ -33,12 +34,15 @@ import {PropType, defineComponent, computed} from "vue";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import useCloseChannel from "../js/hooks/use-close-channel";
 import {ClientChan, ClientNetwork} from "../js/types";
+import {ChanType} from "../../shared/types/chan";
 import ChannelWrapper from "./ChannelWrapper.vue";
+import StatusIcon from "./StatusIcon.vue";
 
 export default defineComponent({
 	name: "Channel",
 	components: {
 		ChannelWrapper,
+		StatusIcon,
 	},
 	props: {
 		network: {
@@ -54,10 +58,17 @@ export default defineComponent({
 	},
 	setup(props) {
 		const unreadCount = computed(() => roundBadgeNumber(props.channel.unread));
+		const showStatusIcon = computed(
+			() =>
+				props.channel.type === ChanType.QUERY &&
+				props.network.status.connected &&
+				props.channel.isOnline !== null
+		);
 		const close = useCloseChannel(props.channel);
 
 		return {
 			unreadCount,
+			showStatusIcon,
 			close,
 		};
 	},

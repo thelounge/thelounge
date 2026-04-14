@@ -38,7 +38,8 @@
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
 						:user="user.original"
-						v-html="user.string"
+						:html="user.string"
+						:include-status-icon="true"
 					/>
 					<!-- eslint-enable -->
 				</template>
@@ -49,6 +50,7 @@
 						:on-hover="hoverUser"
 						:active="user === activeUser"
 						:user="user"
+						:include-status-icon="true"
 					/>
 				</template>
 			</div>

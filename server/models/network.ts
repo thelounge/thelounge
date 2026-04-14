@@ -128,7 +128,11 @@ class Network {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
+		MONITOR: number;
 	};
+
+	monitorList!: string[];
+	toBeMonitored!: string[];
 
 	// TODO: this is only available on export
 	hasSTSPolicy!: boolean;
@@ -162,6 +166,7 @@ class Network {
 					{symbol: "+", mode: "v"},
 				]),
 				NETWORK: "",
+				MONITOR: 0,
 			},
 
 			proxyHost: "",
@@ -173,6 +178,8 @@ class Network {
 			chanCache: [],
 			ignoreList: [],
 			keepNick: null,
+			monitorList: [],
+			toBeMonitored: [],
 		});
 
 		if (!this.uuid) {
@@ -310,6 +317,7 @@ class Network {
 		this.irc.requestCap([
 			"znc.in/self-message", // Legacy echo-message for ZNC
 			"znc.in/playback", // See http://wiki.znc.in/Playback
+			"extended-monitor", // https://ircv3.net/specs/extensions/extended-monitor
 		]);
 	}
 
@@ -562,6 +570,11 @@ class Network {
 		}
 
 		this.channels.splice(index, 0, newChan);
+
+		if (newChan.type === ChanType.QUERY && this.irc?.connected) {
+			this.monitor(newChan.name);
+		}
+
 		return index;
 	}
 
@@ -666,6 +679,52 @@ class Network {
 			// Skip network lobby (it's always unshifted into first position)
 			return i > 0 && that.name.toLowerCase() === name;
 		});
+	}
+
+	monitor(target: string) {
+		if (!this.irc) {
+			return;
+		}
+
+		target = target.toLowerCase();
+
+		if (this.monitorList.includes(target) || this.toBeMonitored.includes(target)) {
+			return;
+		}
+
+		if (
+			this.serverOptions.MONITOR > 0 &&
+			this.monitorList.length >= this.serverOptions.MONITOR
+		) {
+			this.toBeMonitored.push(target);
+			return;
+		}
+
+		this.irc.addMonitor(target);
+		this.monitorList.push(target);
+	}
+
+	removeMonitor(target: string) {
+		if (!this.irc) {
+			return;
+		}
+
+		target = target.toLowerCase();
+
+		const wasMonitored = this.monitorList.includes(target);
+
+		this.monitorList = this.monitorList.filter((monitored) => monitored !== target);
+		this.toBeMonitored = this.toBeMonitored.filter((pending) => pending !== target);
+
+		if (!wasMonitored) {
+			return;
+		}
+
+		this.irc.removeMonitor(target);
+
+		if (this.toBeMonitored.length > 0) {
+			this.monitor(this.toBeMonitored.shift()!);
+		}
 	}
 
 	getLobby() {
