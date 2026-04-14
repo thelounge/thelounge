@@ -266,7 +266,7 @@ export default async function (
 				process.exit(1);
 			}
 
-			manager.init(identHandler, sockets);
+			void manager.init(identHandler, sockets);
 		});
 
 		// Handle ctrl+c and kill gracefully
@@ -710,7 +710,7 @@ function initializeClient(
 			);
 
 			if (registration) {
-				client.manager.webPush.pushSingle(client, registration, {
+				void client.manager.webPush.pushSingle(client, registration, {
 					type: "notification",
 					timestamp: Date.now(),
 					title: "The Lounge",
