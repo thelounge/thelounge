@@ -27,6 +27,8 @@ export enum MessageType {
 	RAW = "raw",
 	PLUGIN = "plugin",
 	WALLOPS = "wallops",
+	WARN = "warn",
+	NOTE = "note",
 }
 
 import {SharedUser} from "./user";

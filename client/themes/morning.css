@@ -134,6 +134,16 @@ form.message-search input {
 	color: #f92772;
 }
 
+#chat .msg[data-type="warn"],
+#chat .msg[data-type="warn"] .from {
+	color: #e6a23c;
+}
+
+#chat .msg[data-type="note"],
+#chat .msg[data-type="note"] .from {
+	color: #4a90d9;
+}
+
 #chat .msg[data-type="monospace_block"] .text,
 code,
 .irc-monospace {

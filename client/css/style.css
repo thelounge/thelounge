@@ -323,6 +323,9 @@ p {
 #chat .msg[data-type="nick"] .from::before,
 #chat .msg[data-type="chghost"] .from::before,
 #chat .msg[data-type="action"] .from::before,
+#chat .msg[data-type="error"] .from::before,
+#chat .msg[data-type="warn"] .from::before,
+#chat .msg[data-type="note"] .from::before,
 #chat .msg[data-type="plugin"] .from::before,
 #chat .msg[data-type="raw"] .from::before,
 #chat .msg-statusmsg span::before,
@@ -1580,9 +1583,31 @@ textarea.input {
 	content: "Wallops: ";
 }
 
+#chat .msg[data-type="error"] .from::before {
+	content: "\f06a"; /* https://fontawesome.com/icons/circle-exclamation?style=solid */
+}
+
 #chat .msg[data-type="error"],
 #chat .msg[data-type="error"] .from {
 	color: #e74c3c;
+}
+
+#chat .msg[data-type="warn"] .from::before {
+	content: "\f071"; /* https://fontawesome.com/icons/triangle-exclamation?style=solid */
+}
+
+#chat .msg[data-type="warn"],
+#chat .msg[data-type="warn"] .from {
+	color: #f39c12;
+}
+
+#chat .msg[data-type="note"] .from::before {
+	content: "\f05a"; /* https://fontawesome.com/icons/circle-info?style=solid */
+}
+
+#chat .msg[data-type="note"],
+#chat .msg[data-type="note"] .from {
+	color: #3498db;
 }
 
 #chat .chat-view[data-type="channel"] .msg.highlight {

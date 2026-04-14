@@ -439,6 +439,7 @@ declare module "irc-framework" {
 		enable_chghost?: boolean;
 		enable_echomessage?: boolean;
 		enable_setname?: boolean;
+		enable_standardreplies?: boolean;
 		message_max_length?: number;
 		auto_reconnect?: boolean;
 		auto_reconnect_wait?: number;
