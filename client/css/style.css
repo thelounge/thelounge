@@ -1817,6 +1817,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	content: "Search Results";
 }
 
+.user-bot-indicator {
+	color: var(--body-color-muted);
+	font-size: 0.85em;
+}
+
 #loading {
 	display: flex;
 	font-size: 14px;
