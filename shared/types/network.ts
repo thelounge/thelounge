@@ -20,6 +20,7 @@ export type SharedServerOptions = {
 	PREFIX: SharedPrefix;
 	NETWORK: string;
 	MONITOR: number;
+	supportsReply: boolean;
 };
 
 export type SharedNetworkStatus = {

@@ -124,6 +124,7 @@ declare module "irc-framework" {
 
 			supports(feature: "MODES"): string;
 			supports(feature: string): boolean;
+			supportsTag(tag_name: string): boolean;
 		};
 		// End of added by Max
 
@@ -178,11 +179,16 @@ declare module "irc-framework" {
 
 		changeNick(nick: string): void;
 
-		sendMessage(commandName: string, target: string, message: string): string[];
+		sendMessage(
+			commandName: string,
+			target: string,
+			message: string,
+			tags?: {[key: string]: string}
+		): string[];
 
-		say(target: string, message: string): string[];
+		say(target: string, message: string, tags?: {[key: string]: string}): string[];
 
-		notice(target: string, message: string): string[];
+		notice(target: string, message: string, tags?: {[key: string]: string}): string[];
 
 		join(channel: string, key?: string): void;
 

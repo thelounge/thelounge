@@ -129,6 +129,7 @@ class Network {
 		PREFIX: Prefix;
 		NETWORK: string;
 		MONITOR: number;
+		supportsReply: boolean;
 	};
 
 	monitorList!: string[];
@@ -167,6 +168,7 @@ class Network {
 				]),
 				NETWORK: "",
 				MONITOR: 0,
+				supportsReply: false,
 			},
 
 			proxyHost: "",
