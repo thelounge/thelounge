@@ -4,50 +4,26 @@ import {ChanType} from "../../../shared/types/chan";
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
-	irc.on("users online", function (data) {
+	function handleMonitorStatus(nicks: string[], online: boolean) {
 		const changedChannels: string[] = [];
 
-		for (const nick of data.nicks) {
-			const normalizedNick = nick.toLowerCase();
+		for (const nick of nicks) {
+			const channel = network.getChannel(nick);
 
-			for (const channel of network.channels) {
-				if (
-					channel.type === ChanType.QUERY &&
-					channel.name.toLowerCase() === normalizedNick
-				) {
-					channel.isOnline = true;
-
-					changedChannels.push(channel.name);
-					break;
-				}
+			if (channel?.type === ChanType.QUERY && channel.isOnline !== online) {
+				channel.isOnline = online;
+				changedChannels.push(channel.name);
 			}
 		}
 
 		if (changedChannels.length > 0) {
-			client.emit("users:online", {changedChannels, networkId: network.uuid});
+			client.emit(online ? "users:online" : "users:offline", {
+				changedChannels,
+				networkId: network.uuid,
+			});
 		}
-	});
+	}
 
-	irc.on("users offline", function (data) {
-		const changedChannels: string[] = [];
-
-		for (const nick of data.nicks) {
-			const normalizedNick = nick.toLowerCase();
-
-			for (const channel of network.channels) {
-				if (
-					channel.type === ChanType.QUERY &&
-					channel.name.toLowerCase() === normalizedNick
-				) {
-					channel.isOnline = false;
-					changedChannels.push(channel.name);
-					break;
-				}
-			}
-		}
-
-		if (changedChannels.length > 0) {
-			client.emit("users:offline", {changedChannels, networkId: network.uuid});
-		}
-	});
+	irc.on("users online", (data) => handleMonitorStatus(data.nicks, true));
+	irc.on("users offline", (data) => handleMonitorStatus(data.nicks, false));
 };

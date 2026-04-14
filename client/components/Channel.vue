@@ -34,6 +34,7 @@ import {PropType, defineComponent, computed} from "vue";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import useCloseChannel from "../js/hooks/use-close-channel";
 import {ClientChan, ClientNetwork} from "../js/types";
+import {ChanType} from "../../shared/types/chan";
 import ChannelWrapper from "./ChannelWrapper.vue";
 import StatusIcon from "./StatusIcon.vue";
 
@@ -59,7 +60,7 @@ export default defineComponent({
 		const unreadCount = computed(() => roundBadgeNumber(props.channel.unread));
 		const showStatusIcon = computed(
 			() =>
-				props.channel.type === "query" &&
+				props.channel.type === ChanType.QUERY &&
 				props.network.status.connected &&
 				props.channel.isOnline !== null
 		);

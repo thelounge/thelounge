@@ -29,30 +29,20 @@ socket.on("user:away", ({chan, nick, away}) => {
 	}
 });
 
-socket.on("users:online", ({changedChannels, networkId}) => {
-	for (const network of store.state.networks) {
-		if (network.uuid === networkId) {
-			for (const channel of network.channels) {
-				if (changedChannels.includes(channel.name)) {
-					channel.isOnline = true;
-				}
-			}
+function handleMonitorStatus(
+	{changedChannels, networkId}: {changedChannels: string[]; networkId: string},
+	online: boolean
+) {
+	const network = store.getters.findNetwork(networkId);
 
-			break;
+	if (network) {
+		for (const channel of network.channels) {
+			if (changedChannels.includes(channel.name)) {
+				channel.isOnline = online;
+			}
 		}
 	}
-});
+}
 
-socket.on("users:offline", ({changedChannels, networkId}) => {
-	for (const network of store.state.networks) {
-		if (network.uuid === networkId) {
-			for (const channel of network.channels) {
-				if (changedChannels.includes(channel.name)) {
-					channel.isOnline = false;
-				}
-			}
-
-			break;
-		}
-	}
-});
+socket.on("users:online", (data) => handleMonitorStatus(data, true));
+socket.on("users:offline", (data) => handleMonitorStatus(data, false));

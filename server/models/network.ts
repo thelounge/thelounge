@@ -681,16 +681,12 @@ class Network {
 		});
 	}
 
-	normalizeMonitorTarget(target: string) {
-		return target.toLowerCase();
-	}
-
 	monitor(target: string) {
 		if (!this.irc) {
 			return;
 		}
 
-		target = this.normalizeMonitorTarget(target);
+		target = target.toLowerCase();
 
 		if (this.monitorList.includes(target) || this.toBeMonitored.includes(target)) {
 			return;
@@ -713,7 +709,7 @@ class Network {
 			return;
 		}
 
-		target = this.normalizeMonitorTarget(target);
+		target = target.toLowerCase();
 
 		const wasMonitored = this.monitorList.includes(target);
 
