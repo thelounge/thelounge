@@ -1,8 +1,5 @@
 <template>
-	<div
-		v-if="typingText"
-		class="typing-indicator"
-	>
+	<div v-if="typingText" class="typing-indicator">
 		<span class="typing-dots"><span /><span /><span /></span>
 		{{ typingText }}
 	</div>
