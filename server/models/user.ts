@@ -38,7 +38,6 @@ class User {
 		return {
 			nick: this.nick,
 			modes: this.modes,
-			away: this.away,
 			lastMessage: this.lastMessage,
 			isBot: this.isBot,
 		};

@@ -10,7 +10,7 @@ export default <IrcEventHandler>function (irc, network) {
 	irc.on("back", (data) => handleAway(MessageType.BACK, data));
 
 	function handleAway(type: MessageType, data) {
-		const away = data.message ?? null;
+		const away = data.message;
 
 		if (data.self) {
 			const msg = new Msg({
@@ -42,12 +42,6 @@ export default <IrcEventHandler>function (irc, network) {
 					// because query windows have no users
 					chan.userAway = away;
 
-					client.emit("user:away", {
-						chan: chan.id,
-						nick: data.nick,
-						away: away,
-					});
-
 					user = chan.getUser(data.nick);
 
 					const msg = new Msg({
@@ -70,12 +64,6 @@ export default <IrcEventHandler>function (irc, network) {
 					}
 
 					user.away = away;
-
-					client.emit("user:away", {
-						chan: chan.id,
-						nick: data.nick,
-						away: away,
-					});
 
 					break;
 				}
