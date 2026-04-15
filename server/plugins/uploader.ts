@@ -4,7 +4,6 @@ import {v4 as uuidv4} from "uuid";
 import path from "path";
 import fs from "fs";
 import fileType from "file-type";
-import readChunk from "read-chunk";
 import crypto from "crypto";
 import log from "../log";
 import contentDisposition from "content-disposition";
@@ -304,7 +303,10 @@ class Uploader {
 	// Returns a string with the type otherwise
 	static async getFileType(filePath: string) {
 		try {
-			const buffer = await readChunk(filePath, 0, 5120);
+			const handle = await fs.promises.open(filePath, "r");
+			const buffer = Buffer.alloc(5120);
+			await handle.read(buffer, 0, 5120, 0);
+			await handle.close();
 
 			// returns {ext, mime} if found, null if not.
 			const file = await fileType.fromBuffer(buffer);
