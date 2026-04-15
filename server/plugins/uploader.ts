@@ -9,7 +9,7 @@ import log from "../log";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
 import {Request, Response} from "express";
-import Buffer from "buffer";
+import NodeBuffer, {Buffer} from "buffer";
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -317,7 +317,7 @@ class Uploader {
 			}
 
 			// if the buffer is a valid UTF-8 buffer, use text/plain
-			if (Buffer.isUtf8(buffer)) {
+			if (NodeBuffer.isUtf8(buffer)) {
 				return "text/plain";
 			}
 
