@@ -355,8 +355,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const clonedMsg = Object.keys(msg).reduce((newMsg, prop) => {
 			// id is regenerated when messages are retrieved
 			// previews are not stored because storage is cleared on lounge restart
-			// type and time are stored in a separate column
-			// msgid is stored in a dedicated column
+			// type, time, and msgid are stored in separate columns
 			if (
 				prop !== "id" &&
 				prop !== "previews" &&
