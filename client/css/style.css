@@ -1278,9 +1278,6 @@ textarea.input {
 	transform: translateY(16px);
 	transition: transform 0.2s, opacity 0.2s;
 	cursor: pointer;
-	background: none;
-	border: none;
-	padding: 0;
 }
 
 .scroll-down:focus:not(:focus-visible)::before,
