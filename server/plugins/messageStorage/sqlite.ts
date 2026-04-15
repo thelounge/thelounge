@@ -114,10 +114,7 @@ export const rollbacks: Rollback[] = [
 	},
 	{
 		version: 1784073600000,
-		stmts: [
-			"DROP INDEX msgid_idx",
-			// SQLite doesn't support DROP COLUMN before 3.35.0; leaving the column is harmless
-		],
+		stmts: ["DROP INDEX msgid_idx", "ALTER TABLE messages DROP COLUMN msgid"],
 	},
 ];
 
