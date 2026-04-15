@@ -250,6 +250,10 @@ declare module "irc-framework" {
 
 		matchAction(match_regex: string, cb: (event: Event) => any): void;
 
+		addMonitor(target: string): void;
+
+		removeMonitor(target: string): void;
+
 		stringToBlocks(str: string, block_size?: number): string[];
 
 		on(eventType: string | symbol, cb: (event: any) => void): this;
