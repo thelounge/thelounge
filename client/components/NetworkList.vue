@@ -17,7 +17,6 @@
 				placeholder="Jump to..."
 				type="search"
 				class="search input mousetrap"
-				aria-label="Search among the channel list"
 				tabindex="-1"
 				@input="setSearchText"
 				@keydown.up="navigateResults($event, -1)"
