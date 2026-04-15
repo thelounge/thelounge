@@ -39,7 +39,7 @@
 						:active="user.original === activeUser"
 						:user="user.original"
 						:html="user.string"
-						:include-status-icon="true"
+						:include-status-icon="showStatusIndicators"
 					/>
 					<!-- eslint-enable -->
 				</template>
@@ -50,7 +50,7 @@
 						:on-hover="hoverUser"
 						:active="user === activeUser"
 						:user="user"
-						:include-status-icon="true"
+						:include-status-icon="showStatusIndicators"
 					/>
 				</template>
 			</div>
@@ -63,6 +63,7 @@ import {filter as fuzzyFilter} from "fuzzy";
 import {computed, defineComponent, nextTick, PropType, ref} from "vue";
 import type {UserInMessage} from "../../shared/types/msg";
 import type {ClientChan, ClientUser} from "../js/types";
+import {useStore} from "../js/store";
 import Username from "./Username.vue";
 
 const modes = {
@@ -84,6 +85,7 @@ export default defineComponent({
 		channel: {type: Object as PropType<ClientChan>, required: true},
 	},
 	setup(props) {
+		const store = useStore();
 		const userSearchInput = ref("");
 		const activeUser = ref<UserInMessage | null>();
 		const userlist = ref<HTMLDivElement>();
@@ -238,12 +240,15 @@ export default defineComponent({
 			scrollToActiveUser();
 		};
 
+		const showStatusIndicators = computed(() => store.state.settings.statusIndicators);
+
 		return {
 			filteredUsers,
 			groupedUsers,
 			userSearchInput,
 			activeUser,
 			userlist,
+			showStatusIndicators,
 
 			setUserSearchInput,
 			getModeClass,
