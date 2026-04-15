@@ -117,9 +117,17 @@ export default <IrcEventHandler>function (irc, network) {
 			identSocketId = 0;
 		}
 
+		network.monitorList = [];
+		network.toBeMonitored = [];
+
 		network.channels.forEach((chan) => {
 			chan.users = new Map();
 			chan.state = ChanState.PARTED;
+
+			if (chan.type === ChanType.QUERY) {
+				chan.isOnline = null;
+				chan.userAway = null;
+			}
 		});
 
 		if (error) {
@@ -212,7 +220,10 @@ export default <IrcEventHandler>function (irc, network) {
 			network.serverOptions.CHANTYPES = data.options.CHANTYPES;
 		}
 
+		const monitor = Number(data.options.MONITOR);
+
 		network.serverOptions.NETWORK = data.options.NETWORK;
+		network.serverOptions.MONITOR = Number.isFinite(monitor) ? monitor : 0;
 		network.serverOptions.supportsReply = irc.network.supportsTag("reply");
 
 		client.emit("network:options", {

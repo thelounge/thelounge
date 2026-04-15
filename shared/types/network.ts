@@ -19,6 +19,7 @@ export type SharedServerOptions = {
 	CHANTYPES: string[];
 	PREFIX: SharedPrefix;
 	NETWORK: string;
+	MONITOR: number;
 	supportsReply: boolean;
 };
 

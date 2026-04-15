@@ -320,6 +320,7 @@ class Network {
 		this.irc.requestCap([
 			"znc.in/self-message", // Legacy echo-message for ZNC
 			"znc.in/playback", // See http://wiki.znc.in/Playback
+			"extended-monitor", // https://ircv3.net/specs/extensions/extended-monitor
 		]);
 	}
 
@@ -572,6 +573,11 @@ class Network {
 		}
 
 		this.channels.splice(index, 0, newChan);
+
+		if (newChan.type === ChanType.QUERY && this.irc?.connected) {
+			this.monitor(newChan.name);
+		}
+
 		return index;
 	}
 
