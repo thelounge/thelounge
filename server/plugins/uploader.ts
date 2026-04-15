@@ -6,11 +6,11 @@ import fs from "fs";
 import fileType from "file-type";
 import readChunk from "read-chunk";
 import crypto from "crypto";
-import isUtf8 from "is-utf8";
 import log from "../log";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
 import {Request, Response} from "express";
+import Buffer from "buffer";
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -315,7 +315,7 @@ class Uploader {
 			}
 
 			// if the buffer is a valid UTF-8 buffer, use text/plain
-			if (isUtf8(buffer)) {
+			if (Buffer.isUtf8(buffer)) {
 				return "text/plain";
 			}
 
