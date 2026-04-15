@@ -718,7 +718,11 @@ class Network {
 		for (let target of targets) {
 			target = target.toLowerCase();
 
-			if (this.monitorList.includes(target) || this.toBeMonitored.includes(target)) {
+			if (
+				this.monitorList.includes(target) ||
+				this.toBeMonitored.includes(target) ||
+				toAdd.includes(target)
+			) {
 				continue;
 			}
 
