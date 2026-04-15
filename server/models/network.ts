@@ -128,8 +128,12 @@ class Network {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
+		MONITOR: number;
 		supportsReply: boolean;
 	};
+
+	monitorList!: string[];
+	toBeMonitored!: string[];
 
 	// TODO: this is only available on export
 	hasSTSPolicy!: boolean;
@@ -163,6 +167,7 @@ class Network {
 					{symbol: "+", mode: "v"},
 				]),
 				NETWORK: "",
+				MONITOR: 0,
 				supportsReply: false,
 			},
 
@@ -175,6 +180,8 @@ class Network {
 			chanCache: [],
 			ignoreList: [],
 			keepNick: null,
+			monitorList: [],
+			toBeMonitored: [],
 		});
 
 		if (!this.uuid) {
@@ -669,6 +676,87 @@ class Network {
 			// Skip network lobby (it's always unshifted into first position)
 			return i > 0 && that.name.toLowerCase() === name;
 		});
+	}
+
+	monitor(target: string) {
+		if (!this.irc) {
+			return;
+		}
+
+		target = target.toLowerCase();
+
+		if (this.monitorList.includes(target) || this.toBeMonitored.includes(target)) {
+			return;
+		}
+
+		if (
+			this.serverOptions.MONITOR > 0 &&
+			this.monitorList.length >= this.serverOptions.MONITOR
+		) {
+			this.toBeMonitored.push(target);
+			return;
+		}
+
+		this.irc.addMonitor(target);
+		this.monitorList.push(target);
+	}
+
+	/**
+	 * If we send MONITORs to every channel/query the user may be
+	 * kicked for flooding, so we batch.
+	 */
+	monitorBatch(targets: string[]) {
+		if (!this.irc || targets.length === 0) {
+			return;
+		}
+
+		const toAdd: string[] = [];
+
+		for (let target of targets) {
+			target = target.toLowerCase();
+
+			if (this.monitorList.includes(target) || this.toBeMonitored.includes(target)) {
+				continue;
+			}
+
+			if (
+				this.serverOptions.MONITOR > 0 &&
+				this.monitorList.length + toAdd.length >= this.serverOptions.MONITOR
+			) {
+				this.toBeMonitored.push(target);
+				continue;
+			}
+
+			toAdd.push(target);
+		}
+
+		if (toAdd.length > 0) {
+			this.irc.raw("MONITOR", "+", toAdd.join(","));
+			this.monitorList.push(...toAdd);
+		}
+	}
+
+	removeMonitor(target: string) {
+		if (!this.irc) {
+			return;
+		}
+
+		target = target.toLowerCase();
+
+		const wasMonitored = this.monitorList.includes(target);
+
+		this.monitorList = this.monitorList.filter((monitored) => monitored !== target);
+		this.toBeMonitored = this.toBeMonitored.filter((pending) => pending !== target);
+
+		if (!wasMonitored) {
+			return;
+		}
+
+		this.irc.removeMonitor(target);
+
+		if (this.toBeMonitored.length > 0) {
+			this.monitor(this.toBeMonitored.shift()!);
+		}
 	}
 
 	getLobby() {
