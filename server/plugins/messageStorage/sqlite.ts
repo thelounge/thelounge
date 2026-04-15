@@ -14,12 +14,12 @@ import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
 type Migration = {version: number; stmts: string[]};
 type Rollback = {version: number; rollback_forbidden?: boolean; stmts: string[]};
 
-export const currentSchemaVersion = 1703322560448; // use `new Date().getTime()`
+export const currentSchemaVersion = 1744646400000; // use `new Date().getTime()`
 
 // Desired schema, adapt to the newest version and add migrations to the array below
 const schema = [
 	"CREATE TABLE options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
-	"CREATE TABLE messages (id INTEGER PRIMARY KEY AUTOINCREMENT, network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
+	"CREATE TABLE messages (id INTEGER PRIMARY KEY AUTOINCREMENT, network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT, msgid TEXT)",
 	`CREATE TABLE migrations (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		version INTEGER NOT NULL UNIQUE,
@@ -34,6 +34,7 @@ const schema = [
 	"CREATE INDEX network_channel ON messages (network, channel)",
 	"CREATE INDEX time ON messages (time)",
 	"CREATE INDEX msg_type_idx on messages (type)", // needed for efficient storageCleaner queries
+	"CREATE INDEX msgid_idx ON messages (msgid)",
 ];
 
 // the migrations will be executed in an exclusive transaction as a whole
@@ -71,6 +72,13 @@ export const migrations: Migration[] = [
 		version: 1703322560448,
 		stmts: ["CREATE INDEX msg_type_idx on messages (type)"],
 	},
+	{
+		version: 1744646400000,
+		stmts: [
+			"ALTER TABLE messages ADD COLUMN msgid TEXT",
+			"CREATE INDEX msgid_idx ON messages (msgid)",
+		],
+	},
 ];
 
 // down migrations need to restore the state of the prior version.
@@ -87,6 +95,13 @@ export const rollbacks: Rollback[] = [
 	{
 		version: 1703322560448,
 		stmts: ["drop INDEX msg_type_idx"],
+	},
+	{
+		version: 1744646400000,
+		stmts: [
+			"DROP INDEX msgid_idx",
+			// SQLite doesn't support DROP COLUMN before 3.35.0; leaving the column is harmless
+		],
 	},
 ];
 
@@ -341,7 +356,14 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			// id is regenerated when messages are retrieved
 			// previews are not stored because storage is cleared on lounge restart
 			// type and time are stored in a separate column
-			if (prop !== "id" && prop !== "previews" && prop !== "type" && prop !== "time") {
+			// msgid is stored in a dedicated column
+			if (
+				prop !== "id" &&
+				prop !== "previews" &&
+				prop !== "type" &&
+				prop !== "time" &&
+				prop !== "msgid"
+			) {
 				newMsg[prop] = msg[prop];
 			}
 
@@ -350,14 +372,15 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		this.database
 			.prepare(
-				"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)"
+				"INSERT INTO messages(network, channel, time, type, msg, msgid) VALUES(?, ?, ?, ?, ?, ?)"
 			)
 			.run(
 				network.uuid,
 				channel.name.toLowerCase(),
 				msg.time.getTime(),
 				msg.type,
-				JSON.stringify(clonedMsg)
+				JSON.stringify(clonedMsg),
+				msg.msgid ?? null
 			);
 	}
 
@@ -381,18 +404,23 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		const rows = this.database
 			.prepare(
-				"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?"
+				"SELECT msg, type, time, msgid FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?"
 			)
 			.all(network.uuid, channel.name.toLowerCase(), limit) as {
 			msg: string;
 			type: string;
 			time: number;
+			msgid: string | null;
 		}[];
 
 		return rows.reverse().map((row): Message => {
 			const msg = JSON.parse(row.msg);
 			msg.time = row.time;
 			msg.type = row.type;
+
+			if (row.msgid) {
+				msg.msgid = row.msgid;
+			}
 
 			const newMsg = new Msg(msg);
 			newMsg.id = nextID();
@@ -413,7 +441,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
 
 		let select =
-			"SELECT msg, type, time, network, channel FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
+			"SELECT msg, type, time, network, channel, msgid FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
 		const params: (string | number)[] = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
@@ -438,6 +466,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			time: number;
 			network: string;
 			channel: string;
+			msgid: string | null;
 		}[];
 
 		return {
@@ -480,7 +509,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 // TODO: type any
 function parseSearchRowsToMessages(
 	id: number,
-	rows: {msg: string; type: string; time: number; network: string; channel: string}[]
+	rows: {msg: string; type: string; time: number; network: string; channel: string; msgid: string | null}[]
 ) {
 	const messages: Msg[] = [];
 
@@ -491,6 +520,11 @@ function parseSearchRowsToMessages(
 		msg.networkUuid = row.network;
 		msg.channelName = row.channel;
 		msg.id = id;
+
+		if (row.msgid) {
+			msg.msgid = row.msgid;
+		}
+
 		messages.push(new Msg(msg));
 		id += 1;
 	}
