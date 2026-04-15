@@ -704,6 +704,41 @@ class Network {
 		this.monitorList.push(target);
 	}
 
+	/**
+	 * If we send MONITORs to every channel/query the user may be
+	 * kicked for flooding, so we batch.
+	 */
+	monitorBatch(targets: string[]) {
+		if (!this.irc || targets.length === 0) {
+			return;
+		}
+
+		const toAdd: string[] = [];
+
+		for (let target of targets) {
+			target = target.toLowerCase();
+
+			if (this.monitorList.includes(target) || this.toBeMonitored.includes(target)) {
+				continue;
+			}
+
+			if (
+				this.serverOptions.MONITOR > 0 &&
+				this.monitorList.length + toAdd.length >= this.serverOptions.MONITOR
+			) {
+				this.toBeMonitored.push(target);
+				continue;
+			}
+
+			toAdd.push(target);
+		}
+
+		if (toAdd.length > 0) {
+			this.irc.raw("MONITOR", "+", toAdd.join(","));
+			this.monitorList.push(...toAdd);
+		}
+	}
+
 	removeMonitor(target: string) {
 		if (!this.irc) {
 			return;

@@ -742,4 +742,66 @@ describe("Network", function () {
 			expect(network.monitorList).to.be.empty;
 		});
 	});
+
+	describe("#monitorBatch(targets)", function () {
+		it("should send a single raw MONITOR command for multiple targets", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+
+			network.monitorBatch(["user1", "user2", "user3"]);
+
+			expect(rawSpy.calledOnce).to.be.true;
+			expect(rawSpy.firstCall.args).to.deep.equal(["MONITOR", "+", "user1,user2,user3"]);
+			expect(network.monitorList).to.deep.equal(["user1", "user2", "user3"]);
+		});
+
+		it("should skip duplicates and already-monitored targets", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+			network.monitorList = ["existing"];
+
+			network.monitorBatch(["Existing", "new1", "NEW1", "new2"]);
+
+			expect(rawSpy.calledOnce).to.be.true;
+			expect(rawSpy.firstCall.args).to.deep.equal(["MONITOR", "+", "new1,new2"]);
+			expect(network.monitorList).to.deep.equal(["existing", "new1", "new2"]);
+		});
+
+		it("should queue targets exceeding MONITOR limit", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 2;
+
+			network.monitorBatch(["user1", "user2", "user3", "user4"]);
+
+			expect(rawSpy.calledOnce).to.be.true;
+			expect(rawSpy.firstCall.args).to.deep.equal(["MONITOR", "+", "user1,user2"]);
+			expect(network.monitorList).to.deep.equal(["user1", "user2"]);
+			expect(network.toBeMonitored).to.deep.equal(["user3", "user4"]);
+		});
+
+		it("should not send anything for empty targets", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+
+			network.monitorBatch([]);
+
+			expect(rawSpy.called).to.be.false;
+		});
+
+		it("should not send anything when all targets are duplicates", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+			network.monitorList = ["user1", "user2"];
+
+			network.monitorBatch(["User1", "USER2"]);
+
+			expect(rawSpy.called).to.be.false;
+		});
+	});
 });

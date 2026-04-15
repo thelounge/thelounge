@@ -52,9 +52,11 @@ export default <IrcEventHandler>function (irc, network) {
 			});
 		}
 
+		const monitorTargets: string[] = [];
+
 		network.channels.forEach((chan) => {
 			if (chan.type === ChanType.QUERY) {
-				network.monitor(chan.name);
+				monitorTargets.push(chan.name);
 				return;
 			}
 
@@ -67,6 +69,8 @@ export default <IrcEventHandler>function (irc, network) {
 			}, delay);
 			delay += 1000;
 		});
+
+		network.monitorBatch(monitorTargets);
 	});
 
 	irc.on("socket connected", function () {
