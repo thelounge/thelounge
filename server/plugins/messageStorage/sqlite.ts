@@ -505,7 +505,14 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 // TODO: type any
 function parseSearchRowsToMessages(
 	id: number,
-	rows: {msg: string; type: string; time: number; network: string; channel: string; msgid: string | null}[]
+	rows: {
+		msg: string;
+		type: string;
+		time: number;
+		network: string;
+		channel: string;
+		msgid: string | null;
+	}[]
 ) {
 	const messages: Msg[] = [];
 
