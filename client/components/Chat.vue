@@ -116,10 +116,8 @@
 		>
 			{{ store.state.currentUserVisibleError }}
 		</div>
-		<div class="chat-input-wrapper">
-			<TypingIndicator :channel="channel" />
-			<ChatInput :network="network" :channel="channel" />
-		</div>
+		<ChatInput :network="network" :channel="channel" />
+		<TypingIndicator :channel="channel" />
 	</div>
 </template>
 

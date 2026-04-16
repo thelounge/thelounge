@@ -25,9 +25,6 @@
 	/* Background color of the main window */
 	--window-bg-color: #fff;
 
-	/* Width of the user list sidebar */
-	--userlist-width: 180px;
-
 	/* Text color for <h2> and <h3> headings in windows */
 	--window-heading-color: #6c797a;
 
@@ -1228,7 +1225,7 @@ textarea.input {
 
 #chat .userlist {
 	border-left: 1px solid #e7e7e7;
-	width: var(--userlist-width);
+	width: 180px;
 	display: none;
 	flex-direction: column;
 	flex-shrink: 0;
@@ -1310,7 +1307,7 @@ textarea.input {
 }
 
 #chat .messages {
-	padding: 10px 0 24px;
+	padding: 10px 0;
 	touch-action: pan-y;
 }
 
@@ -2210,7 +2207,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-top: 1px solid #e7e7e7;
 	border-radius: 0;
 	margin: 0;
-	padding: 6px 6px 6px 18px;
+	padding: 6px 6px 2px;
 	background: white;
 	display: flex;
 	align-items: flex-end;
@@ -2698,7 +2695,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		height: 100%;
 		position: absolute;
 		right: 0;
-		transform: translateX(var(--userlist-width));
+		transform: translateX(180px);
 		transition: transform 0.2s;
 		z-index: 1;
 	}
