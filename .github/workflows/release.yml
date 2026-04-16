@@ -7,6 +7,7 @@ permissions:
 on:
   push:
     tags: v*
+  workflow_dispatch:
 
 jobs:
   release:
@@ -18,10 +19,13 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version-file: ".node-version"
           registry-url: "https://registry.npmjs.org/"
+
+      - name: Upgrade npm
+        run: npm install -g npm@latest
 
       - name: Install
         run: yarn --frozen-lockfile --non-interactive
@@ -37,17 +41,11 @@ jobs:
       - name: Publish latest
         if: "!contains(github.ref, '-')"
         run: npm publish --tag latest --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
       - name: Publish next
         if: contains(github.ref, '-')
         run: npm publish --tag next --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
       - name: Remove next tag
         if: "!contains(github.ref, '-')"
         run: npm dist-tag rm thelounge next || true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
