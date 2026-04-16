@@ -21,11 +21,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version-file: ".node-version"
+          # TODO: we should use node-version-file but the version of npm with node 22 has issues updating to the latest version
+          # https://github.com/nodejs/node/issues/62425
+          node-version: "24"
           registry-url: "https://registry.npmjs.org/"
-
-      - name: Upgrade npm
-        run: npm install -g npm@latest
 
       - name: Install
         run: yarn --frozen-lockfile --non-interactive
