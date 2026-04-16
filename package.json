@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thelounge/thelounge.git"
+    "url": "git+https://github.com/thelounge/thelounge.git"
   },
   "homepage": "https://thelounge.chat/",
   "scripts": {
@@ -66,7 +66,7 @@
     "file-type": "16.5.4",
     "filenamify": "4.3.0",
     "got": "11.8.6",
-    "irc-framework": "kiwiirc/irc-framework#9578e59",
+    "irc-framework": "github:kiwiirc/irc-framework#9578e59",
     "is-utf8": "0.2.1",
     "ldapjs": "2.3.3",
     "linkify-it": "3.0.3",
