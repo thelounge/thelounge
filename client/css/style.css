@@ -838,6 +838,22 @@ background on hover (unless active) */
 	line-height: 18px;
 }
 
+.channel-list-item[data-type="query"] > .status {
+	position: absolute;
+	left: 21px;
+	top: 13px;
+	width: auto;
+	height: auto;
+	margin-left: 0;
+	z-index: 1;
+}
+
+.channel-list-item[data-type="query"] > .status span::after {
+	width: 6px;
+	height: 6px;
+	box-shadow: 0 0 0 1.5px var(--body-bg-color);
+}
+
 .channel-list-item .name {
 	position: relative;
 	flex-grow: 1;

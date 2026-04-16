@@ -1,8 +1,8 @@
 <template>
 	<!-- TODO: investigate -->
 	<ChannelWrapper ref="wrapper" v-bind="$props">
-		<span class="name">{{ channel.name }}</span>
 		<StatusIcon v-if="showStatusIcon" :online="channel.isOnline" :away="!!channel.userAway" />
+		<span class="name">{{ channel.name }}</span>
 		<span
 			v-if="channel.unread"
 			:class="{highlight: channel.highlight && !channel.muted}"
