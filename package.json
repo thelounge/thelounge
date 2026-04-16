@@ -1,7 +1,7 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "4.4.3",
+  "version": "4.5.0-pre.1",
   "type": "commonjs",
   "preferGlobal": true,
   "bin": {
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thelounge/thelounge.git"
+    "url": "git+https://github.com/thelounge/thelounge.git"
   },
   "homepage": "https://thelounge.chat/",
   "scripts": {
@@ -64,7 +64,7 @@
     "file-type": "16.5.4",
     "filenamify": "4.3.0",
     "got": "11.8.6",
-    "irc-framework": "kiwiirc/irc-framework#9578e59",
+    "irc-framework": "github:kiwiirc/irc-framework#9578e59",
     "is-utf8": "0.2.1",
     "ldapjs": "2.3.3",
     "linkify-it": "3.0.3",
@@ -85,7 +85,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.15.4",
     "@textcomplete/core": "0.1.10",
-    "@textcomplete/textarea": "0.1.13",
+    "@textcomplete/textarea": "0.1.10",
     "@types/bcryptjs": "2.4.6",
     "@types/cheerio": "0.22.35",
     "@types/content-disposition": "0.5.8",
