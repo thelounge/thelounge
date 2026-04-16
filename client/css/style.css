@@ -2058,7 +2058,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .user-bot-indicator {
 	color: var(--body-color-muted);
 	font-size: 0.85em;
-	margin-left: 4px;
+	margin-left: 2px;
 }
 
 #loading {
