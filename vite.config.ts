@@ -58,6 +58,8 @@ function serviceWorkerPlugin(mode: string): Plugin {
 export default defineConfig(({mode}) => ({
 	root: path.resolve(__dirname, "client"),
 	publicDir: path.resolve(__dirname, "client/public"),
+	// Relative base so the app works when mounted at a subpath by a reverse proxy
+	base: "./",
 
 	build: {
 		outDir: path.resolve(__dirname, "public"),
