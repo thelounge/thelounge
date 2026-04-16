@@ -39,6 +39,9 @@
 	/* Background color of the main window */
 	--window-bg-color: #fff;
 
+	/* Background color of the message input form */
+	--form-bg-color: #fff;
+
 	/* Text color for <h2> and <h3> headings in windows */
 	--window-heading-color: #6c797a;
 
@@ -2377,7 +2380,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-radius: 0;
 	margin: 0;
 	padding: 6px 6px 2px;
-	background: white;
+	background: var(--form-bg-color);
 	display: flex;
 	align-items: flex-end;
 	flex-wrap: wrap;
