@@ -844,10 +844,11 @@ background on hover (unless active) */
 	line-height: 18px;
 }
 
+/* the status dot is overlaid on the channel speech bubble icon */
 .channel-list-item[data-type="query"] > .status {
 	position: absolute;
-	left: 21px;
-	top: 13px;
+	left: 23px;
+	top: 12px;
 	width: auto;
 	height: auto;
 	margin-left: 0;
