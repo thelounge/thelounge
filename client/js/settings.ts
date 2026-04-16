@@ -30,6 +30,9 @@ const defaultConfig = {
 	coloredNicks: {
 		default: true,
 	},
+	statusIndicators: {
+		default: true,
+	},
 	desktopNotifications: {
 		default: false,
 		sync: "never",

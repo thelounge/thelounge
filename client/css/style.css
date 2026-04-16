@@ -10,6 +10,12 @@
 	content: attr(data-tooltip);
 }
 
+/* Allow tooltips via data-tooltip instead of aria-label to avoid
+   duplicating accessible names on wrapper + child elements */
+.tooltipped[data-tooltip]::after {
+	content: attr(data-tooltip);
+}
+
 :root {
 	/* Main text color */
 	--body-color: #222;
@@ -851,6 +857,23 @@ background on hover (unless active) */
 	line-height: 18px;
 }
 
+/* the status dot is overlaid on the channel speech bubble icon */
+.channel-list-item[data-type="query"] > .status {
+	position: absolute;
+	left: 23px;
+	top: 12px;
+	width: auto;
+	height: auto;
+	margin-left: 0;
+	z-index: 1;
+}
+
+.channel-list-item[data-type="query"] > .status span::after {
+	width: 6px;
+	height: 6px;
+	box-shadow: 0 0 0 1.5px var(--body-bg-color);
+}
+
 .channel-list-item .name {
 	position: relative;
 	flex-grow: 1;
@@ -1288,6 +1311,11 @@ textarea.input {
 	background: none;
 	border: none;
 	padding: 0;
+}
+
+.scroll-down:focus:not(:focus-visible)::before,
+.scroll-down:focus:not(:focus-visible)::after {
+	display: none;
 }
 
 .scroll-down:focus:not(:focus-visible)::before,

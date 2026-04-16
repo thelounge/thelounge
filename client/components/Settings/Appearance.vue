@@ -97,6 +97,12 @@
 				:checked="store.state.settings.coloredNicks"
 			/>
 			<SettingToggle
+				name="statusIndicators"
+				label="Online status indicators"
+				description="Show an indicator next to users who are currently online"
+				:checked="store.state.settings.statusIndicators"
+			/>
+			<SettingToggle
 				name="autocomplete"
 				label="Autocomplete"
 				description="Suggest nicknames, channels, and commands as you type"
