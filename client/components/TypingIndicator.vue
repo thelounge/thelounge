@@ -1,34 +1,23 @@
 <template>
-	<div v-if="typingText" class="typing-indicator">
-		<span class="typing-dots"><span /><span /><span /></span>
-		{{ typingText }}
+	<div class="typing-indicator">
+		<template v-if="typingText">
+			<span class="typing-dots"><span /><span /><span /></span>
+			{{ typingText }}
+		</template>
 	</div>
 </template>
 
 <style>
-.chat-input-wrapper {
-	position: relative;
-}
-
 .typing-indicator {
-	position: absolute;
-	bottom: 100%;
-	left: 0;
-	right: 0;
-	height: 24px;
-	padding: 0 24px;
-	font-size: 0.8em;
+	flex: 0 0 auto;
+	padding: 0 10px 4px 11px;
+	font-size: 0.65em;
+	line-height: 1.2;
+	min-height: calc(1.2em + 4px);
 	color: var(--body-color-muted);
-	background: linear-gradient(to top, var(--window-bg-color) 40%, transparent);
-	pointer-events: none;
 	display: flex;
 	align-items: center;
 	gap: 4px;
-}
-
-/* We align just left of the userlist */
-.userlist-open .typing-indicator {
-	right: calc(var(--userlist-width) + 1px);
 }
 
 .typing-dots {
@@ -37,8 +26,8 @@
 	align-items: center;
 
 	span {
-		width: 4px;
-		height: 4px;
+		width: 3px;
+		height: 3px;
 		border-radius: 50%;
 		background: var(--body-color-muted);
 		animation: typing-bounce 1.4s infinite ease-in-out both;
