@@ -25,8 +25,9 @@ class Storage {
 			return;
 		}
 
-		// TODO: Use `fs.rmdirSync(dir, {recursive: true});` when it's stable (node 13+)
-		items.forEach((item) => deleteFolder(path.join(dir, item)));
+		items.forEach((item) => {
+			fs.rmSync(path.join(dir, item), {recursive: true, force: true});
+		});
 	}
 
 	dereference(url) {
@@ -88,17 +89,3 @@ class Storage {
 }
 
 export default new Storage();
-
-function deleteFolder(dir: string) {
-	fs.readdirSync(dir).forEach((item) => {
-		item = path.join(dir, item);
-
-		if (fs.lstatSync(item).isDirectory()) {
-			deleteFolder(item);
-		} else {
-			fs.unlinkSync(item);
-		}
-	});
-
-	fs.rmdirSync(dir);
-}

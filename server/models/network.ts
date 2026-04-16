@@ -424,16 +424,16 @@ class Network {
 		// Sync lobby channel name
 		this.getLobby().name = this.name;
 
+		if (!this.validate(client)) {
+			return;
+		}
+
 		if (this.name !== oldNetworkName) {
 			// Send updated network name to all connected clients
 			client.emit("network:name", {
 				uuid: this.uuid,
 				name: this.name,
 			});
-		}
-
-		if (!this.validate(client)) {
-			return;
 		}
 
 		if (this.irc) {
@@ -476,6 +476,10 @@ class Network {
 
 	destroy() {
 		this.channels.forEach((channel) => channel.destroy());
+	}
+
+	isIgnoredUser(data: Hostmask) {
+		return this.ignoreList.some((entry) => Helper.compareHostmask(entry, data));
 	}
 
 	setNick(this: Network, nick: string) {
