@@ -1688,16 +1688,16 @@
   dependencies:
     eventemitter3 "^4.0.4"
 
-"@textcomplete/textarea@0.1.13":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@textcomplete/textarea/-/textarea-0.1.13.tgz#a0e365877bdce1c16ec48bdd439cd44d28a903ef"
-  integrity sha512-GNathnXpV361YuZrBVXvVqFYZ5NQZsjGC7Bt2sCUA/RTWlIgxHxC0ruDChYyRDx4siQZiZZOO5pWz+z1x8pZFQ==
+"@textcomplete/textarea@0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@textcomplete/textarea/-/textarea-0.1.10.tgz#3c8872e11f90e09fb5fc7926335dc9b1f3def35b"
+  integrity sha512-JDPApnDAkQ7mLd8ma/4lkaym8ge72XWpCvPAVMS7meGrn6+gfLtH92ENPy6EfODAbmDDFOaPLOEQAfV3uC2GEQ==
   dependencies:
-    "@textcomplete/utils" "^0.1.13"
+    "@textcomplete/utils" "^0.1.10"
     textarea-caret "^3.1.0"
     undate "^0.3.0"
 
-"@textcomplete/utils@^0.1.13":
+"@textcomplete/utils@^0.1.10":
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/@textcomplete/utils/-/utils-0.1.13.tgz#0b56a5a876fb27478b702e3ea118fa75960b4331"
   integrity sha512-5UW9Ee0WEX1s9K8MFffo5sfUjYm3YVhtqRhAor/ih7p0tnnpaMB7AwMRDKwhSIQL6O+g1fmEkxCeO8WqjPzjUA==
