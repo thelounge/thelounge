@@ -14,6 +14,7 @@
 	font-size: 0.65em;
 	line-height: 1.2;
 	min-height: calc(1.2em + 4px);
+	background: var(--form-bg-color);
 	color: var(--body-color-muted);
 	display: flex;
 	align-items: center;
