@@ -639,7 +639,7 @@ function initializeClient(
 	// so there's no need to handle msg:preview:toggle
 	if (!Config.values.public) {
 		socket.on("msg:preview:toggle", (data) => {
-			if (_.isPlainObject(data)) {
+			if (!_.isPlainObject(data)) {
 				return;
 			}
 
