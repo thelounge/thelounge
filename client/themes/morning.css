@@ -161,23 +161,21 @@ kbd {
 }
 
 /* Form elements */
-/* stylelint-disable selector-no-vendor-prefix */
 
-#chat-container ::-moz-placeholder {
+#chat-container ::placeholder {
 	color: #b7c5d1;
 	opacity: 0.75;
 }
 
-#chat-container ::-webkit-input-placeholder {
-	color: #b7c5d1;
-	opacity: 0.75;
+.setting-card input::placeholder,
+.setting-card textarea::placeholder {
+	color: var(--body-color-muted);
 }
 
-#chat-container :-ms-input-placeholder {
-	color: #b7c5d1;
-	opacity: 0.75;
+.setting-card .input {
+	background-color: #28333d;
+	color: var(--body-color);
+	border: 1px solid #28333d;
 }
-
-/* stylelint-enable selector-no-vendor-prefix */
 
 /* End form elements */

@@ -1,128 +1,6 @@
 <template>
 	<div>
-		<h2>Messages</h2>
-		<div>
-			<label class="opt">
-				<input :checked="store.state.settings.motd" type="checkbox" name="motd" />
-				Show <abbr title="Message Of The Day">MOTD</abbr>
-			</label>
-		</div>
-		<div>
-			<label class="opt">
-				<input
-					:checked="store.state.settings.showSeconds"
-					type="checkbox"
-					name="showSeconds"
-				/>
-				Include seconds in timestamp
-			</label>
-		</div>
-		<div>
-			<label class="opt">
-				<input
-					:checked="store.state.settings.use12hClock"
-					type="checkbox"
-					name="use12hClock"
-				/>
-				Use 12-hour timestamps
-			</label>
-		</div>
-		<template v-if="store.state.serverConfiguration?.prefetch">
-			<h2>Link previews</h2>
-			<div>
-				<label class="opt">
-					<input :checked="store.state.settings.media" type="checkbox" name="media" />
-					Auto-expand media
-				</label>
-			</div>
-			<div>
-				<label class="opt">
-					<input :checked="store.state.settings.links" type="checkbox" name="links" />
-					Auto-expand websites
-				</label>
-			</div>
-		</template>
-		<h2 id="label-status-messages">
-			Status messages
-			<span
-				class="tooltipped tooltipped-n tooltipped-no-delay"
-				aria-label="Joins, parts, quits, kicks, nick changes, and mode changes"
-			>
-				<button class="extra-help" />
-			</span>
-		</h2>
-		<div role="group" aria-labelledby="label-status-messages">
-			<label class="opt">
-				<input
-					:checked="store.state.settings.statusMessages === 'shown'"
-					type="radio"
-					name="statusMessages"
-					value="shown"
-				/>
-				Show all status messages individually
-			</label>
-			<label class="opt">
-				<input
-					:checked="store.state.settings.statusMessages === 'condensed'"
-					type="radio"
-					name="statusMessages"
-					value="condensed"
-				/>
-				Condense status messages together
-			</label>
-			<label class="opt">
-				<input
-					:checked="store.state.settings.statusMessages === 'hidden'"
-					type="radio"
-					name="statusMessages"
-					value="hidden"
-				/>
-				Hide all status messages
-			</label>
-		</div>
-		<h2>Visual Aids</h2>
-		<div>
-			<label class="opt">
-				<input
-					:checked="store.state.settings.coloredNicks"
-					type="checkbox"
-					name="coloredNicks"
-				/>
-				Enable colored nicknames
-			</label>
-			<label class="opt">
-				<input
-					:checked="store.state.settings.autocomplete"
-					type="checkbox"
-					name="autocomplete"
-				/>
-				Enable autocomplete
-			</label>
-		</div>
-		<div>
-			<label class="opt">
-				<label for="nickPostfix" class="opt">
-					Nick autocomplete postfix
-					<span
-						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="Nick autocomplete postfix (for example a comma)"
-					>
-						<button class="extra-help" />
-					</span>
-				</label>
-				<input
-					id="nickPostfix"
-					:value="store.state.settings.nickPostfix"
-					type="text"
-					name="nickPostfix"
-					class="input"
-					placeholder="Nick autocomplete postfix (e.g. ', ')"
-				/>
-			</label>
-		</div>
-
-		<h2>Theme</h2>
-		<div>
+		<SettingCard title="Theme">
 			<label for="theme-select" class="sr-only">Theme</label>
 			<select
 				id="theme-select"
@@ -138,21 +16,119 @@
 					{{ theme.displayName }}
 				</option>
 			</select>
-		</div>
+		</SettingCard>
 
-		<div>
-			<h2>Custom Stylesheet</h2>
-			<label for="user-specified-css-input" class="sr-only">
-				Custom stylesheet. You can override any style with CSS here.
+		<SettingCard title="Messages">
+			<SettingToggle
+				name="motd"
+				label="Show MOTD"
+				description="Display the server's Message of the Day when connecting"
+				:checked="store.state.settings.motd"
+			/>
+			<SettingToggle
+				name="showSeconds"
+				label="Include seconds in timestamps"
+				description="Show seconds alongside hours and minutes in message timestamps"
+				:checked="store.state.settings.showSeconds"
+			/>
+			<SettingToggle
+				name="use12hClock"
+				label="Use 12-hour clock"
+				description="Display timestamps in 12-hour format instead of 24-hour"
+				:checked="store.state.settings.use12hClock"
+			/>
+		</SettingCard>
+
+		<SettingCard v-if="store.state.serverConfiguration?.prefetch" title="Link previews">
+			<SettingToggle
+				name="media"
+				label="Auto-expand media"
+				description="Automatically show inline previews for images and videos"
+				:checked="store.state.settings.media"
+			/>
+			<SettingToggle
+				name="links"
+				label="Auto-expand websites"
+				description="Automatically show link previews for URLs"
+				:checked="store.state.settings.links"
+			/>
+		</SettingCard>
+
+		<SettingCard title="Status messages">
+			<div class="setting-card-intro">
+				Control how joins, parts, quits, kicks, nick changes, and mode changes appear
+			</div>
+			<div class="setting-radio-pills" role="group" aria-label="Status messages">
+				<label class="setting-radio-pill">
+					<input
+						:checked="store.state.settings.statusMessages === 'shown'"
+						type="radio"
+						name="statusMessages"
+						value="shown"
+					/>
+					<span class="pill-label">Show</span>
+				</label>
+				<label class="setting-radio-pill">
+					<input
+						:checked="store.state.settings.statusMessages === 'condensed'"
+						type="radio"
+						name="statusMessages"
+						value="condensed"
+					/>
+					<span class="pill-label">Condense</span>
+				</label>
+				<label class="setting-radio-pill">
+					<input
+						:checked="store.state.settings.statusMessages === 'hidden'"
+						type="radio"
+						name="statusMessages"
+						value="hidden"
+					/>
+					<span class="pill-label">Hide</span>
+				</label>
+			</div>
+		</SettingCard>
+
+		<SettingCard title="Visual aids">
+			<SettingToggle
+				name="coloredNicks"
+				label="Colored nicknames"
+				description="Assign a unique color to each nickname in chat"
+				:checked="store.state.settings.coloredNicks"
+			/>
+			<SettingToggle
+				name="autocomplete"
+				label="Autocomplete"
+				description="Suggest nicknames, channels, and commands as you type"
+				:checked="store.state.settings.autocomplete"
+			/>
+			<label for="nickPostfix" class="setting-row-text">
+				<div class="setting-row-label">Nick autocomplete postfix</div>
+				<div class="setting-row-description">
+					Character added after a completed nickname (e.g. a comma)
+				</div>
 			</label>
+			<input
+				id="nickPostfix"
+				:value="store.state.settings.nickPostfix"
+				type="text"
+				name="nickPostfix"
+				class="input"
+				placeholder="e.g. , "
+			/>
+		</SettingCard>
+
+		<SettingCard title="Custom stylesheet">
+			<div class="setting-card-intro">Override any style with your own CSS</div>
+			<label for="user-specified-css-input" class="sr-only"> Custom stylesheet </label>
 			<textarea
 				id="user-specified-css-input"
 				:value="store.state.settings.userStyles"
 				class="input"
 				name="userStyles"
-				placeholder="/* You can override any style with CSS here */"
+				placeholder="/* Add your custom CSS here */"
 			/>
-		</div>
+		</SettingCard>
 	</div>
 </template>
 
@@ -165,9 +141,15 @@ textarea#user-specified-css-input {
 <script lang="ts">
 import {defineComponent} from "vue";
 import {useStore} from "../../js/store";
+import SettingCard from "./SettingCard.vue";
+import SettingToggle from "./SettingToggle.vue";
 
 export default defineComponent({
 	name: "AppearanceSettings",
+	components: {
+		SettingCard,
+		SettingToggle,
+	},
 	setup() {
 		const store = useStore();
 

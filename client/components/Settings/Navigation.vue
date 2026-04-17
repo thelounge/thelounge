@@ -3,9 +3,9 @@
 	<aside class="settings-menu">
 		<h2>Settings</h2>
 		<ul role="navigation" aria-label="Settings tabs">
-			<SettingTabItem v-if="showGeneral" name="General" class-name="general" to="" />
-			<SettingTabItem name="Appearance" class-name="appearance" to="appearance" />
+			<SettingTabItem name="Appearance" class-name="appearance" to="" />
 			<SettingTabItem name="Notifications" class-name="notifications" to="notifications" />
+			<SettingTabItem v-if="showGeneral" name="General" class-name="general" to="general" />
 			<SettingTabItem v-if="!isPublic" name="Account" class-name="account" to="account" />
 		</ul>
 	</aside>
@@ -20,6 +20,11 @@
 	margin-left: calc(50% - 480px - 30px);
 }
 
+/* Other sessions have a `<p>` for their last used date below them; current-session does not. */
+.current-session .session-item-btn {
+	margin-top: 10px;
+}
+
 /** The calculation is mobile +  2/3 of container width. Fairly arbitrary. */
 @media screen and (max-width: calc(768px + 320px)) {
 	.settings-menu {
@@ -28,6 +33,10 @@
 		align-self: center;
 		margin: 0 auto;
 		padding: 0 15px;
+	}
+
+	.settings-menu > h2 {
+		display: none;
 	}
 }
 

@@ -1,15 +1,16 @@
 <template>
 	<div>
-		<div
+		<!-- Change password -->
+		<SettingCard
 			v-if="
 				!store.state.serverConfiguration?.public &&
 				!store.state.serverConfiguration?.ldapEnabled
 			"
-			id="change-password"
+			title="Change password"
+			title-id="label-change-password"
 			role="group"
 			aria-labelledby="label-change-password"
 		>
-			<h2 id="label-change-password">Change password</h2>
 			<div class="password-container">
 				<label for="current-password" class="sr-only"> Enter current password </label>
 				<RevealPassword v-slot:default="slotProps">
@@ -20,7 +21,7 @@
 						:type="slotProps.isVisible ? 'text' : 'password'"
 						name="old_password"
 						class="input"
-						placeholder="Enter current password"
+						placeholder="Current password"
 					/>
 				</RevealPassword>
 			</div>
@@ -34,7 +35,7 @@
 						name="new_password"
 						autocomplete="new-password"
 						class="input"
-						placeholder="Enter desired new password"
+						placeholder="New password"
 					/>
 				</RevealPassword>
 			</div>
@@ -48,7 +49,7 @@
 						name="verify_password"
 						autocomplete="new-password"
 						class="input"
-						placeholder="Repeat new password"
+						placeholder="Confirm new password"
 					/>
 				</RevealPassword>
 			</div>
@@ -65,17 +66,20 @@
 				{{ passwordErrors[passwordChangeStatus.error] }}
 			</div>
 			<div>
-				<button type="submit" class="btn" @click.prevent="changePassword">
+				<button type="submit" class="btn btn-small" @click.prevent="changePassword">
 					Change password
 				</button>
 			</div>
-		</div>
+		</SettingCard>
 
-		<div v-if="!store.state.serverConfiguration?.public" class="session-list" role="group">
-			<h2>Sessions</h2>
-
+		<!-- Sessions -->
+		<SettingCard v-if="!store.state.serverConfiguration?.public" title="Sessions" role="group">
 			<h3>Current session</h3>
-			<Session v-if="currentSession" :session="currentSession" />
+			<Session
+				v-if="currentSession"
+				:session="currentSession"
+				v-bind:class="'current-session'"
+			/>
 
 			<template v-if="activeSessions.length > 0">
 				<h3>Active sessions</h3>
@@ -97,7 +101,7 @@
 				:key="session.token"
 				:session="session"
 			/>
-		</div>
+		</SettingCard>
 	</div>
 </template>
 
@@ -105,7 +109,8 @@
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
-import {computed, defineComponent, onMounted, PropType, ref} from "vue";
+import SettingCard from "./SettingCard.vue";
+import {computed, defineComponent, onMounted, ref} from "vue";
 import {useStore} from "../../js/store";
 
 export default defineComponent({
@@ -113,6 +118,7 @@ export default defineComponent({
 	components: {
 		RevealPassword,
 		Session,
+		SettingCard,
 	},
 	setup() {
 		const store = useStore();
