@@ -2,6 +2,12 @@
 @import "fontawesome.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
 
+/* Allow tooltips via data-tooltip instead of aria-label to avoid
+   duplicating accessible names on wrapper + child elements */
+.tooltipped[data-tooltip]::after {
+	content: attr(data-tooltip);
+}
+
 :root {
 	/* Main text color */
 	--body-color: #222;
@@ -1273,6 +1279,11 @@ textarea.input {
 	transform: translateY(16px);
 	transition: transform 0.2s, opacity 0.2s;
 	cursor: pointer;
+}
+
+.scroll-down:focus:not(:focus-visible)::before,
+.scroll-down:focus:not(:focus-visible)::after {
+	display: none;
 }
 
 .scroll-down-shown {

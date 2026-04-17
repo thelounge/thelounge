@@ -9,13 +9,14 @@
 	</div>
 	<div v-else ref="networklist" role="navigation" aria-label="Network and Channel list">
 		<div class="jump-to-input">
+			<label for="channel-search-input" class="sr-only">Search among the channel list</label>
 			<input
+				id="channel-search-input"
 				ref="searchInput"
 				:value="searchText"
 				placeholder="Jump to..."
 				type="search"
 				class="search input mousetrap"
-				aria-label="Search among the channel list"
 				tabindex="-1"
 				@input="setSearchText"
 				@keydown.up="navigateResults($event, -1)"

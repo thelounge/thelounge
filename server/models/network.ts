@@ -426,16 +426,16 @@ class Network {
 		// Sync lobby channel name
 		this.getLobby().name = this.name;
 
+		if (!this.validate(client)) {
+			return;
+		}
+
 		if (this.name !== oldNetworkName) {
 			// Send updated network name to all connected clients
 			client.emit("network:name", {
 				uuid: this.uuid,
 				name: this.name,
 			});
-		}
-
-		if (!this.validate(client)) {
-			return;
 		}
 
 		if (this.irc) {

@@ -15,6 +15,7 @@
 		</div>
 		<span id="upload-progressbar" />
 		<span id="nick">{{ network.nick }}</span>
+		<label for="input" class="sr-only">Message input</label>
 		<textarea
 			id="input"
 			ref="input"
@@ -24,7 +25,6 @@
 			autocomplete="off"
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
-			:aria-label="getInputPlaceholder(channel)"
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit"
 			@blur="onBlur"
@@ -54,7 +54,7 @@
 		<span
 			id="submit-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
-			aria-label="Send message"
+			data-tooltip="Send message"
 		>
 			<button
 				id="submit"

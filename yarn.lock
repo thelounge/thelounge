@@ -1688,16 +1688,16 @@
   dependencies:
     eventemitter3 "^4.0.4"
 
-"@textcomplete/textarea@0.1.13":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@textcomplete/textarea/-/textarea-0.1.13.tgz#a0e365877bdce1c16ec48bdd439cd44d28a903ef"
-  integrity sha512-GNathnXpV361YuZrBVXvVqFYZ5NQZsjGC7Bt2sCUA/RTWlIgxHxC0ruDChYyRDx4siQZiZZOO5pWz+z1x8pZFQ==
+"@textcomplete/textarea@0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@textcomplete/textarea/-/textarea-0.1.10.tgz#3c8872e11f90e09fb5fc7926335dc9b1f3def35b"
+  integrity sha512-JDPApnDAkQ7mLd8ma/4lkaym8ge72XWpCvPAVMS7meGrn6+gfLtH92ENPy6EfODAbmDDFOaPLOEQAfV3uC2GEQ==
   dependencies:
-    "@textcomplete/utils" "^0.1.13"
+    "@textcomplete/utils" "^0.1.10"
     textarea-caret "^3.1.0"
     undate "^0.3.0"
 
-"@textcomplete/utils@^0.1.13":
+"@textcomplete/utils@^0.1.10":
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/@textcomplete/utils/-/utils-0.1.13.tgz#0b56a5a876fb27478b702e3ea118fa75960b4331"
   integrity sha512-5UW9Ee0WEX1s9K8MFffo5sfUjYm3YVhtqRhAor/ih7p0tnnpaMB7AwMRDKwhSIQL6O+g1fmEkxCeO8WqjPzjUA==
@@ -3188,15 +3188,10 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001335, caniuse-lite@^1.0.30001366:
-  version "1.0.30001641"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001641.tgz"
-  integrity sha512-Phv5thgl67bHYo1TtMY/MurjkHhV4EDaCosezRXgZ8jzA/Ub+wjxAvbGvjoFENStinwi5kCyOYV3mi5tOGykwA==
-
-caniuse-lite@^1.0.30001782:
-  version "1.0.30001787"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001787.tgz#fd25c5e42e2d35df5c75eddda00d15d9c0c68f81"
-  integrity sha512-mNcrMN9KeI68u7muanUpEejSLghOKlVhRqS/Za2IeyGllJ9I9otGpR9g3nsw7n4W378TE/LyIteA0+/FOZm4Kg==
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001335, caniuse-lite@^1.0.30001366, caniuse-lite@^1.0.30001782:
+  version "1.0.30001788"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001788.tgz"
+  integrity sha512-6q8HFp+lOQtcf7wBK+uEenxymVWkGKkjFpCvw5W25cmMwEDU45p1xQFBQv8JDlMMry7eNxyBaR+qxgmTUZkIRQ==
 
 chai@4.3.7:
   version "4.3.7"
@@ -5283,7 +5278,7 @@ ipaddr.js@1.9.1:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-irc-framework@kiwiirc/irc-framework#9578e59:
+"irc-framework@github:kiwiirc/irc-framework#9578e59":
   version "4.14.0"
   resolved "https://codeload.github.com/kiwiirc/irc-framework/tar.gz/9578e59a1056499e4a03a0f0fd2c260e9aadc541"
   dependencies:
