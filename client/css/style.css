@@ -1793,6 +1793,13 @@ textarea.input {
 	content: "\f3e5"; /* fa-reply */
 }
 
+/* When a reply-context is present, anchor the toolbar to the bottom row
+   (the actual message) instead of the reply preview above it. */
+#chat .msg:has(.reply-context) .msg-actions {
+	top: auto;
+	bottom: 0;
+}
+
 /* Reply bar above message input */
 #form .reply-bar {
 	display: flex;
