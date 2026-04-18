@@ -1,6 +1,5 @@
 import Config from "../config";
 import busboy, {BusboyHeaders} from "@fastify/busboy";
-import {v4 as uuidv4} from "uuid";
 import path from "path";
 import fs from "fs";
 import fileType from "file-type";
@@ -39,7 +38,7 @@ const uploadTokens = new Map();
 class Uploader {
 	constructor(socket: Socket) {
 		socket.on("upload:auth", () => {
-			const token = uuidv4();
+			const token = crypto.randomUUID();
 
 			socket.emit("upload:auth", token);
 
