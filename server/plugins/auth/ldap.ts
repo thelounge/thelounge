@@ -7,7 +7,7 @@ import type {AuthHandler} from "../auth";
 
 // Escape LDAP filter assertion values per RFC 4515 section 3:
 // https://datatracker.ietf.org/doc/html/rfc4515#section-3
-function escapeLdapFilter(value: string): string {
+export function escapeLdapFilter(value: string): string {
 	return value.replace(/[\\*()\0]/g, (c) => {
 		return "\\" + c.charCodeAt(0).toString(16).padStart(2, "0");
 	});
