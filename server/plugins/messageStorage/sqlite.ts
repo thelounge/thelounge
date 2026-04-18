@@ -448,28 +448,25 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 	deleteMessages(req: DeletionRequest): number {
 		let sql = "delete from messages where id in (select id from messages where\n";
-
 		// We roughly get a timestamp from N days before.
 		// We don't adjust for daylight savings time or other weird time jumps
 		const millisecondsInDay = 24 * 60 * 60 * 1000;
 		const deleteBefore = Date.now() - req.olderThanDays * millisecondsInDay;
-		sql += `time <= ${deleteBefore}\n`;
-
-		let typeClause = "";
+		sql += "time <= ?\n";
+		const params: (string | number)[] = [deleteBefore];
 
 		if (req.messageTypes !== null) {
-			typeClause = `type in (${req.messageTypes.map((type) => `'${type}'`).join(",")})\n`;
-		}
-
-		if (typeClause) {
-			sql += `and ${typeClause}`;
+			const placeholder = new Array(req.messageTypes.length).fill("?").join(",");
+			sql += `and type in (${placeholder})\n`;
+			params.push(...req.messageTypes);
 		}
 
 		sql += "order by time asc\n";
-		sql += `limit ${req.limit}\n`;
+		sql += "limit ?\n";
+		params.push(req.limit);
 		sql += ")";
 
-		return this.database.prepare(sql).run().changes as number;
+		return this.database.prepare(sql).run(...params).changes as number;
 	}
 
 	canProvideMessages() {
