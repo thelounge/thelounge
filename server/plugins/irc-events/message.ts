@@ -138,7 +138,9 @@ export default <IrcEventHandler>function (irc, network) {
 
 			if (parentMsg) {
 				msg.replyToNick = parentMsg.from?.nick;
-				const cleanReplyToText = parentMsg.text ? cleanIrcMessage(parentMsg.text) : parentMsg.text;
+				const cleanReplyToText = parentMsg.text
+					? cleanIrcMessage(parentMsg.text)
+					: parentMsg.text;
 				msg.replyToText = cleanReplyToText?.substring(0, 200);
 
 				// Replies to our own messages should highlight like a mention
