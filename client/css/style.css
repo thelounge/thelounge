@@ -1334,7 +1334,7 @@ textarea.input {
 	position: relative;
 	contain: content;
 	content-visibility: auto;
-	contain-intrinsic-size: auto 1.5em;
+	contain-intrinsic-size: auto calc(1lh + 6px);
 }
 
 #chat .unread-marker {
