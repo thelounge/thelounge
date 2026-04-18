@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {expect} from "chai";
+import {expect} from "vitest";
 import util from "../util";
 import Msg from "../../server/models/msg";
 import {MessageType} from "../../shared/types/msg";
@@ -52,7 +52,7 @@ const v1_dummy_messages = [
 describe("SQLite migrations", function () {
 	let db: DatabaseSync;
 
-	before(function () {
+	beforeAll(function () {
 		db = new DatabaseSync(":memory:");
 
 		for (const stmt of orig_schema) {
@@ -68,7 +68,7 @@ describe("SQLite migrations", function () {
 		}
 	});
 
-	after(function () {
+	afterAll(function () {
 		db.close();
 	});
 
@@ -216,29 +216,23 @@ describe("SQLite unit tests", function () {
 });
 
 describe("SQLite Message Storage", function () {
-	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
-	this.slow(300);
-
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
 
-	before(function (done) {
+	beforeAll(function () {
 		store = new MessageStorage("testUser");
 
 		// Delete database file from previous test run
 		if (fs.existsSync(expectedPath)) {
-			fs.unlink(expectedPath, done);
-		} else {
-			done();
+			fs.unlinkSync(expectedPath);
 		}
 	});
 
-	after(function (done) {
+	afterAll(function () {
 		// After tests run, remove the logs folder
 		// so we return to the clean state
 		fs.unlinkSync(expectedPath);
-		fs.rmdir(path.join(Config.getHomePath(), "logs"), done);
+		fs.rmdirSync(path.join(Config.getHomePath(), "logs"));
 	});
 
 	it("should create database file", function () {

@@ -5,5 +5,7 @@ yarn-error.log*
 package-lock.json
 
 coverage/
-public/
+/public/
 dist/
+test/public/
+client/public/fonts/*.woff*

@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import {NetworkConfig} from "../server/models/network";
 import {ChanConfig} from "../server/models/chan";
 import {ChanType} from "../shared/types/chan";
@@ -37,11 +37,11 @@ describe("Client", function () {
 	};
 	let logWarnStub: sinon.SinonStub<string[], void>;
 
-	before(function () {
+	beforeAll(function () {
 		logWarnStub = sinon.stub(log, "warn");
 	});
 
-	after(function () {
+	afterAll(function () {
 		logWarnStub.restore();
 	});
 

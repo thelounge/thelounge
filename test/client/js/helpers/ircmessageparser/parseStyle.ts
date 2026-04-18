@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import parseStyle from "../../../../../client/js/helpers/ircmessageparser/parseStyle";
 
 describe("parseStyle", () => {

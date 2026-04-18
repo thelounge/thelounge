@@ -2,7 +2,7 @@ import log from "../../../server/log";
 import ldapAuth, {escapeLdapFilter} from "../../../server/plugins/auth/ldap";
 import Config from "../../../server/config";
 import ldap from "ldapjs";
-import {expect} from "chai";
+import {expect} from "vitest";
 import TestUtil from "../../util";
 import ClientManager from "../../../server/clientManager";
 import sinon from "ts-sinon";
@@ -90,60 +90,61 @@ function testLdapAuth() {
 	const manager = {} as ClientManager;
 	const client = true;
 
-	it("should successfully authenticate with correct password", function (done) {
-		// TODO: why is client = true?
-		ldapAuth.auth(manager, client as any, user, correctPassword, function (valid) {
-			expect(valid).to.equal(true);
-			done();
-		});
-	});
+	it("should successfully authenticate with correct password", () =>
+		new Promise<void>((resolve) => {
+			// TODO: why is client = true?
+			ldapAuth.auth(manager, client as any, user, correctPassword, function (valid) {
+				expect(valid).to.equal(true);
+				resolve();
+			});
+		}));
 
-	it("should fail to authenticate with incorrect password", function (done) {
-		let error = "";
+	it("should fail to authenticate with incorrect password", () =>
+		new Promise<void>((resolve) => {
+			let error = "";
 
-		const errorLogStub = sinon
-			.stub(log, "error")
-			.callsFake(TestUtil.sanitizeLog((str) => (error += str)));
+			const errorLogStub = sinon
+				.stub(log, "error")
+				.callsFake(TestUtil.sanitizeLog((str) => (error += str)));
 
-		ldapAuth.auth(manager, client as any, user, wrongPassword, function (valid) {
-			expect(valid).to.equal(false);
-			expect(error).to.equal(
-				"LDAP bind failed: InsufficientAccessRightsError: InsufficientAccessRightsError\n"
-			);
-			errorLogStub.restore();
-			done();
-		});
-	});
+			ldapAuth.auth(manager, client as any, user, wrongPassword, function (valid) {
+				expect(valid).to.equal(false);
+				expect(error).to.equal(
+					"LDAP bind failed: InsufficientAccessRightsError: InsufficientAccessRightsError\n"
+				);
+				errorLogStub.restore();
+				resolve();
+			});
+		}));
 
-	it("should fail to authenticate with incorrect username", function (done) {
-		let warning = "";
-		const warnLogStub = sinon
-			.stub(log, "warn")
-			.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+	it("should fail to authenticate with incorrect username", () =>
+		new Promise<void>((resolve) => {
+			let warning = "";
+			const warnLogStub = sinon
+				.stub(log, "warn")
+				.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
-		ldapAuth.auth(manager, client as any, wrongUser, correctPassword, function (valid) {
-			expect(valid).to.equal(false);
-			expect(warning).to.equal("LDAP Search did not find anything for: eve (0)\n");
-			warnLogStub.restore();
-			done();
-		});
-	});
+			ldapAuth.auth(manager, client as any, wrongUser, correctPassword, function (valid) {
+				expect(valid).to.equal(false);
+				expect(warning).to.equal("LDAP Search did not find anything for: eve (0)\n");
+				warnLogStub.restore();
+				resolve();
+			});
+		}));
 }
 
 describe("LDAP authentication plugin", function () {
-	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(TestUtil.isRunningOnCI() ? 25000 : 5000);
-	this.slow(300);
-
 	let server: ldap.Server;
 	let logInfoStub: sinon.SinonStub<string[], void>;
 
-	before(function (done) {
+	beforeAll(async function () {
 		logInfoStub = sinon.stub(log, "info");
-		server = startLdapServer(done);
+		await new Promise<void>((resolve) => {
+			server = startLdapServer(() => resolve());
+		});
 	});
 
-	after(function () {
+	afterAll(function () {
 		server.close(() => {
 			// no-op
 		});

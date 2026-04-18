@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import log from "../../server/log";
 import Client from "../../server/client";
 import TestUtil from "../util";
