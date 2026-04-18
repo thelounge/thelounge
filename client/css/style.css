@@ -1332,6 +1332,9 @@ textarea.input {
 	display: flex;
 	align-items: flex-start;
 	position: relative;
+	contain: content;
+	content-visibility: auto;
+	contain-intrinsic-size: auto 1.5em;
 }
 
 #chat .unread-marker {
