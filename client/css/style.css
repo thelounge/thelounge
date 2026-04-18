@@ -1370,6 +1370,9 @@ textarea.input {
 	display: flex;
 	align-items: flex-start;
 	position: relative;
+	contain: content;
+	content-visibility: auto;
+	contain-intrinsic-size: auto calc(1lh + 6px);
 }
 
 #chat .msg:has(.reply-context) {
