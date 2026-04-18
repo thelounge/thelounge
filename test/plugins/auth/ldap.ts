@@ -1,5 +1,5 @@
 import log from "../../../server/log";
-import ldapAuth from "../../../server/plugins/auth/ldap";
+import ldapAuth, {escapeLdapFilter} from "../../../server/plugins/auth/ldap";
 import Config from "../../../server/config";
 import ldap from "ldapjs";
 import {expect} from "vitest";
@@ -181,5 +181,50 @@ describe("LDAP authentication plugin", function () {
 	describe("Advanced LDAP authentication (DN found by a prior search query)", function () {
 		delete Config.values.ldap.baseDN;
 		testLdapAuth();
+
+		it("should reject filter-injection usernames (RFC 4515)", function (done) {
+			let warning = "";
+			const warnLogStub = sinon
+				.stub(log, "warn")
+				.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+
+			// Without proper escaping, "*" becomes a presence wildcard in the
+			// search filter, causing the mock server to return johndoe's DN;
+			// combined with johndoe's password this would bypass the username
+			// check. With RFC 4515 escaping, "*" is sent as "\2a" and matches
+			// no uid, so auth must fail.
+			ldapAuth.auth({} as ClientManager, true as any, "*", correctPassword, function (valid) {
+				expect(valid).to.equal(false);
+				expect(warning).to.contain("LDAP Search did not find anything");
+				warnLogStub.restore();
+				done();
+			});
+		});
+	});
+
+	describe("escapeLdapFilter (RFC 4515)", function () {
+		it("escapes the five required octets", function () {
+			expect(escapeLdapFilter("*")).to.equal("\\2a");
+			expect(escapeLdapFilter("(")).to.equal("\\28");
+			expect(escapeLdapFilter(")")).to.equal("\\29");
+			expect(escapeLdapFilter("\\")).to.equal("\\5c");
+			expect(escapeLdapFilter("\0")).to.equal("\\00");
+		});
+
+		it("leaves ordinary characters untouched", function () {
+			expect(escapeLdapFilter("johndoe")).to.equal("johndoe");
+			expect(escapeLdapFilter("john.doe+tag@example.com")).to.equal(
+				"john.doe+tag@example.com"
+			);
+		});
+
+		it("escapes every occurrence, not just the first", function () {
+			expect(escapeLdapFilter("a*b*c")).to.equal("a\\2ab\\2ac");
+			expect(escapeLdapFilter("()()")).to.equal("\\28\\29\\28\\29");
+		});
+
+		it("neutralizes a classic injection payload", function () {
+			expect(escapeLdapFilter("*)(uid=*")).to.equal("\\2a\\29\\28uid=\\2a");
+		});
 	});
 });
