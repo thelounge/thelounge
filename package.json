@@ -1,7 +1,7 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "4.5.0-pre.1",
+  "version": "4.5.0-rc.2",
   "type": "commonjs",
   "preferGlobal": true,
   "bin": {
@@ -78,7 +78,6 @@
     "socket.io": "4.6.2",
     "tlds": "1.228.0",
     "ua-parser-js": "1.0.39",
-    "uuid": "8.3.2",
     "web-push": "3.4.5",
     "yarn": "1.22.22"
   },
@@ -101,7 +100,6 @@
     "@types/semver": "7.3.9",
     "@types/sortablejs": "1.15.8",
     "@types/ua-parser-js": "0.7.39",
-    "@types/uuid": "8.3.4",
     "@types/web-push": "3.3.2",
     "@types/ws": "8.5.12",
     "@typescript-eslint/eslint-plugin": "7.8.0",
