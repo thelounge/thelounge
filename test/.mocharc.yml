@@ -2,7 +2,9 @@ color: true
 check-leaks: true
 recursive: true
 reporter: dot
-ignore: "test/client/**"
+ignore:
+  - "test/client/**"
+  - "test/public/**"
 extension: ["ts", "js"]
 node-option:
   - "import=tsx"
