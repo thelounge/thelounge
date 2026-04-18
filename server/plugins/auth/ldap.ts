@@ -5,6 +5,14 @@ import log from "../../log";
 import Config from "../../config";
 import type {AuthHandler} from "../auth";
 
+// Escape LDAP filter assertion values per RFC 4515 section 3:
+// https://datatracker.ietf.org/doc/html/rfc4515#section-3
+function escapeLdapFilter(value: string): string {
+	return value.replace(/[\\*()\0]/g, (c) => {
+		return "\\" + c.charCodeAt(0).toString(16).padStart(2, "0");
+	});
+}
+
 function ldapAuthCommon(
 	user: string,
 	bindDN: string,
@@ -60,6 +68,7 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 
 	const config = Config.values;
 	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
+	const userFilterValue = escapeLdapFilter(user);
 
 	const ldapclient = ldap.createClient({
 		url: config.ldap.url,
@@ -69,7 +78,7 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 	const base = config.ldap.searchDN.base;
 	const searchOptions: SearchOptions = {
 		scope: config.ldap.searchDN.scope,
-		filter: `(&(${config.ldap.primaryKey}=${userDN})${config.ldap.searchDN.filter})`,
+		filter: `(&(${config.ldap.primaryKey}=${userFilterValue})${config.ldap.searchDN.filter})`,
 		attributes: ["dn"],
 	};
 
