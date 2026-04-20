@@ -134,11 +134,22 @@ function notifyMessage(
 				let title: string;
 				let body: string;
 				// TODO: fix msg type and get rid of that conditional
-				const nick = msg.from && msg.from.nick ? msg.from.nick : "unkonown";
+				const nick = msg.from && msg.from.nick ? msg.from.nick : "unknown";
+
+				// Check if user has disabled message previews
+				if (store.state.settings.notifications.hideMessagePreview) {
+					body = "You have a new message";
+				} else {
+					// TODO: fix msg type and get rid of that conditional
+					body = cleanIrcMessage(msg.text ? msg.text : "");
+				}
 
 				if (msg.type === MessageType.INVITE) {
 					title = "New channel invite:";
-					body = nick + " invited you to " + msg.channel;
+
+					if (!store.state.settings.notifications.hideMessagePreview) {
+						body = nick + " invited you to " + msg.channel;
+					}
 				} else {
 					title = nick;
 
@@ -149,9 +160,6 @@ function notifyMessage(
 					if (msg.type === MessageType.MESSAGE) {
 						title += " says:";
 					}
-
-					// TODO: fix msg type and get rid of that conditional
-					body = cleanIrcMessage(msg.text ? msg.text : "");
 				}
 
 				const timestamp = Date.parse(String(msg.time));
