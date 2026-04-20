@@ -16,6 +16,7 @@ import GeneralSettings from "../components/Settings/General.vue";
 import AccountSettings from "../components/Settings/Account.vue";
 import NotificationSettings from "../components/Settings/Notifications.vue";
 import {ClientChan} from "./types";
+import {showGeneralSettings} from "./helpers/settingsTabs";
 
 const router = createRouter({
 	history: createWebHashHistory(),
@@ -48,6 +49,14 @@ const router = createRouter({
 					name: "General",
 					path: "",
 					component: GeneralSettings,
+					beforeEnter(to, from, next) {
+						if (!showGeneralSettings()) {
+							next({name: "Appearance"});
+							return;
+						}
+
+						next();
+					},
 				},
 				{
 					name: "Appearance",
