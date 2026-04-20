@@ -16,7 +16,7 @@
     "build:client": "webpack",
     "build:server": "tsc -p server/tsconfig.json",
     "build": "run-p --aggregate-output build:client build:server",
-    "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
+    "coverage": "webpack --mode=development && cross-env NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' nyc --nycrc-path=test/.nycrc-mocha.json mocha --config=test/.mocharc.yml 'test/**/*.ts' && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "cross-env NODE_ENV=development ts-node --project server/tsconfig.json server/index.ts start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
     "generate:config:doc": "ts-node scripts/generate-config-doc.js",
