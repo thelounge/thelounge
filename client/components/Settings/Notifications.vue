@@ -30,6 +30,16 @@
 					<span>Push notifications are not supported by your browser.</span>
 				</div>
 			</div>
+			<div>
+				<label class="opt">
+					<input
+						:checked="store.state.settings.notifications.onlyPushWhenAllSocketsClosed"
+						type="checkbox"
+						name="notifications.onlyPushWhenAllSocketsClosed"
+					/>
+					Only send push notifications when all sessions are inactive
+				</label>
+			</div>
 		</template>
 
 		<h2>Browser Notifications</h2>

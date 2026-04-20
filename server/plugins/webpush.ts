@@ -70,6 +70,10 @@ class WebPush {
 	}
 
 	push(client: Client, payload: any, onlyToOffline: boolean) {
+		if (client.config.clientSettings?.notifications?.onlyPushWhenAllSocketsClosed === true && _.size(client.attachedClients) > 0) {
+			return;
+		}
+		
 		_.forOwn(client.config.sessions, ({pushSubscription}, token) => {
 			if (pushSubscription) {
 				if (onlyToOffline && _.find(client.attachedClients, {token}) !== undefined) {
