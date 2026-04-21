@@ -12,6 +12,7 @@ import Client from "../client";
 import {MessageType} from "../../shared/types/msg";
 import {ChanType} from "../../shared/types/chan";
 import {SharedNetwork} from "../../shared/types/network";
+import NickKeeper, {NickKeeperOwner} from "./nickKeeper";
 
 type NetworkIrcOptions = {
 	host: string;
@@ -121,6 +122,7 @@ class Network {
 	chanCache!: Chan[];
 	ignoreList!: IgnoreList;
 	keepNick!: string | null;
+	private nickKeeper?: NickKeeper;
 
 	status!: NetworkStatus;
 
@@ -194,6 +196,32 @@ class Network {
 					this.channels.every((chan) => chan.muted || chan.type === ChanType.SPECIAL),
 			})
 		);
+	}
+
+	getKeepNick(this: Network) {
+		return this.keepNick;
+	}
+
+	setKeepNick(this: Network, nick: string) {
+		this.keepNick = nick;
+	}
+
+	clearKeepNick(this: Network) {
+		this.keepNick = null;
+	}
+
+	getNickKeeper(this: Network) {
+		if (!this.nickKeeper) {
+			const owner: NickKeeperOwner = {
+				getKeepNick: () => this.getKeepNick(),
+				setKeepNick: (nick) => this.setKeepNick(nick),
+				clearKeepNick: () => this.clearKeepNick(),
+			};
+
+			this.nickKeeper = new NickKeeper(owner);
+		}
+
+		return this.nickKeeper;
 	}
 
 	validate(this: Network, client: Client) {
@@ -394,7 +422,7 @@ class Network {
 		const oldNick = this.nick;
 		const oldRealname = this.realname;
 
-		this.keepNick = null;
+		this.clearKeepNick();
 		this.nick = args.nick;
 		this.host = String(args.host || "");
 		this.name = String(args.name || "") || this.host;
@@ -497,7 +525,7 @@ class Network {
 		);
 
 		if (this.keepNick === nick) {
-			this.keepNick = null;
+			this.clearKeepNick();
 		}
 
 		if (this.irc?.options) {

@@ -40,11 +40,10 @@ export default <IrcEventHandler>function (irc, network) {
 		if (irc.connection.registered === false && !Config.values.public) {
 			message += " An attempt to use it will be made when this nick quits.";
 
-			// Clients usually get nick in use on connect when reconnecting to a network
-			// after a network failure (like ping timeout), and as a result of that,
-			// TL will append a random number to the nick.
-			// keepNick will try to set the original nick name back if it sees a QUIT for that nick.
-			network.keepNick = irc.user.nick;
+			// Store the user's preferred nick so the quit handler can reclaim it
+			network
+				.getNickKeeper()
+				.onNickInUse(network.nick, {registered: false, isPublic: Config.values.public});
 		}
 
 		const lobby = network.getLobby();
@@ -57,20 +56,16 @@ export default <IrcEventHandler>function (irc, network) {
 
 		if (irc.connection.registered === false) {
 			const nickLen = parseInt(network.irc.network.options.NICKLEN, 10) || 16;
-
 			const random = (data.nick || irc.user.nick) + Math.floor(Math.random() * 10);
 
 			// Safeguard nick changes up to allowed length
 			// Some servers may send "nick in use" error even for randomly generated nicks
 			if (random.length <= nickLen) {
+				// Only change the IRC session nick (irc.user.nick), not the user's preference (network.nick)
+				// This allows the quit handler to reclaim the preferred nick when it becomes available
 				irc.changeNick(random);
 			}
 		}
-
-		client.emit("nick", {
-			network: network.uuid,
-			nick: irc.user.nick,
-		});
 	});
 
 	irc.on("nick invalid", function (data) {
