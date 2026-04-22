@@ -65,6 +65,9 @@ import {watch, defineComponent, nextTick, onMounted, PropType, ref, onUnmounted}
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
 import {ChanType} from "../../shared/types/chan";
+import type {TypingStatus} from "../../shared/types/typing";
+
+const TYPING_THROTTLE_MS = 3000;
 
 const formattingHotkeys = {
 	"mod+k": "\x03",
@@ -102,6 +105,19 @@ export default defineComponent({
 		const input = ref<HTMLTextAreaElement>();
 		const uploadInput = ref<HTMLInputElement>();
 		const autocompletionRef = ref<ReturnType<typeof autocompletion>>();
+		let lastTypingSent = 0;
+		let typingPauseTimeout: ReturnType<typeof setTimeout> | null = null;
+
+		const clearTypingPauseTimeout = () => {
+			if (typingPauseTimeout !== null) {
+				clearTimeout(typingPauseTimeout);
+				typingPauseTimeout = null;
+			}
+		};
+
+		onUnmounted(() => {
+			clearTypingPauseTimeout();
+		});
 
 		const setInputSize = () => {
 			void nextTick(() => {
@@ -125,10 +141,54 @@ export default defineComponent({
 			});
 		};
 
+		const sendTypingStatus = (status: TypingStatus) => {
+			if (store.state.settings.typing !== "on" || !store.state.isConnected) {
+				return;
+			}
+
+			if (props.channel.type !== ChanType.CHANNEL && props.channel.type !== ChanType.QUERY) {
+				return;
+			}
+
+			const now = Date.now();
+
+			if (status === "active" && now - lastTypingSent < TYPING_THROTTLE_MS) {
+				return;
+			}
+
+			if (status === "active") {
+				lastTypingSent = now;
+			}
+
+			socket.emit("typing", {target: props.channel.id, status});
+		};
+
 		const setPendingMessage = (e: Event) => {
-			props.channel.pendingMessage = (e.target as HTMLInputElement).value;
+			const text = (e.target as HTMLInputElement).value;
+			props.channel.pendingMessage = text;
 			props.channel.inputHistoryPosition = 0;
 			setInputSize();
+
+			// No need to send typing indicators for / commands
+			if (text.length > 0 && text[0] !== "/") {
+				sendTypingStatus("active");
+
+				if (typingPauseTimeout) {
+					clearTimeout(typingPauseTimeout);
+				}
+
+				typingPauseTimeout = setTimeout(() => {
+					typingPauseTimeout = null;
+					sendTypingStatus("paused");
+				}, TYPING_THROTTLE_MS);
+			} else if (text.length === 0) {
+				if (typingPauseTimeout) {
+					clearTimeout(typingPauseTimeout);
+					typingPauseTimeout = null;
+				}
+
+				sendTypingStatus("done");
+			}
 		};
 
 		const getInputPlaceholder = (channel: ClientChan) => {
@@ -193,6 +253,14 @@ export default defineComponent({
 			}
 
 			socket.emit("input", {target, text});
+
+			if (typingPauseTimeout) {
+				clearTimeout(typingPauseTimeout);
+				typingPauseTimeout = null;
+			}
+
+			sendTypingStatus("done");
+			lastTypingSent = 0;
 		};
 
 		const onUploadInputChange = () => {
