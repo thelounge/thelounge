@@ -128,6 +128,7 @@ class Network {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
+		supportsReply: boolean;
 	};
 
 	// TODO: this is only available on export
@@ -162,6 +163,7 @@ class Network {
 					{symbol: "+", mode: "v"},
 				]),
 				NETWORK: "",
+				supportsReply: false,
 			},
 
 			proxyHost: "",
