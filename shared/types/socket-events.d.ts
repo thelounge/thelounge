@@ -20,9 +20,11 @@ type EventHandler<T> = (data: T) => void;
 type NoPayloadEventHandler = EventHandler<void>;
 
 interface ServerToClientEvents {
-	"auth:start": (serverHash: number) => void;
+	"auth:start": (data: {serverHash: number; selfRegister: boolean}) => void;
 	"auth:failed": NoPayloadEventHandler;
 	"auth:success": NoPayloadEventHandler;
+	"auth:register:success": NoPayloadEventHandler;
+	"auth:register:failed": EventHandler<{error: string}>;
 
 	"upload:auth": (token: string) => void;
 
@@ -112,8 +114,15 @@ type AuthPerformData =
 			hasConfig: boolean;
 	  };
 
+type AuthRegisterData = {
+	user: string;
+	password: string;
+	password_confirm: string;
+};
+
 interface ClientToServerEvents {
 	"auth:perform": EventHandler<AuthPerformData>;
+	"auth:register": EventHandler<AuthRegisterData>;
 
 	changelog: NoPayloadEventHandler;
 

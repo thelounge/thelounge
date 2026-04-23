@@ -198,8 +198,6 @@ class Client {
 		delete client.config.networks;
 
 		if (client.name) {
-			log.info(`User ${colors.bold(client.name)} loaded`);
-
 			// Networks are created instantly, but to reduce server load on startup
 			// We randomize the IRC connections and channel log loading
 			let delay = client.manager.clients.length * 500;

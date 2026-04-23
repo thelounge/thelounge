@@ -49,6 +49,11 @@
 			<div v-if="errorShown" class="error">Authentication failed.</div>
 
 			<button :disabled="inFlight" type="submit" class="btn">Sign in</button>
+
+			<p v-if="selfRegisterEnabled" class="sign-up-link">
+				Don't have an account?
+				<router-link to="/sign-up">Sign up</router-link>
+			</p>
 		</form>
 	</div>
 </template>
@@ -57,7 +62,8 @@
 import storage from "../../js/localStorage";
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
-import {defineComponent, onBeforeUnmount, onMounted, ref} from "vue";
+import {computed, defineComponent, onBeforeUnmount, onMounted, ref} from "vue";
+import {useStore} from "../../js/store";
 
 export default defineComponent({
 	name: "SignIn",
@@ -65,11 +71,14 @@ export default defineComponent({
 		RevealPassword,
 	},
 	setup() {
+		const store = useStore();
 		const inFlight = ref(false);
 		const errorShown = ref(false);
 
 		const username = ref(storage.get("user") || "");
 		const password = ref("");
+
+		const selfRegisterEnabled = computed(() => store.state.selfRegister);
 
 		const onAuthFailed = () => {
 			inFlight.value = false;
@@ -109,6 +118,7 @@ export default defineComponent({
 			errorShown,
 			username,
 			password,
+			selfRegisterEnabled,
 			onSubmit,
 		};
 	},

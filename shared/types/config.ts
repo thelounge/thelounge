@@ -5,6 +5,7 @@ export type ConfigTheme = {
 };
 type SharedConfigurationBase = {
 	public: boolean;
+	selfRegister: boolean;
 	useHexIp: boolean;
 	prefetch: boolean;
 	fileUpload: boolean;
