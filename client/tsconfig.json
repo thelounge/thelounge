@@ -13,8 +13,9 @@
   "compilerOptions": {
     "sourceMap": false /*Create source map files for emitted JavaScript files. See more: https://www.typescriptlang.org/tsconfig#sourceMap */,
     "jsx": "preserve" /* Specify what JSX code is generated. */,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-
+    "lib": ["DOM", "ESNext"],
+    // This is required for webpack's `require.context` and `process.env`
+    "types": ["webpack-env"],
     // this enables stricter inference for data properties on `this`
     "strict": true,
     // if using webpack 2+ or rollup, to leverage tree shaking:

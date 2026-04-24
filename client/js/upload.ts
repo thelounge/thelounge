@@ -6,7 +6,7 @@ import {store} from "./store";
 class Uploader {
 	xhr: XMLHttpRequest | null = null;
 	fileQueue: File[] = [];
-	tokenKeepAlive: NodeJS.Timeout | null = null;
+	tokenKeepAlive: ReturnType<typeof setTimeout> | null = null;
 
 	overlay: HTMLDivElement | null = null;
 	uploadProgressbar: HTMLSpanElement | null = null;
