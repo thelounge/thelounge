@@ -654,15 +654,28 @@ describe("Network", function () {
 			expect(network.toBeMonitored).to.deep.equal(["user3"]);
 		});
 
-		it("should send monitor when MONITOR limit is unknown (0)", function () {
+		it("should not send monitor when server does not advertise MONITOR support", function () {
 			const addMonitorSpy = sinon.spy();
 			const network = new Network({name: "test"});
 			network.irc = {addMonitor: addMonitorSpy, removeMonitor: sinon.spy()} as any;
 
 			network.monitor("user1");
 
-			expect(addMonitorSpy.calledOnce).to.be.true;
-			expect(network.monitorList).to.deep.equal(["user1"]);
+			expect(addMonitorSpy.called).to.be.false;
+			expect(network.monitorList).to.be.empty;
+		});
+
+		it("should send monitor when server advertises MONITOR with no limit (0)", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {addMonitor: addMonitorSpy, removeMonitor: sinon.spy()} as any;
+			network.serverOptions.MONITOR = 0;
+
+			network.monitor("user1");
+			network.monitor("user2");
+
+			expect(addMonitorSpy.calledTwice).to.be.true;
+			expect(network.monitorList).to.deep.equal(["user1", "user2"]);
 		});
 	});
 
@@ -748,6 +761,7 @@ describe("Network", function () {
 			const rawSpy = sinon.spy();
 			const network = new Network({name: "test"});
 			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 0;
 
 			network.monitorBatch(["user1", "user2", "user3"]);
 
@@ -760,6 +774,7 @@ describe("Network", function () {
 			const rawSpy = sinon.spy();
 			const network = new Network({name: "test"});
 			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 0;
 			network.monitorList = ["existing"];
 
 			network.monitorBatch(["Existing", "new1", "NEW1", "new2"]);
@@ -787,6 +802,7 @@ describe("Network", function () {
 			const rawSpy = sinon.spy();
 			const network = new Network({name: "test"});
 			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 0;
 
 			network.monitorBatch([]);
 
@@ -797,11 +813,23 @@ describe("Network", function () {
 			const rawSpy = sinon.spy();
 			const network = new Network({name: "test"});
 			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 0;
 			network.monitorList = ["user1", "user2"];
 
 			network.monitorBatch(["User1", "USER2"]);
 
 			expect(rawSpy.called).to.be.false;
+		});
+
+		it("should not send anything when server does not advertise MONITOR support", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+
+			network.monitorBatch(["user1", "user2"]);
+
+			expect(rawSpy.called).to.be.false;
+			expect(network.monitorList).to.be.empty;
 		});
 	});
 });

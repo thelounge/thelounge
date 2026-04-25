@@ -8,6 +8,10 @@ export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("irc error", function (data) {
+		if (data.error === "monitor_list_full") {
+			return;
+		}
+
 		const msg = new Msg({
 			type: MessageType.ERROR,
 			error: data.error,
