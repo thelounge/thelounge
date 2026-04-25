@@ -128,7 +128,7 @@ class Network {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
-		MONITOR: number;
+		MONITOR: number | null;
 	};
 
 	monitorList!: string[];
@@ -166,7 +166,7 @@ class Network {
 					{symbol: "+", mode: "v"},
 				]),
 				NETWORK: "",
-				MONITOR: 0,
+				MONITOR: null,
 			},
 
 			proxyHost: "",
@@ -682,7 +682,12 @@ class Network {
 	}
 
 	monitor(target: string) {
-		if (!this.irc) {
+		// https://ircv3.net/specs/extensions/monitor#monitor-command:
+		//  > This token takes an optional parameter, of the maximum amount of targets a client may have in their monitor list.
+		//  > If no parameter is specified, there is no limit
+		const limit = this.serverOptions.MONITOR;
+
+		if (!this.irc || limit === null) {
 			return;
 		}
 
@@ -692,10 +697,7 @@ class Network {
 			return;
 		}
 
-		if (
-			this.serverOptions.MONITOR > 0 &&
-			this.monitorList.length >= this.serverOptions.MONITOR
-		) {
+		if (limit > 0 && this.monitorList.length >= limit) {
 			this.toBeMonitored.push(target);
 			return;
 		}
@@ -704,12 +706,10 @@ class Network {
 		this.monitorList.push(target);
 	}
 
-	/**
-	 * If we send MONITORs to every channel/query the user may be
-	 * kicked for flooding, so we batch.
-	 */
 	monitorBatch(targets: string[]) {
-		if (!this.irc || targets.length === 0) {
+		const limit = this.serverOptions.MONITOR;
+
+		if (!this.irc || limit === null || targets.length === 0) {
 			return;
 		}
 
@@ -726,10 +726,7 @@ class Network {
 				continue;
 			}
 
-			if (
-				this.serverOptions.MONITOR > 0 &&
-				this.monitorList.length + toAdd.length >= this.serverOptions.MONITOR
-			) {
+			if (limit > 0 && this.monitorList.length + toAdd.length >= limit) {
 				this.toBeMonitored.push(target);
 				continue;
 			}
@@ -737,10 +734,33 @@ class Network {
 			toAdd.push(target);
 		}
 
-		if (toAdd.length > 0) {
-			this.irc.raw("MONITOR", "+", toAdd.join(","));
-			this.monitorList.push(...toAdd);
+		// 512-byte IRC line minus "MONITOR + \r\n" overhead, with headroom.
+		const MAX_TARGETS_BYTES = 480;
+		const irc = this.irc;
+		let chunk: string[] = [];
+		let chunkBytes = 0;
+
+		const flush = () => {
+			if (chunk.length === 0) {
+				return;
+			}
+
+			irc.raw("MONITOR", "+", chunk.join(","));
+			this.monitorList.push(...chunk);
+			chunk = [];
+			chunkBytes = 0;
+		};
+
+		for (const target of toAdd) {
+			if (chunk.length > 0 && chunkBytes + 1 + target.length > MAX_TARGETS_BYTES) {
+				flush();
+			}
+
+			chunkBytes += (chunk.length === 0 ? 0 : 1) + target.length;
+			chunk.push(target);
 		}
+
+		flush();
 	}
 
 	removeMonitor(target: string) {

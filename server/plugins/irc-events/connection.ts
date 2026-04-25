@@ -8,6 +8,21 @@ import Config from "../../config";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType, ChanState} from "../../../shared/types/chan";
 
+// https://ircv3.net/specs/extensions/monitor — RPL_ISUPPORT MONITOR token.
+// null = unsupported, 0 = supported with no limit, N>0 = supported with limit.
+function parseMonitorLimit(raw: unknown): number | null {
+	if (raw === undefined || raw === null) {
+		return null;
+	}
+
+	if (raw === true) {
+		return 0;
+	}
+
+	const limit = Number(raw);
+	return Number.isFinite(limit) && limit > 0 ? limit : 0;
+}
+
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
@@ -220,10 +235,8 @@ export default <IrcEventHandler>function (irc, network) {
 			network.serverOptions.CHANTYPES = data.options.CHANTYPES;
 		}
 
-		const monitor = Number(data.options.MONITOR);
-
 		network.serverOptions.NETWORK = data.options.NETWORK;
-		network.serverOptions.MONITOR = Number.isFinite(monitor) ? monitor : 0;
+		network.serverOptions.MONITOR = parseMonitorLimit(data.options.MONITOR);
 
 		client.emit("network:options", {
 			network: network.uuid,
