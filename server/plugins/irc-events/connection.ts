@@ -8,6 +8,21 @@ import Config from "../../config";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType, ChanState} from "../../../shared/types/chan";
 
+// https://ircv3.net/specs/extensions/monitor — RPL_ISUPPORT MONITOR token.
+// null = unsupported, 0 = supported with no limit, N>0 = supported with limit.
+function parseMonitorLimit(raw: unknown): number | null {
+	if (raw === undefined || raw === null) {
+		return null;
+	}
+
+	if (raw === true) {
+		return 0;
+	}
+
+	const limit = Number(raw);
+	return Number.isFinite(limit) && limit > 0 ? limit : 0;
+}
+
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
@@ -52,7 +67,14 @@ export default <IrcEventHandler>function (irc, network) {
 			});
 		}
 
+		const monitorTargets: string[] = [];
+
 		network.channels.forEach((chan) => {
+			if (chan.type === ChanType.QUERY) {
+				monitorTargets.push(chan.name);
+				return;
+			}
+
 			if (chan.type !== ChanType.CHANNEL) {
 				return;
 			}
@@ -62,6 +84,8 @@ export default <IrcEventHandler>function (irc, network) {
 			}, delay);
 			delay += 1000;
 		});
+
+		network.monitorBatch(monitorTargets);
 	});
 
 	irc.on("socket connected", function () {
@@ -108,9 +132,17 @@ export default <IrcEventHandler>function (irc, network) {
 			identSocketId = 0;
 		}
 
+		network.monitorList = [];
+		network.toBeMonitored = [];
+
 		network.channels.forEach((chan) => {
 			chan.users = new Map();
 			chan.state = ChanState.PARTED;
+
+			if (chan.type === ChanType.QUERY) {
+				chan.isOnline = null;
+				chan.userAway = null;
+			}
 		});
 
 		if (error) {
@@ -204,6 +236,7 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		network.serverOptions.NETWORK = data.options.NETWORK;
+		network.serverOptions.MONITOR = parseMonitorLimit(data.options.MONITOR);
 
 		client.emit("network:options", {
 			network: network.uuid,

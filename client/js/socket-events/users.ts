@@ -14,3 +14,35 @@ socket.on("users", function (data) {
 		channel.channel.usersOutdated = true;
 	}
 });
+
+socket.on("user:away", ({chan, nick, away}) => {
+	const channel = store.getters.findChannel(chan);
+
+	if (channel) {
+		channel.channel.userAway = away || undefined;
+
+		const user = channel.channel.users.find((u) => u.nick.toLowerCase() === nick.toLowerCase());
+
+		if (user) {
+			user.away = away || "";
+		}
+	}
+});
+
+function handleMonitorStatus(
+	{changedChannels, networkId}: {changedChannels: string[]; networkId: string},
+	online: boolean
+) {
+	const network = store.getters.findNetwork(networkId);
+
+	if (network) {
+		for (const channel of network.channels) {
+			if (changedChannels.includes(channel.name)) {
+				channel.isOnline = online;
+			}
+		}
+	}
+}
+
+socket.on("users:online", (data) => handleMonitorStatus(data, true));
+socket.on("users:offline", (data) => handleMonitorStatus(data, false));
