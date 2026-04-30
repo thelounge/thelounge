@@ -80,23 +80,26 @@ function getVersionCacheBust() {
 }
 
 function ip2hex(address: string) {
-	// no ipv6 support
-	if (!net.isIPv4(address)) {
-		return "00000000";
+	if (net.isIPv4(address)) {
+		return address
+			.split(".")
+			.map(function (octet) {
+				let hex = parseInt(octet, 10).toString(16);
+
+				if (hex.length === 1) {
+					hex = "0" + hex;
+				}
+
+				return hex;
+			})
+			.join("");
 	}
 
-	return address
-		.split(".")
-		.map(function (octet) {
-			let hex = parseInt(octet, 10).toString(16);
+	if (net.isIPv6(address)) {
+		return crypto.createHash("sha256").update(address.toLowerCase()).digest("hex").substring(0, 10);
+	}
 
-			if (hex.length === 1) {
-				hex = "0" + hex;
-			}
-
-			return hex;
-		})
-		.join("");
+	return "00000000";
 }
 
 // Expand ~ into the current user home dir.

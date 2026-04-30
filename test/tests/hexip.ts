@@ -8,10 +8,14 @@ describe("HexIP", function () {
 		expect(Helper.ip2hex("0.0.0.255")).to.equal("000000ff");
 	});
 
+	it("should hash IPv6 addresses to 10 hex chars", function () {
+		expect(Helper.ip2hex("::1")).to.equal("eff8e7ca50");
+		expect(Helper.ip2hex("2606:2800:220:1:248:1893:25c8:1946")).to.equal("fb9d128946");
+	});
+
 	it("unsupported addresses return default", function () {
 		expect(Helper.ip2hex("0.0.0.999")).to.equal("00000000");
 		expect(Helper.ip2hex("localhost")).to.equal("00000000");
-		expect(Helper.ip2hex("::1")).to.equal("00000000");
-		expect(Helper.ip2hex("2606:2800:220:1:248:1893:25c8:1946")).to.equal("00000000");
+		expect(Helper.ip2hex("2001:db8:::1")).to.equal("00000000");
 	});
 });
