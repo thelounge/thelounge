@@ -1461,6 +1461,10 @@ textarea.input {
 	position: relative;
 }
 
+#chat .msg.multiline .content {
+	white-space: pre-wrap;
+}
+
 #chat .content {
 	flex: 1 1 auto;
 	min-width: 0;

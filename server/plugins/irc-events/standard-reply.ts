@@ -9,6 +9,13 @@ const typeMap: Record<string, MessageType> = {
 	NOTE: MessageType.NOTE,
 };
 
+const MULTILINE_ERROR_DESCRIPTIONS: Record<string, string> = {
+	MULTILINE_MAX_BYTES: "Multiline message too long",
+	MULTILINE_MAX_LINES: "Too many lines in multiline message",
+	MULTILINE_INVALID_TARGET: "Mismatched target in multiline message",
+	MULTILINE_INVALID: "Invalid multiline message",
+};
+
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
@@ -29,11 +36,24 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 		}
 
+		let text = data.description;
+
+		// Surface a friendlier prefix for multiline batch errors.
+		if (
+			data.type === "FAIL" &&
+			data.command === "BATCH" &&
+			data.code &&
+			data.code.startsWith("MULTILINE_")
+		) {
+			const friendly = MULTILINE_ERROR_DESCRIPTIONS[data.code] ?? "Multiline message rejected";
+			text = `${friendly}: ${data.description || friendly}`;
+		}
+
 		target.pushMessage(
 			client,
 			new Msg({
 				type,
-				text: data.description,
+				text,
 				showInActive: true,
 			}),
 			true

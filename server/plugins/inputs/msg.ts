@@ -17,7 +17,7 @@ function getTarget(cmd: string, args: string[], chan: Chan) {
 }
 
 const input: PluginInputHandler = function (network, chan, cmd, args) {
-	let targetName = getTarget(cmd, args, chan);
+	const targetName = getTarget(cmd, args, chan);
 
 	if (cmd === "query") {
 		if (!targetName) {
@@ -94,34 +94,51 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	}
 
 	const replyTo = this._pendingReplyTo;
-	const replyTags = replyTo && network.serverOptions.supportsReply
-		? {"+reply": replyTo} : undefined;
-	network.irc.say(targetName, msg, replyTags);
+	const replyTags =
+		replyTo && network.serverOptions.supportsReply ? {"+reply": replyTo} : undefined;
 
-	// If the IRCd does not support echo-message, simulate the message
-	// being sent back to us.
-	if (!network.irc.network.cap.isEnabled("echo-message")) {
-		const parsedTarget = network.irc.network.extractTargetGroup(targetName);
-		let targetGroup: string | undefined = undefined;
+	const lines = msg.includes("\n") ? msg.split(/\r?\n/) : [msg];
+	const isMultiline = lines.length > 1;
+	const useMultilineBatch = isMultiline && network.irc.network.cap.isEnabled("draft/multiline");
 
-		if (parsedTarget) {
-			targetName = parsedTarget.target;
-			targetGroup = parsedTarget.target_group;
+	if (useMultilineBatch) {
+		try {
+			network.irc.sayMultiline(targetName, lines, replyTags);
+		} catch {
+			// max-bytes / max-lines exceeded; deliver as separate messages.
+			lines.forEach((line) => network.irc.say(targetName, line, replyTags));
 		}
+	} else if (isMultiline) {
+		lines.forEach((line) => network.irc.say(targetName, line, replyTags));
+	} else {
+		network.irc.say(targetName, msg, replyTags);
+	}
 
-		const channel = network.getChannel(targetName);
+	if (network.irc.network.cap.isEnabled("echo-message")) {
+		return true;
+	}
 
-		if (typeof channel !== "undefined") {
-			network.irc.emit("privmsg", {
-				nick: network.irc.user.nick,
-				ident: network.irc.user.username,
-				hostname: network.irc.user.host,
-				target: targetName,
-				group: targetGroup,
-				message: msg,
-				tags: replyTo ? {"+reply": replyTo} : undefined,
-			});
-		}
+	const parsedTarget = network.irc.network.extractTargetGroup(targetName);
+	const echoTarget = parsedTarget ? parsedTarget.target : targetName;
+	const targetGroup = parsedTarget ? parsedTarget.target_group : undefined;
+
+	if (typeof network.getChannel(echoTarget) === "undefined") {
+		return true;
+	}
+
+	const echoBase = {
+		nick: network.irc.user.nick,
+		ident: network.irc.user.username,
+		hostname: network.irc.user.host,
+		target: echoTarget,
+		group: targetGroup,
+		tags: replyTo ? {"+reply": replyTo} : undefined,
+	};
+
+	if (useMultilineBatch) {
+		network.irc.emit("privmsg", {...echoBase, message: msg, multiline: true});
+	} else {
+		lines.forEach((line) => network.irc.emit("privmsg", {...echoBase, message: line}));
 	}
 
 	return true;

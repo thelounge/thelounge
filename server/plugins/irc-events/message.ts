@@ -26,6 +26,7 @@ type HandleInput = {
 	replyTo?: string;
 	/** https://ircv3.net/specs/client-tags/channel-context */
 	channelContext?: string;
+	multiline?: boolean;
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
@@ -35,6 +36,7 @@ function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInpu
 		msgid: data.tags?.msgid,
 		replyTo: data.tags?.["+reply"],
 		channelContext: data.tags?.["+channel-context"],
+		multiline: data.multiline,
 	};
 }
 
@@ -157,6 +159,7 @@ export default <IrcEventHandler>function (irc, network) {
 			users: [],
 			msgid: data.msgid,
 			replyTo: data.replyTo,
+			multiline: data.multiline,
 		});
 
 		if (data.replyTo && chan) {
@@ -219,7 +222,10 @@ export default <IrcEventHandler>function (irc, network) {
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
 		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
 			let title = chan.name;
-			let body = cleanMessage;
+			// For multiline messages we limit the notification preview to the first line
+			let body = data.multiline
+				? cleanMessage.split("\n").find((line) => line.trim().length > 0) ?? cleanMessage
+				: cleanMessage;
 
 			if (msg.type === MessageType.ACTION) {
 				// For actions, do not include colon in the message

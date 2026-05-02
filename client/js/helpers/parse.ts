@@ -99,6 +99,20 @@ function createFragment(fragment: StyledFragment): VNode | string | undefined {
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
 function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
+	if (text && text.includes("\n")) {
+		const lines = text.split("\n");
+		return lines.flatMap((line, i) =>
+			i === 0
+				? parseLine(line, message, network)
+				: // a br isn't ideal but I can't think of a better way to preserve all styles/text wrapping
+				  [createElement("br"), ...parseLine(line, message, network)]
+		);
+	}
+
+	return parseLine(text, message, network);
+}
+
+function parseLine(text: string, message?: ClientMessage, network?: ClientNetwork) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
