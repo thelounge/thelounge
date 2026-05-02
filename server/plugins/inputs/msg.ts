@@ -16,7 +16,7 @@ function getTarget(cmd: string, args: string[], chan: Chan) {
 	}
 }
 
-const input: PluginInputHandler = function (network, chan, cmd, args) {
+const input: PluginInputHandler = function (network, chan, cmd, args, extras) {
 	let targetName = getTarget(cmd, args, chan);
 
 	if (cmd === "query") {
@@ -93,7 +93,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		return true;
 	}
 
-	const replyTo = this._pendingReplyTo;
+	const replyTo = extras?.replyTo;
 	const replyTags =
 		replyTo && network.serverOptions.supportsReply ? {"+reply": replyTo} : undefined;
 	network.irc.say(targetName, msg, replyTags);

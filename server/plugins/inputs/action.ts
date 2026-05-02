@@ -5,7 +5,7 @@ import {ChanType} from "../../../shared/types/chan";
 
 const commands = ["slap", "me"];
 
-const input: PluginInputHandler = function (network, chan, cmd, args) {
+const input: PluginInputHandler = function (network, chan, cmd, args, extras) {
 	if (chan.type !== ChanType.CHANNEL && chan.type !== ChanType.QUERY) {
 		chan.pushMessage(
 			this,
@@ -33,7 +33,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 
 			text = text || args.join(" ");
 
-			const replyTo = this._pendingReplyTo;
+			const replyTo = extras?.replyTo;
 			const replyTags =
 				replyTo && network.serverOptions.supportsReply ? {"+reply": replyTo} : undefined;
 
