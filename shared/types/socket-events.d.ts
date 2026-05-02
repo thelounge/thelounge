@@ -82,6 +82,11 @@ interface ServerToClientEvents {
 
 	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;
 	"msg:special": EventHandler<{chan: number; data?: Record<string, any>}>;
+	"msg:reactions": EventHandler<{
+		chan: number;
+		msgid: string;
+		reactions: {[reaction: string]: string[]};
+	}>;
 	msg: EventHandler<{msg: SharedMsg; chan: number; highlight?: number; unread?: number}>;
 
 	init: EventHandler<{active: number; networks: SharedNetwork[]; token?: string}>;
@@ -182,6 +187,13 @@ interface ClientToServerEvents {
 	search: EventHandler<SearchQuery>;
 
 	typing: EventHandler<{target: number; status: TypingStatus}>;
+
+	react: EventHandler<{
+		target: number;
+		msgid: string;
+		reaction: string;
+		action: "react" | "unreact";
+	}>;
 }
 
 interface InterServerEvents {}

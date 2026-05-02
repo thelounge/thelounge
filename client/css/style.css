@@ -1345,6 +1345,12 @@ textarea.input {
 	align-items: flex-end;
 }
 
+/* When reactions are present, the message grows downward instead of upward,
+   so don't bottom-align — that would shove the reply preview off the top. */
+#chat .msg:has(.reply-context):has(.msg-reactions) {
+	align-items: flex-start;
+}
+
 #chat .unread-marker {
 	position: relative;
 	text-align: center;
@@ -1729,7 +1735,8 @@ textarea.input {
 }
 
 #chat .msg:hover .msg-actions,
-#chat .msg .msg-actions:focus-within {
+#chat .msg .msg-actions:focus-within,
+#chat .msg .msg-actions-open {
 	opacity: 1;
 	pointer-events: auto;
 }
@@ -1762,11 +1769,154 @@ textarea.input {
 	content: "\f3e5"; /* fa-reply */
 }
 
+#chat .msg .msg-action-react::before {
+	content: "\f164"; /* fa-thumbs-up */
+}
+
 /* When a reply-context is present, anchor the toolbar to the bottom row
    (the actual message) instead of the reply preview above it. */
 #chat .msg:has(.reply-context) .msg-actions {
 	top: auto;
 	bottom: 0;
+}
+
+/* Reaction chips render on their own row beneath the message body text.
+   display: flex on a child span forces a line break in the inline-flowing
+   .content, putting chips below preceding text. */
+#chat .msg .msg-reactions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-top: 3px;
+}
+
+#chat .msg .msg-reaction {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 1px 6px;
+	background: rgb(0 0 0 / 4%);
+	border: 1px solid transparent;
+	border-radius: 10px;
+	font-size: 0.85em;
+	line-height: 1.6;
+	color: var(--body-color);
+	cursor: pointer;
+}
+
+#chat .msg .msg-reaction:hover,
+#chat .msg .msg-reaction:focus-visible {
+	background: rgb(0 0 0 / 8%);
+}
+
+#chat .msg .msg-reaction-mine {
+	background: rgb(45 119 230 / 12%);
+	border-color: rgb(45 119 230 / 40%);
+}
+
+#chat .msg .msg-reaction-mine:hover,
+#chat .msg .msg-reaction-mine:focus-visible {
+	background: rgb(45 119 230 / 20%);
+}
+
+#chat .msg .msg-reaction-value {
+	font-size: 1.1em;
+	line-height: 1;
+}
+
+#chat .msg .msg-reaction-count {
+	font-variant-numeric: tabular-nums;
+	color: var(--body-color-muted);
+}
+
+/* Emoji picker popover, anchored to the msg-actions toolbar */
+.emoji-picker {
+	position: absolute;
+	top: calc(100% + 4px);
+	right: 0;
+	z-index: 10;
+	width: 232px;
+	background: var(--window-bg-color);
+	color: var(--body-color);
+	border: 1px solid rgb(0 0 0 / 12%);
+	border-radius: 6px;
+	padding: 8px;
+	box-shadow: 0 2px 12px rgb(0 0 0 / 18%);
+	/* Toolbar can be pointer-events: none until hover; the picker itself is
+	   always interactive when rendered (we only render via v-if on open). */
+	pointer-events: auto;
+}
+
+/* Flip up when the picker would otherwise overflow the bottom of the viewport. */
+.emoji-picker.emoji-picker-flipped {
+	top: auto;
+	bottom: calc(100% + 4px);
+}
+
+.emoji-picker-search {
+	width: 100%;
+	box-sizing: border-box;
+	margin: 0 0 8px;
+	padding: 5px 8px;
+	/* Neutral gray with alpha so it stands out against both light and dark
+	   popup backgrounds without needing per-theme overrides. */
+	background: rgb(127 127 127 / 15%);
+	border: 1px solid rgb(127 127 127 / 35%);
+	border-radius: 4px;
+	color: inherit;
+	font: inherit;
+	font-size: 0.9em;
+}
+
+.emoji-picker-search:focus {
+	outline: 2px solid var(--link-color);
+	outline-offset: -1px;
+	background: var(--window-bg-color);
+}
+
+.emoji-picker-section-title {
+	font-size: 0.75em;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: var(--body-color-muted);
+	margin: 6px 2px 4px;
+	letter-spacing: 0.04em;
+}
+
+.emoji-picker-section-title:first-child {
+	margin-top: 0;
+}
+
+.emoji-picker-grid {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 2px;
+}
+
+.emoji-picker-btn {
+	aspect-ratio: 1;
+	padding: 0;
+	background: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	font-size: 18px;
+	line-height: 1;
+	color: inherit;
+	cursor: pointer;
+}
+
+.emoji-picker-btn:hover,
+.emoji-picker-btn:focus-visible {
+	background: rgb(0 0 0 / 8%);
+	border-color: rgb(0 0 0 / 10%);
+	outline: none;
+}
+
+.emoji-picker-empty {
+	padding: 12px 4px;
+	color: var(--body-color-muted);
+	font-size: 0.9em;
+	text-align: center;
 }
 
 /* Reply bar above message input */

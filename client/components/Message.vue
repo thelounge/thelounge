@@ -59,6 +59,13 @@
 					:link="preview"
 					:channel="channel"
 				/>
+				<MessageReactions
+					v-if="message.reactions && message.msgid"
+					:reactions="message.reactions"
+					:my-nick="network.nick"
+					:read-only="!canReact"
+					@toggle="onToggleChip"
+				/>
 			</span>
 		</template>
 		<template v-else>
@@ -105,18 +112,50 @@
 					:link="preview"
 					:channel="channel"
 				/>
+				<MessageReactions
+					v-if="message.reactions && message.msgid"
+					:reactions="message.reactions"
+					:my-nick="network.nick"
+					:read-only="!canReact"
+					@toggle="onToggleChip"
+				/>
 			</span>
 		</template>
-		<div v-if="canReply && message.msgid" class="msg-actions">
-			<span class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Reply"
+		<div
+			v-if="(canReply || canReact) && message.msgid"
+			class="msg-actions"
+			:class="{'msg-actions-open': pickerOpen}"
+		>
+			<span
+				v-if="canReact"
+				class="tooltipped tooltipped-w tooltipped-no-touch"
+				aria-label="Add reaction"
+				><button
+					ref="reactBtnEl"
+					class="msg-action-react"
+					aria-label="Add reaction"
+					:aria-expanded="pickerOpen"
+					:aria-controls="pickerOpen ? pickerId : undefined"
+					@click.stop="togglePicker"
+			/></span>
+			<span
+				v-if="canReply"
+				class="tooltipped tooltipped-w tooltipped-no-touch"
+				aria-label="Reply"
 				><button class="msg-action-reply" aria-label="Reply" @click.stop="startReply"
 			/></span>
+			<EmojiPicker
+				v-if="pickerOpen"
+				ref="pickerEl"
+				:id="pickerId"
+				@pick="onPickEmoji"
+			/>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import {computed, defineComponent, onBeforeUnmount, PropType} from "vue";
+import {computed, defineComponent, onBeforeUnmount, PropType, ref} from "vue";
 import dayjs from "dayjs";
 
 import constants from "../js/constants";
@@ -126,8 +165,11 @@ import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import ReplyContext from "./ReplyContext.vue";
+import MessageReactions from "./MessageReactions.vue";
+import EmojiPicker from "./EmojiPicker.vue";
 import MessageTypes from "./MessageTypes";
 import StatusmsgMarker from "./StatusmsgMarker.vue";
+import socket from "../js/socket";
 
 import type {ClientChan, ClientMessage, ClientNetwork} from "../js/types";
 import {MessageType} from "../../shared/types/msg";
@@ -142,6 +184,8 @@ export default defineComponent({
 	components: {
 		...MessageTypes,
 		ReplyContext,
+		MessageReactions,
+		EmojiPicker,
 		StatusmsgMarker,
 	},
 	props: {
@@ -191,6 +235,84 @@ export default defineComponent({
 				t === MessageType.MESSAGE || t === MessageType.ACTION || t === MessageType.NOTICE
 			);
 		});
+
+		// Reactions per spec must accompany a +reply, so they share the same
+		// "is this a reactable message?" criteria as reply.
+		const canReact = computed(() => {
+			return canReply.value && props.network.serverOptions.supportsReact;
+		});
+
+		const pickerOpen = ref(false);
+		const pickerEl = ref<{$el: HTMLElement} | null>(null);
+		const reactBtnEl = ref<HTMLButtonElement | null>(null);
+		const pickerId = computed(() => `emoji-picker-${props.message.msgid ?? ""}`);
+
+		const onDocumentMouseDown = (e: MouseEvent) => {
+			const root = pickerEl.value?.$el;
+
+			if (root && !root.contains(e.target as Node)) {
+				closePicker();
+			}
+		};
+
+		const onEscape = () => closePicker(true);
+
+		const togglePicker = () => {
+			pickerOpen.value = !pickerOpen.value;
+
+			if (pickerOpen.value) {
+				document.addEventListener("mousedown", onDocumentMouseDown);
+				eventbus.on("escapekey", onEscape);
+			} else {
+				document.removeEventListener("mousedown", onDocumentMouseDown);
+				eventbus.off("escapekey", onEscape);
+			}
+		};
+
+		const closePicker = (restoreFocus = false) => {
+			if (!pickerOpen.value) {
+				return;
+			}
+
+			pickerOpen.value = false;
+			document.removeEventListener("mousedown", onDocumentMouseDown);
+			eventbus.off("escapekey", onEscape);
+
+			if (restoreFocus) {
+				reactBtnEl.value?.focus();
+			}
+		};
+
+		const sendReaction = (reaction: string, action: "react" | "unreact") => {
+			if (!props.message.msgid || !props.channel) {
+				return;
+			}
+
+			socket.emit("react", {
+				target: props.channel.id,
+				msgid: props.message.msgid,
+				reaction,
+				action,
+			});
+		};
+
+		const onPickEmoji = (emoji: string) => {
+			closePicker(true);
+
+			const myNick = props.network.nick;
+			const existing = props.message.reactions?.[emoji];
+			const alreadyReacted = !!existing && existing.includes(myNick);
+
+			sendReaction(emoji, alreadyReacted ? "unreact" : "react");
+		};
+
+		const onToggleChip = (reaction: string) => {
+			const myNick = props.network.nick;
+			const existing = props.message.reactions?.[reaction];
+			const mine = !!existing && existing.includes(myNick);
+
+			sendReaction(reaction, mine ? "unreact" : "react");
+		};
 
 		const parentInHistory = computed(() => {
 			if (!props.message.replyTo || !props.channel) {
@@ -276,6 +398,7 @@ export default defineComponent({
 
 		onBeforeUnmount(() => {
 			clearLongPress();
+			closePicker();
 
 			if (highlightTimer !== null) {
 				clearTimeout(highlightTimer);
@@ -288,6 +411,15 @@ export default defineComponent({
 			messageTimeLocale,
 			messageComponent,
 			canReply,
+			canReact,
+			pickerOpen,
+			pickerEl,
+			pickerId,
+			reactBtnEl,
+			togglePicker,
+			closePicker,
+			onPickEmoji,
+			onToggleChip,
 			parentInHistory,
 			isAction,
 			startReply,
