@@ -2,7 +2,7 @@ import {PluginInputHandler} from "./index";
 
 const commands = ["notice"];
 
-const input: PluginInputHandler = function (network, chan, cmd, args) {
+const input: PluginInputHandler = function (network, chan, cmd, args, extras) {
 	if (!args[1]) {
 		return;
 	}
@@ -10,7 +10,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let targetName = args[0];
 	let message = args.slice(1).join(" ");
 
-	const replyTo = this._pendingReplyTo;
+	const replyTo = extras?.replyTo;
 	const replyTags =
 		replyTo && network.serverOptions.supportsReply ? {"+reply": replyTo} : undefined;
 	network.irc.notice(targetName, message, replyTags);
