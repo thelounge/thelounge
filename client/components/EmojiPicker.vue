@@ -39,7 +39,7 @@
 				</div>
 			</template>
 
-			<div :id="`${id}-quick-h`" class="emoji-picker-section-title">Frequently used</div>
+			<div :id="`${id}-quick-h`" class="emoji-picker-section-title">Suggested</div>
 			<div class="emoji-picker-grid" role="grid" :aria-labelledby="`${id}-quick-h`">
 				<button
 					v-for="(emoji, idx) in QUICK_EMOJI"
