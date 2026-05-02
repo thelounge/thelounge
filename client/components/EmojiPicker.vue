@@ -22,11 +22,7 @@
 		<template v-if="!query">
 			<template v-if="recents.length">
 				<div :id="`${id}-recents-h`" class="emoji-picker-section-title">Recent</div>
-				<div
-					class="emoji-picker-grid"
-					role="grid"
-					:aria-labelledby="`${id}-recents-h`"
-				>
+				<div class="emoji-picker-grid" role="grid" :aria-labelledby="`${id}-recents-h`">
 					<button
 						v-for="(emoji, idx) in recents"
 						:key="`r-${emoji}`"
@@ -94,8 +90,6 @@ import fuzzy from "fuzzy";
 import emojiMap from "../js/helpers/simplemap.json";
 import {getRecents, pushRecent} from "../js/helpers/emojiRecents";
 
-// Curated quick reactions shown when search is empty and recents are exhausted.
-// One row of five — most common reactions; everything else lives behind search.
 const QUICK_EMOJI = ["👍", "👎", "🙏", "🎉", "✅"];
 
 const COLS = 5;
@@ -116,8 +110,6 @@ export default defineComponent({
 		const recents = ref<string[]>(getRecents());
 		const flipped = ref(false);
 
-		// Query DOM for current buttons so we never operate on stale refs
-		// that survived a v-if swap (recents/quick → search results).
 		const getButtons = (): HTMLButtonElement[] => {
 			const root = rootEl.value;
 
@@ -143,7 +135,7 @@ export default defineComponent({
 					emoji: (emojiMap as Record<string, string>)[m.original],
 				}));
 
-			// Dedupe by emoji native value (e.g. `+1` and `thumbsup` both map to 👍)
+			// handle dupes: `+1` and `thumbsup` both map to 👍
 			const seen = new Set<string>();
 			return matches.filter((item) => {
 				if (seen.has(item.emoji)) {
@@ -156,12 +148,9 @@ export default defineComponent({
 		});
 
 		onMounted(() => {
-			// Decide direction off the toolbar (the picker's parent), not the
-			// picker itself. Toolbar position is stable and doesn't depend on
-			// the picker's own rendering timing or any focus-triggered scroll.
-			//
 			// If the room below the toolbar is less than the picker's likely
-			// height, and there's more room above, flip up.
+			// height, and there's more room above, flip up. This prevents the
+			// picker from overflowing the container
 			const toolbar = rootEl.value?.parentElement;
 			const toolbarRect = toolbar?.getBoundingClientRect();
 			const pickerRect = rootEl.value?.getBoundingClientRect();
@@ -190,7 +179,9 @@ export default defineComponent({
 			buttons[clamped]?.focus();
 		};
 
-		// Roving tabindex with arrow-key navigation across the visible grid(s).
+		// a11y tabIndex support
+		// By default, the page jumped from the emoji to the "Add reaction" button behind the
+		// emoji picker.
 		const onGridKeydown = (e: KeyboardEvent, idx: number) => {
 			const total = getButtons().length;
 			let next = idx;
@@ -243,10 +234,9 @@ export default defineComponent({
 			}
 		};
 
-		// Tab focus trap. Without this, Tab from the search input would skip
-		// past the buttons (which use roving tabindex) and land on whatever's
-		// behind the picker. We intercept Tab and walk through the search +
-		// every button manually, wrapping at the ends.
+		// Need to force tab to move between emojis.
+		// TODO: there's probably a better way to do this in the DOM?
+		// Nothing I tried worked quite right.
 		const onTrapTab = (e: KeyboardEvent) => {
 			if (!rootEl.value) {
 				return;

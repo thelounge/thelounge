@@ -1339,8 +1339,7 @@ textarea.input {
 	align-items: flex-end;
 }
 
-/* When reactions are present, the message grows downward instead of upward,
-   so don't bottom-align — that would shove the reply preview off the top. */
+/* When reactions are present, the message grows downward instead of upward, so we need to override */
 #chat .msg:has(.reply-context):has(.msg-reactions) {
 	align-items: flex-start;
 }
