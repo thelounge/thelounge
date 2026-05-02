@@ -7,6 +7,7 @@
 				self: message.self,
 				highlight: message.highlight || focused,
 				'previous-source': isPreviousSource,
+				multiline: message.multiline,
 			},
 		]"
 		:data-type="message.type"

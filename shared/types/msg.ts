@@ -98,4 +98,5 @@ export type SharedMsg = {
 
 	statusmsgGroup?: string;
 	params?: string[];
+	multiline?: boolean;
 };
