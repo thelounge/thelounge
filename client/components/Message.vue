@@ -144,12 +144,7 @@
 				aria-label="Reply"
 				><button class="msg-action-reply" aria-label="Reply" @click.stop="startReply"
 			/></span>
-			<EmojiPicker
-				v-if="pickerOpen"
-				ref="pickerEl"
-				:id="pickerId"
-				@pick="onPickEmoji"
-			/>
+			<EmojiPicker v-if="pickerOpen" ref="pickerEl" :id="pickerId" @pick="onPickEmoji" />
 		</div>
 	</div>
 </template>
@@ -236,8 +231,6 @@ export default defineComponent({
 			);
 		});
 
-		// Reactions per spec must accompany a +reply, so they share the same
-		// "is this a reactable message?" criteria as reply.
 		const canReact = computed(() => {
 			return canReply.value && props.network.serverOptions.supportsReact;
 		});

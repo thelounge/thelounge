@@ -98,7 +98,5 @@ export type SharedMsg = {
 	replyToNick?: string;
 	replyToText?: string;
 
-	// reaction value → list of nicks who currently have that reaction on this message,
-	// in arrival order. Reactions are ephemeral and not persisted to sqlite.
 	reactions?: {[reaction: string]: string[]};
 };

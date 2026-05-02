@@ -35,12 +35,7 @@ import type {
 	AuthPerformData,
 } from "../shared/types/socket-events";
 import {ChanType} from "../shared/types/chan";
-import {
-	applyReactionTags,
-	REACT_TAG,
-	UNREACT_TAG,
-	REPLY_TAG,
-} from "./plugins/irc-events/reactions";
+import {applyReactionTags, REACT_TAG, UNREACT_TAG, REPLY_TAG} from "./plugins/irc-events/reactions";
 import {
 	LockedSharedConfiguration,
 	SharedConfiguration,
@@ -536,8 +531,7 @@ function initializeClient(
 
 		irc.tagmsg(chan.name, tags);
 
-		// Without echo-message, the sender's own reaction won't come back
-		// through the inbound TAGMSG handler — apply locally instead.
+		// Simulate echo-message when not supported so our client picks it up the same.
 		if (!irc.network.cap.isEnabled("echo-message")) {
 			applyReactionTags(client, chan, irc.user.nick, tags);
 		}

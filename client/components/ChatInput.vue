@@ -308,8 +308,7 @@ export default defineComponent({
 				text: data.text || "",
 			};
 
-			// Pre-fill with "nick: " so clients without +reply support
-			// can still see who the reply is directed at
+			// "nick: " fallback for clients without +reply support
 			if (!props.channel.pendingMessage && data.nick && input.value) {
 				props.channel.pendingMessage = data.nick + ": ";
 				input.value.value = props.channel.pendingMessage;
