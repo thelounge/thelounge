@@ -5,12 +5,7 @@ export const REACT_TAG = "+draft/react";
 export const UNREACT_TAG = "+draft/unreact";
 export const REPLY_TAG = "+reply";
 
-// Apply +draft/react / +draft/unreact tags from an inbound message to the
-// parent message identified by the +reply tag.
-//
-// Per spec, react/unreact must be paired with +reply, and a single message
-// must not carry both. The parent must still be in scrollback; reactions to
-// older messages are silently dropped.
+// TODO: right now, the parent must still be in scrollback for reactions; reactions to older messages are silently dropped.
 export function applyReactionTags(
 	client: Client,
 	chan: Chan,

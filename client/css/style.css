@@ -1620,7 +1620,7 @@ textarea.input {
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
-/* Reply context — compact preview above message text, inside .content */
+/* compact preview above message text, inside .content */
 #chat .msg .reply-context {
 	display: flex;
 	align-items: center;
@@ -1813,8 +1813,6 @@ textarea.input {
 	border-radius: 6px;
 	padding: 8px;
 	box-shadow: 0 2px 12px rgb(0 0 0 / 18%);
-	/* Toolbar can be pointer-events: none until hover; the picker itself is
-	   always interactive when rendered (we only render via v-if on open). */
 	pointer-events: auto;
 }
 
@@ -1829,8 +1827,7 @@ textarea.input {
 	box-sizing: border-box;
 	margin: 0 0 8px;
 	padding: 5px 8px;
-	/* Neutral gray with alpha so it stands out against both light and dark
-	   popup backgrounds without needing per-theme overrides. */
+	/* TODO: use css var? none looked great to me */
 	background: rgb(127 127 127 / 15%);
 	border: 1px solid rgb(127 127 127 / 35%);
 	border-radius: 4px;

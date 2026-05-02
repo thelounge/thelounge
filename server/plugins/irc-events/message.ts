@@ -200,7 +200,6 @@ export default <IrcEventHandler>function (irc, network) {
 
 		chan.pushMessage(client, msg, !msg.self);
 
-		// Reactions may also arrive as PRIVMSG (with body), per spec.
 		if (data.tags && data.replyTo) {
 			applyReactionTags(client, chan, data.nick, data.tags);
 		}
