@@ -105,7 +105,8 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			lines.forEach((line) => network.irc.say(targetName, line));
 		}
 	} else if (isMultiline) {
-		lines.forEach((line) => network.irc.say(targetName, line));
+		lines.forEach((line) => network.irc.say(targetName, line)); // If the IRCd does not support echo-message, simulate the message
+		// being sent back to us.
 	} else {
 		network.irc.say(targetName, msg);
 	}
@@ -113,6 +114,9 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	if (network.irc.network.cap.isEnabled("echo-message")) {
 		return true;
 	}
+
+	// If the IRCd does not support echo-message, simulate the message
+	// being sent back to us.
 
 	const parsedTarget = network.irc.network.extractTargetGroup(targetName);
 	const echoTarget = parsedTarget ? parsedTarget.target : targetName;
