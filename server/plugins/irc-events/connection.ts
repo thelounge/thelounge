@@ -238,6 +238,7 @@ export default <IrcEventHandler>function (irc, network) {
 		network.serverOptions.NETWORK = data.options.NETWORK;
 		network.serverOptions.MONITOR = parseMonitorLimit(data.options.MONITOR);
 		network.serverOptions.supportsReply = irc.network.supportsTag("reply");
+		network.serverOptions.supportsReact = irc.network.supportsTag("draft/react");
 
 		client.emit("network:options", {
 			network: network.uuid,

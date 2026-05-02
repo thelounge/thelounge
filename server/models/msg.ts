@@ -42,6 +42,7 @@ class Msg {
 	statusmsgGroup?: string;
 	params!: string[];
 	multiline?: boolean;
+	reactions?: {[reaction: string]: string[]};
 
 	constructor(attr?: Partial<Msg>) {
 		// Some properties need to be copied in the Msg object instead of referenced

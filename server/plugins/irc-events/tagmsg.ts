@@ -1,21 +1,13 @@
 import {IrcEventHandler} from "../../client";
-import Helper from "../../helper";
 import {ChanType} from "../../../shared/types/chan";
 import {VALID_TYPING_STATUSES, TypingStatus} from "../../../shared/types/typing";
+import {applyReactionTags} from "./reactions";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("tagmsg", function (data) {
-		if (data.nick === irc.user.nick) {
-			return;
-		}
-
-		const shouldIgnore = network.ignoreList.some(function (entry) {
-			return Helper.compareHostmask(entry, data);
-		});
-
-		if (shouldIgnore) {
+		if (network.isIgnoredUser(data)) {
 			return;
 		}
 
@@ -35,7 +27,16 @@ export default <IrcEventHandler>function (irc, network) {
 			return;
 		}
 
+		// React/unreact may also arrive as PRIVMSG (handled in message.ts).
+		// https://ircv3.net/specs/client-tags/react
+		applyReactionTags(client, chan, data.nick, data.tags);
+
 		// https://ircv3.net/specs/client-tags/typing
+		// Don't echo our own typing status back to ourselves.
+		if (data.nick === irc.user.nick) {
+			return;
+		}
+
 		const typing = data.tags["+typing"];
 
 		if (typing && VALID_TYPING_STATUSES.has(typing as TypingStatus)) {

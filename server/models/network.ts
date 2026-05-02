@@ -130,6 +130,7 @@ class Network {
 		NETWORK: string;
 		MONITOR: number | null;
 		supportsReply: boolean;
+		supportsReact: boolean;
 	};
 
 	monitorList!: string[];
@@ -169,6 +170,7 @@ class Network {
 				NETWORK: "",
 				MONITOR: null,
 				supportsReply: false,
+				supportsReact: false,
 			},
 
 			proxyHost: "",

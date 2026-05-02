@@ -34,8 +34,8 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			text = text || args.join(" ");
 
 			const replyTo = this._pendingReplyTo;
-			const replyTags = replyTo && network.serverOptions.supportsReply
-				? {"+reply": replyTo} : undefined;
+			const replyTags =
+				replyTo && network.serverOptions.supportsReply ? {"+reply": replyTo} : undefined;
 
 			if (replyTags) {
 				// irc.action() doesn't support tags

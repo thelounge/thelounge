@@ -21,6 +21,7 @@ export type SharedServerOptions = {
 	NETWORK: string;
 	MONITOR: number | null;
 	supportsReply: boolean;
+	supportsReact: boolean;
 };
 
 export type SharedNetworkStatus = {

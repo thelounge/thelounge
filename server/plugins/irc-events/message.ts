@@ -7,6 +7,7 @@ import User from "../../models/user";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 import {MessageEventArgs} from "irc-framework";
+import {applyReactionTags} from "./reactions";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
@@ -167,7 +168,9 @@ export default <IrcEventHandler>function (irc, network) {
 
 			if (parentMsg) {
 				msg.replyToNick = parentMsg.from?.nick;
-				const cleanReplyToText = parentMsg.text ? cleanIrcMessage(parentMsg.text) : parentMsg.text;
+				const cleanReplyToText = parentMsg.text
+					? cleanIrcMessage(parentMsg.text)
+					: parentMsg.text;
 				msg.replyToText = cleanReplyToText?.substring(0, 200);
 
 				// Replies to our own messages should highlight like a mention
@@ -218,6 +221,10 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		chan.pushMessage(client, msg, !msg.self);
+
+		if (data.tags && data.replyTo) {
+			applyReactionTags(client, chan, data.nick, data.tags);
+		}
 
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
 		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {

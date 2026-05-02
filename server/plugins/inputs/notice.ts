@@ -11,8 +11,8 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let message = args.slice(1).join(" ");
 
 	const replyTo = this._pendingReplyTo;
-	const replyTags = replyTo && network.serverOptions.supportsReply
-		? {"+reply": replyTo} : undefined;
+	const replyTags =
+		replyTo && network.serverOptions.supportsReply ? {"+reply": replyTo} : undefined;
 	network.irc.notice(targetName, message, replyTags);
 
 	// If the IRCd does not support echo-message, simulate the message
