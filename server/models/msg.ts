@@ -41,6 +41,7 @@ class Msg {
 	users!: string[];
 	statusmsgGroup?: string;
 	params!: string[];
+	reactions?: {[reaction: string]: string[]};
 
 	constructor(attr?: Partial<Msg>) {
 		// Some properties need to be copied in the Msg object instead of referenced

@@ -7,6 +7,7 @@ import User from "../../models/user";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 import {MessageEventArgs} from "irc-framework";
+import {applyReactionTags} from "./reactions";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
@@ -23,10 +24,17 @@ type HandleInput = {
 	group?: string;
 	msgid?: string;
 	replyTo?: string;
+	tags?: Record<string, string>;
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
-	return {...data, type: type, msgid: data.tags?.msgid, replyTo: data.tags?.["+reply"]};
+	return {
+		...data,
+		type: type,
+		msgid: data.tags?.msgid,
+		replyTo: data.tags?.["+reply"],
+		tags: data.tags as Record<string, string> | undefined,
+	};
 }
 
 export default <IrcEventHandler>function (irc, network) {
@@ -191,6 +199,11 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		chan.pushMessage(client, msg, !msg.self);
+
+		// Reactions may also arrive as PRIVMSG (with body), per spec.
+		if (data.tags && data.replyTo) {
+			applyReactionTags(client, chan, data.nick, data.tags);
+		}
 
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
 		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {

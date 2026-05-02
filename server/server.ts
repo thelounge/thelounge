@@ -34,6 +34,12 @@ import type {
 } from "../shared/types/socket-events";
 import {ChanType} from "../shared/types/chan";
 import {
+	applyReactionTags,
+	REACT_TAG,
+	UNREACT_TAG,
+	REPLY_TAG,
+} from "./plugins/irc-events/reactions";
+import {
 	LockedSharedConfiguration,
 	SharedConfiguration,
 	ConfigNetDefaults,
@@ -457,6 +463,50 @@ function initializeClient(
 	socket.on("input", (data) => {
 		if (_.isPlainObject(data)) {
 			client.input(data);
+		}
+	});
+
+	socket.on("react", (data) => {
+		if (!_.isPlainObject(data)) {
+			return;
+		}
+
+		if (
+			typeof data.msgid !== "string" ||
+			typeof data.reaction !== "string" ||
+			!data.reaction ||
+			(data.action !== "react" && data.action !== "unreact")
+		) {
+			return;
+		}
+
+		const target = client.find(data.target);
+
+		if (!target) {
+			return;
+		}
+
+		const {network, chan} = target;
+
+		if (chan.type !== ChanType.CHANNEL && chan.type !== ChanType.QUERY) {
+			return;
+		}
+
+		const irc = network.irc;
+
+		if (!irc?.network?.cap?.isEnabled("message-tags")) {
+			return;
+		}
+
+		const tagName = data.action === "react" ? REACT_TAG : UNREACT_TAG;
+		const tags = {[REPLY_TAG]: data.msgid, [tagName]: data.reaction};
+
+		irc.tagmsg(chan.name, tags);
+
+		// Without echo-message, the sender's own reaction won't come back
+		// through the inbound TAGMSG handler — apply locally instead.
+		if (!irc.network.cap.isEnabled("echo-message")) {
+			applyReactionTags(client, chan, irc.user.nick, tags);
 		}
 	});
 
