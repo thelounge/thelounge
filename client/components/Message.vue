@@ -291,7 +291,10 @@ export default defineComponent({
 		};
 
 		const onPickEmoji = (emoji: string) => {
-			closePicker(true);
+			// Dismiss the toolbar entirely after a pick — keeping focus on the
+			// React button would trap the toolbar visible via :focus-within.
+			closePicker();
+			(document.activeElement as HTMLElement | null)?.blur();
 
 			const myNick = props.network.nick;
 			const existing = props.message.reactions?.[emoji];
