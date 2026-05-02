@@ -9,6 +9,24 @@ const typeMap: Record<string, MessageType> = {
 	NOTE: MessageType.NOTE,
 };
 
+// Multiline failures come back with terse codes, so give them a readable prefix
+const MULTILINE_ERROR_DESCRIPTIONS: Record<string, string> = {
+	MULTILINE_MAX_BYTES: "Multiline message too long",
+	MULTILINE_MAX_LINES: "Too many lines in multiline message",
+	MULTILINE_INVALID_TARGET: "Mismatched target in multiline message",
+	MULTILINE_INVALID: "Invalid multiline message",
+};
+
+function describe(data: {code?: string; description: string}) {
+	if (!data.code?.startsWith("MULTILINE_")) {
+		return data.description;
+	}
+
+	const friendly = MULTILINE_ERROR_DESCRIPTIONS[data.code] ?? "Multiline message rejected";
+
+	return data.description ? `${friendly}: ${data.description}` : friendly;
+}
+
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
@@ -33,7 +51,7 @@ export default <IrcEventHandler>function (irc, network) {
 			client,
 			new Msg({
 				type,
-				text: data.description,
+				text: describe(data),
 				showInActive: true,
 			}),
 			true
