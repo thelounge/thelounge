@@ -218,7 +218,11 @@ declare module "irc-framework" {
 
 		ctcpResponse(target: string, type: string, ...params: Array<string>): void;
 
-		action(target: string, message: string): string[];
+		action(
+			target: string,
+			message: string,
+			tags?: {[key: string]: string | boolean}
+		): string[];
 
 		whowas(target: string, cb?: (event: Event) => any): void;
 
