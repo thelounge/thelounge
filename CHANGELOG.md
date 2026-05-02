@@ -16,7 +16,7 @@ to the Node.js `node:sqlite` built-in. No user-facing changes are necessary.
 
 For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.4.1...v4.4.3)
 
-🎉 Thanks to our 36 contributors for this release:
+🎉 Thanks to our 14 contributors for this release:
 
 @arminius-smh, @brunnre8, @Jay2k1, @kevincox, @kfranqueiro, @marmitar, @MaxLeiter, @nycki93, @sadiepowell, @sfan5, @supertassu, @SyntaxColoring, @TehPeGaSuS, and @xPaw
 
