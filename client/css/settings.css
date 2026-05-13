@@ -181,7 +181,7 @@
 
 .setting-radio-pill input:checked + .pill-label {
 	background-color: var(--button-color);
-	color: var(--button-text-color-hover);
+	color: #16331b;
 }
 
 .setting-radio-pill input:focus-visible + .pill-label {
@@ -323,39 +323,6 @@
 
 #settings .setting-card h3:first-child {
 	margin-top: 0;
-}
-
-/* Settings - mobile nav */
-@media screen and (max-width: calc(768px + 320px)) {
-	.settings-menu {
-		padding-bottom: 8px;
-		margin-bottom: 8px;
-	}
-
-	.settings-menu ul {
-		display: flex;
-		gap: 4px;
-		justify-content: center;
-	}
-
-	.settings-menu li {
-		font-size: 14px;
-	}
-
-	.settings-menu button {
-		padding: 6px 14px;
-		border-radius: 6px;
-		text-align: center;
-	}
-
-	.settings-menu button.active {
-		background-color: var(--button-color);
-		color: var(--button-text-color-hover);
-	}
-
-	.settings-menu button::before {
-		display: none;
-	}
 }
 
 @media screen and (max-width: 480px) {
