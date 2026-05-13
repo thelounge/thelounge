@@ -103,6 +103,7 @@
 import SettingTabItem from "./SettingTabItem.vue";
 import {defineComponent} from "vue";
 import {useStore} from "../../js/store";
+import {shouldShowGeneralSettings} from "../../js/helpers/settingsTabs";
 
 export default defineComponent({
 	name: "SettingsTabs",
@@ -112,8 +113,7 @@ export default defineComponent({
 	setup() {
 		const store = useStore();
 		const isPublic = store.state.serverConfiguration?.public;
-		const showGeneral = !isPublic || store.state.serverConfiguration?.fileUpload;
-		return {isPublic, showGeneral};
+		return {isPublic, showGeneral: shouldShowGeneralSettings()};
 	},
 });
 </script>
