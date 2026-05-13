@@ -330,8 +330,6 @@
 	.settings-menu {
 		padding-bottom: 8px;
 		margin-bottom: 8px;
-		border-bottom: 1px solid #edeef0;
-		border-bottom-color: color-mix(in srgb, var(--body-color) 8%, var(--window-bg-color));
 	}
 
 	.settings-menu ul {
