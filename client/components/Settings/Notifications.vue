@@ -24,17 +24,11 @@
 					</template>
 					<template v-else> Subscribe to push notifications </template>
 				</button>
-				<div
-					v-if="store.state.pushNotificationState === 'nohttps'"
-					class="setting-info-panel error"
-				>
+				<div v-if="store.state.pushNotificationState === 'nohttps'" class="error">
 					<strong>Warning:</strong> Push notifications are only supported over HTTPS
 					connections.
 				</div>
-				<div
-					v-if="store.state.pushNotificationState === 'unsupported'"
-					class="setting-info-panel error"
-				>
+				<div v-if="store.state.pushNotificationState === 'unsupported'" class="error">
 					<strong>Warning:</strong> Push notifications are not supported by your browser.
 				</div>
 			</div>
@@ -49,22 +43,13 @@
 				:checked="store.state.settings.desktopNotifications"
 				:disabled="store.state.desktopNotificationState === 'nohttps'"
 			/>
-			<div
-				v-if="store.state.desktopNotificationState === 'unsupported'"
-				class="setting-info-panel error"
-			>
+			<div v-if="store.state.desktopNotificationState === 'unsupported'" class="error">
 				<strong>Warning:</strong> Notifications are not supported by your browser.
 			</div>
-			<div
-				v-if="store.state.desktopNotificationState === 'nohttps'"
-				class="setting-info-panel error"
-			>
+			<div v-if="store.state.desktopNotificationState === 'nohttps'" class="error">
 				<strong>Warning:</strong> Notifications are only supported over HTTPS connections.
 			</div>
-			<div
-				v-if="store.state.desktopNotificationState === 'blocked'"
-				class="setting-info-panel error"
-			>
+			<div v-if="store.state.desktopNotificationState === 'blocked'" class="error">
 				<strong>Warning:</strong> Notifications are blocked by your browser.
 			</div>
 			<div class="setting-row">

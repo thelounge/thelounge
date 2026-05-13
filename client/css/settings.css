@@ -229,40 +229,6 @@
 	margin-bottom: 0;
 }
 
-/* Info/warning panels */
-
-.setting-info-panel {
-	padding: 10px 12px;
-	border-radius: 6px;
-	font-size: 13px;
-	line-height: 1.5;
-	margin-top: 8px;
-}
-
-.setting-info-panel.warning {
-	background-color: #fdf6ec;
-	background-color: color-mix(in srgb, #f0ad4e 12%, var(--window-bg-color));
-	color: #8a6d3b;
-	color: color-mix(in srgb, #8a6d3b 80%, var(--body-color));
-}
-
-.setting-info-panel.error {
-	color: #e74c3c;
-}
-
-.setting-info-panel p {
-	margin: 0 0 6px;
-}
-
-.setting-info-panel p:last-child {
-	margin-bottom: 0;
-}
-
-.setting-info-panel .btn {
-	margin-top: 8px;
-	margin-bottom: 0;
-}
-
 /* Settings h2 override (.window h2 reset) */
 
 #settings h2 {

@@ -37,20 +37,18 @@
 				:checked="store.state.settings.syncSettings"
 			/>
 			<template v-if="!store.state.settings.syncSettings">
-				<div v-if="store.state.serverHasSettings" class="setting-info-panel warning">
-					<p>
+				<div v-if="store.state.serverHasSettings" class="setting-action-row">
+					<div class="setting-card-intro">
 						<strong>Warning:</strong> Enabling sync will override this client's settings
 						with those stored on the server.
-					</p>
+					</div>
 					<button type="button" class="btn btn-small" @click="onForceSyncClick">
 						Sync settings and enable
 					</button>
 				</div>
-				<div v-else class="setting-info-panel warning">
-					<p>
-						No settings have been synced before. Enabling this will upload your current
-						settings as the starting point for other devices.
-					</p>
+				<div v-else class="setting-card-intro">
+					No settings have been synced before. Enabling this will upload your current
+					settings as the starting point for other devices.
 				</div>
 			</template>
 		</SettingCard>
