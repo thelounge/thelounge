@@ -78,7 +78,7 @@
 			<Session
 				v-if="currentSession"
 				:session="currentSession"
-				v-bind:class="'current-session'"
+				:class="'current-session'"
 			/>
 
 			<template v-if="activeSessions.length > 0">

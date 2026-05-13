@@ -181,7 +181,7 @@
 
 .setting-radio-pill input:checked + .pill-label {
 	background-color: var(--button-color);
-	color: var(--button-text-color-hover);
+	color: #16331b;
 }
 
 .setting-radio-pill input:focus-visible + .pill-label {
@@ -226,40 +226,6 @@
 }
 
 .setting-action-row .btn {
-	margin-bottom: 0;
-}
-
-/* Info/warning panels */
-
-.setting-info-panel {
-	padding: 10px 12px;
-	border-radius: 6px;
-	font-size: 13px;
-	line-height: 1.5;
-	margin-top: 8px;
-}
-
-.setting-info-panel.warning {
-	background-color: #fdf6ec;
-	background-color: color-mix(in srgb, #f0ad4e 12%, var(--window-bg-color));
-	color: #8a6d3b;
-	color: color-mix(in srgb, #8a6d3b 80%, var(--body-color));
-}
-
-.setting-info-panel.error {
-	color: #e74c3c;
-}
-
-.setting-info-panel p {
-	margin: 0 0 6px;
-}
-
-.setting-info-panel p:last-child {
-	margin-bottom: 0;
-}
-
-.setting-info-panel .btn {
-	margin-top: 8px;
 	margin-bottom: 0;
 }
 
@@ -323,41 +289,6 @@
 
 #settings .setting-card h3:first-child {
 	margin-top: 0;
-}
-
-/* Settings - mobile nav */
-@media screen and (max-width: calc(768px + 320px)) {
-	.settings-menu {
-		padding-bottom: 8px;
-		margin-bottom: 8px;
-		border-bottom: 1px solid #edeef0;
-		border-bottom-color: color-mix(in srgb, var(--body-color) 8%, var(--window-bg-color));
-	}
-
-	.settings-menu ul {
-		display: flex;
-		gap: 4px;
-		justify-content: center;
-	}
-
-	.settings-menu li {
-		font-size: 14px;
-	}
-
-	.settings-menu button {
-		padding: 6px 14px;
-		border-radius: 6px;
-		text-align: center;
-	}
-
-	.settings-menu button.active {
-		background-color: var(--button-color);
-		color: var(--button-text-color-hover);
-	}
-
-	.settings-menu button::before {
-		display: none;
-	}
 }
 
 @media screen and (max-width: 480px) {
