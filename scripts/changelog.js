@@ -870,12 +870,12 @@ async function generateChangelogEntry(changelog, targetVersion) {
 		);
 		items.websiteDocumentation = websiteCommitsAndPullRequests;
 
+		dedupeEntries(changelog, items);
+
 		contributors = extractContributors([
 			...codeCommitsAndPullRequests,
-			...websiteCommitsAndPullRequests,
+			...items.websiteDocumentation,
 		]);
-
-		dedupeEntries(changelog, items);
 	}
 
 	items.version = targetVersion;
