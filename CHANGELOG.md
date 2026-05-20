@@ -302,6 +302,21 @@ On the [website repository](https://github.com/thelounge/thelounge.github.io):
   - `yarn` to 1.22.22 ([`793313d`](https://github.com/thelounge/thelounge/commit/793313db77dc06c91c7098d7392086f4b9e02cee) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
   - `webpack` and other dev deps bumped ([#5042](https://github.com/thelounge/thelounge/pull/5042) by [@MaxLeiter](https://github.com/MaxLeiter))
 
+## v4.5.0-rc.3 - 2026-05-12 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.5.0-rc.2...v4.5.0-rc.3)
+
+This is a release candidate (RC) for v4.5.0 to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
 ## v4.5.0-rc.2 - 2026-04-18 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.5.0-rc.1...v4.5.0-rc.2)
