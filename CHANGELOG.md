@@ -22,7 +22,7 @@ For more details, [see the full changelog](https://github.com/thelounge/theloung
 
 ### Added
 
-- ircv3: start storing/tracking msgid ([`09f4179`](https://github.com/thelounge/thelounge/commit/09f417957006e70c1daf28792335297935c56f02) by [@MaxLeiter](https://github.com/MaxLeiter))
+- ircv3: start storing/tracking msgid ([#5044](https://github.com/thelounge/thelounge/pull/5044), [#5046](https://github.com/thelounge/thelounge/pull/5046)
 - topic: display topic when no arguments are given, add `/cleartopic` command ([`3d8e964`](https://github.com/thelounge/thelounge/commit/3d8e96491bb5a228b260e76c1bc9b16d8e960db4), [`91fb1ee`](https://github.com/thelounge/thelounge/commit/91fb1ee343a733c0a3373a953e0ef46a646db884) by [@brunnre8](https://github.com/brunnre8))
 - Show STATUSMSG indication for actions as well ([#5004](https://github.com/thelounge/thelounge/pull/5004) by [@supertassu](https://github.com/supertassu))
 - whois: support `actual_username` field ([`e42ad91`](https://github.com/thelounge/thelounge/commit/e42ad91e0402b51121ac6d5c0273cad87087d350) by [@brunnre8](https://github.com/brunnre8))
@@ -34,7 +34,6 @@ For more details, [see the full changelog](https://github.com/thelounge/theloung
 - Trim username in sign-in form ([`59a333d`](https://github.com/thelounge/thelounge/commit/59a333d9821b43ec2d9a2d14f769ee8862ad01cd) by [@sfan5](https://github.com/sfan5))
 - Precise user configuration reloading ([`c20e9d2`](https://github.com/thelounge/thelounge/commit/c20e9d2ef0e3d555d478d1c1080e369762308fd3) by [@kevincox](https://github.com/kevincox))
 - client: opt out of browser completion in the chat input ([#5068](https://github.com/thelounge/thelounge/pull/5068) by [@nycki93](https://github.com/nycki93))
-- ircv3: parse msgid from tags manually ([#5046](https://github.com/thelounge/thelounge/pull/5046) by [@MaxLeiter](https://github.com/MaxLeiter))
 - Update production dependencies to their latest versions:
   - `irc-framework` pinned to `9578e59` ([#5049](https://github.com/thelounge/thelounge/pull/5049) by [@MaxLeiter](https://github.com/MaxLeiter))
   - `socket.io` to 4.6.2 ([`a900943`](https://github.com/thelounge/thelounge/commit/a90094334567c879f8cb58da898f35fe57662626) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
