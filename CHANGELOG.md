@@ -68,7 +68,7 @@ For more details, [see the full changelog](https://github.com/thelounge/theloung
 - Fix inverted boolean check with expand & collapse ([#5082](https://github.com/thelounge/thelounge/pull/5082) by [@MaxLeiter](https://github.com/MaxLeiter))
 - Fix PWA installation behind Cloudflare Access ([#5032](https://github.com/thelounge/thelounge/pull/5032) by [@MaxLeiter](https://github.com/MaxLeiter))
 - Fix `.DS_Store` crash by using `fs.rmSync` in storage cleanup ([`c88f647`](https://github.com/thelounge/thelounge/commit/c88f647f1ae61b7470c20db89b83f0dfdf45da73) by [@MaxLeiter](https://github.com/MaxLeiter))
-- Strip IRC color codes from topic hover text (fixes #4840) ([`c94c68e`](https://github.com/thelounge/thelounge/commit/c94c68ebee614cc68d6af7b0596e2c2c93dfed4e) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Strip IRC color codes from topic hover text (fixes [#4840](https://github.com/thelounge/thelounge/pull/4840)) ([`c94c68e`](https://github.com/thelounge/thelounge/commit/c94c68ebee614cc68d6af7b0596e2c2c93dfed4e) by [@MaxLeiter](https://github.com/MaxLeiter))
 - Hide Account settings tab on public instance ([`2a92ec0`](https://github.com/thelounge/thelounge/commit/2a92ec0e0393ee4127b68689cbb3735ed356e32f) by [@MaxLeiter](https://github.com/MaxLeiter))
 - Preserve network name in sidebar after editing in public mode (fixes #4922) ([`45a2357`](https://github.com/thelounge/thelounge/commit/45a23575c0687176c988ac3f7f250008535692e8) by [@MaxLeiter](https://github.com/MaxLeiter))
 - Improve a11y labels and semantics ([#5057](https://github.com/thelounge/thelounge/pull/5057) by [@MaxLeiter](https://github.com/MaxLeiter))
