@@ -199,6 +199,7 @@ import SettingTabItem from "./SettingTabItem.vue";
 import {computed, defineComponent, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {useStore} from "../../js/store";
+import {shouldShowGeneralSettings} from "../../js/helpers/settingsTabs";
 
 type Section = {name: string; className: string; to: string};
 
@@ -211,7 +212,7 @@ export default defineComponent({
 		const store = useStore();
 		const route = useRoute();
 		const isPublic = store.state.serverConfiguration?.public;
-		const showGeneral = !isPublic || store.state.serverConfiguration?.fileUpload;
+		const showGeneral = shouldShowGeneralSettings();
 
 		const menuOpen = ref(false);
 

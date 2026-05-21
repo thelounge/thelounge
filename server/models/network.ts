@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {v4 as uuidv4} from "uuid";
+import crypto from "crypto";
 import IrcFramework, {Client as IRCClient} from "irc-framework";
 import Chan, {ChanConfig, Channel} from "./chan";
 import Msg from "./msg";
@@ -176,7 +176,7 @@ class Network {
 		});
 
 		if (!this.uuid) {
-			this.uuid = uuidv4();
+			this.uuid = crypto.randomUUID();
 		}
 
 		if (!this.name) {
@@ -424,16 +424,16 @@ class Network {
 		// Sync lobby channel name
 		this.getLobby().name = this.name;
 
+		if (!this.validate(client)) {
+			return;
+		}
+
 		if (this.name !== oldNetworkName) {
 			// Send updated network name to all connected clients
 			client.emit("network:name", {
 				uuid: this.uuid,
 				name: this.name,
 			});
-		}
-
-		if (!this.validate(client)) {
-			return;
 		}
 
 		if (this.irc) {
