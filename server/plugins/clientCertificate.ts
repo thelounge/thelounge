@@ -85,7 +85,12 @@ function generate() {
 	const cert = pki.createCertificate();
 
 	cert.publicKey = keys.publicKey;
-	cert.serialNumber = crypto.randomBytes(16).toString("hex").toUpperCase();
+
+	// RFC 5280 4.1.2.2: serial number MUST be a positive integer, up to 20 octets.
+	// Clear the high bit of the leading byte to guarantee positivity.
+	const serialBytes = crypto.randomBytes(20);
+	serialBytes[0] &= 0x7f;
+	cert.serialNumber = serialBytes.toString("hex").toUpperCase();
 
 	// Set notBefore a day earlier just in case the time between
 	// the client and server is not perfectly in sync
