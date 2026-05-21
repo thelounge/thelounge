@@ -29,7 +29,7 @@
 		src="https://img.shields.io/npm/v/thelounge.svg?colorA=333a41&maxAge=3600"></a>
 	<a href="https://github.com/thelounge/thelounge/actions"><img
 		alt="Build Status"
-		src="https://github.com/thelounge/thelounge/workflows/Build/badge.svg"></a>
+		src="https://github.com/thelounge/thelounge/actions/workflows/build.yml/badge.svg"></a>
 </p>
 
 <p align="center">

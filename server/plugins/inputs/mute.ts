@@ -15,7 +15,8 @@ function args_to_channels(network: Network, args: string[]) {
 	const targets: Chan[] = [];
 
 	for (const arg of args) {
-		const target = network.channels.find((c) => c.name === arg);
+		const argLower = arg.toLowerCase();
+		const target = network.channels.find((c) => c.name.toLowerCase() === argLower);
 
 		if (target) {
 			targets.push(target);
@@ -43,6 +44,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 
 	if (args.length === 0) {
 		change_mute_state(client, chan, valueToSet);
+		client.save();
 		return;
 	}
 
@@ -66,6 +68,8 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	for (const target of targets) {
 		change_mute_state(client, target, valueToSet);
 	}
+
+	client.save();
 };
 
 export default {
