@@ -381,7 +381,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		const rows = this.database
 			.prepare(
-				"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?"
+				"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC, id DESC LIMIT ?"
 			)
 			.all(network.uuid, channel.name.toLowerCase(), limit) as {
 			msg: string;
@@ -428,7 +428,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		const maxResults = 100;
 
-		select += " ORDER BY time DESC LIMIT ? OFFSET ? ";
+		select += " ORDER BY time DESC, id DESC LIMIT ? OFFSET ? ";
 		params.push(maxResults);
 		params.push(query.offset);
 
