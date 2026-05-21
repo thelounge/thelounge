@@ -13,7 +13,7 @@ describe("Image storage", function () {
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 	this.slow(300);
 
-	const testImagePath = path.resolve(__dirname, "../../client/img/logo-grey-bg-120x120px.png");
+	const testImagePath = path.resolve("client/img/logo-grey-bg-120x120px.png");
 	const correctImageHash = crypto
 		.createHash("sha256")
 		.update(fs.readFileSync(testImagePath))
@@ -23,7 +23,7 @@ describe("Image storage", function () {
 		2
 	)}/${correctImageHash.substring(2, 4)}/${correctImageHash.substring(4)}.png`;
 
-	const testSvgPath = path.resolve(__dirname, "../../client/img/logo-grey-bg.svg");
+	const testSvgPath = path.resolve("client/img/logo-grey-bg.svg");
 	const correctSvgHash = crypto
 		.createHash("sha256")
 		.update(fs.readFileSync(testSvgPath))

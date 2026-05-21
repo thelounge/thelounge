@@ -25,7 +25,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 	beforeEach(function (done) {
 		app = util.createWebserver();
 		app.get("/real-test-image.png", function (req, res) {
-			res.sendFile(path.resolve(__dirname, "../../client/img/logo-grey-bg-120x120px.png"));
+			res.sendFile(path.resolve("client/img/logo-grey-bg-120x120px.png"));
 		});
 		this.connection = app.listen(0, "127.0.0.1", () => {
 			this.port = this.connection.address().port;
