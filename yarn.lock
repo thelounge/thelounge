@@ -1136,13 +1136,6 @@
   resolved "https://registry.yarnpkg.com/@types/ua-parser-js/-/ua-parser-js-0.7.39.tgz#832c58e460c9435e4e34bb866e85e9146e12cdbb"
   integrity sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg==
 
-"@types/web-push@3.3.2":
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/@types/web-push/-/web-push-3.3.2.tgz#8c32434147c0396415862e86405c9edc9c50fc15"
-  integrity sha512-JxWGVL/m7mWTIg4mRYO+A6s0jPmBkr4iJr39DqJpRJAc+jrPiEe1/asmkwerzRon8ZZDxaZJpsxpv0Z18Wo9gw==
-  dependencies:
-    "@types/node" "*"
-
 "@types/ws@8.5.12":
   version "8.5.12"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.12.tgz#619475fe98f35ccca2a2f6c137702d85ec247b7e"
@@ -3543,9 +3536,9 @@ ipaddr.js@1.9.1:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-"irc-framework@github:kiwiirc/irc-framework#b228525":
+"irc-framework@github:kiwiirc/irc-framework#69d47d1":
   version "4.14.0"
-  resolved "https://codeload.github.com/kiwiirc/irc-framework/tar.gz/b228525d516dee8b71a6f3417866e03aa47bf813"
+  resolved "https://codeload.github.com/kiwiirc/irc-framework/tar.gz/69d47d1d8b2771a2312398366503fe0fae719f9e"
   dependencies:
     buffer "^6.0.3"
     core-js "^3.38.1"
