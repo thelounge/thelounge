@@ -1,7 +1,7 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "4.4.3",
+  "version": "4.5.0-rc.3",
   "type": "commonjs",
   "preferGlobal": true,
   "bin": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thelounge/thelounge.git"
+    "url": "git+https://github.com/thelounge/thelounge.git"
   },
   "homepage": "https://thelounge.chat/",
   "scripts": {
     "build:client": "webpack",
     "build:server": "tsc -p server/tsconfig.json",
     "build": "run-p --aggregate-output build:client build:server",
-    "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
+    "coverage": "webpack --mode=development && cross-env NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' nyc --nycrc-path=test/.nycrc-mocha.json mocha --config=test/.mocharc.yml 'test/**/*.ts' && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "cross-env NODE_ENV=development ts-node --project server/tsconfig.json server/index.ts start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
     "generate:config:doc": "ts-node scripts/generate-config-doc.js",
@@ -66,7 +66,7 @@
     "file-type": "16.5.4",
     "filenamify": "4.3.0",
     "got": "11.8.6",
-    "irc-framework": "kiwiirc/irc-framework#9578e59",
+    "irc-framework": "github:kiwiirc/irc-framework#9578e59",
     "is-utf8": "0.2.1",
     "ldapjs": "2.3.3",
     "linkify-it": "3.0.3",
@@ -80,7 +80,6 @@
     "socket.io": "4.6.2",
     "tlds": "1.228.0",
     "ua-parser-js": "1.0.39",
-    "uuid": "8.3.2",
     "web-push-neo": "0.1.2",
     "yarn": "1.22.22"
   },
@@ -91,7 +90,7 @@
     "@fortawesome/fontawesome-free": "5.15.4",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@textcomplete/core": "0.1.10",
-    "@textcomplete/textarea": "0.1.13",
+    "@textcomplete/textarea": "0.1.10",
     "@types/bcryptjs": "2.4.6",
     "@types/chai": "4.3.5",
     "@types/cheerio": "0.22.35",
@@ -109,7 +108,6 @@
     "@types/semver": "7.3.9",
     "@types/sortablejs": "1.15.8",
     "@types/ua-parser-js": "0.7.39",
-    "@types/uuid": "8.3.4",
     "@types/webpack-env": "1.16.4",
     "@types/webpack-hot-middleware": "2.25.6",
     "@types/ws": "8.5.12",
