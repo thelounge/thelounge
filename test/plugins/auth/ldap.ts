@@ -182,24 +182,31 @@ describe("LDAP authentication plugin", function () {
 		delete Config.values.ldap.baseDN;
 		testLdapAuth();
 
-		it("should reject filter-injection usernames (RFC 4515)", function (done) {
-			let warning = "";
-			const warnLogStub = sinon
-				.stub(log, "warn")
-				.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+		it("should reject filter-injection usernames (RFC 4515)", () =>
+			new Promise<void>((resolve) => {
+				let warning = "";
+				const warnLogStub = sinon
+					.stub(log, "warn")
+					.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
-			// Without proper escaping, "*" becomes a presence wildcard in the
-			// search filter, causing the mock server to return johndoe's DN;
-			// combined with johndoe's password this would bypass the username
-			// check. With RFC 4515 escaping, "*" is sent as "\2a" and matches
-			// no uid, so auth must fail.
-			ldapAuth.auth({} as ClientManager, true as any, "*", correctPassword, function (valid) {
-				expect(valid).to.equal(false);
-				expect(warning).to.contain("LDAP Search did not find anything");
-				warnLogStub.restore();
-				done();
-			});
-		});
+				// Without proper escaping, "*" becomes a presence wildcard in the
+				// search filter, causing the mock server to return johndoe's DN;
+				// combined with johndoe's password this would bypass the username
+				// check. With RFC 4515 escaping, "*" is sent as "\2a" and matches
+				// no uid, so auth must fail.
+				ldapAuth.auth(
+					{} as ClientManager,
+					true as any,
+					"*",
+					correctPassword,
+					function (valid) {
+						expect(valid).to.equal(false);
+						expect(warning).to.contain("LDAP Search did not find anything");
+						warnLogStub.restore();
+						resolve();
+					}
+				);
+			}));
 	});
 
 	describe("escapeLdapFilter (RFC 4515)", function () {
