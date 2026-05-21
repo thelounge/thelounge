@@ -22,10 +22,11 @@ type HandleInput = {
 	message: string;
 	group?: string;
 	msgid?: string;
+	multiline?: boolean;
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
-	return {...data, type: type, msgid: data.tags?.msgid};
+	return {...data, type: type, msgid: data.tags?.msgid, multiline: data.multiline};
 }
 
 export default <IrcEventHandler>function (irc, network) {
@@ -129,6 +130,7 @@ export default <IrcEventHandler>function (irc, network) {
 			highlight: highlight,
 			users: [],
 			msgid: data.msgid,
+			multiline: data.multiline,
 		});
 
 		if (showInActive) {
@@ -176,7 +178,10 @@ export default <IrcEventHandler>function (irc, network) {
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
 		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
 			let title = chan.name;
-			let body = cleanMessage;
+			// For multiline messages we limit the notification preview to the first line
+			let body = data.multiline
+				? cleanMessage.split("\n").find((line) => line.trim().length > 0) ?? cleanMessage
+				: cleanMessage;
 
 			if (msg.type === MessageType.ACTION) {
 				// For actions, do not include colon in the message

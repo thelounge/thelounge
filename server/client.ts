@@ -48,6 +48,7 @@ const events = [
 	"part",
 	"quit",
 	"sasl",
+	"standard-reply",
 	"topic",
 	"welcome",
 	"whois",
@@ -449,7 +450,23 @@ class Client {
 
 	input(data) {
 		const client = this;
-		data.text.split("\n").forEach((line) => {
+		const text: string = data.text;
+
+		// If the target network supports draft/multiline, we don't need
+		// to split the message by line.
+		const isPlainSay = text.charAt(0) !== "/" || text.charAt(1) === "/";
+
+		if (isPlainSay && text.includes("\n")) {
+			const target = client.find(data.target);
+			const irc = target ? target.network.irc : undefined;
+
+			if (irc?.network?.cap?.isEnabled?.("draft/multiline")) {
+				client.inputLine(data);
+				return;
+			}
+		}
+
+		text.split("\n").forEach((line) => {
 			data.text = line;
 			client.inputLine(data);
 		});
