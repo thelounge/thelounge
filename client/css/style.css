@@ -350,7 +350,8 @@ p {
 .channel-list-item .parted-channel-icon::before,
 .jump-to-input::before,
 .password-container .reveal-password span,
-#sidebar .collapse-network-icon::before {
+#sidebar .collapse-network-icon::before,
+#chat .msg .msg-actions button::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
@@ -1334,6 +1335,10 @@ textarea.input {
 	position: relative;
 }
 
+#chat .msg:has(.reply-context) {
+	align-items: flex-end;
+}
+
 #chat .unread-marker {
 	position: relative;
 	text-align: center;
@@ -1608,6 +1613,166 @@ textarea.input {
 
 #chat .chat-view[data-type="channel"] .msg.highlight .content {
 	border-left: 1px solid var(--highlight-bg-color);
+}
+
+/* Reply context — compact preview above message text, inside .content */
+#chat .msg .reply-context {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 0.8em;
+	line-height: 1.4;
+	color: var(--body-color-muted);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	min-width: 0;
+	padding: 1px 6px;
+	margin-bottom: 1px;
+	border-radius: 3px;
+	cursor: pointer;
+	width: fit-content;
+	max-width: 100%;
+}
+
+#chat .msg .reply-context-icon::before {
+	content: "\f3e5"; /* fa-reply icon */
+	font: normal normal normal 10px/1 FontAwesome;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: #b0b0b0;
+}
+
+#chat .msg .reply-context-icon {
+	flex-shrink: 0;
+}
+
+#chat .msg .reply-context:not(.disabled):hover {
+	background: rgb(0 0 0 / 4%);
+	color: var(--body-color);
+}
+
+#chat .msg .reply-context:not(.disabled):hover .reply-context-icon::before {
+	color: var(--body-color-muted);
+}
+
+#chat .msg .reply-context.disabled {
+	cursor: default;
+	opacity: 0.6;
+	overflow: visible;
+}
+
+#chat .msg .reply-context-nick {
+	font-weight: 700;
+	flex-shrink: 0;
+}
+
+#chat .msg .reply-context-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 0;
+}
+
+#chat .msg .reply-context-text::before {
+	content: "— ";
+}
+
+#chat .msg .reply-context-unknown {
+	font-style: italic;
+}
+
+/* Message actions toolbar — floating overlay, top-right of message */
+#chat .msg .msg-actions {
+	display: flex;
+	gap: 1px;
+	position: absolute;
+	top: -8px;
+	right: 6px;
+	background: var(--window-bg-color);
+	border: 1px solid #d0d0d0;
+	border-radius: 4px;
+	padding: 1px;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 1;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
+	transition: opacity 0.1s;
+}
+
+#chat .msg:hover .msg-actions,
+#chat .msg .msg-actions:focus-within {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+#chat .msg .msg-actions button {
+	background: none;
+	border: none;
+	border-radius: 3px;
+	color: var(--body-color-muted);
+	cursor: pointer;
+	font-size: 14px;
+	width: 26px;
+	height: 24px;
+	padding: 0;
+	line-height: 1;
+}
+
+#chat .msg .msg-actions button:hover,
+#chat .msg .msg-actions button:focus-visible {
+	background: rgb(0 0 0 / 6%);
+	color: var(--body-color);
+}
+
+#chat .msg .msg-actions button:focus-visible {
+	outline: 2px solid var(--link-color);
+	outline-offset: -1px;
+}
+
+#chat .msg .msg-action-reply::before {
+	content: "\f3e5"; /* fa-reply */
+}
+
+/* When a reply-context is present, anchor the toolbar to the bottom row
+   (the actual message) instead of the reply preview above it. */
+#chat .msg:has(.reply-context) .msg-actions {
+	top: auto;
+	bottom: 0;
+}
+
+/* Reply bar above message input */
+#form .reply-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 4px 10px;
+	background: #f0f0f0;
+	border-bottom: 1px solid #e7e7e7;
+	font-size: 0.85em;
+	color: var(--body-color-muted);
+	width: 100%;
+}
+
+#form .reply-bar-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#form .reply-bar-close {
+	background: none;
+	border: none;
+	color: var(--body-color-muted);
+	cursor: pointer;
+	font-size: 18px;
+	line-height: 1;
+	padding: 0 4px;
+	flex-shrink: 0;
+}
+
+#form .reply-bar-close:hover {
+	color: var(--body-color);
 }
 
 #chat .preview-size {
@@ -2222,6 +2387,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: white;
 	display: flex;
 	align-items: flex-end;
+	flex-wrap: wrap;
 	position: relative;
 }
 
