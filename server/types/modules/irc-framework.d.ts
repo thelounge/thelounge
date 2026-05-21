@@ -241,7 +241,11 @@ declare module "irc-framework" {
 
 		ctcpResponse(target: string, type: string, ...params: Array<string>): void;
 
-		action(target: string, message: string): string[];
+		action(
+			target: string,
+			message: string,
+			tags?: {[key: string]: string | boolean}
+		): string[];
 
 		tagmsg(target: string, tags: {[key: string]: string}): void;
 
