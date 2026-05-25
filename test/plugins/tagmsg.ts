@@ -87,17 +87,18 @@ describe("tagmsg handler", function () {
 		expect(emitted).to.be.false;
 	});
 
-	it("should redirect PM target to sender nick", function (done) {
-		const query = new Chan({name: "other-user", type: ChanType.QUERY});
-		network.channels.push(query);
+	it("should redirect PM target to sender nick", () =>
+		new Promise<void>((resolve) => {
+			const query = new Chan({name: "other-user", type: ChanType.QUERY});
+			network.channels.push(query);
 
-		client.on("typing", function (data: any) {
-			expect(data.chan).to.equal(query.id);
-			done();
-		});
+			client.on("typing", function (data: any) {
+				expect(data.chan).to.equal(query.id);
+				resolve();
+			});
 
-		emitTagmsg({target: "test-user", tags: {"+typing": "active"}});
-	});
+			emitTagmsg({target: "test-user", tags: {"+typing": "active"}});
+		}));
 
 	it("should ignore tagmsg without recognized tags", function () {
 		let emitted = false;
@@ -111,34 +112,36 @@ describe("tagmsg handler", function () {
 	});
 
 	describe("+typing", function () {
-		it("should emit typing event for +typing tag", function (done) {
-			client.on("typing", function (data: any) {
-				expect(data.nick).to.equal("other-user");
-				expect(data.status).to.equal("active");
-				expect(data.chan).to.equal(network.channels[0].id);
-				expect(data.network).to.equal(network.uuid);
-				done();
-			});
+		it("should emit typing event for +typing tag", () =>
+			new Promise<void>((resolve) => {
+				client.on("typing", function (data: any) {
+					expect(data.nick).to.equal("other-user");
+					expect(data.status).to.equal("active");
+					expect(data.chan).to.equal(network.channels[0].id);
+					expect(data.network).to.equal(network.uuid);
+					resolve();
+				});
 
-			emitTagmsg({tags: {"+typing": "active"}});
-		});
+				emitTagmsg({tags: {"+typing": "active"}});
+			}));
 
-		it("should support all valid typing statuses", function (done) {
-			const statuses: string[] = [];
+		it("should support all valid typing statuses", () =>
+			new Promise<void>((resolve) => {
+				const statuses: string[] = [];
 
-			client.on("typing", function (data: any) {
-				statuses.push(data.status);
+				client.on("typing", function (data: any) {
+					statuses.push(data.status);
 
-				if (statuses.length === 3) {
-					expect(statuses).to.deep.equal(["active", "paused", "done"]);
-					done();
-				}
-			});
+					if (statuses.length === 3) {
+						expect(statuses).to.deep.equal(["active", "paused", "done"]);
+						resolve();
+					}
+				});
 
-			emitTagmsg({tags: {"+typing": "active"}});
-			emitTagmsg({tags: {"+typing": "paused"}});
-			emitTagmsg({tags: {"+typing": "done"}});
-		});
+				emitTagmsg({tags: {"+typing": "active"}});
+				emitTagmsg({tags: {"+typing": "paused"}});
+				emitTagmsg({tags: {"+typing": "done"}});
+			}));
 
 		it("should ignore invalid typing statuses", function () {
 			let emitted = false;
