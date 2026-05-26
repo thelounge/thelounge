@@ -10,47 +10,35 @@
 			aria-labelledby="label-change-password"
 		>
 			<h2 id="label-change-password">Change password</h2>
-			<div class="password-container">
+			<div>
 				<label for="current-password" class="sr-only"> Enter current password </label>
-				<RevealPassword v-slot:default="slotProps">
-					<input
-						id="current-password"
-						v-model="old_password"
-						autocomplete="current-password"
-						:type="slotProps.isVisible ? 'text' : 'password'"
-						name="old_password"
-						class="input"
-						placeholder="Enter current password"
-					/>
-				</RevealPassword>
+				<RevealPassword
+					id="current-password"
+					v-model:password="old_password"
+					autocomplete="current-password"
+					name="old_password"
+					placeholder="Enter current password"
+				/>
 			</div>
-			<div class="password-container">
+			<div>
 				<label for="new-password" class="sr-only"> Enter desired new password </label>
-				<RevealPassword v-slot:default="slotProps">
-					<input
-						id="new-password"
-						v-model="new_password"
-						:type="slotProps.isVisible ? 'text' : 'password'"
-						name="new_password"
-						autocomplete="new-password"
-						class="input"
-						placeholder="Enter desired new password"
-					/>
-				</RevealPassword>
+				<RevealPassword
+					id="new-password"
+					v-model:password="new_password"
+					name="new_password"
+					autocomplete="new-password"
+					placeholder="Enter desired new password"
+				/>
 			</div>
-			<div class="password-container">
+			<div>
 				<label for="new-password-verify" class="sr-only"> Repeat new password </label>
-				<RevealPassword v-slot:default="slotProps">
-					<input
-						id="new-password-verify"
-						v-model="verify_password"
-						:type="slotProps.isVisible ? 'text' : 'password'"
-						name="verify_password"
-						autocomplete="new-password"
-						class="input"
-						placeholder="Repeat new password"
-					/>
-				</RevealPassword>
+				<RevealPassword
+					id="new-password-verify"
+					v-model:password="verify_password"
+					name="verify_password"
+					autocomplete="new-password"
+					placeholder="Repeat new password"
+				/>
 			</div>
 			<div
 				v-if="passwordChangeStatus && passwordChangeStatus.success"
