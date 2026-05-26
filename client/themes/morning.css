@@ -122,6 +122,15 @@ body {
 /* Search Form */
 form.message-search input {
 	background-color: #28333d;
+	color: inherit;
+}
+
+form.message-search input::placeholder {
+	color: rgba(0, 0, 0, 0.35);
+}
+
+form.message-search .input-wrapper {
+	background: var(--window-bg-color);
 }
 
 #chat form.message-search button {
