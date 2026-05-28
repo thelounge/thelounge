@@ -1,6 +1,8 @@
+/* prettier-ignore comment-empty-line-before */
 @import "../../node_modules/normalize.css/normalize.css";
 @import "fontawesome.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
+@import "settings.css";
 
 /* Allow tooltips via data-tooltip instead of aria-label to avoid
    duplicating accessible names on wrapper + child elements */
@@ -302,7 +304,6 @@ p {
 #footer .icon,
 #chat .count::before,
 #connect .extra-help,
-#settings .extra-help,
 #settings #play::before,
 #settings .settings-menu .icon::before,
 #form #upload::before,
@@ -571,8 +572,7 @@ p {
 	line-height: 45px;
 }
 
-#connect .extra-help::before,
-#settings .extra-help::before {
+#connect .extra-help::before {
 	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
 }
 
@@ -1942,79 +1942,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 100%;
 }
 
-#settings .settings-sync-panel {
-	padding: 10px;
-	margin-bottom: 16px;
-	border-radius: 2px;
-	background-color: #d9edf7;
-	color: #31708f;
-}
-
-#settings .settings-sync-panel p:last-child {
-	margin-bottom: 0;
-}
-
-#settings .settings-sync-panel .btn {
-	color: #007bff;
-	border-color: #007bff;
-	margin-bottom: 0;
-}
-
-#settings .settings-sync-panel .btn:hover,
-#settings .settings-sync-panel .btn:focus {
-	background-color: #007bff;
-	color: #fff;
-}
-
-#settings .settings-sync-panel .btn:active,
-#settings .settings-sync-panel .btn:focus {
-	box-shadow: 0 0 0 3px rgb(0 123 255 / 50%);
-}
-
-#settings .opt {
-	display: block;
-	padding: 5px 0 5px 1px;
-}
-
-#settings .opt input {
-	margin-right: 6px;
-}
-
-#connect .extra-help,
-#settings .extra-help {
+#connect .extra-help {
 	cursor: help;
-}
-
-#settings h2 .extra-help {
-	font-size: 0.8em;
-}
-
-#settings #play {
-	font-size: 14px;
-	transition: opacity 0.2s;
-	color: var(--window-heading-color);
-}
-
-#settings #play:hover {
-	opacity: 0.8;
-}
-
-#settings #change-password .error,
-#settings #change-password .success {
-	margin-bottom: 1em;
-}
-
-#settings #change-password .error {
-	color: #e74c3c;
-}
-
-#settings #change-password .success {
-	color: #2ecc40;
-}
-
-#settings .error {
-	color: #e74c3c;
-	margin-top: 0.2em;
 }
 
 .password-container {
