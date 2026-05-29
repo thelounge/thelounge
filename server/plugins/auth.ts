@@ -2,6 +2,8 @@ import colors from "chalk";
 import Client from "../client";
 import ClientManager from "../clientManager";
 import log from "../log";
+import Auth from "./packages";
+import Config from "../config";
 
 export type AuthHandler = (
 	manager: ClientManager,
@@ -35,17 +37,21 @@ const toExport = {
 		}
 
 		// Override default API stubs with exports from first enabled plugin found
-		const resolvedPlugins = await Promise.all(plugins);
+		const packagePlugins = [...Auth.packageMap.values()]
+			.map((packagee) => packagee.auth || [])
+			.flatMap((item) => item);
 
-		for (const {default: plugin} of resolvedPlugins) {
-			if (plugin.isEnabled()) {
-				toExport.initialized = true;
+		const resolvedPlugins = (await Promise.all(plugins))
+			.map((plugin) => plugin.default)
+			.concat(packagePlugins);
 
-				for (const name in plugin) {
-					toExport[name] = plugin[name];
-				}
+		const plugin = resolvedPlugins.find(
+			(resolvedPlugin) => resolvedPlugin.moduleName === Config.values.authModule
+		);
 
-				break;
+		if (plugin) {
+			for (const name in plugin) {
+				toExport[name] = plugin[name];
 			}
 		}
 
