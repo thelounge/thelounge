@@ -76,4 +76,46 @@ describe("findNames", () => {
 
 		expect(actual).to.deep.equal(expected);
 	});
+
+	it("should not find nick inside a word with apostrophe (issue #2008)", () => {
+		const nicks = ["S"];
+		expect(findNames("it's going well", nicks)).to.deep.equal([]);
+		expect(findNames("don't worry", ["t"])).to.deep.equal([]);
+		expect(findNames("can't stop won't stop", ["t"])).to.deep.equal([]);
+	});
+
+	it("should find nick when it stands alone, even if short", () => {
+		const input = "hey S, how are you?";
+		const nicks = ["S"];
+		const actual = findNames(input, nicks);
+
+		expect(actual).to.deep.equal([
+			{
+				start: 4,
+				end: 5,
+				nick: "S",
+			},
+		]);
+	});
+
+	it("should not find nick inside a word with non-ASCII characters (issue #2008)", () => {
+		// Umlauts and accented characters should not create false word boundaries
+		expect(findNames("naïve approach", ["ve"])).to.deep.equal([]);
+		expect(findNames("über cool", ["ber"])).to.deep.equal([]);
+		expect(findNames("café latte", ["caf"])).to.deep.equal([]);
+	});
+
+	it("should find nicks with IRC special characters", () => {
+		const input = "hello user|away!";
+		const nicks = ["user|away"];
+		const actual = findNames(input, nicks);
+
+		expect(actual).to.deep.equal([
+			{
+				start: 6,
+				end: 15,
+				nick: "user|away",
+			},
+		]);
+	});
 });
