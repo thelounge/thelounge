@@ -83,6 +83,8 @@ class ClientManager {
 			// Fallback to loading all users
 			users.forEach((name) => this.loadUser(name));
 		}
+
+		log.info(`${colors.bold(String(users.length))} users loaded`);
 	}
 
 	autoloadUsers() {

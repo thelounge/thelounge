@@ -31,6 +31,7 @@ import type {
 	InterServerEvents,
 	SocketData,
 	AuthPerformData,
+	AuthRegisterData,
 } from "../shared/types/socket-events";
 import {ChanType} from "../shared/types/chan";
 import {
@@ -236,7 +237,11 @@ export default async function (
 				performAuthentication.call(socket, {});
 			} else {
 				socket.on("auth:perform", performAuthentication);
-				socket.emit("auth:start", serverHash);
+				socket.on("auth:register", performRegistration);
+				socket.emit("auth:start", {
+					serverHash,
+					selfRegister: Config.values.selfRegister,
+				});
 			}
 		});
 
@@ -870,6 +875,7 @@ function getClientConfiguration(): SharedConfiguration | LockedSharedConfigurati
 		themes: themes.getAll(),
 		defaultTheme: Config.values.theme,
 		public: Config.values.public,
+		selfRegister: Config.values.selfRegister,
 		useHexIp: Config.values.useHexIp,
 		prefetch: Config.values.prefetch,
 		fileUploadMaxFileSize: Uploader ? Uploader.getMaxFileSize() : undefined, // TODO can't be undefined?
@@ -1064,6 +1070,90 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		// Perform password checking
 		Auth.auth(manager, client, data.user, data.password, authCallback);
 	});
+}
+
+function performRegistration(this: Socket, data: AuthRegisterData) {
+	const socket = this;
+
+	// Self-registration must be enabled
+	if (!Config.values.selfRegister) {
+		socket.emit("auth:register:failed", {error: "Registration is disabled."});
+		return;
+	}
+
+	// Public mode doesn't need registration
+	if (Config.values.public) {
+		socket.emit("auth:register:failed", {
+			error: "Registration is not available in public mode.",
+		});
+		return;
+	}
+
+	// Validate input
+	if (!_.isPlainObject(data)) {
+		socket.emit("auth:register:failed", {error: "Invalid request."});
+		return;
+	}
+
+	const {user, password, password_confirm} = data;
+
+	if (typeof user !== "string" || !user) {
+		socket.emit("auth:register:failed", {error: "Username is required."});
+		return;
+	}
+
+	if (typeof password !== "string" || !password) {
+		socket.emit("auth:register:failed", {error: "Password is required."});
+		return;
+	}
+
+	if (password !== password_confirm) {
+		socket.emit("auth:register:failed", {error: "Passwords do not match."});
+		return;
+	}
+
+	if (password.length < 8) {
+		socket.emit("auth:register:failed", {error: "Password must be at least 8 characters."});
+		return;
+	}
+
+	// Validate username (must be safe)
+	const cleanUsername = user.toLowerCase();
+
+	if (!/^[a-z0-9_-]+$/.test(cleanUsername)) {
+		socket.emit("auth:register:failed", {
+			error: "Username can only contain letters, numbers, dashes and underscores.",
+		});
+		return;
+	}
+
+	// Check if user already exists
+	if (manager!.findClient(cleanUsername)) {
+		socket.emit("auth:register:failed", {error: "Username already exists."});
+		return;
+	}
+
+	// Create the user
+	const hashedPassword = Helper.password.hash(password);
+
+	try {
+		const success = manager!.addUser(cleanUsername, hashedPassword, true);
+
+		if (!success) {
+			socket.emit("auth:register:failed", {error: "Failed to create user."});
+			return;
+		}
+	} catch (e: any) {
+		log.error(`Registration failed for user ${colors.bold(cleanUsername)}: ${e.message}`);
+		socket.emit("auth:register:failed", {error: "Failed to create user."});
+		return;
+	}
+
+	log.info(
+		`User ${colors.bold(cleanUsername)} registered from ${colors.bold(getClientIp(socket))}`
+	);
+
+	socket.emit("auth:register:success");
 }
 
 function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
