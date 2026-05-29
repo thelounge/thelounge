@@ -31,6 +31,9 @@
 	/* Background color of the main window */
 	--window-bg-color: #fff;
 
+	/* Background color of the message input form */
+	--form-bg-color: #fff;
+
 	/* Text color for <h2> and <h3> headings in windows */
 	--window-heading-color: #6c797a;
 
@@ -1395,7 +1398,7 @@ textarea.input {
 
 #chat .time {
 	color: var(--body-color-muted);
-	padding-left: 10px;
+	padding-left: 24px;
 	width: 55px;
 	font-variant-numeric: tabular-nums;
 	box-sizing: content-box; /* highlights have a border-left */
@@ -1423,7 +1426,7 @@ textarea.input {
 	flex: 1 1 auto;
 	min-width: 0;
 	padding-left: 10px;
-	padding-right: 6px;
+	padding-right: 24px;
 	border-left: 1px solid #f6f6f6;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
 	text-align: left; /* so RTL text will still be aligned left, not right */
@@ -1602,7 +1605,7 @@ textarea.input {
 }
 
 #chat .chat-view[data-type="channel"] .msg.highlight .time {
-	padding-left: 5px;
+	padding-left: 19px;
 	color: #696969;
 }
 
@@ -2218,8 +2221,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-top: 1px solid #e7e7e7;
 	border-radius: 0;
 	margin: 0;
-	padding: 6px;
-	background: white;
+	padding: 6px 6px 2px;
+	background: var(--form-bg-color);
 	display: flex;
 	align-items: flex-end;
 	position: relative;
@@ -2754,12 +2757,21 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .messages {
 		display: block;
-		padding: 5px 0;
+		padding: 5px 0 18px;
 	}
 
 	#chat .msg {
 		display: block;
 		padding: 2px 10px;
+	}
+
+	#form {
+		padding-left: 6px;
+	}
+
+	.typing-indicator {
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 
 	#chat .msg[data-type="condensed"] .msg {
