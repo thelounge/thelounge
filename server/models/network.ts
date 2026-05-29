@@ -296,6 +296,7 @@ class Network {
 			enable_chghost: true,
 			enable_echomessage: true,
 			enable_setname: true,
+			enable_standardreplies: true,
 			auto_reconnect: true,
 
 			// Exponential backoff maxes out at 300 seconds after 9 reconnects,
