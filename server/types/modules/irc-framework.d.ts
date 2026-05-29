@@ -43,6 +43,7 @@ declare module "irc-framework" {
 		ident: string;
 		nick: string;
 		time?: any;
+		tags: {[key: string]: string};
 	}
 	export interface KickEventArgs {
 		kicked: string;
@@ -328,6 +329,7 @@ declare module "irc-framework" {
 		username: string;
 		gecos: string;
 		host: string;
+		bot?: boolean;
 	}
 
 	export interface ChannelInfoEventArgs {

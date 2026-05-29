@@ -21,6 +21,7 @@ type HandleInput = {
 	from_server?: boolean;
 	message: string;
 	group?: string;
+	tags?: {[key: string]: string};
 	msgid?: string;
 };
 
@@ -117,6 +118,11 @@ export default <IrcEventHandler>function (irc, network) {
 			} else if (chan.type === ChanType.CHANNEL) {
 				from.lastMessage = data.time || Date.now();
 			}
+		}
+
+		// https://ircv3.net/specs/extensions/bot-mode
+		if (data.tags && "bot" in data.tags) {
+			from.isBot = true;
 		}
 
 		// msg is constructed down here because `from` is being copied in the constructor

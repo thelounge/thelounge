@@ -6,7 +6,8 @@
 		v-on="onHover ? {mouseenter: hover} : {}"
 		@click.prevent="openContextMenu"
 		@contextmenu.prevent="openContextMenu"
-		><slot>{{ mode }}{{ user.nick }}</slot></span
+		><slot>{{ mode }}{{ user.nick }}</slot
+		><span v-if="user.isBot" class="user-bot-indicator" title="Bot"> [bot]</span></span
 	>
 </template>
 
