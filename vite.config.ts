@@ -58,7 +58,7 @@ function serviceWorkerPlugin(mode: string): Plugin {
 export default defineConfig(({mode}) => ({
 	root: path.resolve(__dirname, "client"),
 	publicDir: path.resolve(__dirname, "client/public"),
-	// Relative base so the app works when mounted at a subpath by a reverse proxy
+	// Ensures the app works when mounted at a subpath by a reverse proxy
 	base: "./",
 
 	build: {
@@ -72,8 +72,7 @@ export default defineConfig(({mode}) => ({
 						return "vendor";
 					}
 
-					// Emoji data is ~100KB — split it into its own chunk so the
-					// main bundle stays small and emoji data can be cached separately
+					// Split emojis (~100kb)  into their own chunk for separate caching
 					if (id.includes("fullnamemap.json") || id.includes("simplemap.json")) {
 						return "emoji";
 					}

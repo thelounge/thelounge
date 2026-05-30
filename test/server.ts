@@ -36,15 +36,11 @@ describe("Server", function () {
 	});
 
 	afterAll(async function () {
-		// Tear down test fixtures in the order they were setup,
-		// in case setup crashed for any reason
 		logInfoStub.restore();
 		logWarnStub.restore();
 		checkForUpdatesStub.restore();
 		await new Promise<void>((resolve) => server.close(() => resolve()));
 
-		// Wait for lazy dynamic imports (IRC event plugins → mime-types etc.)
-		// to settle before Vitest tears down the environment
 		await vi.dynamicImportSettled();
 	});
 
