@@ -290,6 +290,36 @@ the server tab on new connection"
 				</div>
 			</template>
 
+			<template v-if="store.state.serverConfiguration?.public && config?.lockNetwork">
+				<div class="connect-row">
+					<label></label>
+					<div class="input-wrap">
+						<label class="tls">
+							<input v-model="displayPasswordField" type="checkbox" />
+							I have a server password
+						</label>
+					</div>
+				</div>
+				<div v-if="displayPasswordField" class="connect-row">
+					<label for="connect:password">Server password</label>
+					<RevealPassword
+						v-slot:default="slotProps"
+						class="input-wrap password-container"
+					>
+						<input
+							id="connect:password"
+							ref="publicPassword"
+							v-model="defaults.password"
+							class="input"
+							:type="slotProps.isVisible ? 'text' : 'password'"
+							placeholder="Server password (optional)"
+							name="password"
+							maxlength="300"
+						/>
+					</RevealPassword>
+				</div>
+			</template>
+
 			<h2 id="label-auth">Authentication</h2>
 			<div class="connect-row connect-auth" role="group" aria-labelledby="label-auth">
 				<label class="opt">
@@ -436,6 +466,17 @@ export default defineComponent({
 		const store = useStore();
 		const config = ref(store.state.serverConfiguration);
 		const previousUsername = ref(props.defaults?.username);
+		const displayPasswordField = ref(false);
+
+		const publicPassword = ref<HTMLInputElement | null>(null);
+
+		watch(displayPasswordField, (newValue) => {
+			if (newValue) {
+				void nextTick(() => {
+					publicPassword.value?.focus();
+				});
+			}
+		});
 
 		const commandsInput = ref<HTMLInputElement | null>(null);
 
@@ -514,6 +555,8 @@ export default defineComponent({
 		return {
 			store,
 			config,
+			displayPasswordField,
+			publicPassword,
 			commandsInput,
 			resizeCommandsInput,
 			setSaslAuth,
