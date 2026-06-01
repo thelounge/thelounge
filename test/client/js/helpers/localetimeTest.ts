@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import localetime from "../../../../client/js/helpers/localetime";
 
 describe("localetime helper", () => {
