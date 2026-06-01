@@ -120,7 +120,7 @@
     "jsdom": "29.0.2",
     "mousetrap": "1.6.5",
     "normalize.css": "8.0.1",
-    "npm-run-all": "4.1.5",
+    "npm-run-all2": "5.0.0",
     "postcss": "8.4.47",
     "postcss-import": "14.0.2",
     "postcss-preset-env": "7.3.0",
