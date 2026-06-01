@@ -11,10 +11,11 @@ import type {SearchableMessageStorage, DeletionRequest} from "./types";
 import Network from "../../models/network";
 import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
 
-type Migration = {version: number; stmts: string[]};
+// set vacuum on migrations that free up space
+type Migration = {version: number; stmts: string[]; vacuum?: boolean};
 type Rollback = {version: number; rollback_forbidden?: boolean; stmts: string[]};
 
-export const currentSchemaVersion = 1703322560448; // use `new Date().getTime()`
+export const currentSchemaVersion = 1780272000000; // use `new Date().getTime()`
 
 // Desired schema, adapt to the newest version and add migrations to the array below
 const schema = [
@@ -31,9 +32,10 @@ const schema = [
 		step INTEGER NOT NULL,
 		statement TEXT NOT NULL
 	)`,
-	"CREATE INDEX network_channel ON messages (network, channel)",
 	"CREATE INDEX time ON messages (time)",
 	"CREATE INDEX msg_type_idx on messages (type)", // needed for efficient storageCleaner queries
+	// needed for efficient getMessages queries
+	"CREATE INDEX network_channel_time ON messages (network, channel, time)",
 ];
 
 // the migrations will be executed in an exclusive transaction as a whole
@@ -42,6 +44,7 @@ const schema = [
 export const migrations: Migration[] = [
 	{
 		version: 1672236339873,
+		vacuum: true,
 		stmts: [
 			"CREATE TABLE messages_new (id INTEGER PRIMARY KEY AUTOINCREMENT, network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
 			"INSERT INTO messages_new(network, channel, time, type, msg) select network, channel, time, type, msg from messages order by time asc",
@@ -71,6 +74,14 @@ export const migrations: Migration[] = [
 		version: 1703322560448,
 		stmts: ["CREATE INDEX msg_type_idx on messages (type)"],
 	},
+	{
+		// replaces network_channel and also covers the sort in getMessages
+		version: 1780272000000,
+		stmts: [
+			"CREATE INDEX IF NOT EXISTS network_channel_time ON messages (network, channel, time)",
+			"DROP INDEX IF EXISTS network_channel",
+		],
+	},
 ];
 
 // down migrations need to restore the state of the prior version.
@@ -88,7 +99,18 @@ export const rollbacks: Rollback[] = [
 		version: 1703322560448,
 		stmts: ["drop INDEX msg_type_idx"],
 	},
+	{
+		version: 1780272000000,
+		stmts: [
+			"DROP INDEX IF EXISTS network_channel_time",
+			"CREATE INDEX IF NOT EXISTS network_channel ON messages (network, channel)",
+		],
+	},
 ];
+
+// exported for tests
+export const getMessagesQuery =
+	"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC, id DESC LIMIT ?";
 
 class SqliteMessageStorage implements SearchableMessageStorage {
 	isEnabled: boolean;
@@ -159,9 +181,9 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			.run(currentSchemaVersion.toString());
 	}
 
-	_run_migrations(dbVersion: number) {
+	_run_migrations(dbVersion: number): boolean {
 		log.info(
-			`sqlite messages schema version is out of date (${dbVersion} < ${currentSchemaVersion}). Running migrations.`
+			`sqlite messages schema version is out of date (${dbVersion} < ${currentSchemaVersion}). Running migrations, this may take a while.`
 		);
 
 		const to_execute = necessaryMigrations(dbVersion);
@@ -171,6 +193,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		this.update_version_in_db();
+
+		return to_execute.some((migration) => migration.vacuum);
 	}
 
 	run_migrations() {
@@ -183,12 +207,13 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		this.database.exec("BEGIN EXCLUSIVE TRANSACTION");
+		let needsVacuum = false;
 
 		try {
 			if (version === 0) {
 				this.setup_new_db();
 			} else {
-				this._run_migrations(version);
+				needsVacuum = this._run_migrations(version);
 			}
 
 			this.insert_rollback_since(version);
@@ -198,7 +223,10 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		this.database.exec("COMMIT");
-		this.database.exec("VACUUM");
+
+		if (needsVacuum) {
+			this.vacuum();
+		}
 	}
 
 	// helper method that vacuums the db, meant to be used by migration related cli commands
@@ -380,9 +408,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const limit = Config.values.maxHistory < 0 ? 100000 : Config.values.maxHistory;
 
 		const rows = this.database
-			.prepare(
-				"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC, id DESC LIMIT ?"
-			)
+			.prepare(getMessagesQuery)
 			.all(network.uuid, channel.name.toLowerCase(), limit) as {
 			msg: string;
 			type: string;
