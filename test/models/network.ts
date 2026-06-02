@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import sinon from "ts-sinon";
 import Chan from "../../server/models/chan";
 import {ChanType} from "../../shared/types/chan";
@@ -12,11 +12,11 @@ import ClientCertificate from "../../server/plugins/clientCertificate";
 describe("Network", function () {
 	let stsPoliciesRefreshStub: sinon.SinonStub<unknown[], void>;
 
-	before(function () {
+	beforeAll(function () {
 		stsPoliciesRefreshStub = sinon.stub(STSPolicies, "refresh");
 	});
 
-	after(function () {
+	afterAll(function () {
 		stsPoliciesRefreshStub.restore();
 	});
 
