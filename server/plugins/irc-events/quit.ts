@@ -27,9 +27,8 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 
 		// If user with the nick we are trying to keep has quit, try to get this nick
-		if (network.keepNick === data.nick) {
-			irc.changeNick(network.keepNick);
-			network.keepNick = null;
+		if (network.getNickKeeper().onQuit(data.nick)) {
+			irc.changeNick(data.nick);
 		}
 	});
 };
