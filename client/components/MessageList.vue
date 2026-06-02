@@ -389,12 +389,9 @@ export default defineComponent({
 		);
 
 		watch(
-			() => props.channel.messages,
+			() => props.channel.messages.length,
 			async () => {
 				await keepScrollPosition();
-			},
-			{
-				deep: true,
 			}
 		);
 
