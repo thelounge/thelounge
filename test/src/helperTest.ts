@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import os from "os";
 import Helper from "../../server/helper";
 

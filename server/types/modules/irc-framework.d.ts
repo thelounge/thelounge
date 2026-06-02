@@ -206,6 +206,8 @@ declare module "irc-framework" {
 
 		setTopic(channel: string, newTopic: string): void;
 
+		clearTopic(channel: string): void;
+
 		ctcpRequest(target: string, type: string, ...params: Array<string>): void;
 
 		ctcpResponse(target: string, type: string, ...params: Array<string>): void;

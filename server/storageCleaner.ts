@@ -61,7 +61,7 @@ export class StorageCleaner {
 		};
 	}
 
-	async runDeletesNoLimit(): Promise<number> {
+	runDeletesNoLimit(): number {
 		if (!Config.values.storagePolicy.enabled) {
 			// this is meant to be used by cli tools, so we guard against this
 			throw new Error("storage policy is disabled");
@@ -69,11 +69,10 @@ export class StorageCleaner {
 
 		const req = this.genDeletionRequest();
 		req.limit = -1; // unlimited
-		const num_deleted = await this.db.deleteMessages(req);
-		return num_deleted;
+		return this.db.deleteMessages(req);
 	}
 
-	private async runDeletes() {
+	private runDeletes() {
 		if (this.isStopped) {
 			return;
 		}
@@ -89,7 +88,7 @@ export class StorageCleaner {
 		let num_deleted = 0;
 
 		try {
-			num_deleted = await this.db.deleteMessages(req);
+			num_deleted = this.db.deleteMessages(req);
 			this.errCount = 0; // reset when it works
 		} catch (err: any) {
 			this.errCount++;
@@ -115,13 +114,13 @@ export class StorageCleaner {
 	}
 
 	private schedule(ms: number) {
-		const self = this;
-
 		this.ticker = setTimeout(() => {
-			self.runDeletes().catch((err) => {
+			try {
+				this.runDeletes();
+			} catch (err) {
 				log.error("storageCleaner: unexpected failure");
 				throw err;
-			});
+			}
 		}, ms);
 	}
 

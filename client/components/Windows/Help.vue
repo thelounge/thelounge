@@ -795,6 +795,15 @@
 
 			<div class="help-item">
 				<div class="subject">
+					<code>/cleartopic</code>
+				</div>
+				<div class="description">
+					<p>Clear the topic in the current channel.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
 					<code>/unban nick</code>
 				</div>
 				<div class="description">
