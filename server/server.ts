@@ -1089,7 +1089,7 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	Auth.initialize().then(() => {
+	void Auth.initialize().then(() => {
 		// Perform password checking
 		Auth.auth(manager, client, data.user, data.password, authCallback);
 	});
