@@ -72,12 +72,12 @@ function merge(
 
 	// Distribute the style fragments within the text parts
 	return allParts.map((part: Part) => {
-		const fragmentedPart = part as PartWithFragments;
-		fragmentedPart.fragments = styleFragments
-			.filter((fragment) => anyIntersection(fragmentedPart, fragment))
-			.map((fragment) => assign(fragmentedPart, fragment));
-
-		return fragmentedPart;
+		return {
+			...part,
+			fragments: styleFragments
+				.filter((fragment) => anyIntersection(part, fragment))
+				.map((fragment) => assign(part, fragment)),
+		};
 	});
 }
 

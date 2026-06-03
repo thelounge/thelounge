@@ -29,7 +29,7 @@ export type Module = {
 // Always keep 'local' auth plugin at the end of the list; it should always be enabled.
 const plugins = [import("./auth/ldap"), import("./auth/local")];
 
-const toExport = {
+const toExport: Module = {
 	moduleName: "<module with no name>",
 
 	// Must override: implements authentication mechanism
@@ -67,7 +67,7 @@ const toExport = {
 			log.error("None of the auth plugins is enabled");
 		}
 	},
-} as Module;
+};
 
 function unimplemented(funcName: string) {
 	log.debug(
