@@ -11,8 +11,7 @@ import type {SearchableMessageStorage, DeletionRequest} from "./types";
 import Network from "../../models/network";
 import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
 
-// set vacuum on migrations that free up space
-type Migration = {version: number; stmts: string[]; vacuum?: boolean};
+type Migration = {version: number; stmts: string[]};
 type Rollback = {version: number; rollback_forbidden?: boolean; stmts: string[]};
 
 export const currentSchemaVersion = 1780272000000; // use `new Date().getTime()`
@@ -44,7 +43,6 @@ const schema = [
 export const migrations: Migration[] = [
 	{
 		version: 1672236339873,
-		vacuum: true,
 		stmts: [
 			"CREATE TABLE messages_new (id INTEGER PRIMARY KEY AUTOINCREMENT, network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
 			"INSERT INTO messages_new(network, channel, time, type, msg) select network, channel, time, type, msg from messages order by time asc",
@@ -181,7 +179,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			.run(currentSchemaVersion.toString());
 	}
 
-	_run_migrations(dbVersion: number): boolean {
+	_run_migrations(dbVersion: number) {
 		log.info(
 			`sqlite messages schema version is out of date (${dbVersion} < ${currentSchemaVersion}). Running migrations, this may take a while.`
 		);
@@ -193,8 +191,6 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		this.update_version_in_db();
-
-		return to_execute.some((migration) => migration.vacuum);
 	}
 
 	run_migrations() {
@@ -207,13 +203,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		this.database.exec("BEGIN EXCLUSIVE TRANSACTION");
-		let needsVacuum = false;
 
 		try {
 			if (version === 0) {
 				this.setup_new_db();
 			} else {
-				needsVacuum = this._run_migrations(version);
+				this._run_migrations(version);
 			}
 
 			this.insert_rollback_since(version);
@@ -223,10 +218,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		this.database.exec("COMMIT");
-
-		if (needsVacuum) {
-			this.vacuum();
-		}
+		this.database.exec("VACUUM");
 	}
 
 	// helper method that vacuums the db, meant to be used by migration related cli commands
@@ -283,11 +275,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		this.database.prepare("delete from migrations where migrations.version > ?").run(version);
 	}
 
-	_downgrade_to(version: number): number {
+	// returns whether any rollback statements were executed
+	_downgrade_to(version: number): boolean {
 		const _rollbacks = this.fetch_rollbacks(version);
 
 		if (_rollbacks.length === 0) {
-			return version;
+			return false;
 		}
 
 		const forbidden = _rollbacks.find((item) => item.rollback_forbidden);
@@ -305,7 +298,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		this.delete_migrations_older_than(version);
 		this.update_version_in_db();
 
-		return version;
+		return true;
 	}
 
 	downgrade_to(version: number): number {
@@ -315,17 +308,22 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		this.database.exec("BEGIN EXCLUSIVE TRANSACTION");
 
-		let new_version: number;
+		let rolled_back = false;
 
 		try {
-			new_version = this._downgrade_to(version);
+			rolled_back = this._downgrade_to(version);
 		} catch (err) {
 			this.database.exec("ROLLBACK");
 			throw err;
 		}
 
 		this.database.exec("COMMIT");
-		return new_version;
+
+		if (rolled_back) {
+			this.vacuum();
+		}
+
+		return version;
 	}
 
 	downgrade() {

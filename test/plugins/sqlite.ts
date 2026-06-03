@@ -102,12 +102,6 @@ describe("SQLite migrations", function () {
 		expect(details).to.not.include("TEMP B-TREE");
 	});
 
-	it("only vacuums after migrations that reclaim space", function () {
-		// the index migration doesn't free up any space, the table rebuild does
-		expect(necessaryMigrations(1703322560448).some((m) => m.vacuum)).to.be.false;
-		expect(necessaryMigrations(v1_schema_version).some((m) => m.vacuum)).to.be.true;
-	});
-
 	it("has working down-migrations", function () {
 		db.exec("BEGIN EXCLUSIVE TRANSACTION");
 
