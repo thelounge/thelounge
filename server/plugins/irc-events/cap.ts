@@ -20,7 +20,7 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		const isSecure = irc.connection.transport.socket.encrypted;
-		const values = {} as Record<string, string>;
+		const values: Record<string, string> = {};
 
 		data.capabilities.sts.split(",").map((value: string) => {
 			const splitValue = value.split("=", 2);

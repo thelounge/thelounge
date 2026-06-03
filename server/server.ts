@@ -1056,7 +1056,8 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	void Auth.initialize().then(() => {
+	// eslint-disable-next-line @typescript-eslint/no-floating-promises
+	Auth.initialize().then(() => {
 		// Perform password checking
 		Auth.auth(manager, client, data.user, data.password, authCallback);
 	});

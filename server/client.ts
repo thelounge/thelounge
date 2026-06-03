@@ -458,7 +458,7 @@ class Client {
 
 	input(data: {target: number; text: string}) {
 		const client = this;
-		data.text.split("\n").forEach((line: string) => {
+		data.text.split("\n").forEach((line) => {
 			data.text = line;
 			client.inputLine(data);
 		});
