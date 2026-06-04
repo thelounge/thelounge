@@ -40,10 +40,10 @@ export default <IrcEventHandler>function (irc, network) {
 		if (irc.connection.registered === false && !Config.values.public) {
 			message += " An attempt to use it will be made when this nick quits.";
 
-			// Store the user's preferred nick so the quit handler can reclaim it
-			network
-				.getNickKeeper()
-				.onNickInUse(network.nick, {registered: false, isPublic: Config.values.public});
+			network.nickKeeper.onNickInUse({
+				registered: irc.connection.registered,
+				isPublic: Config.values.public,
+			});
 		}
 
 		const lobby = network.getLobby();
@@ -61,8 +61,6 @@ export default <IrcEventHandler>function (irc, network) {
 			// Safeguard nick changes up to allowed length
 			// Some servers may send "nick in use" error even for randomly generated nicks
 			if (random.length <= nickLen) {
-				// Only change the IRC session nick (irc.user.nick), not the user's preference (network.nick)
-				// This allows the quit handler to reclaim the preferred nick when it becomes available
 				irc.changeNick(random);
 			}
 		}

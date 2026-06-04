@@ -42,8 +42,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		return;
 	}
 
-	// If we were trying to keep a nick and user changes nick, stop trying to keep the old one
-	network.clearKeepNick();
+	network.nickKeeper.cancelPendingNick();
 
 	// If connected to IRC, send to server and wait for ACK
 	// otherwise update the nick and UI straight away

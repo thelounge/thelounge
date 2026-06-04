@@ -3,58 +3,82 @@ export type NickInUseContext = {
 	isPublic: boolean;
 };
 
-export type RegisteredResult = {
-	shouldUpdatePreferred: boolean;
-};
-
-export type NickKeeperOwner = {
-	getKeepNick(): string | null;
-	setKeepNick(nick: string): void;
-	clearKeepNick(): void;
+export type RegisteredCallbacks = {
+	setPreferredNick(nick: string): void;
+	setCurrentNick(nick: string): void;
 };
 
 export default class NickKeeper {
-	private owner: NickKeeperOwner;
+	private desiredNick: string;
+	private currentNick: string;
+	private pendingNick: string | null = null;
 
-	constructor(owner: NickKeeperOwner) {
-		this.owner = owner;
+	constructor(nick: string) {
+		this.desiredNick = nick;
+		this.currentNick = nick;
 	}
 
-	onNickInUse(preferredNick: string, context: NickInUseContext) {
+	setDesiredNick(nick: string) {
+		this.desiredNick = nick;
+		this.currentNick = nick;
+		this.cancelPendingNick();
+	}
+
+	cancelPendingNick() {
+		this.pendingNick = null;
+	}
+
+	onNickInUse(context: NickInUseContext) {
 		if (!context.registered && !context.isPublic) {
-			this.owner.setKeepNick(preferredNick);
+			this.pendingNick = this.desiredNick;
 		}
 	}
 
-	onRegistered(registeredNick: string, preferredNick: string): RegisteredResult {
-		if (registeredNick === preferredNick) {
-			if (this.owner.getKeepNick() === registeredNick) {
-				this.owner.clearKeepNick();
-			}
+	onRegistered(registeredNick: string, callbacks: RegisteredCallbacks) {
+		this.currentNick = registeredNick;
 
-			return {shouldUpdatePreferred: true};
+		if (registeredNick === this.desiredNick) {
+			this.cancelPendingNick();
+			callbacks.setPreferredNick(registeredNick);
+		} else {
+			callbacks.setCurrentNick(registeredNick);
 		}
-
-		return {shouldUpdatePreferred: false};
 	}
 
-	onQuit(quitNick: string) {
-		if (this.owner.getKeepNick() === quitNick) {
-			this.owner.clearKeepNick();
-			return true;
+	onNickChanged(
+		oldNick: string,
+		newNick: string,
+		isSelf: boolean,
+		changeNick: (nick: string) => void
+	) {
+		if (isSelf) {
+			this.currentNick = newNick;
+			this.desiredNick = newNick;
+			this.cancelPendingNick();
+
+			return;
 		}
 
-		return false;
+		if (this.pendingNick === oldNick) {
+			this.cancelPendingNick();
+			changeNick(oldNick);
+		}
 	}
 
-	onSocketClose() {
-		const keepNick = this.owner.getKeepNick();
-
-		if (!keepNick) {
-			return null;
+	onQuit(quitNick: string, changeNick: (nick: string) => void) {
+		if (this.pendingNick === quitNick) {
+			this.cancelPendingNick();
+			changeNick(quitNick);
 		}
+	}
 
-		this.owner.clearKeepNick();
-		return keepNick;
+	onSocketClose(restoreLocalNick: (nick: string) => void) {
+		if (this.pendingNick) {
+			const nick = this.pendingNick;
+			this.cancelPendingNick();
+			this.currentNick = nick;
+			this.desiredNick = nick;
+			restoreLocalNick(nick);
+		}
 	}
 }

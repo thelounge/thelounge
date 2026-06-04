@@ -124,19 +124,16 @@ export default <IrcEventHandler>function (irc, network) {
 			);
 		}
 
-		const keepNick = network.getNickKeeper().onSocketClose();
+		network.nickKeeper.onSocketClose((nick) => {
+			irc.options.nick = irc.user.nick = nick;
 
-		if (keepNick) {
-			// We disconnected without getting our original nick back yet, just set it back locally
-			irc.options.nick = irc.user.nick = keepNick;
-
-			network.setNick(keepNick);
+			network.setNick(nick);
 
 			client.emit("nick", {
 				network: network.uuid,
 				nick: network.nick,
 			});
-		}
+		});
 
 		sendStatus();
 	});

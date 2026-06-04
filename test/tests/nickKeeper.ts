@@ -1,112 +1,184 @@
-import {expect} from "chai";
+import {expect} from "vitest";
+
 import NickKeeper from "../../server/models/nickKeeper";
 
-type Owner = {
-	keepNick: string | null;
-	getKeepNick(): string | null;
-	setKeepNick(nick: string): void;
-	clearKeepNick(): void;
-};
+function createRegisteredCallbacks() {
+	const calls = {
+		preferredNick: null as string | null,
+		currentNick: null as string | null,
+	};
 
-function createOwner(initial: string | null = null): Owner {
 	return {
-		keepNick: initial,
-		getKeepNick() {
-			return this.keepNick;
-		},
-		setKeepNick(nick: string) {
-			this.keepNick = nick;
-		},
-		clearKeepNick() {
-			this.keepNick = null;
+		calls,
+		callbacks: {
+			setPreferredNick(nick: string) {
+				calls.preferredNick = nick;
+			},
+			setCurrentNick(nick: string) {
+				calls.currentNick = nick;
+			},
 		},
 	};
 }
 
 describe("NickKeeper", function () {
-	it("stores preferred nick when nick in use on connect", function () {
-		const owner = createOwner();
-		const keeper = new NickKeeper(owner);
+	it("stores desired nick when nick in use on connect", function () {
+		const keeper = new NickKeeper("preferred");
+		let reclaimedNick: string | null = null;
 
-		keeper.onNickInUse("preferred", {registered: false, isPublic: false});
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.onQuit("preferred", (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(owner.keepNick).to.equal("preferred");
+		expect(reclaimedNick).to.equal("preferred");
 	});
 
-	it("does not store preferred nick when already registered", function () {
-		const owner = createOwner();
-		const keeper = new NickKeeper(owner);
+	it("does not store desired nick when already registered", function () {
+		const keeper = new NickKeeper("preferred");
+		let reclaimedNick: string | null = null;
 
-		keeper.onNickInUse("preferred", {registered: true, isPublic: false});
+		keeper.onNickInUse({registered: true, isPublic: false});
+		keeper.onQuit("preferred", (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(owner.keepNick).to.equal(null);
+		expect(reclaimedNick).to.equal(null);
 	});
 
-	it("does not store preferred nick in public mode", function () {
-		const owner = createOwner();
-		const keeper = new NickKeeper(owner);
+	it("does not store desired nick in public mode", function () {
+		const keeper = new NickKeeper("preferred");
+		let reclaimedNick: string | null = null;
 
-		keeper.onNickInUse("preferred", {registered: false, isPublic: true});
+		keeper.onNickInUse({registered: false, isPublic: true});
+		keeper.onQuit("preferred", (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(owner.keepNick).to.equal(null);
+		expect(reclaimedNick).to.equal(null);
 	});
 
-	it("clears keepNick when registered with preferred nick", function () {
-		const owner = createOwner("preferred");
-		const keeper = new NickKeeper(owner);
+	it("updates preferred nick when registered with desired nick", function () {
+		const keeper = new NickKeeper("preferred");
+		const {calls, callbacks} = createRegisteredCallbacks();
+		let reclaimedNick: string | null = null;
 
-		const result = keeper.onRegistered("preferred", "preferred");
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.onRegistered("preferred", callbacks);
+		keeper.onQuit("preferred", (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(result.shouldUpdatePreferred).to.equal(true);
-		expect(owner.keepNick).to.equal(null);
+		expect(calls.preferredNick).to.equal("preferred");
+		expect(calls.currentNick).to.equal(null);
+		expect(reclaimedNick).to.equal(null);
 	});
 
-	it("does not clear keepNick when registered with fallback", function () {
-		const owner = createOwner("preferred");
-		const keeper = new NickKeeper(owner);
+	it("updates only current nick when registered with fallback", function () {
+		const keeper = new NickKeeper("preferred");
+		const {calls, callbacks} = createRegisteredCallbacks();
+		let reclaimedNick: string | null = null;
 
-		const result = keeper.onRegistered("fallback", "preferred");
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.onRegistered("fallback", callbacks);
+		keeper.onQuit("preferred", (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(result.shouldUpdatePreferred).to.equal(false);
-		expect(owner.keepNick).to.equal("preferred");
+		expect(calls.preferredNick).to.equal(null);
+		expect(calls.currentNick).to.equal("fallback");
+		expect(reclaimedNick).to.equal("preferred");
 	});
 
-	it("reclaims preferred nick on quit and clears keepNick", function () {
-		const owner = createOwner("preferred");
-		const keeper = new NickKeeper(owner);
+	it("reclaims desired nick when it quits", function () {
+		const keeper = new NickKeeper("preferred");
+		let reclaimedNick: string | null = null;
 
-		const shouldReclaim = keeper.onQuit("preferred");
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.onRegistered("fallback", createRegisteredCallbacks().callbacks);
+		keeper.onQuit("preferred", (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(shouldReclaim).to.equal(true);
-		expect(owner.keepNick).to.equal(null);
+		expect(reclaimedNick).to.equal("preferred");
 	});
 
 	it("does not reclaim when quit nick does not match", function () {
-		const owner = createOwner("preferred");
-		const keeper = new NickKeeper(owner);
+		const keeper = new NickKeeper("preferred");
+		let reclaimedNick: string | null = null;
 
-		const shouldReclaim = keeper.onQuit("other");
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.onRegistered("fallback", createRegisteredCallbacks().callbacks);
+		keeper.onQuit("other", (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(shouldReclaim).to.equal(false);
-		expect(owner.keepNick).to.equal("preferred");
+		expect(reclaimedNick).to.equal(null);
 	});
 
-	it("returns keepNick on socket close and clears it", function () {
-		const owner = createOwner("preferred");
-		const keeper = new NickKeeper(owner);
+	it("reclaims desired nick when another user changes away from it", function () {
+		const keeper = new NickKeeper("preferred");
+		let reclaimedNick: string | null = null;
 
-		const keepNick = keeper.onSocketClose();
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.onRegistered("fallback", createRegisteredCallbacks().callbacks);
+		keeper.onNickChanged("preferred", "other", false, (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(keepNick).to.equal("preferred");
-		expect(owner.keepNick).to.equal(null);
+		expect(reclaimedNick).to.equal("preferred");
 	});
 
-	it("returns null on socket close when no keepNick", function () {
-		const owner = createOwner(null);
-		const keeper = new NickKeeper(owner);
+	it("updates desired and current nick after self nick change", function () {
+		const keeper = new NickKeeper("preferred");
+		let reclaimedNick: string | null = null;
 
-		const keepNick = keeper.onSocketClose();
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.onRegistered("fallback", createRegisteredCallbacks().callbacks);
+		keeper.onNickChanged("fallback", "newNick", true, (nick) => {
+			reclaimedNick = nick;
+		});
+		keeper.onQuit("preferred", (nick) => {
+			reclaimedNick = nick;
+		});
 
-		expect(keepNick).to.equal(null);
+		expect(reclaimedNick).to.equal(null);
+	});
+
+	it("restores desired nick on socket close", function () {
+		const keeper = new NickKeeper("preferred");
+		let restoredNick: string | null = null;
+
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.onRegistered("fallback", createRegisteredCallbacks().callbacks);
+		keeper.onSocketClose((nick) => {
+			restoredNick = nick;
+		});
+
+		expect(restoredNick).to.equal("preferred");
+	});
+
+	it("does nothing on socket close when there is no pending desired nick", function () {
+		const keeper = new NickKeeper("preferred");
+		let restoredNick: string | null = null;
+
+		keeper.onSocketClose((nick) => {
+			restoredNick = nick;
+		});
+
+		expect(restoredNick).to.equal(null);
+	});
+
+	it("cancels pending reclaim when user changes desired nick", function () {
+		const keeper = new NickKeeper("preferred");
+		let reclaimedNick: string | null = null;
+
+		keeper.onNickInUse({registered: false, isPublic: false});
+		keeper.setDesiredNick("newNick");
+		keeper.onQuit("preferred", (nick) => {
+			reclaimedNick = nick;
+		});
+
+		expect(reclaimedNick).to.equal(null);
 	});
 });
