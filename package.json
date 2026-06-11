@@ -98,7 +98,7 @@
     "@types/sortablejs": "1.15.8",
     "@types/ua-parser-js": "0.7.39",
     "@types/web-push": "3.3.2",
-    "@types/ws": "8.5.12",
+    "@types/ws": "8.18.1",
     "@typescript-eslint/eslint-plugin": "7.8.0",
     "@typescript-eslint/parser": "7.8.0",
     "@vitejs/plugin-vue": "6.0.5",
