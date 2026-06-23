@@ -20,23 +20,31 @@
 			</dd>
 
 			<template v-if="message.whois.actual_hostname">
-				<dt>Actual host:</dt>
+				<dt>Actual host mask:</dt>
 				<dd class="hostmask">
+					<ParsedMessage
+						v-if="message.whois.actual_username"
+						:network="network"
+						:text="message.whois.actual_username + '@' + message.whois.actual_hostname"
+					/>
+					<ParsedMessage
+						v-else
+						:network="network"
+						:text="message.whois.ident + '@' + message.whois.actual_hostname"
+					/>
+				</dd>
+			</template>
+
+			<template v-if="message.whois.actual_ip">
+				<dt>IP address:</dt>
+				<dd>
 					<a
 						:href="'https://ipinfo.io/' + message.whois.actual_ip"
 						target="_blank"
 						rel="noopener"
 						>{{ message.whois.actual_ip }}</a
 					>
-					<i v-if="message.whois.actual_hostname != message.whois.actual_ip">
-						({{ message.whois.actual_hostname }})</i
-					>
 				</dd>
-			</template>
-
-			<template v-if="message.whois.actual_username">
-				<dt>Actual username:</dt>
-				<dd>{{ message.whois.actual_username }}</dd>
 			</template>
 
 			<template v-if="message.whois.real_name">
