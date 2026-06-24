@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.5.1 - 2026-06-21
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.5.0...v4.5.1) and [milestone](https://github.com/thelounge/thelounge/milestone/47?closed=1).
+
+This is a patch release addressing two regressions found in v4.5.0: identd forwarding stopped working and large sqlite databases could cause slow startup times. On the developer side, we've modernized our stack from webpack to Vite and removed unnecessary dependencies; build times and bundle sizes have been greatly reduced.
+
+### Changed
+
+- Replace is-utf8, read-chunk dependencies with Node replacements (#5077) ([`d21c6fb`](https://github.com/thelounge/thelounge/commit/d21c6fb088b9e869b42b250bda33ee41bdced607) by [@MaxLeiter](https://github.com/MaxLeiter))
+- sqlite: add message history index (#5107) ([`dc7f79f`](https://github.com/thelounge/thelounge/commit/dc7f79fe92c62264c6a1d4fc0337cd49c429e0d4) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Fixed
+
+- ident: normalize ipv4-mapped addresses when comparing (#5102) ([`283b6f4`](https://github.com/thelounge/thelounge/commit/283b6f4dea1ef4e3ff8077888361466e509ef83b) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Documentation
+
+- readme: fix image (#5109) ([`6172ab2`](https://github.com/thelounge/thelounge/commit/6172ab2e797a24f91020510e9f30c5c7268fb043) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Internals
+
+- Add changelog for 4.5.0, fix changelog deduplication in generate scri… ([`4ac9a3f`](https://github.com/thelounge/thelounge/commit/4ac9a3fae77ae8bd7e9d441d14f725a20e8b664e) by [@MaxLeiter](https://github.com/MaxLeiter))
+- remove webpack, babel, mocha; switch to vite/vitest (#5064) ([`0fe0112`](https://github.com/thelounge/thelounge/commit/0fe011235e305348a3083feab24a0a0b420d2ea2) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Lock file maintenance (#4857) ([`84963db`](https://github.com/thelounge/thelounge/commit/84963db2ec783f87dd4ad456602db74862960ac5) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- Replace dependency npm-run-all with npm-run-all2 5.0.0 (#4830) ([`ce7f66e`](https://github.com/thelounge/thelounge/commit/ce7f66e259160c337229776ac62e3931454bd439) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+
 ## v4.5.1-rc.1 - 2026-06-17 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.5.1-pre.1...v4.5.1-rc.1)
