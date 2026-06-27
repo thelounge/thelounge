@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import merge from "../../../../../client/js/helpers/ircmessageparser/merge";
 
 describe("merge", () => {

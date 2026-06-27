@@ -11,28 +11,24 @@ on:
 
 jobs:
   build:
-    name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
+    name: Node on ${{ matrix.os }}
 
     strategy:
       matrix:
-        include:
-          # EOL: April 2027
-          - os: macOS-latest
-            node_version: 22.x
-          - os: windows-latest
-            node_version: 22.x
-          - os: ubuntu-latest
-            node_version: 22.x
+        os:
+          - macOS-latest
+          - windows-latest
+          - ubuntu-latest
 
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node_version }}
+          node-version-file: ".node-version"
 
       - name: Install
         run: yarn --frozen-lockfile --non-interactive

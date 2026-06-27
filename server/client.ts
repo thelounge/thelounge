@@ -1,6 +1,5 @@
 import _ from "lodash";
 import UAParser from "ua-parser-js";
-import {v4 as uuidv4} from "uuid";
 import escapeRegExp from "lodash/escapeRegExp";
 import crypto from "crypto";
 import colors from "chalk";
@@ -107,7 +106,7 @@ class Client {
 	fileHash!: string;
 
 	constructor(manager: ClientManager, name?: string, config = {} as UserConfig) {
-		this.id = uuidv4();
+		this.id = crypto.randomUUID();
 		_.merge(this, {
 			awayMessage: "",
 			lastActiveChannel: -1,
