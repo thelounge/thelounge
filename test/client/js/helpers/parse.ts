@@ -1,4 +1,5 @@
-import {expect} from "chai";
+// @vitest-environment jsdom
+import {expect} from "vitest";
 
 import {mount} from "@vue/test-utils";
 import ParsedMessage from "../../../../client/components/ParsedMessage.vue";
