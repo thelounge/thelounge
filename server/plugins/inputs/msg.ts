@@ -16,7 +16,7 @@ function getTarget(cmd: string, args: string[], chan: Chan) {
 	}
 }
 
-const input: PluginInputHandler = function (network, chan, cmd, args) {
+const input: PluginInputHandler = function (network, chan, cmd, args, extras) {
 	let targetName = getTarget(cmd, args, chan);
 
 	if (cmd === "query") {
@@ -93,7 +93,10 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		return true;
 	}
 
-	network.irc.say(targetName, msg);
+	const replyTo = extras?.replyTo;
+	const replyTags =
+		replyTo && network.serverOptions.supportsReply ? {"+reply": replyTo} : undefined;
+	network.irc.say(targetName, msg, replyTags);
 
 	// If the IRCd does not support echo-message, simulate the message
 	// being sent back to us.
@@ -116,6 +119,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 				target: targetName,
 				group: targetGroup,
 				message: msg,
+				tags: replyTo ? {"+reply": replyTo} : undefined,
 			});
 		}
 	}

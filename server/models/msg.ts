@@ -5,6 +5,9 @@ class Msg {
 	from!: UserInMessage;
 	id!: number;
 	msgid?: string;
+	replyTo?: string;
+	replyToNick?: string;
+	replyToText?: string;
 	previews!: LinkPreview[];
 	text!: string;
 	type!: MessageType;

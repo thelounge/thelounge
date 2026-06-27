@@ -98,4 +98,8 @@ export type SharedMsg = {
 
 	statusmsgGroup?: string;
 	params?: string[];
+
+	replyTo?: string;
+	replyToNick?: string;
+	replyToText?: string;
 };
