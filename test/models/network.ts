@@ -562,5 +562,274 @@ describe("Network", function () {
 
 			expect(network.channels[1]).to.equal(newUser);
 		});
+
+		it("should call monitor for query channels when connected", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {
+				addMonitor: addMonitorSpy,
+				removeMonitor: sinon.spy(),
+				connected: true,
+			} as any;
+			network.serverOptions.MONITOR = 100;
+
+			const newQuery = new Chan({name: "someuser", type: ChanType.QUERY});
+			network.addChannel(newQuery);
+
+			expect(addMonitorSpy.calledOnce).to.be.true;
+			expect(network.monitorList).to.include("someuser");
+		});
+
+		it("should not call monitor for regular channels", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {
+				addMonitor: addMonitorSpy,
+				removeMonitor: sinon.spy(),
+				connected: true,
+			} as any;
+			network.serverOptions.MONITOR = 100;
+
+			const newChan = new Chan({name: "#channel"});
+			network.addChannel(newChan);
+
+			expect(addMonitorSpy.called).to.be.false;
+		});
+
+		it("should not call monitor when disconnected", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {
+				addMonitor: addMonitorSpy,
+				removeMonitor: sinon.spy(),
+				connected: false,
+			} as any;
+
+			const newQuery = new Chan({name: "someuser", type: ChanType.QUERY});
+			network.addChannel(newQuery);
+
+			expect(addMonitorSpy.called).to.be.false;
+		});
+	});
+
+	describe("#monitor(target)", function () {
+		it("should add target to monitorList and call addMonitor", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {addMonitor: addMonitorSpy, removeMonitor: sinon.spy()} as any;
+			network.serverOptions.MONITOR = 100;
+
+			network.monitor("TestUser");
+
+			expect(addMonitorSpy.calledOnce).to.be.true;
+			expect(network.monitorList).to.deep.equal(["testuser"]);
+		});
+
+		it("should not monitor duplicate nicks (case-insensitive)", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {addMonitor: addMonitorSpy, removeMonitor: sinon.spy()} as any;
+			network.serverOptions.MONITOR = 100;
+
+			network.monitor("TestUser");
+			network.monitor("testuser");
+			network.monitor("TESTUSER");
+
+			expect(addMonitorSpy.calledOnce).to.be.true;
+			expect(network.monitorList).to.deep.equal(["testuser"]);
+		});
+
+		it("should queue targets when monitor list is full", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {addMonitor: addMonitorSpy, removeMonitor: sinon.spy()} as any;
+			network.serverOptions.MONITOR = 2;
+
+			network.monitor("user1");
+			network.monitor("user2");
+			network.monitor("user3");
+
+			expect(addMonitorSpy.calledTwice).to.be.true;
+			expect(network.monitorList).to.deep.equal(["user1", "user2"]);
+			expect(network.toBeMonitored).to.deep.equal(["user3"]);
+		});
+
+		it("should not send monitor when server does not advertise MONITOR support", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {addMonitor: addMonitorSpy, removeMonitor: sinon.spy()} as any;
+
+			network.monitor("user1");
+
+			expect(addMonitorSpy.called).to.be.false;
+			expect(network.monitorList).to.be.empty;
+		});
+
+		it("should send monitor when server advertises MONITOR with no limit (0)", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {addMonitor: addMonitorSpy, removeMonitor: sinon.spy()} as any;
+			network.serverOptions.MONITOR = 0;
+
+			network.monitor("user1");
+			network.monitor("user2");
+
+			expect(addMonitorSpy.calledTwice).to.be.true;
+			expect(network.monitorList).to.deep.equal(["user1", "user2"]);
+		});
+	});
+
+	describe("#removeMonitor(target)", function () {
+		it("should remove target and call removeMonitor on irc", function () {
+			const removeMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {
+				addMonitor: sinon.spy(),
+				removeMonitor: removeMonitorSpy,
+			} as any;
+			network.serverOptions.MONITOR = 100;
+
+			network.monitor("user1");
+			network.removeMonitor("user1");
+
+			expect(removeMonitorSpy.calledOnce).to.be.true;
+			expect(network.monitorList).to.be.empty;
+		});
+
+		it("should drain pending queue when a monitored target is removed", function () {
+			const addMonitorSpy = sinon.spy();
+			const removeMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {
+				addMonitor: addMonitorSpy,
+				removeMonitor: removeMonitorSpy,
+			} as any;
+			network.serverOptions.MONITOR = 2;
+
+			network.monitor("user1");
+			network.monitor("user2");
+			network.monitor("user3"); // queued
+
+			expect(network.toBeMonitored).to.deep.equal(["user3"]);
+
+			network.removeMonitor("user1");
+
+			expect(network.monitorList).to.deep.equal(["user2", "user3"]);
+			expect(network.toBeMonitored).to.be.empty;
+			// addMonitor: user1, user2, then user3 promoted
+			expect(addMonitorSpy.calledThrice).to.be.true;
+		});
+
+		it("should not call irc.removeMonitor for targets only in the pending queue", function () {
+			const removeMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {
+				addMonitor: sinon.spy(),
+				removeMonitor: removeMonitorSpy,
+			} as any;
+			network.serverOptions.MONITOR = 1;
+
+			network.monitor("user1");
+			network.monitor("user2"); // queued
+
+			network.removeMonitor("user2");
+
+			expect(removeMonitorSpy.called).to.be.false;
+			expect(network.toBeMonitored).to.be.empty;
+			expect(network.monitorList).to.deep.equal(["user1"]);
+		});
+
+		it("should handle case-insensitive removal", function () {
+			const removeMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {
+				addMonitor: sinon.spy(),
+				removeMonitor: removeMonitorSpy,
+			} as any;
+			network.serverOptions.MONITOR = 100;
+
+			network.monitor("TestUser");
+			network.removeMonitor("TESTUSER");
+
+			expect(removeMonitorSpy.calledOnce).to.be.true;
+			expect(network.monitorList).to.be.empty;
+		});
+	});
+
+	describe("#monitorBatch(targets)", function () {
+		it("should send a single raw MONITOR command for multiple targets", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 0;
+
+			network.monitorBatch(["user1", "user2", "user3"]);
+
+			expect(rawSpy.calledOnce).to.be.true;
+			expect(rawSpy.firstCall.args).to.deep.equal(["MONITOR", "+", "user1,user2,user3"]);
+			expect(network.monitorList).to.deep.equal(["user1", "user2", "user3"]);
+		});
+
+		it("should skip duplicates and already-monitored targets", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 0;
+			network.monitorList = ["existing"];
+
+			network.monitorBatch(["Existing", "new1", "NEW1", "new2"]);
+
+			expect(rawSpy.calledOnce).to.be.true;
+			expect(rawSpy.firstCall.args).to.deep.equal(["MONITOR", "+", "new1,new2"]);
+			expect(network.monitorList).to.deep.equal(["existing", "new1", "new2"]);
+		});
+
+		it("should queue targets exceeding MONITOR limit", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 2;
+
+			network.monitorBatch(["user1", "user2", "user3", "user4"]);
+
+			expect(rawSpy.calledOnce).to.be.true;
+			expect(rawSpy.firstCall.args).to.deep.equal(["MONITOR", "+", "user1,user2"]);
+			expect(network.monitorList).to.deep.equal(["user1", "user2"]);
+			expect(network.toBeMonitored).to.deep.equal(["user3", "user4"]);
+		});
+
+		it("should not send anything for empty targets", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 0;
+
+			network.monitorBatch([]);
+
+			expect(rawSpy.called).to.be.false;
+		});
+
+		it("should not send anything when all targets are duplicates", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+			network.serverOptions.MONITOR = 0;
+			network.monitorList = ["user1", "user2"];
+
+			network.monitorBatch(["User1", "USER2"]);
+
+			expect(rawSpy.called).to.be.false;
+		});
+
+		it("should not send anything when server does not advertise MONITOR support", function () {
+			const rawSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {raw: rawSpy} as any;
+
+			network.monitorBatch(["user1", "user2"]);
+
+			expect(rawSpy.called).to.be.false;
+			expect(network.monitorList).to.be.empty;
+		});
 	});
 });
