@@ -1,15 +1,13 @@
-"use strict";
+import crypto from "crypto";
+import {execSync} from "child_process";
+import pkg from "../package.json";
 
-const crypto = require("crypto");
-const {execSync} = require("child_process");
-const pkg = require("../package.json");
-
-let _gitCommit;
+let _gitCommit: string | null | undefined;
 let _gitCommitFetched = false;
 
-function getGitCommit() {
+export function getGitCommit(): string | null {
 	if (_gitCommitFetched) {
-		return _gitCommit;
+		return _gitCommit ?? null;
 	}
 
 	_gitCommitFetched = true;
@@ -27,15 +25,19 @@ function getGitCommit() {
 	return _gitCommit;
 }
 
-function getVersion() {
+export function getVersion(): string {
 	const gitCommit = getGitCommit();
 	const version = `v${pkg.version}`;
 	return gitCommit ? `source (${gitCommit} / ${version})` : version;
 }
 
-let _cacheBust;
+export function getVersionNumber(): string {
+	return pkg.version;
+}
 
-function getVersionCacheBust() {
+let _cacheBust: string;
+
+export function getVersionCacheBust(): string {
 	if (!_cacheBust) {
 		const hash = crypto.createHash("sha256").update(getVersion()).digest("hex");
 		_cacheBust = hash.substring(0, 10);
@@ -43,10 +45,3 @@ function getVersionCacheBust() {
 
 	return _cacheBust;
 }
-
-module.exports = {
-	getVersion,
-	getVersionNumber: () => pkg.version,
-	getVersionCacheBust,
-	getGitCommit,
-};
