@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {Server as wsServer} from "ws";
+import ws from "ws";
 import express, {NextFunction, Request, Response} from "express";
 import fs from "fs";
 import path from "path";
@@ -13,12 +13,13 @@ import Client from "./client";
 import ClientManager from "./clientManager";
 import Uploader from "./plugins/uploader";
 import Helper from "./helper";
-import Config, {ConfigType} from "./config";
+import Config from "./config";
 import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
 import {VALID_TYPING_STATUSES} from "../shared/types/typing";
+import {injectServerConfig} from "./plugins/html-config";
 
 import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
@@ -45,13 +46,8 @@ type ServerOptions = {
 	dev: boolean;
 };
 
-type ServerConfiguration = ConfigType & {
-	stylesheets: string[];
-};
-
-type IndexTemplateConfiguration = ServerConfiguration & {
-	cacheBust: string;
-};
+// Cached built HTML (production only — read once at startup)
+let cachedHtml: string | null = null;
 
 type Socket = ioSocket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
 export type Server = ioServer<
@@ -65,6 +61,7 @@ export type Server = ioServer<
 const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager: ClientManager | null = null;
+let isDev = false;
 
 export default async function (
 	options: ServerOptions = {
@@ -84,8 +81,10 @@ export default async function (
 
 	const app = express();
 
+	isDev = options.dev;
+
 	if (options.dev) {
-		(await import("./plugins/dev-server")).default(app);
+		await (await import("./plugins/dev-server")).default(app);
 	}
 
 	app.set("env", "production")
@@ -94,8 +93,6 @@ export default async function (
 		.use(addSecurityHeaders)
 		.get("/", indexRequest)
 		.get("/service-worker.js", forceNoCacheRequest)
-		.get("/js/bundle.js.map", forceNoCacheRequest)
-		.get("/css/style.css.map", forceNoCacheRequest)
 		.use(express.static(Utils.getFileFromRelativeToRoot("public"), staticOptions))
 		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
 
@@ -220,7 +217,7 @@ export default async function (
 		}
 
 		const sockets: Server = new ioServer(server, {
-			wsEngine: wsServer,
+			wsEngine: ws.Server,
 			cookie: false,
 			serveClient: false,
 
@@ -374,7 +371,7 @@ function addSecurityHeaders(_req: Request, res: Response, next: NextFunction) {
 		"form-action 'self'", // 'self' to fix saving passwords in Firefox, even though login is handled in javascript
 		"connect-src 'self' ws: wss:", // allow self for polling; websockets
 		"style-src 'self' https: 'unsafe-inline'", // allow inline due to use in irc hex colors
-		"script-src 'self'", // javascript
+		isDev ? "script-src 'self' 'unsafe-eval'" : "script-src 'self'", // javascript
 		"worker-src 'self'", // service worker
 		"manifest-src 'self'", // manifest.json
 		"font-src 'self' https:", // allow loading fonts from secure sites (e.g. google fonts)
@@ -404,23 +401,26 @@ function forceNoCacheRequest(_req: Request, res: Response, next: NextFunction) {
 	return next();
 }
 
+function getBaseHtml(): string {
+	if (cachedHtml) {
+		return cachedHtml;
+	}
+
+	cachedHtml = fs.readFileSync(Utils.getFileFromRelativeToRoot("public", "index.html"), "utf-8");
+
+	return cachedHtml;
+}
+
 function indexRequest(_req: Request, res: Response) {
-	res.setHeader("Content-Type", "text/html");
-
-	fs.readFile(Utils.getFileFromRelativeToRoot("client/index.html.tpl"), "utf-8", (err, file) => {
-		if (err) {
-			log.error(`failed to server index request: ${err.name}, ${err.message}`);
-			res.sendStatus(500);
-			return;
-		}
-
-		const config: IndexTemplateConfiguration = {
-			...getServerConfiguration(),
-			...{cacheBust: Helper.getVersionCacheBust()},
-		};
-
-		res.send(_.template(file)(config));
-	});
+	try {
+		const html = injectServerConfig(getBaseHtml());
+		res.setHeader("Content-Type", "text/html");
+		res.send(html);
+	} catch (e) {
+		const err = e as Error;
+		log.error(`failed to serve index request: ${err.name}, ${err.message}`);
+		res.sendStatus(500);
+	}
 }
 
 function initializeClient(
@@ -944,10 +944,6 @@ function getClientConfiguration(): SharedConfiguration | LockedSharedConfigurati
 	};
 
 	return result;
-}
-
-function getServerConfiguration(): ServerConfiguration {
-	return {...Config.values, ...{stylesheets: packages.getStylesheets()}};
 }
 
 function performAuthentication(this: Socket, data: AuthPerformData) {
