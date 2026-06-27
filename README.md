@@ -2,7 +2,7 @@
 	<img
 		width="300"
 		alt="The Lounge"
-		src="https://raw.githubusercontent.com/thelounge/thelounge/master/client/img/logo-vertical-transparent-bg.svg?sanitize=true">
+		src="https://github.com/thelounge/thelounge/blob/master/client/public/img/logo-vertical-transparent-bg.svg?sanitize=true">
 </h1>
 
 <h3 align="center">
