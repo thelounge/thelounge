@@ -34,6 +34,7 @@ declare module "irc-framework" {
 		tags: {[key: string]: string};
 		target: string;
 		time?: number;
+		multiline?: boolean;
 	}
 	export interface JoinEventArgs {
 		account: boolean;
@@ -115,7 +116,9 @@ declare module "irc-framework" {
 			cap: {
 				isEnabled: (cap: string) => boolean;
 				enabled: string[];
+				available: Map<string, string>;
 			};
+			multilineLimits: () => {maxBytes: number; maxLines: number | null} | null;
 			extractTargetGroup: (target: string) => {
 				target: string;
 				target_group: string;
@@ -182,6 +185,25 @@ declare module "irc-framework" {
 		say(target: string, message: string): string[];
 
 		notice(target: string, message: string): string[];
+
+		sendMultiline(
+			commandName: string,
+			target: string,
+			lines: string[],
+			tags?: Record<string, string | boolean>
+		): void;
+
+		sayMultiline(
+			target: string,
+			lines: string[],
+			tags?: Record<string, string | boolean>
+		): void;
+
+		noticeMultiline(
+			target: string,
+			lines: string[],
+			tags?: Record<string, string | boolean>
+		): void;
 
 		join(channel: string, key?: string): void;
 
@@ -417,6 +439,7 @@ declare module "irc-framework" {
 		enable_chghost?: boolean;
 		enable_echomessage?: boolean;
 		enable_setname?: boolean;
+		enable_multiline?: boolean;
 		message_max_length?: number;
 		auto_reconnect?: boolean;
 		auto_reconnect_wait?: number;

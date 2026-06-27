@@ -38,6 +38,7 @@ class Msg {
 	users!: string[];
 	statusmsgGroup?: string;
 	params!: string[];
+	multiline?: boolean;
 
 	constructor(attr?: Partial<Msg>) {
 		// Some properties need to be copied in the Msg object instead of referenced
