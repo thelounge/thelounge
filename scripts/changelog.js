@@ -595,7 +595,7 @@ ${printList(items)}
 
 const dependencies = Object.keys(packageJson.dependencies);
 const devDependencies = Object.keys(packageJson.devDependencies);
-const optionalDependencies = Object.keys(packageJson.optionalDependencies);
+const optionalDependencies = Object.keys(packageJson.optionalDependencies || {});
 
 // Returns the package.json section in which that package exists, or undefined
 // if that package is not listed there.
@@ -870,12 +870,12 @@ async function generateChangelogEntry(changelog, targetVersion) {
 		);
 		items.websiteDocumentation = websiteCommitsAndPullRequests;
 
+		dedupeEntries(changelog, items);
+
 		contributors = extractContributors([
 			...codeCommitsAndPullRequests,
-			...websiteCommitsAndPullRequests,
+			...items.websiteDocumentation,
 		]);
-
-		dedupeEntries(changelog, items);
 	}
 
 	items.version = targetVersion;

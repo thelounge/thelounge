@@ -1,5 +1,3 @@
-import type {Database} from "sqlite3";
-
 import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";
 import {Network} from "../../models/network";
@@ -16,20 +14,20 @@ export type DeletionRequest = {
 interface MessageStorage {
 	isEnabled: boolean;
 
-	enable(): Promise<void>;
+	enable(): void;
 
-	close(): Promise<void>;
+	close(): void;
 
-	index(network: Network, channel: Channel, msg: Message): Promise<void>;
+	index(network: Network, channel: Channel, msg: Message): void;
 
-	deleteChannel(network: Network, channel: Channel): Promise<void>;
+	deleteChannel(network: Network, channel: Channel): void;
 
-	getMessages(network: Network, channel: Channel, nextID: () => number): Promise<Message[]>;
+	getMessages(network: Network, channel: Channel, nextID: () => number): Message[];
 
 	canProvideMessages(): boolean;
 }
 
-type SearchFunction = (query: SearchQuery) => Promise<SearchResponse>;
+type SearchFunction = (query: SearchQuery) => SearchResponse;
 
 export interface SearchableMessageStorage extends MessageStorage {
 	search: SearchFunction;

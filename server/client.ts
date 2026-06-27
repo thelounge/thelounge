@@ -1,6 +1,5 @@
 import _ from "lodash";
 import UAParser from "ua-parser-js";
-import {v4 as uuidv4} from "uuid";
 import escapeRegExp from "lodash/escapeRegExp";
 import crypto from "crypto";
 import colors from "chalk";
@@ -107,7 +106,7 @@ class Client {
 	fileHash!: string;
 
 	constructor(manager: ClientManager, name?: string, config = {} as UserConfig) {
-		this.id = uuidv4();
+		this.id = crypto.randomUUID();
 		_.merge(this, {
 			awayMessage: "",
 			lastActiveChannel: -1,
@@ -150,7 +149,11 @@ class Client {
 			}
 
 			for (const messageStorage of client.messageStorage) {
-				messageStorage.enable().catch((e) => log.error(e));
+				try {
+					messageStorage.enable();
+				} catch (e: any) {
+					log.error(e);
+				}
 			}
 		}
 
@@ -645,11 +648,15 @@ class Client {
 		}
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.deleteChannel(target.network, target.chan).catch((e) => log.error(e));
+			try {
+				messageStorage.deleteChannel(target.network, target.chan);
+			} catch (e: any) {
+				log.error(e);
+			}
 		}
 	}
 
-	async search(query: SearchQuery): Promise<SearchResponse> {
+	search(query: SearchQuery): SearchResponse {
 		if (!this.messageProvider?.isEnabled) {
 			return {
 				...query,
@@ -778,7 +785,11 @@ class Client {
 		});
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.close().catch((e) => log.error(e));
+			try {
+				messageStorage.close();
+			} catch (e: any) {
+				log.error(e);
+			}
 		}
 	}
 
