@@ -1,16 +1,14 @@
 import Config from "../config";
 import busboy, {BusboyHeaders} from "@fastify/busboy";
-import {v4 as uuidv4} from "uuid";
 import path from "path";
 import fs from "fs";
 import fileType from "file-type";
-import readChunk from "read-chunk";
 import crypto from "crypto";
-import isUtf8 from "is-utf8";
 import log from "../log";
 import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
 import {Request, Response} from "express";
+import NodeBuffer, {Buffer} from "buffer";
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -40,7 +38,7 @@ const uploadTokens = new Map();
 class Uploader {
 	constructor(socket: Socket) {
 		socket.on("upload:auth", () => {
-			const token = uuidv4();
+			const token = crypto.randomUUID();
 
 			socket.emit("upload:auth", token);
 
@@ -132,7 +130,7 @@ class Uploader {
 	}
 
 	static routeUploadFile(this: void, req: Request, res: Response) {
-		let busboyInstance: NodeJS.WritableStream | busboy | null | undefined;
+		let busboyInstance: busboy | null | undefined;
 		let uploadUrl: string | URL;
 		let randomName: string;
 		let destDir: fs.PathLike;
@@ -304,7 +302,10 @@ class Uploader {
 	// Returns a string with the type otherwise
 	static async getFileType(filePath: string) {
 		try {
-			const buffer = await readChunk(filePath, 0, 5120);
+			const handle = await fs.promises.open(filePath, "r");
+			const buffer = Buffer.alloc(5120);
+			await handle.read(buffer, 0, 5120, 0);
+			await handle.close();
 
 			// returns {ext, mime} if found, null if not.
 			const file = await fileType.fromBuffer(buffer);
@@ -315,7 +316,7 @@ class Uploader {
 			}
 
 			// if the buffer is a valid UTF-8 buffer, use text/plain
-			if (isUtf8(buffer)) {
+			if (NodeBuffer.isUtf8(buffer)) {
 				return "text/plain";
 			}
 
