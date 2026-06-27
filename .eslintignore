@@ -1,3 +1,5 @@
 public/
 coverage/
 dist/
+vite.config.ts
+vitest.config.ts

@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import Helper from "../../server/helper";
 
 describe("Hostmask", function () {
