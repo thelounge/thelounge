@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import {condensedTypes} from "../../shared/irc";
 
 describe(".condensedTypes", function () {

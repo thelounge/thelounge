@@ -36,7 +36,7 @@ class Msg {
 	when!: Date;
 	whois!: any;
 	users!: string[];
-	statusmsgGroup!: string;
+	statusmsgGroup?: string;
 	params!: string[];
 
 	constructor(attr?: Partial<Msg>) {
