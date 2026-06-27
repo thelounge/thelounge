@@ -27,6 +27,27 @@
 				Use 12-hour timestamps
 			</label>
 		</div>
+
+		<h3>Markdown</h3>
+		<div>
+			<label class="opt">
+				<input :checked="store.state.settings.parseMd" type="checkbox" name="parseMd" />
+				Render inline Markdown in messages
+			</label>
+		</div>
+
+		<div>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.renderMdSrc"
+					type="checkbox"
+					name="renderMdSrc"
+				/>
+				Show source characters in rendered Markdown (i.e. <code>`code`</code> instead of
+				<code>code</code>)
+			</label>
+		</div>
+
 		<template v-if="store.state.serverConfiguration?.prefetch">
 			<h2>Link previews</h2>
 			<div>
