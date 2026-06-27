@@ -89,7 +89,7 @@
 					</div>
 				</div>
 				<div v-else class="chat-content">
-					<div
+					<button
 						:class="[
 							'scroll-down tooltipped tooltipped-w tooltipped-no-touch',
 							{'scroll-down-shown': !channel.scrolledToBottom},
@@ -98,7 +98,7 @@
 						@click="messageList?.jumpToBottom()"
 					>
 						<div class="scroll-down-arrow" />
-					</div>
+					</button>
 					<ChatUserList v-if="channel.type === 'channel'" :channel="channel" />
 					<MessageList
 						ref="messageList"
