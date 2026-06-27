@@ -25,4 +25,29 @@ export default <IrcEventHandler>function (irc, network) {
 			chan: chan.id,
 		});
 	});
+
+	irc.on("wholist", function (data) {
+		const chan = network.getChannel(data.target);
+
+		if (typeof chan === "undefined") {
+			return;
+		}
+
+		let changed = false;
+
+		data.users.forEach((whoUser) => {
+			const user = chan.findUser(whoUser.nick);
+
+			if (user && whoUser.bot && !user.isBot) {
+				user.isBot = true;
+				changed = true;
+			}
+		});
+
+		if (changed) {
+			client.emit("users", {
+				chan: chan.id,
+			});
+		}
+	});
 };
