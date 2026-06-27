@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 
 import Chan from "../../server/models/chan";
 import Msg from "../../server/models/msg";
