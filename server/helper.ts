@@ -4,15 +4,7 @@ import os from "os";
 import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
-import fromRoot from "./rootpath";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const versionUtils = require(fromRoot("scripts", "version")) as {
-	getVersion: () => string;
-	getVersionNumber: () => string;
-	getVersionCacheBust: () => string;
-	getGitCommit: () => string | null;
-};
+import {getVersion, getVersionCacheBust, getVersionNumber, getGitCommit} from "./version";
 
 export type Hostmask = {
 	nick: string;
@@ -22,10 +14,10 @@ export type Hostmask = {
 
 const Helper = {
 	expandHome,
-	getVersion: versionUtils.getVersion,
-	getVersionCacheBust: versionUtils.getVersionCacheBust,
-	getVersionNumber: versionUtils.getVersionNumber,
-	getGitCommit: versionUtils.getGitCommit,
+	getVersion,
+	getVersionCacheBust,
+	getVersionNumber,
+	getGitCommit,
 	ip2hex,
 	parseHostmask,
 	compareHostmask,
