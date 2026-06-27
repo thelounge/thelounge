@@ -5,6 +5,19 @@ import Helper from "./helper";
 import Config from "./config";
 import log from "./log";
 
+// Node reports an IPv4 peer accepted on a dual-stack (`::`) listener as an
+// IPv4-mapped IPv6 address (e.g. `::ffff:127.0.0.1`)
+// See "IPv4-Mapped IPv6 Address": https://www.rfc-editor.org/rfc/rfc4291.html#section-2.5.5.2
+function normalizeAddress(address: string | undefined): string | undefined {
+	if (address === undefined) {
+		return undefined;
+	}
+
+	// https://regex101.com/r/QbKRF8/1
+	const mapped = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/.exec(address);
+	return mapped && net.isIPv4(mapped[1]) ? mapped[1] : address;
+}
+
 type Connection = {
 	socket: Socket;
 	user: string;
@@ -98,13 +111,16 @@ class Identification {
 
 		log.debug(`identd: remote ${socket.remoteAddress} query ${lport}, ${fport}`);
 
+		const queryRemoteAddress = normalizeAddress(socket.remoteAddress);
+		const queryLocalAddress = normalizeAddress(socket.localAddress);
+
 		for (const connection of this.connections.values()) {
 			// we only want to respond if all the ip,port tuples match, to avoid user enumeration
 			if (
 				connection.socket.remotePort === fport &&
 				connection.socket.localPort === lport &&
-				socket.remoteAddress === connection.socket.remoteAddress &&
-				socket.localAddress === connection.socket.localAddress
+				queryRemoteAddress === normalizeAddress(connection.socket.remoteAddress) &&
+				queryLocalAddress === normalizeAddress(connection.socket.localAddress)
 			) {
 				const reply = `${lport}, ${fport} : USERID : TheLounge : ${connection.user}\r\n`;
 				log.debug(`identd: reply is ${reply.trimEnd()}`);
@@ -164,9 +180,9 @@ class Identification {
 
 			// we only want to respond if all the ip,port tuples match, to avoid user enumeration
 			file +=
-				`to ${connection.socket.remoteAddress}` +
+				`to ${normalizeAddress(connection.socket.remoteAddress)}` +
 				` fport ${connection.socket.remotePort}` +
-				` from ${connection.socket.localAddress}` +
+				` from ${normalizeAddress(connection.socket.localAddress)}` +
 				` lport ${connection.socket.localPort}` +
 				` { reply "${connection.user}" }\n`;
 		});
@@ -182,3 +198,4 @@ class Identification {
 }
 
 export default Identification;
+export {normalizeAddress};
