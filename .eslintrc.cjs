@@ -130,6 +130,7 @@ module.exports = defineConfig({
 	overrides: [
 		{
 			files: ["**/*.ts", "**/*.vue"],
+			excludedFiles: ["webpack.config.ts"],
 			parser: "@typescript-eslint/parser",
 			parserOptions: {
 				tsconfigRootDir: __dirname,
