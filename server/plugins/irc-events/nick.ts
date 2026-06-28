@@ -9,6 +9,10 @@ export default <IrcEventHandler>function (irc, network) {
 	irc.on("nick", function (data) {
 		const self = data.nick === irc.user.nick;
 
+		network.nickKeeper.onNickChanged(data.nick, data.new_nick, self, (nick) =>
+			irc.changeNick(nick)
+		);
+
 		if (self) {
 			network.setNick(data.new_nick);
 

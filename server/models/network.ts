@@ -12,6 +12,7 @@ import Client from "../client";
 import {MessageType} from "../../shared/types/msg";
 import {ChanType} from "../../shared/types/chan";
 import {SharedNetwork} from "../../shared/types/network";
+import NickKeeper from "./nickKeeper";
 
 type NetworkIrcOptions = {
 	host: string;
@@ -120,7 +121,7 @@ class Network {
 
 	chanCache!: Chan[];
 	ignoreList!: IgnoreList;
-	keepNick!: string | null;
+	nickKeeper!: NickKeeper;
 
 	status!: NetworkStatus;
 
@@ -172,8 +173,9 @@ class Network {
 
 			chanCache: [],
 			ignoreList: [],
-			keepNick: null,
 		});
+
+		this.nickKeeper = new NickKeeper(this.nick);
 
 		if (!this.uuid) {
 			this.uuid = crypto.randomUUID();
@@ -394,7 +396,7 @@ class Network {
 		const oldNick = this.nick;
 		const oldRealname = this.realname;
 
-		this.keepNick = null;
+		this.nickKeeper.cancelPendingNick();
 		this.nick = args.nick;
 		this.host = String(args.host || "");
 		this.name = String(args.name || "") || this.host;
@@ -484,6 +486,7 @@ class Network {
 
 	setNick(this: Network, nick: string) {
 		this.nick = nick;
+		this.nickKeeper.setDesiredNick(nick);
 		this.highlightRegex = new RegExp(
 			// Do not match characters and numbers (unless IRC color)
 			"(?:^|[^a-z0-9]|\x03[0-9]{1,2})" +
@@ -495,10 +498,6 @@ class Network {
 			// Case insensitive search
 			"i"
 		);
-
-		if (this.keepNick === nick) {
-			this.keepNick = null;
-		}
 
 		if (this.irc?.options) {
 			this.irc.options.nick = nick;
