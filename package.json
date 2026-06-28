@@ -92,7 +92,7 @@
     "@types/lodash": "4.14.202",
     "@types/mime-types": "2.1.4",
     "@types/mousetrap": "1.6.15",
-    "@types/node": "22.19.17",
+    "@types/node": "24.13.2",
     "@types/read": "0.0.32",
     "@types/semver": "7.3.9",
     "@types/sortablejs": "1.15.8",
