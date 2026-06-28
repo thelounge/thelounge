@@ -887,12 +887,12 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@textcomplete/core@0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@textcomplete/core/-/core-0.1.10.tgz#80211c20f28a378cc9ee8b6633ddf2034785d8c3"
-  integrity sha512-+T7dOElhJivE7+V0JUeDK5TdHUU8Sbuhvnp8VmtHimLaTruv5FJS1dgSjAqGlRcMw9AX459JY9JCbkX9ezGh2g==
+"@textcomplete/core@0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@textcomplete/core/-/core-0.1.13.tgz#75935c180a26e923cc5f895570063f9cadfb7dde"
+  integrity sha512-C4S+ihQU5HsKQ/TbsmS0e7hfPZtLZbEXj5NDUgRnhu/1Nezpu892bjNZGeErZm+R8iyDIT6wDu6EgIhng4M8eQ==
   dependencies:
-    eventemitter3 "^4.0.4"
+    eventemitter3 "^5.0.1"
 
 "@textcomplete/textarea@0.1.10":
   version "0.1.10"
@@ -2758,11 +2758,6 @@ event-target-shim@^5.0.0:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
   integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
-
-eventemitter3@^4.0.4:
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
-  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
 eventemitter3@^5.0.1:
   version "5.0.4"
