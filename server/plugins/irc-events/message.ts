@@ -22,10 +22,17 @@ type HandleInput = {
 	message: string;
 	group?: string;
 	msgid?: string;
+	/** https://ircv3.net/specs/client-tags/channel-context */
+	channelContext?: string;
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
-	return {...data, type: type, msgid: data.tags?.msgid};
+	return {
+		...data,
+		type: type,
+		msgid: data.tags?.msgid,
+		channelContext: data.tags?.["+channel-context"],
+	};
 }
 
 export default <IrcEventHandler>function (irc, network) {
@@ -85,7 +92,19 @@ export default <IrcEventHandler>function (irc, network) {
 				target = data.nick;
 			}
 
-			chan = network.getChannel(target);
+			// +channel-context: route private messages to the specified channel
+			// https://ircv3.net/specs/client-tags/channel-context
+			if (data.channelContext && target === data.nick) {
+				const contextChan = network.getChannel(data.channelContext);
+
+				if (contextChan && contextChan.type === ChanType.CHANNEL) {
+					chan = contextChan;
+				}
+			}
+
+			if (!chan) {
+				chan = network.getChannel(target);
+			}
 
 			if (typeof chan === "undefined") {
 				// Send notices that are not targeted at us into the server window
