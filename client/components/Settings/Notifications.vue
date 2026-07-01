@@ -1,5 +1,17 @@
 <template>
 	<div>
+		<h2>General</h2>
+		<div>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.notifications.hideMessagePreview"
+					type="checkbox"
+					name="notifications.hideMessagePreview"
+				/>
+				Hide message preview in all notifications
+			</label>
+		</div>
+
 		<template v-if="!store.state.serverConfiguration?.public">
 			<h2>Push Notifications</h2>
 			<div>
