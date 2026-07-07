@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.5.2-rc.1 - 2026-07-06 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.5.1...v4.5.2-rc.1)
+
+This is a release candidate (RC) for v4.5.2 to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
 ## v4.5.1 - 2026-06-21
 
 For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.5.0...v4.5.1) and [milestone](https://github.com/thelounge/thelounge/milestone/47?closed=1).
