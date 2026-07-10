@@ -110,7 +110,19 @@ function assignStoredSettings(
 			typeof storedSettings[key] !== "undefined" &&
 			typeof defaultSettings[key] === typeof storedSettings[key]
 		) {
-			newSettings[key] = storedSettings[key];
+			// Handle nested objects by merging them
+			if (
+				typeof defaultSettings[key] === "object" &&
+				defaultSettings[key] !== null &&
+				!Array.isArray(defaultSettings[key])
+			) {
+				newSettings[key] = {
+					...defaultSettings[key],
+					...storedSettings[key],
+				};
+			} else {
+				newSettings[key] = storedSettings[key];
+			}
 		}
 	}
 
