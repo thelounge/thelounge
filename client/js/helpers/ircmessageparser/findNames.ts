@@ -1,6 +1,6 @@
 import {Part} from "./merge";
 
-const nickRegExp = /([\w[\]\\`^{|}-]+)/g;
+const nickRegExp = /([\p{Letter}\p{Number}_[\]\\`^{|}-]+)/gu;
 
 export type NamePart = Part & {
 	nick: string;
