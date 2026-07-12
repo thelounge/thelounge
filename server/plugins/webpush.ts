@@ -2,17 +2,39 @@ import _ from "lodash";
 import log from "../log";
 import fs from "fs";
 import path from "path";
-import WebPushAPI from "web-push";
 import Config from "../config";
 import Client from "../client";
 import * as os from "os";
+
+import type {PushSubscription, VapidDetails} from "web-push-neo";
+
+type WebPushNeo = typeof import("web-push-neo");
+
+// Prevent TypeScript from transforming import() into require() for ESM-only packages. Super ugly.
+/* eslint-disable @typescript-eslint/no-implied-eval, no-use-before-define */
+const importEsm = new Function("specifier", "return import(specifier)") as <T>(
+	specifier: string
+) => Promise<T>;
+/* eslint-enable @typescript-eslint/no-implied-eval, no-use-before-define */
+
 class WebPush {
 	vapidKeys?: {
 		publicKey: string;
 		privateKey: string;
 	};
+	private vapidDetails?: VapidDetails;
+	private webPushModule?: WebPushNeo;
 
-	constructor() {
+	private async loadWebPush(): Promise<WebPushNeo> {
+		if (!this.webPushModule) {
+			// TODO: use a static import once thelounge migrates to ESM
+			this.webPushModule = await importEsm<WebPushNeo>("web-push-neo");
+		}
+
+		return this.webPushModule;
+	}
+
+	async init() {
 		const vapidPath = path.join(Config.getHomePath(), "vapid.json");
 
 		let vapidStat: fs.Stats | undefined = undefined;
@@ -53,7 +75,8 @@ class WebPush {
 		}
 
 		if (!this.vapidKeys) {
-			this.vapidKeys = WebPushAPI.generateVAPIDKeys();
+			const webPush = await this.loadWebPush();
+			this.vapidKeys = await webPush.generateVAPIDKeys();
 
 			fs.writeFileSync(vapidPath, JSON.stringify(this.vapidKeys, null, "\t"), {
 				mode: 0o600,
@@ -62,11 +85,11 @@ class WebPush {
 			log.info("New VAPID key pair has been generated for use with push subscription.");
 		}
 
-		WebPushAPI.setVapidDetails(
-			"https://github.com/thelounge/thelounge",
-			this.vapidKeys.publicKey,
-			this.vapidKeys.privateKey
-		);
+		this.vapidDetails = {
+			subject: "https://github.com/thelounge/thelounge",
+			publicKey: this.vapidKeys!.publicKey,
+			privateKey: this.vapidKeys!.privateKey,
+		};
 	}
 
 	push(client: Client, payload: any, onlyToOffline: boolean) {
@@ -76,13 +99,18 @@ class WebPush {
 					return;
 				}
 
-				this.pushSingle(client, pushSubscription, payload);
+				void this.pushSingle(client, pushSubscription, payload);
 			}
 		});
 	}
 
-	pushSingle(client: Client, subscription: WebPushAPI.PushSubscription, payload: any) {
-		WebPushAPI.sendNotification(subscription, JSON.stringify(payload)).catch((error) => {
+	async pushSingle(client: Client, subscription: PushSubscription, payload: any) {
+		try {
+			const webPush = await this.loadWebPush();
+			await webPush.sendNotification(subscription, JSON.stringify(payload), {
+				vapidDetails: this.vapidDetails,
+			});
+		} catch (error: any) {
 			if (error.statusCode >= 400 && error.statusCode < 500) {
 				log.warn(
 					`WebPush subscription for ${client.name} returned an error (${String(
@@ -100,7 +128,7 @@ class WebPush {
 			}
 
 			log.error(`WebPush Error (${String(error)})`);
-		});
+		}
 	}
 }
 
