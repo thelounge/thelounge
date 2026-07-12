@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.5.2 - 2026-07-11
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.5.1...v4.5.2) and [milestone](https://github.com/thelounge/thelounge/milestone/48?closed=1).
+
+This is a patch release fixing a regression in v4.5.1 where the version script was missing from the NPM package, breaking installations from npm. The next release will be a more feature-focused release (assuming further regressions are not found).
+
+### Fixed
+
+- include the version script in the NPM package (#5115) ([`833a8bb`](https://github.com/thelounge/thelounge/commit/833a8bb36255d314327f3fa846cc5619a2d1d4b5) by [@deltamualpha](https://github.com/deltamualpha))
+
 ## v4.5.2-rc.1 - 2026-07-06 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.5.1...v4.5.2-rc.1)
