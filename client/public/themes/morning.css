@@ -5,6 +5,7 @@
 	--body-color-muted: #b7c5d1;
 	--link-color: #77abd9;
 	--window-bg-color: #303e4a;
+	--form-bg-color: #28333d;
 	--window-heading-color: #b7c5d1;
 	--date-marker-color: #97ea70;
 	--unread-marker-color: #f92772;
@@ -96,7 +97,6 @@ body {
 
 /* Message form */
 #form {
-	background-color: #28333d;
 	border-color: #28333d;
 	color: var(--body-color);
 }
