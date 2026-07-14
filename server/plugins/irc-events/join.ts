@@ -49,7 +49,8 @@ export default <IrcEventHandler>function (irc, network) {
 		});
 		chan.pushMessage(client, msg);
 
-		chan.setUser(new User({nick: data.nick}));
+		const isBot = "bot" in (data.tags || {});
+		chan.setUser(new User({nick: data.nick, isBot}));
 		client.emit("users", {
 			chan: chan.id,
 		});
