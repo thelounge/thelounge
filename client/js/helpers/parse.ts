@@ -35,8 +35,11 @@ type StyledFragment = Fragment & {
 	strikethrough?: boolean;
 };
 
-// Create an HTML `span` with styling information for a given fragment
-function createFragment(fragment: StyledFragment): VNode | string | undefined {
+// Build the class list and inline style shared by styled and emoji fragments
+function fragmentStyle(fragment: StyledFragment): {
+	classes: string[];
+	style?: Record<string, string>;
+} {
 	const classes: string[] = [];
 
 	if (fragment.bold) {
@@ -67,13 +70,29 @@ function createFragment(fragment: StyledFragment): VNode | string | undefined {
 		classes.push("irc-monospace");
 	}
 
+	let style: Record<string, string> | undefined;
+
+	if (fragment.hexColor) {
+		style = {
+			color: `#${fragment.hexColor}`,
+		};
+
+		if (fragment.hexBgColor) {
+			style["background-color"] = `#${fragment.hexBgColor}`;
+		}
+	}
+
+	return {classes, style};
+}
+
+// Create an HTML `span` with styling information for a given fragment
+function createFragment(fragment: StyledFragment): VNode | string | undefined {
+	const {classes, style} = fragmentStyle(fragment);
+
 	const data: {
 		class?: string[];
 		style?: Record<string, string>;
-	} = {
-		class: undefined,
-		style: undefined,
-	};
+	} = {};
 
 	let hasData = false;
 
@@ -82,18 +101,77 @@ function createFragment(fragment: StyledFragment): VNode | string | undefined {
 		data.class = classes;
 	}
 
-	if (fragment.hexColor) {
+	if (style) {
 		hasData = true;
-		data.style = {
-			color: `#${fragment.hexColor}`,
-		};
-
-		if (fragment.hexBgColor) {
-			data.style["background-color"] = `#${fragment.hexBgColor}`;
-		}
+		data.style = style;
 	}
 
 	return hasData ? createElement("span", data, fragment.text) : fragment.text;
+}
+
+// Create an emoji `span` (always carrying the `emoji` class) for a fragment whose
+// text is a single emoji, merging in any surrounding style so that styled emoji
+// produce a single span instead of nested ones.
+function createEmojiFragment(fragment: StyledFragment): VNode {
+	const {classes, style} = fragmentStyle(fragment);
+	const emojiWithoutModifiers = (fragment.text || "").replace(emojiModifiersRegex, "");
+	const title = emojiMap[emojiWithoutModifiers]
+		? `Emoji: ${emojiMap[emojiWithoutModifiers]}`
+		: null;
+
+	const data: {
+		role: string;
+		"aria-label": string | null;
+		title: string | null;
+		class: string[];
+		style?: Record<string, string>;
+	} = {
+		role: "img",
+		"aria-label": title,
+		title: title,
+		class: ["emoji", ...classes],
+	};
+
+	if (style) {
+		data.style = style;
+	}
+
+	return createElement("span", data, fragment.text);
+}
+
+// Split a fragment into emoji and non-emoji runs so that emoji anywhere in the
+// visible text (including inside links, channels and nicks) get the `emoji` class,
+// while attributes such as a link's `href` remain untouched.
+function createFragments(fragment: StyledFragment): (VNode | string | undefined)[] {
+	const text = fragment.text;
+
+	if (!text) {
+		return [createFragment(fragment)];
+	}
+
+	const emojis = findEmoji(text);
+
+	if (emojis.length === 0) {
+		return [createFragment(fragment)];
+	}
+
+	const result: (VNode | string | undefined)[] = [];
+	let position = 0;
+
+	for (const emoji of emojis) {
+		if (emoji.start > position) {
+			result.push(createFragment({...fragment, text: text.slice(position, emoji.start)}));
+		}
+
+		result.push(createEmojiFragment({...fragment, text: text.slice(emoji.start, emoji.end)}));
+		position = emoji.end;
+	}
+
+	if (position < text.length) {
+		result.push(createFragment({...fragment, text: text.slice(position)}));
+	}
+
+	return result;
 }
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
@@ -112,18 +190,15 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 		: ["!", "@", "%", "+"];
 	const channelParts = findChannels(cleanText, channelPrefixes, userModes);
 	const linkParts = findLinks(cleanText);
-	const emojiParts = findEmoji(cleanText);
 	const nameParts = findNames(cleanText, message ? message.users || [] : []);
 
-	const parts = (channelParts as MergedParts)
-		.concat(linkParts)
-		.concat(emojiParts)
-		.concat(nameParts);
+	const parts = (channelParts as MergedParts).concat(linkParts).concat(nameParts);
 
 	// Merge the styling information with the channels / URLs / nicks / text objects and
-	// generate HTML strings with the resulting fragments
+	// generate HTML strings with the resulting fragments. Emoji are wrapped at the
+	// fragment level so they keep the `emoji` class even inside links, channels and nicks.
 	return merge(parts, styleFragments, cleanText).map((textPart) => {
-		const fragments = textPart.fragments.map((fragment) => createFragment(fragment));
+		const fragments = textPart.fragments.flatMap((fragment) => createFragments(fragment));
 
 		// Wrap these potentially styled fragments with links and channel buttons
 		if (textPart.link) {
@@ -181,22 +256,6 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 				{
 					default: () => fragments,
 				}
-			);
-		} else if (textPart.emoji) {
-			const emojiWithoutModifiers = textPart.emoji.replace(emojiModifiersRegex, "");
-			const title = emojiMap[emojiWithoutModifiers]
-				? `Emoji: ${emojiMap[emojiWithoutModifiers]}`
-				: null;
-
-			return createElement(
-				"span",
-				{
-					class: ["emoji"],
-					role: "img",
-					"aria-label": title,
-					title: title,
-				},
-				fragments
 			);
 		} else if (textPart.nick) {
 			return createElement(
