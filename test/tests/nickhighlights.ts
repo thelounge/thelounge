@@ -58,4 +58,39 @@ describe("Nickname highlights", function () {
 		expect("lounge-bot, hello").to.not.match(network.highlightRegex as any);
 		expect("cool_person, hello").to.match(network.highlightRegex as any);
 	});
+
+	it("should NOT highlight nick inside words with apostrophes (issue #2008)", function () {
+		network.setNick("S");
+
+		expect("it's going well").to.not.match(network.highlightRegex as any);
+		expect("that's nice").to.not.match(network.highlightRegex as any);
+		expect("let's go").to.not.match(network.highlightRegex as any);
+
+		network.setNick("t");
+
+		expect("don't worry").to.not.match(network.highlightRegex as any);
+		expect("can't stop").to.not.match(network.highlightRegex as any);
+		expect("won't work").to.not.match(network.highlightRegex as any);
+	});
+
+	it("should highlight short nick when standalone", function () {
+		network.setNick("S");
+
+		expect("hey S, what's up").to.match(network.highlightRegex as any);
+		expect("S: hello").to.match(network.highlightRegex as any);
+		expect("hello S").to.match(network.highlightRegex as any);
+	});
+
+	it("should NOT highlight nick inside non-ASCII words (issue #2008)", function () {
+		network.setNick("ve");
+
+		expect("what a naïve idea").to.not.match(network.highlightRegex as any);
+		// Decomposed form: nai + combining diaeresis + ve
+		expect("what a nai\u0308ve idea").to.not.match(network.highlightRegex as any);
+
+		network.setNick("ber");
+
+		expect("über cool").to.not.match(network.highlightRegex as any);
+		expect("u\u0308ber cool").to.not.match(network.highlightRegex as any);
+	});
 });
