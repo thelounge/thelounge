@@ -129,6 +129,7 @@ class Network {
 		PREFIX: Prefix;
 		NETWORK: string;
 		supportsReply: boolean;
+		supportsReact: boolean;
 	};
 
 	// TODO: this is only available on export
@@ -164,6 +165,7 @@ class Network {
 				]),
 				NETWORK: "",
 				supportsReply: false,
+				supportsReact: false,
 			},
 
 			proxyHost: "",

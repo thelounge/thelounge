@@ -97,4 +97,6 @@ export type SharedMsg = {
 	replyTo?: string;
 	replyToNick?: string;
 	replyToText?: string;
+
+	reactions?: {[reaction: string]: string[]};
 };
