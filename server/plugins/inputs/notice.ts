@@ -2,7 +2,7 @@ import {PluginInputHandler} from "./index";
 
 const commands = ["notice"];
 
-const input: PluginInputHandler = function (network, chan, cmd, args) {
+const input: PluginInputHandler = function (network, chan, cmd, args, extras) {
 	if (!args[1]) {
 		return;
 	}
@@ -10,7 +10,10 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let targetName = args[0];
 	let message = args.slice(1).join(" ");
 
-	network.irc.notice(targetName, message);
+	const replyTo = extras?.replyTo;
+	const replyTags =
+		replyTo && network.serverOptions.supportsReply ? {"+reply": replyTo} : undefined;
+	network.irc.notice(targetName, message, replyTags);
 
 	// If the IRCd does not support echo-message, simulate the message
 	// being sent back to us.
@@ -34,6 +37,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			target: targetName,
 			group: targetGroup,
 			message: message,
+			tags: replyTo ? {"+reply": replyTo} : undefined,
 		});
 	}
 
