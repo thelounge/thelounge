@@ -186,6 +186,30 @@ describe("Network", function () {
 			Config.values.lockNetwork = false;
 		});
 
+		it("should allow a locked-network host that differs from the default only by case", function () {
+			// Regression test for #4733: hostnames are case-insensitive, but the
+			// lockNetwork guard used to compare the (lowercased) host against the raw
+			// configured default, rejecting a valid host after a restart.
+			const originalHost = Config.values.defaults.host;
+			Config.values.lockNetwork = true;
+			Config.values.public = false;
+			Config.values.defaults.host = "irc.Example.com"; // admin-configured mixed-case default
+
+			// host as persisted after a previous connect (same mixed case)
+			const network = new Network({
+				host: "irc.Example.com",
+			});
+
+			// Before the fix this returns false and pushes "...is not allowed."
+			expect(network.validate({} as any)).to.be.true;
+			expect(network.host).to.equal("irc.Example.com");
+
+			// restore globals for the other tests in this file
+			Config.values.defaults.host = originalHost;
+			Config.values.lockNetwork = false;
+			Config.values.public = true;
+		});
+
 		it("realname should be set to nick only if realname is empty", function () {
 			const network = new Network({
 				host: "localhost",

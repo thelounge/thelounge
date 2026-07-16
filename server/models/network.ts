@@ -252,7 +252,8 @@ class Network {
 				!Config.values.public &&
 				this.host &&
 				this.host.length > 0 &&
-				this.host !== Config.values.defaults.host
+				// hostnames are case-insensitive; this.host is already lowercased above
+				this.host !== Config.values.defaults.host.toLowerCase()
 			) {
 				error(this, `The hostname you specified (${this.host}) is not allowed.`);
 				return false;
