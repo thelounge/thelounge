@@ -187,25 +187,23 @@ describe("Network", function () {
 		});
 
 		it("should allow a locked-network host that differs from the default only by case", function () {
-			// Regression test for #4733: hostnames are case-insensitive, but the
-			// lockNetwork guard used to compare the (lowercased) host against the raw
-			// configured default, rejecting a valid host after a restart.
-			const originalHost = Config.values.defaults.host;
+			// Regression test for #4733. Hostnames are case-insensitive; defaults.host
+			// is normalized to lowercase at config load (server/config.ts) and
+			// Network.validate() lowercases incoming hosts, so a persisted network whose
+			// stored host differs from the default only by case must still validate.
 			Config.values.lockNetwork = true;
 			Config.values.public = false;
-			Config.values.defaults.host = "irc.Example.com"; // admin-configured mixed-case default
 
-			// host as persisted after a previous connect (same mixed case)
+			// Config.values.defaults.host is "irc.example.com" (normalized at load).
 			const network = new Network({
-				host: "irc.Example.com",
+				host: "irc.Example.com", // persisted with different casing
 			});
 
-			// Before the fix this returns false and pushes "...is not allowed."
+			// Before the fix this returned false and pushed "...is not allowed."
 			expect(network.validate({} as any)).to.be.true;
-			expect(network.host).to.equal("irc.Example.com");
+			expect(network.host).to.equal("irc.example.com");
 
 			// restore globals for the other tests in this file
-			Config.values.defaults.host = originalHost;
 			Config.values.lockNetwork = false;
 			Config.values.public = true;
 		});
