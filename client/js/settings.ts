@@ -61,7 +61,7 @@ const defaultConfig = {
 		sync: "always",
 	},
 	typing: {
-		default: "on",
+		default: "receive",
 	},
 	links: {
 		default: true,
