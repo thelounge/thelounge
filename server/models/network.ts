@@ -129,7 +129,11 @@ class Network {
 		PREFIX: Prefix;
 		NETWORK: string;
 		supportsReply: boolean;
+		MONITOR: number | null;
 	};
+
+	monitorList!: string[];
+	toBeMonitored!: string[];
 
 	// TODO: this is only available on export
 	hasSTSPolicy!: boolean;
@@ -164,6 +168,7 @@ class Network {
 				]),
 				NETWORK: "",
 				supportsReply: false,
+				MONITOR: null,
 			},
 
 			proxyHost: "",
@@ -175,6 +180,8 @@ class Network {
 			chanCache: [],
 			ignoreList: [],
 			keepNick: null,
+			monitorList: [],
+			toBeMonitored: [],
 		});
 
 		if (!this.uuid) {
@@ -314,6 +321,7 @@ class Network {
 		this.irc.requestCap([
 			"znc.in/self-message", // Legacy echo-message for ZNC
 			"znc.in/playback", // See http://wiki.znc.in/Playback
+			"extended-monitor", // https://ircv3.net/specs/extensions/extended-monitor
 		]);
 	}
 
@@ -566,6 +574,11 @@ class Network {
 		}
 
 		this.channels.splice(index, 0, newChan);
+
+		if (newChan.type === ChanType.QUERY && this.irc?.connected) {
+			this.monitor(newChan.name);
+		}
+
 		return index;
 	}
 
@@ -670,6 +683,137 @@ class Network {
 			// Skip network lobby (it's always unshifted into first position)
 			return i > 0 && that.name.toLowerCase() === name;
 		});
+	}
+
+	monitor(target: string) {
+		// https://ircv3.net/specs/extensions/monitor#monitor-command:
+		//  > This token takes an optional parameter, of the maximum amount of targets a client may have in their monitor list.
+		//  > If no parameter is specified, there is no limit
+		const limit = this.serverOptions.MONITOR;
+
+		if (!this.irc || limit === null) {
+			return;
+		}
+
+		target = target.toLowerCase();
+
+		if (this.monitorList.includes(target) || this.toBeMonitored.includes(target)) {
+			return;
+		}
+
+		if (limit > 0 && this.monitorList.length >= limit) {
+			this.toBeMonitored.push(target);
+			return;
+		}
+
+		this.irc.addMonitor(target);
+		this.monitorList.push(target);
+	}
+
+	monitorBatch(targets: string[]) {
+		const limit = this.serverOptions.MONITOR;
+
+		if (!this.irc || limit === null || targets.length === 0) {
+			return;
+		}
+
+		const toAdd: string[] = [];
+
+		for (let target of targets) {
+			target = target.toLowerCase();
+
+			if (
+				this.monitorList.includes(target) ||
+				this.toBeMonitored.includes(target) ||
+				toAdd.includes(target)
+			) {
+				continue;
+			}
+
+			if (limit > 0 && this.monitorList.length + toAdd.length >= limit) {
+				this.toBeMonitored.push(target);
+				continue;
+			}
+
+			toAdd.push(target);
+		}
+
+		// 512-byte IRC line minus "MONITOR + \r\n" overhead, with headroom.
+		const MAX_TARGETS_BYTES = 480;
+		const irc = this.irc;
+		let chunk: string[] = [];
+		let chunkBytes = 0;
+
+		const flush = () => {
+			if (chunk.length === 0) {
+				return;
+			}
+
+			irc.raw("MONITOR", "+", chunk.join(","));
+			this.monitorList.push(...chunk);
+			chunk = [];
+			chunkBytes = 0;
+		};
+
+		for (const target of toAdd) {
+			if (chunk.length > 0 && chunkBytes + 1 + target.length > MAX_TARGETS_BYTES) {
+				flush();
+			}
+
+			chunkBytes += (chunk.length === 0 ? 0 : 1) + target.length;
+			chunk.push(target);
+		}
+
+		flush();
+	}
+
+	// A monitored nick changing name keeps its slot: releasing it first would let
+	// a queued target take it and leave the open query without status.
+	renameMonitor(oldTarget: string, newTarget: string) {
+		if (!this.irc) {
+			return;
+		}
+
+		oldTarget = oldTarget.toLowerCase();
+		newTarget = newTarget.toLowerCase();
+
+		const index = this.monitorList.indexOf(oldTarget);
+
+		if (index === -1) {
+			this.removeMonitor(oldTarget);
+			this.monitor(newTarget);
+			return;
+		}
+
+		this.irc.removeMonitor(oldTarget);
+		this.irc.addMonitor(newTarget);
+		this.monitorList[index] = newTarget;
+	}
+
+	removeMonitor(target: string) {
+		if (!this.irc) {
+			return;
+		}
+
+		target = target.toLowerCase();
+
+		const wasMonitored = this.monitorList.includes(target);
+
+		this.monitorList = this.monitorList.filter((monitored) => monitored !== target);
+		this.toBeMonitored = this.toBeMonitored.filter((pending) => pending !== target);
+
+		if (!wasMonitored) {
+			return;
+		}
+
+		this.irc.removeMonitor(target);
+
+		const next = this.toBeMonitored[0];
+
+		if (next !== undefined && this.serverOptions.MONITOR !== null) {
+			this.toBeMonitored.shift();
+			this.monitor(next);
+		}
 	}
 
 	getLobby() {

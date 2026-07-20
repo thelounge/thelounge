@@ -258,6 +258,16 @@ declare module "irc-framework" {
 
 		list(...params: Array<string>): void;
 
+		addMonitor(target: string): void;
+
+		removeMonitor(target: string): void;
+
+		queryMonitor(): void;
+
+		clearMonitor(): void;
+
+		monitorlist(cb: (event: {nicks: string[]}) => void): void;
+
 		channel(channel_name: string): IrcChannel;
 
 		match(
@@ -322,6 +332,16 @@ declare module "irc-framework" {
 				account?: any;
 				batch?: any;
 			}) => any
+		): this;
+
+		on(
+			eventType: "users online",
+			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
+		): this;
+
+		on(
+			eventType: "users offline",
+			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
 		): this;
 	}
 	export class Message {
