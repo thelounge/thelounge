@@ -46,8 +46,18 @@ const router = createRouter({
 			component: Settings,
 			children: [
 				{
-					name: "General",
+					name: "Appearance",
 					path: "",
+					component: AppearanceSettings,
+				},
+				{
+					name: "Notifications",
+					path: "notifications",
+					component: NotificationSettings,
+				},
+				{
+					name: "General",
+					path: "general",
 					component: GeneralSettings,
 					beforeEnter(to, from, next) {
 						if (!shouldShowGeneralSettings()) {
@@ -59,20 +69,15 @@ const router = createRouter({
 					},
 				},
 				{
-					name: "Appearance",
-					path: "appearance",
-					component: AppearanceSettings,
-				},
-				{
 					name: "Account",
 					path: "account",
 					component: AccountSettings,
 					props: true,
 				},
 				{
-					name: "Notifications",
-					path: "notifications",
-					component: NotificationSettings,
+					// Appearance used to live here, keep old links working
+					path: "appearance",
+					redirect: {name: "Appearance"},
 				},
 			],
 		},
