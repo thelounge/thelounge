@@ -5,6 +5,7 @@ import {ChanType} from "../../shared/types/chan";
 import Msg from "../../server/models/msg";
 import User from "../../server/models/user";
 import Network from "../../server/models/network";
+import NickKeeper from "../../server/models/nickKeeper";
 import Config from "../../server/config";
 import STSPolicies from "../../server/plugins/sts";
 import ClientCertificate from "../../server/plugins/clientCertificate";
@@ -76,6 +77,12 @@ describe("Network", function () {
 			expect(network.channels[1].messages[0].text).to.equal("message in constructor");
 			expect(network.channels[1].messages[1].text).to.equal("message in original instance");
 			expect(network.channels[1].messages[2].text).to.equal("message after network creation");
+		});
+
+		it("should initialize nick keeper", function () {
+			const network = new Network({nick: "preferred"});
+
+			expect(network.nickKeeper).to.be.instanceOf(NickKeeper);
 		});
 	});
 
