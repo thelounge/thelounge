@@ -8,8 +8,46 @@ import Config from "../../config";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType, ChanState} from "../../../shared/types/chan";
 
+// https://ircv3.net/specs/extensions/monitor — RPL_ISUPPORT MONITOR token.
+// null = unsupported, 0 = supported with no limit, N>0 = supported with limit.
+// The parameter is optional; without one there is no limit.
+function parseMonitorLimit(raw: unknown): number | null {
+	if (raw === undefined || raw === null) {
+		return null;
+	}
+
+	if (raw === true || raw === "") {
+		return 0;
+	}
+
+	const limit = Number(raw);
+
+	if (!Number.isFinite(limit)) {
+		return 0;
+	}
+
+	// A limit of zero leaves us nothing to monitor
+	return limit > 0 ? limit : null;
+}
+
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
+
+	// Registration completes on RPL_WELCOME, before RPL_ISUPPORT tells us whether
+	// this server supports MONITOR, so the initial sync waits for whichever is last.
+	let monitorSyncPending = false;
+
+	function syncMonitorList() {
+		if (!monitorSyncPending || network.serverOptions.MONITOR === null) {
+			return;
+		}
+
+		monitorSyncPending = false;
+
+		network.monitorBatch(
+			network.channels.filter((chan) => chan.type === ChanType.QUERY).map((chan) => chan.name)
+		);
+	}
 
 	network.getLobby().pushMessage(
 		client,
@@ -62,6 +100,9 @@ export default <IrcEventHandler>function (irc, network) {
 			}, delay);
 			delay += 1000;
 		});
+
+		monitorSyncPending = true;
+		syncMonitorList();
 	});
 
 	irc.on("socket connected", function () {
@@ -108,9 +149,21 @@ export default <IrcEventHandler>function (irc, network) {
 			identSocketId = 0;
 		}
 
+		monitorSyncPending = false;
+		network.monitorList = [];
+		network.toBeMonitored = [];
+		// Re-read from RPL_ISUPPORT on the next connection, so nothing is sent
+		// before we know this server supports MONITOR
+		network.serverOptions.MONITOR = null;
+
 		network.channels.forEach((chan) => {
 			chan.users = new Map();
 			chan.state = ChanState.PARTED;
+
+			if (chan.type === ChanType.QUERY) {
+				chan.isOnline = null;
+				chan.userAway = null;
+			}
 		});
 
 		if (error) {
@@ -205,6 +258,8 @@ export default <IrcEventHandler>function (irc, network) {
 
 		network.serverOptions.NETWORK = data.options.NETWORK;
 		network.serverOptions.supportsReply = irc.network.supportsTag("reply");
+		network.serverOptions.MONITOR = parseMonitorLimit(data.options.MONITOR);
+		syncMonitorList();
 
 		client.emit("network:options", {
 			network: network.uuid,
