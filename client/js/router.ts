@@ -1,6 +1,6 @@
 import constants from "./constants";
 
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHashHistory, RouteParamsRaw} from "vue-router";
 import SignIn from "../components/Windows/SignIn.vue";
 import Connect from "../components/Windows/Connect.vue";
 import Settings from "../components/Windows/Settings.vue";
@@ -169,7 +169,7 @@ router.afterEach((to) => {
 	}
 });
 
-async function navigate(routeName: string, params: any = {}) {
+async function navigate(routeName: string, params: RouteParamsRaw = {}) {
 	if (router.currentRoute.value.name) {
 		await router.push({name: routeName, params});
 	} else {
