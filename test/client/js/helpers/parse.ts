@@ -1,4 +1,5 @@
-import {expect} from "chai";
+// @vitest-environment jsdom
+import {expect} from "vitest";
 
 import {mount} from "@vue/test-utils";
 import ParsedMessage from "../../../../client/components/ParsedMessage.vue";
@@ -585,5 +586,32 @@ describe("IRC formatted message parser", () => {
 			'<a href="http://example.com" dir="auto" target="_blank" rel="noopener">example.com</a>' +
 				' <a href="http://example.org" dir="auto" target="_blank" rel="noopener">example.org</a>'
 		);
+	});
+
+	describe("multiline rendering", () => {
+		it("should render line feeds as <br>", () => {
+			const actual = getParsedMessageContents("hello\nworld");
+			expect(actual).to.equal("hello<br>world");
+		});
+
+		it("should preserve blank lines between segments", () => {
+			const actual = getParsedMessageContents("a\n\nb");
+			expect(actual).to.equal("a<br><br>b");
+		});
+
+		it("should parse links independently per line", () => {
+			const actual = getParsedMessageContents("see example.com\nor example.org");
+			expect(actual).to.equal(
+				"see " +
+					'<a href="http://example.com" dir="auto" target="_blank" rel="noopener">example.com</a>' +
+					"<br>or " +
+					'<a href="http://example.org" dir="auto" target="_blank" rel="noopener">example.org</a>'
+			);
+		});
+
+		it("should leave single-line input unchanged", () => {
+			const actual = getParsedMessageContents("just one line");
+			expect(actual).to.equal("just one line");
+		});
 	});
 });

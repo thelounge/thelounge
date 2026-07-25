@@ -6,6 +6,7 @@ import Helper from "../helper";
 import Config from "../config";
 import path from "path";
 import {spawn} from "child_process";
+import fromRoot from "../rootpath";
 let home: string;
 
 class Utils {
@@ -33,13 +34,7 @@ class Utils {
 	}
 
 	static getFileFromRelativeToRoot(...fileName: string[]) {
-		// e.g. /thelounge/server/command-line/utils.ts
-		if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
-			return path.resolve(path.join(__dirname, "..", "..", ...fileName));
-		}
-
-		// e.g. /thelounge/dist/server/command-line/utils.ts
-		return path.resolve(path.join(__dirname, "..", "..", "..", ...fileName));
+		return fromRoot(...fileName);
 	}
 
 	// Parses CLI options such as `-c public=true`, `-c debug.raw=true`, etc.

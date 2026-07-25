@@ -27,16 +27,11 @@ export enum MessageType {
 	RAW = "raw",
 	PLUGIN = "plugin",
 	WALLOPS = "wallops",
+	WARN = "warn",
+	NOTE = "note",
 }
 
-export type SharedUser = {
-	modes: string[];
-	// Users in the channel have only one mode assigned
-	mode: string;
-	away: string;
-	nick: string;
-	lastMessage: number;
-};
+import {SharedUser} from "./user";
 
 export type UserInMessage = Partial<SharedUser> & {
 	mode: string;
@@ -98,4 +93,9 @@ export type SharedMsg = {
 
 	statusmsgGroup?: string;
 	params?: string[];
+
+	replyTo?: string;
+	replyToNick?: string;
+	replyToText?: string;
+	multiline?: boolean;
 };

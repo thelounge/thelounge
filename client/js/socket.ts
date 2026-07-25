@@ -11,7 +11,7 @@ const socket: Socket = io({
 });
 
 // Ease debugging socket during development
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
 	window.socket = socket;
 }
 

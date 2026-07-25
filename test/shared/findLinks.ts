@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import {findLinks, findLinksWithSchema} from "../../shared/linkify";
 
 describe("findLinks", () => {

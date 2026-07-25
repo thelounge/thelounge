@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 
 import Chan from "../../server/models/chan";
 import Msg from "../../server/models/msg";
@@ -212,6 +212,8 @@ describe("Chan", function () {
 				"type",
 				"unread",
 				// the following are there in special cases, need to fix the types
+				"isOnline",
+				"userAway",
 				"num_users",
 				"special",
 				"closed",

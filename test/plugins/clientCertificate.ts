@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {expect} from "chai";
+import {expect} from "vitest";
 import ClientCertificate, {ClientCertificateType} from "../../server/plugins/clientCertificate";
 import Config from "../../server/config";
 

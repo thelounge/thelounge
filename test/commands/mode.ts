@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import Chan from "../../server/models/chan";
 import {ChanType} from "../../shared/types/chan";
 import ModeCommand from "../../server/plugins/inputs/mode";

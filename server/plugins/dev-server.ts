@@ -1,47 +1,28 @@
-import webpackDevMiddleware from "webpack-dev-middleware";
-import webpackHotMiddleware from "webpack-hot-middleware";
+// @ts-expect-error -- vite uses "exports" which requires moduleResolution: "bundler"
+import {createServer as createViteServer} from "vite";
 import express from "express";
+import fs from "fs";
 
 import log from "../log";
+import fromRoot from "../rootpath";
+import {injectServerConfig} from "./html-config";
 
-import webpack from "webpack";
-import config from "../../webpack.config";
-
-export default (app: express.Application) => {
+export default async (app: express.Application) => {
 	log.debug("Starting server in development mode");
 
-	const webpackConfig = config(undefined, {mode: "production"});
+	const vite = await createViteServer({
+		configFile: fromRoot("vite.config.ts"),
+		server: {middlewareMode: true},
+		appType: "custom",
+	});
 
-	if (
-		!webpackConfig ||
-		!webpackConfig.plugins?.length ||
-		!webpackConfig.entry ||
-		!webpackConfig.entry["js/bundle.js"]
-	) {
-		throw new Error("No valid production webpack config found");
-	}
+	app.use(vite.middlewares);
 
-	webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-	webpackConfig.entry["js/bundle.js"].push(
-		"webpack-hot-middleware/client?path=storage/__webpack_hmr"
-	);
-
-	const compiler = webpack(webpackConfig);
-
-	if (!compiler) {
-		throw new Error("Webpack failed to create a compiler");
-	}
-
-	app.use(
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		webpackDevMiddleware(compiler, {
-			index: "/",
-			publicPath: webpackConfig.output?.publicPath,
-		})
-	).use(
-		// TODO: Fix compiler type
-		webpackHotMiddleware(compiler as any, {
-			path: "/storage/__webpack_hmr",
-		})
-	);
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
+	app.get("/", async (req, res) => {
+		const rawHtml = fs.readFileSync(fromRoot("client", "index.html"), "utf-8");
+		const html = await vite.transformIndexHtml(req.url, rawHtml);
+		res.setHeader("Content-Type", "text/html");
+		res.send(injectServerConfig(html));
+	});
 };

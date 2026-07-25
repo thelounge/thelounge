@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import sinon from "ts-sinon";
 
 import log from "../../server/log";

@@ -30,6 +30,9 @@ const defaultConfig = {
 	coloredNicks: {
 		default: true,
 	},
+	statusIndicators: {
+		default: true,
+	},
 	desktopNotifications: {
 		default: false,
 		sync: "never",
@@ -59,6 +62,9 @@ const defaultConfig = {
 	awayMessage: {
 		default: "",
 		sync: "always",
+	},
+	typing: {
+		default: "receive",
 	},
 	links: {
 		default: true,

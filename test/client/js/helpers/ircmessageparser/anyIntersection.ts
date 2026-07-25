@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import anyIntersection from "../../../../../client/js/helpers/ircmessageparser/anyIntersection";
 
 describe("anyIntersection", () => {

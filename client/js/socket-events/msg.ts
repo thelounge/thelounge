@@ -5,12 +5,13 @@ import {switchToChannel} from "../router";
 import {ClientChan, NetChan, ClientMessage} from "../types";
 import {SharedMsg, MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
+import popSrc from "../../audio/pop.wav?url";
 
 let pop;
 
 try {
 	pop = new Audio();
-	pop.src = "audio/pop.wav";
+	pop.src = popSrc;
 } catch (e) {
 	pop = {
 		play() {},

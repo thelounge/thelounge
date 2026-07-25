@@ -5,6 +5,7 @@
 	--body-color-muted: #b7c5d1;
 	--link-color: #77abd9;
 	--window-bg-color: #303e4a;
+	--form-bg-color: #28333d;
 	--window-heading-color: #b7c5d1;
 	--date-marker-color: #97ea70;
 	--unread-marker-color: #f92772;
@@ -94,9 +95,33 @@ body {
 .irc-fg5 { color: #e969a7; }
 .irc-fg12 { color: #50a8ff; }
 
+/* Reply context & actions */
+#chat .msg .reply-context-icon::before {
+	color: #607080;
+}
+
+#chat .msg .msg-actions {
+	border-color: #28333d;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+}
+
+#chat .msg .msg-actions button {
+	color: #b7c5d1;
+}
+
+#chat .msg .msg-actions button:hover,
+#chat .msg .msg-actions button:focus-visible {
+	background: rgb(255 255 255 / 8%);
+	color: #f3f3f3;
+}
+
+#form .reply-bar {
+	background: #28333d;
+	border-bottom-color: #1e2830;
+}
+
 /* Message form */
 #form {
-	background-color: #28333d;
 	border-color: #28333d;
 	color: var(--body-color);
 }
@@ -134,6 +159,16 @@ form.message-search input {
 	color: #f92772;
 }
 
+#chat .msg[data-type="warn"],
+#chat .msg[data-type="warn"] .from {
+	color: #e6a23c;
+}
+
+#chat .msg[data-type="note"],
+#chat .msg[data-type="note"] .from {
+	color: #4a90d9;
+}
+
 #chat .msg[data-type="monospace_block"] .text,
 code,
 .irc-monospace {
@@ -161,23 +196,21 @@ kbd {
 }
 
 /* Form elements */
-/* stylelint-disable selector-no-vendor-prefix */
 
-#chat-container ::-moz-placeholder {
+#chat-container ::placeholder {
 	color: #b7c5d1;
 	opacity: 0.75;
 }
 
-#chat-container ::-webkit-input-placeholder {
-	color: #b7c5d1;
-	opacity: 0.75;
+.setting-card input::placeholder,
+.setting-card textarea::placeholder {
+	color: var(--body-color-muted);
 }
 
-#chat-container :-ms-input-placeholder {
-	color: #b7c5d1;
-	opacity: 0.75;
+.setting-card .input {
+	background-color: #28333d;
+	color: var(--body-color);
+	border: 1px solid #28333d;
 }
-
-/* stylelint-enable selector-no-vendor-prefix */
 
 /* End form elements */

@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect} from "vitest";
 import inputs from "../../../server/plugins/inputs";
 
 describe("inputs", function () {
