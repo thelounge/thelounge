@@ -17,21 +17,23 @@ export default <IrcEventHandler>function (irc, network) {
 			for (const whoUser of whoData.users) {
 				const user = chan.findUser(whoUser.nick);
 
-				if (user) {
+				if (user && (!whoUser.away || !user.away)) {
+					// WHO only tells us whether they are away, not why, so keep a
+					// reason we already have from away-notify
 					user.away = whoUser.away ? "away" : "";
 				}
 
 				// Sync away status to matching query channel
-				const awayStr = whoUser.away ? "away" : "";
+				const away = whoUser.away ? "away" : null;
 				const queryChan = network.getChannel(whoUser.nick);
 
-				if (queryChan?.type === ChanType.QUERY && queryChan.userAway !== awayStr) {
-					queryChan.userAway = awayStr || null;
+				if (queryChan?.type === ChanType.QUERY && queryChan.userAway !== away) {
+					queryChan.userAway = away;
 
 					client.emit("user:away", {
 						chan: queryChan.id,
 						nick: whoUser.nick,
-						away: awayStr,
+						away: away,
 					});
 				}
 			}

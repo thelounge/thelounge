@@ -10,12 +10,6 @@
 	content: attr(data-tooltip);
 }
 
-/* Allow tooltips via data-tooltip instead of aria-label to avoid
-   duplicating accessible names on wrapper + child elements */
-.tooltipped[data-tooltip]::after {
-	content: attr(data-tooltip);
-}
-
 :root {
 	/* Main text color */
 	--body-color: #222;
@@ -858,7 +852,7 @@ background on hover (unless active) */
 }
 
 /* the status dot is overlaid on the channel speech bubble icon */
-.channel-list-item[data-type="query"] > .status {
+.channel-list-item[data-type="query"] > .status-icon {
 	position: absolute;
 	left: 23px;
 	top: 12px;
@@ -868,7 +862,7 @@ background on hover (unless active) */
 	z-index: 1;
 }
 
-.channel-list-item[data-type="query"] > .status span::after {
+.channel-list-item[data-type="query"] > .status-icon span::after {
 	width: 6px;
 	height: 6px;
 	box-shadow: 0 0 0 1.5px var(--body-bg-color);
@@ -1683,7 +1677,7 @@ textarea.input {
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
-/* compact preview above message text, inside .content */
+/* Reply context — compact preview above message text, inside .content */
 #chat .msg .reply-context {
 	display: flex;
 	align-items: center;
@@ -2161,7 +2155,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	white-space: nowrap;
 }
 
-#chat .names .status {
+#chat .names .status-icon {
 	width: auto;
 	height: auto;
 	margin-left: auto;

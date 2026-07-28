@@ -1,14 +1,16 @@
 <template>
 	<div
-		:class="['status', 'tooltipped tooltipped-no-touch', tooltipDirClass]"
-		:aria-label="ariaLabel"
+		:class="['status-icon', 'tooltipped tooltipped-no-touch', tooltipDirClass]"
+		:data-tooltip="label"
+		role="img"
+		:aria-label="label"
 	>
 		<span :class="statusClass" />
 	</div>
 </template>
 
 <style>
-.status {
+.status-icon {
 	width: 16px;
 	height: 16px;
 	display: inline-flex;
@@ -19,9 +21,7 @@
 	z-index: 0;
 }
 
-.online::after,
-.away::after,
-.offline::after {
+.status-icon > span::after {
 	content: "";
 	width: 8px;
 	height: 8px;
@@ -29,15 +29,15 @@
 	display: inline-block;
 }
 
-.online::after {
+.status-icon > .status-online::after {
 	background-color: #2ecc40;
 }
 
-.offline::after {
+.status-icon > .status-offline::after {
 	background-color: #ff4136;
 }
 
-.away::after {
+.status-icon > .status-away::after {
 	background-color: gray;
 }
 </style>
@@ -57,17 +57,7 @@ export default defineComponent({
 			() => `tooltipped-${props.tooltipDir ? props.tooltipDir : "w"}`
 		);
 
-		const statusClass = computed(() => {
-			if (props.away) {
-				return "away";
-			} else if (props.online) {
-				return "online";
-			}
-
-			return "offline";
-		});
-
-		const ariaLabel = computed(() => {
+		const label = computed(() => {
 			if (props.away) {
 				return "Away";
 			} else if (props.online) {
@@ -77,10 +67,12 @@ export default defineComponent({
 			return "Offline";
 		});
 
+		const statusClass = computed(() => `status-${label.value.toLowerCase()}`);
+
 		return {
 			tooltipDirClass,
 			statusClass,
-			ariaLabel,
+			label,
 		};
 	},
 });

@@ -128,9 +128,9 @@ class Network {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
-		MONITOR: number | null;
 		supportsReply: boolean;
 		supportsReact: boolean;
+		MONITOR: number | null;
 	};
 
 	monitorList!: string[];
@@ -168,9 +168,9 @@ class Network {
 					{symbol: "+", mode: "v"},
 				]),
 				NETWORK: "",
-				MONITOR: null,
 				supportsReply: false,
 				supportsReact: false,
+				MONITOR: null,
 			},
 
 			proxyHost: "",
@@ -499,15 +499,15 @@ class Network {
 	setNick(this: Network, nick: string) {
 		this.nick = nick;
 		this.highlightRegex = new RegExp(
-			// Do not match characters and numbers (unless IRC color)
-			"(?:^|[^a-z0-9]|\x03[0-9]{1,2})" +
+			// Do not match letters and numbers (unless IRC color)
+			"(?:^|[^\\p{Letter}\\p{Number}]|\x03[0-9]{1,2})" +
 				// Escape nickname, as it may contain regex stuff
 				_.escapeRegExp(nick) +
-				// Do not match characters and numbers
-				"(?:[^a-z0-9]|$)",
+				// Do not match letters and numbers
+				"(?:[^\\p{Letter}\\p{Number}]|$)",
 
-			// Case insensitive search
-			"i"
+			// Case insensitive Unicode search
+			"iu"
 		);
 
 		if (this.keepNick === nick) {
@@ -769,6 +769,29 @@ class Network {
 		flush();
 	}
 
+	// A monitored nick changing name keeps its slot: releasing it first would let
+	// a queued target take it and leave the open query without status.
+	renameMonitor(oldTarget: string, newTarget: string) {
+		if (!this.irc) {
+			return;
+		}
+
+		oldTarget = oldTarget.toLowerCase();
+		newTarget = newTarget.toLowerCase();
+
+		const index = this.monitorList.indexOf(oldTarget);
+
+		if (index === -1) {
+			this.removeMonitor(oldTarget);
+			this.monitor(newTarget);
+			return;
+		}
+
+		this.irc.removeMonitor(oldTarget);
+		this.irc.addMonitor(newTarget);
+		this.monitorList[index] = newTarget;
+	}
+
 	removeMonitor(target: string) {
 		if (!this.irc) {
 			return;
@@ -787,8 +810,11 @@ class Network {
 
 		this.irc.removeMonitor(target);
 
-		if (this.toBeMonitored.length > 0) {
-			this.monitor(this.toBeMonitored.shift()!);
+		const next = this.toBeMonitored[0];
+
+		if (next !== undefined && this.serverOptions.MONITOR !== null) {
+			this.toBeMonitored.shift();
+			this.monitor(next);
 		}
 	}
 

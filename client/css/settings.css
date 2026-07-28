@@ -10,17 +10,6 @@
 	margin-bottom: 16px;
 }
 
-.setting-card-title {
-	font-size: 11px;
-	font-weight: 700;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
-	color: var(--body-color-muted);
-	margin: 0 0 4px;
-	padding: 0;
-	border: none;
-}
-
 .setting-card-intro {
 	font-size: 13px;
 	color: var(--body-color-muted);
@@ -135,6 +124,12 @@
 	opacity: 0.5;
 }
 
+/* A button that belongs to a toggle row, below its label */
+
+.setting-row-action {
+	margin: 6px 0 0;
+}
+
 /* Radio pills */
 
 .setting-radio-pills {
@@ -229,9 +224,9 @@
 	margin-bottom: 0;
 }
 
-/* Settings h2 override (.window h2 reset) */
+/* Card titles, overriding the .window h2 default */
 
-#settings h2 {
+#settings .setting-card-title {
 	font-size: 11px;
 	font-weight: 700;
 	text-transform: uppercase;
@@ -287,7 +282,7 @@
 	margin: 16px 0 8px;
 }
 
-#settings .setting-card h3:first-child {
+#settings .setting-card .setting-card-title + h3 {
 	margin-top: 0;
 }
 

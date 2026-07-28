@@ -98,9 +98,12 @@
 	display: none;
 }
 
-@media screen and (max-width: 768px) {
+/* Below this the fixed sidebar would overlap the centered container, so the
+   tabs collapse into a dropdown. 768px container + 320px for the sidebar. */
+@media screen and (max-width: calc(768px + 320px)) {
 	.settings-menu {
-		position: static;
+		/* the dropdown below is absolutely positioned against this */
+		position: relative;
 		width: min(480px, 100%);
 		align-self: center;
 		margin: 0 auto 12px;
@@ -155,6 +158,7 @@
 		position: absolute;
 		left: 15px;
 		right: 15px;
+		top: 100%;
 		margin-top: 4px;
 		padding: 4px;
 		background-color: var(--window-bg-color);

@@ -74,6 +74,11 @@ const router = createRouter({
 					component: AccountSettings,
 					props: true,
 				},
+				{
+					// Appearance used to live here, keep old links working
+					path: "appearance",
+					redirect: {name: "Appearance"},
+				},
 			],
 		},
 		{

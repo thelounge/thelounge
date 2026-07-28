@@ -55,19 +55,15 @@
 
 		<!-- Typing indicators -->
 		<SettingCard title="Typing indicators">
-			<div>
-				<label for="typing" class="setting-row-text">
-					<div class="setting-row-label">Typing indicators</div>
-					<div class="setting-row-description">
-						Show when others are typing and let them know when you are
-					</div>
-				</label>
-				<select id="typing" :value="store.state.settings.typing" name="typing" class="input">
-					<option value="on">Send &amp; receive</option>
-					<option value="receive">Receive only</option>
-					<option value="off">Off</option>
-				</select>
+			<div class="setting-card-intro">
+				Show when others are typing, and let them see when you are
 			</div>
+			<label for="typing" class="sr-only">Typing indicators</label>
+			<select id="typing" :value="store.state.settings.typing" name="typing" class="input">
+				<option value="on">Send &amp; receive</option>
+				<option value="receive">Receive only</option>
+				<option value="off">Off</option>
+			</select>
 		</SettingCard>
 
 		<!-- Away message -->

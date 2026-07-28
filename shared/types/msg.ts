@@ -97,7 +97,6 @@ export type SharedMsg = {
 	replyTo?: string;
 	replyToNick?: string;
 	replyToText?: string;
-
 	multiline?: boolean;
 
 	// reaction value → list of nicks who currently have that reaction on this message,

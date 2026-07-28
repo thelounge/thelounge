@@ -35,9 +35,8 @@ export default <IrcEventHandler>function (irc, network) {
 					chan.type === ChanType.QUERY &&
 					chan.name.toLowerCase() === data.nick.toLowerCase()
 				) {
-					network.removeMonitor(chan.name);
+					network.renameMonitor(chan.name, data.new_nick);
 					chan.name = data.new_nick;
-					network.monitor(data.new_nick);
 
 					const nickMsg = new Msg({
 						time: data.time,

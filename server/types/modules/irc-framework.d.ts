@@ -241,11 +241,7 @@ declare module "irc-framework" {
 
 		ctcpResponse(target: string, type: string, ...params: Array<string>): void;
 
-		action(
-			target: string,
-			message: string,
-			tags?: {[key: string]: string | boolean}
-		): string[];
+		action(target: string, message: string, tags?: {[key: string]: string | boolean}): string[];
 
 		tagmsg(target: string, tags: {[key: string]: string}): void;
 
@@ -329,16 +325,6 @@ declare module "irc-framework" {
 		on(eventType: "irc error", cb: (event: IrcErrorEventArgs) => any): this;
 
 		on(
-			eventType: "users online",
-			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
-		): this;
-
-		on(
-			eventType: "users offline",
-			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
-		): this;
-
-		on(
 			eventType: "tagmsg",
 			cb: (event: {
 				nick: string;
@@ -350,6 +336,16 @@ declare module "irc-framework" {
 				account?: any;
 				batch?: any;
 			}) => any
+		): this;
+
+		on(
+			eventType: "users online",
+			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
+		): this;
+
+		on(
+			eventType: "users offline",
+			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
 		): this;
 	}
 	export class Message {

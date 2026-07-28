@@ -5,8 +5,13 @@ import standardReply from "../../../server/plugins/irc-events/standard-reply";
 import {MessageType} from "../../../shared/types/msg";
 
 class FakeChan {
-	name = "lobby";
 	pushed: any[] = [];
+	name: string;
+
+	constructor(name: string) {
+		this.name = name;
+	}
+
 	pushMessage(_client: any, msg: any, _increment: boolean) {
 		this.pushed.push(msg);
 	}
@@ -14,18 +19,20 @@ class FakeChan {
 
 function setup() {
 	const irc = new EventEmitter() as any;
-	const lobby = new FakeChan();
+	const lobby = new FakeChan("lobby");
+	const channel = new FakeChan("#thelounge");
 	const network = {
 		getLobby: () => lobby,
+		getChannel: (name: string) => (name === channel.name ? channel : undefined),
 	} as any;
 	const client = {} as any;
 
 	standardReply.call(client, irc, network);
-	return {irc, lobby};
+	return {irc, lobby, channel};
 }
 
 describe("standard-reply plugin", function () {
-	it("surfaces FAIL BATCH MULTILINE_MAX_BYTES as a MessageType.ERROR", function () {
+	it("gives multiline FAIL replies a readable prefix", function () {
 		const {irc, lobby} = setup();
 
 		irc.emit("standard reply", {
@@ -43,7 +50,7 @@ describe("standard-reply plugin", function () {
 		expect(lobby.pushed[0].showInActive).to.equal(true);
 	});
 
-	it("surfaces FAIL BATCH MULTILINE_MAX_LINES", function () {
+	it("gives MULTILINE_MAX_LINES a readable prefix", function () {
 		const {irc, lobby} = setup();
 
 		irc.emit("standard reply", {
@@ -58,7 +65,25 @@ describe("standard-reply plugin", function () {
 		expect(lobby.pushed[0].text).to.contain("Too many lines");
 	});
 
-	it("ignores non-multiline FAIL replies", function () {
+	it("falls back to a generic prefix for unknown multiline codes", function () {
+		const {irc, lobby} = setup();
+
+		irc.emit("standard reply", {
+			type: "FAIL",
+			command: "BATCH",
+			code: "MULTILINE_SOMETHING_NEW",
+			context: [],
+			description: "who knows",
+		});
+
+		expect(lobby.pushed).to.have.lengthOf(1);
+		expect(lobby.pushed[0].text).to.contain("Multiline message rejected");
+		expect(lobby.pushed[0].text).to.contain("who knows");
+	});
+
+	// The generic handler on master surfaces every standard reply; only the
+	// MULTILINE_ codes get rewritten, everything else passes through as-is.
+	it("surfaces non-multiline FAIL replies unprefixed", function () {
 		const {irc, lobby} = setup();
 
 		irc.emit("standard reply", {
@@ -69,34 +94,47 @@ describe("standard-reply plugin", function () {
 			description: "Bad reftag",
 		});
 
-		expect(lobby.pushed).to.have.lengthOf(0);
+		expect(lobby.pushed).to.have.lengthOf(1);
+		expect(lobby.pushed[0].type).to.equal(MessageType.ERROR);
+		expect(lobby.pushed[0].text).to.equal("Bad reftag");
 	});
 
-	it("ignores non-FAIL standard replies", function () {
+	it("maps WARN and NOTE onto their own message types", function () {
 		const {irc, lobby} = setup();
 
 		irc.emit("standard reply", {
 			type: "WARN",
 			command: "BATCH",
-			code: "MULTILINE_MAX_BYTES",
+			code: "SOME_WARNING",
 			context: [],
 			description: "warning only",
 		});
+		irc.emit("standard reply", {
+			type: "NOTE",
+			command: "BATCH",
+			code: "SOME_NOTE",
+			context: [],
+			description: "just a note",
+		});
 
-		expect(lobby.pushed).to.have.lengthOf(0);
+		expect(lobby.pushed).to.have.lengthOf(2);
+		expect(lobby.pushed[0].type).to.equal(MessageType.WARN);
+		expect(lobby.pushed[1].type).to.equal(MessageType.NOTE);
 	});
 
-	it("ignores FAIL replies for other commands", function () {
-		const {irc, lobby} = setup();
+	it("routes the reply to a channel named in the context", function () {
+		const {irc, lobby, channel} = setup();
 
 		irc.emit("standard reply", {
 			type: "FAIL",
-			command: "JOIN",
-			code: "MULTILINE_MAX_BYTES",
-			context: [],
-			description: "should not appear",
+			command: "BATCH",
+			code: "MULTILINE_INVALID_TARGET",
+			context: ["#thelounge"],
+			description: "target mismatch",
 		});
 
 		expect(lobby.pushed).to.have.lengthOf(0);
+		expect(channel.pushed).to.have.lengthOf(1);
+		expect(channel.pushed[0].text).to.contain("Mismatched target in multiline message");
 	});
 });

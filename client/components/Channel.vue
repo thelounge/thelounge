@@ -1,7 +1,11 @@
 <template>
 	<!-- TODO: investigate -->
 	<ChannelWrapper ref="wrapper" v-bind="$props">
-		<StatusIcon v-if="showStatusIcon" :online="channel.isOnline" :away="!!channel.userAway" />
+		<StatusIcon
+			v-if="showStatusIcon"
+			:online="channel.isOnline"
+			:away="channel.userAway !== null && channel.userAway !== undefined"
+		/>
 		<span class="name">{{ channel.name }}</span>
 		<span
 			v-if="channel.unread"

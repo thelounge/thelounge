@@ -53,21 +53,22 @@
 				<strong>Warning:</strong> Notifications are blocked by your browser.
 			</div>
 			<div class="setting-row">
-				<label for="setting-notification" class="setting-row-text">
-					<div class="setting-row-label">Notification sound</div>
-					<div class="setting-row-description">
-						Play a sound when a notification is triggered
-					</div>
+				<div class="setting-row-text">
+					<label for="setting-notification">
+						<div class="setting-row-label">Notification sound</div>
+						<div class="setting-row-description">
+							Play a sound when a notification is triggered
+						</div>
+					</label>
 					<button
 						id="play"
 						type="button"
-						class="btn btn-small"
-						style="margin-top: 6px; margin-bottom: 0"
+						class="btn btn-small setting-row-action"
 						@click.prevent="playNotification"
 					>
 						Play sound
 					</button>
-				</label>
+				</div>
 				<div class="setting-toggle">
 					<input
 						id="setting-notification"

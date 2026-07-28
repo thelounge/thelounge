@@ -99,14 +99,17 @@ function createFragment(fragment: StyledFragment): VNode | string | undefined {
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
 function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
+	// Each line of a draft/multiline message is its own PRIVMSG on the wire, so
+	// parse them separately and join them with a <br>, which keeps per-line
+	// styling and lets the text wrap as usual.
 	if (text && text.includes("\n")) {
-		const lines = text.split("\n");
-		return lines.flatMap((line, i) =>
-			i === 0
-				? parseLine(line, message, network)
-				: // a br isn't ideal but I can't think of a better way to preserve all styles/text wrapping
-				  [createElement("br"), ...parseLine(line, message, network)]
-		);
+		return text
+			.split("\n")
+			.flatMap((line, i) =>
+				i === 0
+					? parseLine(line, message, network)
+					: [createElement("br"), ...parseLine(line, message, network)]
+			);
 	}
 
 	return parseLine(text, message, network);

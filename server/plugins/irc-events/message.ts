@@ -9,7 +9,7 @@ import {ChanType} from "../../../shared/types/chan";
 import {MessageEventArgs} from "irc-framework";
 import {applyReactionTags} from "./reactions";
 
-const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
+const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\p{Letter}\p{Number}_[\]\\`^{|}-]+)/gu;
 
 type HandleInput = {
 	nick: string;
@@ -24,9 +24,10 @@ type HandleInput = {
 	group?: string;
 	tags?: {[key: string]: string};
 	msgid?: string;
-	replyTo?: string;
 	/** https://ircv3.net/specs/client-tags/channel-context */
 	channelContext?: string;
+	/** https://ircv3.net/specs/client-tags/reply */
+	replyTo?: string;
 	multiline?: boolean;
 };
 
@@ -35,8 +36,8 @@ function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInpu
 		...data,
 		type: type,
 		msgid: data.tags?.msgid,
-		replyTo: data.tags?.["+reply"],
 		channelContext: data.tags?.["+channel-context"],
+		replyTo: data.tags?.["+reply"],
 		multiline: data.multiline,
 	};
 }
@@ -229,8 +230,8 @@ export default <IrcEventHandler>function (irc, network) {
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
 		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
 			let title = chan.name;
-			// For multiline messages we limit the notification preview to the first line
-			let body = data.multiline
+			// Notifications are single line, so preview the first line that has text
+			let body = cleanMessage.includes("\n")
 				? cleanMessage.split("\n").find((line) => line.trim().length > 0) ?? cleanMessage
 				: cleanMessage;
 

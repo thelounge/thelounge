@@ -99,7 +99,7 @@
 			<SettingToggle
 				name="statusIndicators"
 				label="Online status indicators"
-				description="Show an indicator next to users who are currently online"
+				description="Show a dot for whether the person in a query window is online or away"
 				:checked="store.state.settings.statusIndicators"
 			/>
 			<SettingToggle

@@ -756,6 +756,45 @@ describe("Network", function () {
 		});
 	});
 
+	describe("#renameMonitor(oldTarget, newTarget)", function () {
+		it("should keep the slot when a monitored nick changes name", function () {
+			const addMonitorSpy = sinon.spy();
+			const removeMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {addMonitor: addMonitorSpy, removeMonitor: removeMonitorSpy} as any;
+			network.serverOptions.MONITOR = 2;
+
+			network.monitor("alice");
+			network.monitor("bob");
+			network.monitor("carol");
+
+			expect(network.toBeMonitored).to.deep.equal(["carol"]);
+
+			network.renameMonitor("alice", "alice2");
+
+			// carol must not steal the slot the rename is passing along
+			expect(network.monitorList).to.deep.equal(["alice2", "bob"]);
+			expect(network.toBeMonitored).to.deep.equal(["carol"]);
+			expect(removeMonitorSpy.calledWith("alice")).to.be.true;
+			expect(addMonitorSpy.calledWith("alice2")).to.be.true;
+		});
+
+		it("should monitor the new nick when the old one was only queued", function () {
+			const addMonitorSpy = sinon.spy();
+			const network = new Network({name: "test"});
+			network.irc = {addMonitor: addMonitorSpy, removeMonitor: sinon.spy()} as any;
+			network.serverOptions.MONITOR = 1;
+
+			network.monitor("alice");
+			network.monitor("bob");
+
+			network.renameMonitor("bob", "bob2");
+
+			expect(network.monitorList).to.deep.equal(["alice"]);
+			expect(network.toBeMonitored).to.deep.equal(["bob2"]);
+		});
+	});
+
 	describe("#monitorBatch(targets)", function () {
 		it("should send a single raw MONITOR command for multiple targets", function () {
 			const rawSpy = sinon.spy();

@@ -454,15 +454,15 @@ class Client {
 		const client = this;
 		const text: string = data.text;
 
-		// If the target network supports draft/multiline, we don't need
-		// to split the message by line.
-		const isPlainSay = text.charAt(0) !== "/" || text.charAt(1) === "/";
+		// This is either a normal message or a command escaped with a leading '/'
+		const isMessage = text.charAt(0) !== "/" || text.charAt(1) === "/";
 
-		if (isPlainSay && text.includes("\n")) {
+		// Networks supporting draft/multiline take the whole message as a single
+		// batch, everything else has to be sent one line at a time.
+		if (isMessage && text.includes("\n")) {
 			const target = client.find(data.target);
-			const irc = target ? target.network.irc : undefined;
 
-			if (irc?.network?.cap?.isEnabled?.("draft/multiline")) {
+			if (target && target.network.irc?.network.cap.isEnabled("draft/multiline")) {
 				client.inputLine(data);
 				return;
 			}
