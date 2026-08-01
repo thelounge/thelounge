@@ -248,6 +248,13 @@ describe("mergeConfig", function () {
 		});
 	});
 
+	it("normalizes the default host to lowercase at load", function () {
+		// The fixture (test/fixtures/.thelounge/config.js) intentionally sets a
+		// mixed-case defaults.host; setHome() (run via test/fixtures/env.ts)
+		// should have normalized it to lowercase.
+		expect(Config.values.defaults.host).to.equal("irc.example.com");
+	});
+
 	it("should only merge same type", function () {
 		const logWarnStub = sinon.stub(log, "warn");
 

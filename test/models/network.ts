@@ -186,6 +186,28 @@ describe("Network", function () {
 			Config.values.lockNetwork = false;
 		});
 
+		it("should allow a locked-network host that differs from the default only by case", function () {
+			// Regression test for #4733. Hostnames are case-insensitive; defaults.host
+			// is normalized to lowercase at config load (server/config.ts) and
+			// Network.validate() lowercases incoming hosts, so a persisted network whose
+			// stored host differs from the default only by case must still validate.
+			Config.values.lockNetwork = true;
+			Config.values.public = false;
+
+			// Config.values.defaults.host is "irc.example.com" (normalized at load).
+			const network = new Network({
+				host: "irc.Example.com", // persisted with different casing
+			});
+
+			// Before the fix this returned false and pushed "...is not allowed."
+			expect(network.validate({} as any)).to.be.true;
+			expect(network.host).to.equal("irc.example.com");
+
+			// restore globals for the other tests in this file
+			Config.values.lockNetwork = false;
+			Config.values.public = true;
+		});
+
 		it("realname should be set to nick only if realname is empty", function () {
 			const network = new Network({
 				host: "localhost",
