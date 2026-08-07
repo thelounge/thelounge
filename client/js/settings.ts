@@ -165,7 +165,7 @@ export function createState() {
 	return state;
 }
 
-function normalizeConfig(obj: any) {
+function normalizeConfig(obj: typeof defaultConfig) {
 	const newConfig: Partial<typeof defaultConfig> = {};
 
 	for (const settingName in obj) {
