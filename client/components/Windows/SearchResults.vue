@@ -63,7 +63,11 @@
 								v-for="(message, id) in messages"
 								:key="message.id"
 								class="result"
-								@click="jump(message, id)"
+								role="button"
+								tabindex="0"
+								@click="jump(message, $event)"
+								@keydown.enter.self="jump(message)"
+								@keydown.space.prevent.self="jump(message)"
 							>
 								<DateMarker
 									v-if="shouldDisplayDateMarker(message, id)"
@@ -94,6 +98,10 @@
 .chat-view[data-type="search-results"] .chat-content {
 	padding-top: 50px;
 }
+
+.chat-view[data-type="search-results"] .result {
+	cursor: pointer;
+}
 </style>
 
 <script lang="ts">
@@ -108,7 +116,7 @@ import {watch, computed, defineComponent, nextTick, ref, onMounted, onUnmounted}
 import type {ClientMessage} from "../../js/types";
 
 import {useStore} from "../../js/store";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import {switchToChannel} from "../../js/router";
 import {SearchQuery} from "../../../shared/types/storage";
 
@@ -123,7 +131,6 @@ export default defineComponent({
 	setup() {
 		const store = useStore();
 		const route = useRoute();
-		const router = useRouter();
 
 		const chat = ref<HTMLDivElement>();
 
@@ -259,10 +266,20 @@ export default defineComponent({
 			el.scrollTop = el.scrollHeight;
 		};
 
-		const jump = (message: ClientMessage, id: number) => {
-			// TODO: Implement jumping to messages!
-			// This is difficult because it means client will need to handle a potentially nonlinear message set
-			// (loading IntersectionObserver both before AND after the messages)
+		const jump = (message: ClientMessage, event?: Event) => {
+			const interactive = (event?.target as Element | undefined)?.closest(
+				"a, button, [role='button']"
+			);
+
+			if (interactive && interactive !== event?.currentTarget) {
+				return;
+			}
+
+			if (!channel.value || !message.storageId) {
+				return;
+			}
+
+			switchToChannel(channel.value, {storageId: message.storageId});
 		};
 
 		watch(
