@@ -90,6 +90,10 @@
 .channel-name {
 	font-weight: 700;
 }
+
+.chat-view[data-type="search-results"] .chat-content {
+	padding-top: 50px;
+}
 </style>
 
 <script lang="ts">
@@ -124,6 +128,7 @@ export default defineComponent({
 		const chat = ref<HTMLDivElement>();
 
 		const loadMoreButton = ref<HTMLButtonElement>();
+		const historyObserver = ref<IntersectionObserver | null>(null);
 
 		const offset = ref(0);
 		const moreResultsAvailable = ref(false);
@@ -210,7 +215,12 @@ export default defineComponent({
 		};
 
 		const onShowMoreClick = () => {
-			if (!chat.value || !network.value || !channel.value) {
+			if (
+				!chat.value ||
+				!network.value ||
+				!channel.value ||
+				store.state.messageSearchPendingQuery
+			) {
 				return;
 			}
 
@@ -227,6 +237,14 @@ export default defineComponent({
 			};
 			store.commit("messageSearchPendingQuery", query);
 			socket.emit("search", query);
+		};
+
+		const onLoadButtonObserved = (entries: IntersectionObserverEntry[]) => {
+			for (const entry of entries) {
+				if (entry.isIntersecting) {
+					onShowMoreClick();
+				}
+			}
 		};
 
 		const jumpToBottom = async () => {
@@ -263,10 +281,8 @@ export default defineComponent({
 			}
 		);
 
-		watch(messages, async () => {
-			moreResultsAvailable.value = !!(
-				messages.value.length && !(messages.value.length % 100)
-			);
+		watch(messages, async (currentMessages, previousMessages) => {
+			moreResultsAvailable.value = currentMessages.length - previousMessages.length === 100;
 
 			if (!offset.value) {
 				await jumpToBottom();
@@ -288,6 +304,13 @@ export default defineComponent({
 			setActiveChannel();
 			doSearch();
 
+			if (window.IntersectionObserver && chat.value && loadMoreButton.value) {
+				historyObserver.value = new window.IntersectionObserver(onLoadButtonObserved, {
+					root: chat.value,
+				});
+				historyObserver.value.observe(loadMoreButton.value);
+			}
+
 			eventbus.on("escapekey", closeSearch);
 			eventbus.on("re-search", doSearch);
 		});
@@ -295,6 +318,7 @@ export default defineComponent({
 		onUnmounted(() => {
 			eventbus.off("escapekey", closeSearch);
 			eventbus.off("re-search", doSearch);
+			historyObserver.value?.disconnect();
 			clearSearchState();
 		});
 
