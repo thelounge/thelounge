@@ -19,6 +19,8 @@ export type SharedServerOptions = {
 	CHANTYPES: string[];
 	PREFIX: SharedPrefix;
 	NETWORK: string;
+	supportsReply: boolean;
+	MONITOR: number | null;
 };
 
 export type SharedNetworkStatus = {

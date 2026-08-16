@@ -1,3 +1,4 @@
+import type {TypingStatus} from "./typing";
 import {SharedMention} from "./mention";
 import {ChanState, SharedChan} from "./chan";
 import {SharedNetwork, SharedServerOptions} from "./network";
@@ -30,6 +31,7 @@ interface ServerToClientEvents {
 	"changelog:newversion": NoPayloadEventHandler;
 
 	"channel:state": EventHandler<{chan: number; state: ChanState}>;
+	"channel:rename": EventHandler<{chan: number; name: string}>;
 
 	"change-password": EventHandler<{success: boolean; error?: any}>;
 
@@ -76,6 +78,10 @@ interface ServerToClientEvents {
 	topic: EventHandler<{chan: number; topic: string}>;
 
 	users: EventHandler<{chan: number}>;
+	"user:away": EventHandler<{chan: number; nick: string; away: string | null}>;
+
+	"users:online": EventHandler<{changedChannels: string[]; networkId: string}>;
+	"users:offline": EventHandler<{changedChannels: string[]; networkId: string}>;
 
 	more: EventHandler<{chan: number; messages: SharedMsg[]; totalMessages: number}>;
 
@@ -88,6 +94,13 @@ interface ServerToClientEvents {
 	"search:results": (response: SearchResponse) => void;
 
 	quit: EventHandler<{network: string}>;
+
+	typing: EventHandler<{
+		network: string;
+		chan: number;
+		nick: string;
+		status: TypingStatus;
+	}>;
 
 	error: (error: any) => void;
 
@@ -127,7 +140,7 @@ interface ClientToServerEvents {
 
 	names: EventHandler<{target: number}>;
 
-	input: EventHandler<{target: number; text: string}>;
+	input: EventHandler<{target: number; text: string; replyTo?: string}>;
 
 	"upload:auth": NoPayloadEventHandler;
 	"upload:ping": (token: string) => void;
@@ -172,6 +185,8 @@ interface ClientToServerEvents {
 	"history:clear": EventHandler<{target: number}>;
 
 	search: EventHandler<SearchQuery>;
+
+	typing: EventHandler<{target: number; status: TypingStatus}>;
 }
 
 interface InterServerEvents {}

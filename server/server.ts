@@ -18,6 +18,7 @@ import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
+import {VALID_TYPING_STATUSES} from "../shared/types/typing";
 import {injectServerConfig} from "./plugins/html-config";
 
 import themes from "./plugins/packages/themes";
@@ -262,7 +263,7 @@ export default async function (
 				process.exit(1);
 			}
 
-			manager.init(identHandler, sockets);
+			void manager.init(identHandler, sockets);
 		});
 
 		// Handle ctrl+c and kill gracefully
@@ -458,6 +459,38 @@ function initializeClient(
 		if (_.isPlainObject(data)) {
 			client.input(data);
 		}
+	});
+
+	socket.on("typing", (data) => {
+		if (!_.isPlainObject(data)) {
+			return;
+		}
+
+		const status = data.status;
+
+		if (!VALID_TYPING_STATUSES.has(status)) {
+			return;
+		}
+
+		const target = client.find(data.target);
+
+		if (!target) {
+			return;
+		}
+
+		const {network, chan} = target;
+
+		if (chan.type !== ChanType.CHANNEL && chan.type !== ChanType.QUERY) {
+			return;
+		}
+
+		const irc = network.irc;
+
+		if (!irc?.network?.cap?.isEnabled("message-tags")) {
+			return;
+		}
+
+		irc.tagmsg(chan.name, {"+typing": status});
 	});
 
 	socket.on("more", (data) => {
@@ -677,7 +710,7 @@ function initializeClient(
 			);
 
 			if (registration) {
-				client.manager.webPush.pushSingle(client, registration, {
+				void client.manager.webPush.pushSingle(client, registration, {
 					type: "notification",
 					timestamp: Date.now(),
 					title: "The Lounge",

@@ -4,8 +4,7 @@ import * as path from "path";
 import * as fs from "fs";
 import * as crypto from "crypto";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const {getVersionCacheBust} = require("./scripts/version");
+import {getVersionCacheBust} from "./server/version";
 
 // This file can't be a module (it must run synchronously before the bundle loads),
 // so Vite won't process it.

@@ -231,6 +231,15 @@ class Config {
 			this.merge(userConfig);
 		}
 
+		// Hostnames are case-insensitive. Network.validate() lowercases the host of
+		// every incoming/persisted network, so normalize the configured default to
+		// the same canonical form once here at load. This keeps the lockNetwork
+		// allow-list comparison in Network.validate() correct no matter what casing
+		// an admin used for defaults.host in config.js (see #4733).
+		if (this.values.defaults.host) {
+			this.values.defaults.host = this.values.defaults.host.toLowerCase();
+		}
+
 		if (this.values.fileUpload.baseUrl) {
 			try {
 				new URL("test/file.png", this.values.fileUpload.baseUrl);

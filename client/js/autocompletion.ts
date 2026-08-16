@@ -158,7 +158,7 @@ function enableAutocomplete(input: HTMLTextAreaElement) {
 	let currentMatches: string[] | string[][] = [];
 
 	input.addEventListener("input", (e) => {
-		if ((e as CustomEvent).detail === "autocomplete") {
+		if ((e as unknown as CustomEvent).detail === "autocomplete") {
 			return;
 		}
 

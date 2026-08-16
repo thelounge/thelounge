@@ -34,6 +34,7 @@ declare module "irc-framework" {
 		tags: {[key: string]: string};
 		target: string;
 		time?: number;
+		multiline?: boolean;
 	}
 	export interface JoinEventArgs {
 		account: boolean;
@@ -43,6 +44,7 @@ declare module "irc-framework" {
 		ident: string;
 		nick: string;
 		time?: any;
+		tags: {[key: string]: string};
 	}
 	export interface KickEventArgs {
 		kicked: string;
@@ -115,7 +117,9 @@ declare module "irc-framework" {
 			cap: {
 				isEnabled: (cap: string) => boolean;
 				enabled: string[];
+				available: Map<string, string>;
 			};
+			multilineLimits: () => {maxBytes: number; maxLines: number | null} | null;
 			extractTargetGroup: (target: string) => {
 				target: string;
 				target_group: string;
@@ -123,6 +127,7 @@ declare module "irc-framework" {
 
 			supports(feature: "MODES"): string;
 			supports(feature: string): boolean;
+			supportsTag(tag_name: string): boolean;
 		};
 		// End of added by Max
 
@@ -177,11 +182,35 @@ declare module "irc-framework" {
 
 		changeNick(nick: string): void;
 
-		sendMessage(commandName: string, target: string, message: string): string[];
+		sendMessage(
+			commandName: string,
+			target: string,
+			message: string,
+			tags?: {[key: string]: string}
+		): string[];
 
-		say(target: string, message: string): string[];
+		say(target: string, message: string, tags?: {[key: string]: string}): string[];
 
-		notice(target: string, message: string): string[];
+		notice(target: string, message: string, tags?: {[key: string]: string}): string[];
+
+		sendMultiline(
+			commandName: string,
+			target: string,
+			lines: string[],
+			tags?: Record<string, string | boolean>
+		): void;
+
+		sayMultiline(
+			target: string,
+			lines: string[],
+			tags?: Record<string, string | boolean>
+		): void;
+
+		noticeMultiline(
+			target: string,
+			lines: string[],
+			tags?: Record<string, string | boolean>
+		): void;
 
 		join(channel: string, key?: string): void;
 
@@ -212,7 +241,9 @@ declare module "irc-framework" {
 
 		ctcpResponse(target: string, type: string, ...params: Array<string>): void;
 
-		action(target: string, message: string): string[];
+		action(target: string, message: string, tags?: {[key: string]: string | boolean}): string[];
+
+		tagmsg(target: string, tags: {[key: string]: string}): void;
 
 		whowas(target: string, cb?: (event: Event) => any): void;
 
@@ -226,6 +257,16 @@ declare module "irc-framework" {
 		who(target: string, cb: (event: any) => void): void;
 
 		list(...params: Array<string>): void;
+
+		addMonitor(target: string): void;
+
+		removeMonitor(target: string): void;
+
+		queryMonitor(): void;
+
+		clearMonitor(): void;
+
+		monitorlist(cb: (event: {nicks: string[]}) => void): void;
 
 		channel(channel_name: string): IrcChannel;
 
@@ -278,6 +319,30 @@ declare module "irc-framework" {
 		on(eventType: "nick invalid", cb: (event: NickInvalidEventArgs) => any): this;
 
 		on(eventType: "irc error", cb: (event: IrcErrorEventArgs) => any): this;
+
+		on(
+			eventType: "tagmsg",
+			cb: (event: {
+				nick: string;
+				ident: string;
+				hostname: string;
+				target: string;
+				tags: {[key: string]: string};
+				time?: number;
+				account?: any;
+				batch?: any;
+			}) => any
+		): this;
+
+		on(
+			eventType: "users online",
+			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
+		): this;
+
+		on(
+			eventType: "users offline",
+			cb: (event: {nicks: string[]; tags: Record<string, string>}) => any
+		): this;
 	}
 	export class Message {
 		// TODO: What is actually in it and what was in the event?
@@ -328,6 +393,7 @@ declare module "irc-framework" {
 		username: string;
 		gecos: string;
 		host: string;
+		bot?: boolean;
 	}
 
 	export interface ChannelInfoEventArgs {
@@ -417,6 +483,8 @@ declare module "irc-framework" {
 		enable_chghost?: boolean;
 		enable_echomessage?: boolean;
 		enable_setname?: boolean;
+		enable_standardreplies?: boolean;
+		enable_multiline?: boolean;
 		message_max_length?: number;
 		auto_reconnect?: boolean;
 		auto_reconnect_wait?: number;

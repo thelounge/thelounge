@@ -1,5 +1,18 @@
 <template>
 	<form id="form" method="post" action="" @submit.prevent="onSubmit">
+		<div v-if="channel.replyingTo" class="reply-bar">
+			<span class="reply-bar-text">
+				Replying to <strong>{{ channel.replyingTo.nick }}</strong>
+			</span>
+			<button
+				class="reply-bar-close"
+				type="button"
+				aria-label="Cancel reply"
+				@click="cancelReply"
+			>
+				&times;
+			</button>
+		</div>
 		<span id="upload-progressbar" />
 		<span id="nick">{{ network.nick }}</span>
 		<label for="input" class="sr-only">Message input</label>
@@ -65,6 +78,9 @@ import {watch, defineComponent, nextTick, onMounted, PropType, ref, onUnmounted}
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
 import {ChanType} from "../../shared/types/chan";
+import type {TypingStatus} from "../../shared/types/typing";
+
+const TYPING_THROTTLE_MS = 3000;
 
 const formattingHotkeys = {
 	"mod+k": "\x03",
@@ -102,6 +118,19 @@ export default defineComponent({
 		const input = ref<HTMLTextAreaElement>();
 		const uploadInput = ref<HTMLInputElement>();
 		const autocompletionRef = ref<ReturnType<typeof autocompletion>>();
+		let lastTypingSent = 0;
+		let typingPauseTimeout: ReturnType<typeof setTimeout> | null = null;
+
+		const clearTypingPauseTimeout = () => {
+			if (typingPauseTimeout !== null) {
+				clearTimeout(typingPauseTimeout);
+				typingPauseTimeout = null;
+			}
+		};
+
+		onUnmounted(() => {
+			clearTypingPauseTimeout();
+		});
 
 		const setInputSize = () => {
 			void nextTick(() => {
@@ -125,10 +154,54 @@ export default defineComponent({
 			});
 		};
 
+		const sendTypingStatus = (status: TypingStatus) => {
+			if (store.state.settings.typing !== "on" || !store.state.isConnected) {
+				return;
+			}
+
+			if (props.channel.type !== ChanType.CHANNEL && props.channel.type !== ChanType.QUERY) {
+				return;
+			}
+
+			const now = Date.now();
+
+			if (status === "active" && now - lastTypingSent < TYPING_THROTTLE_MS) {
+				return;
+			}
+
+			if (status === "active") {
+				lastTypingSent = now;
+			}
+
+			socket.emit("typing", {target: props.channel.id, status});
+		};
+
 		const setPendingMessage = (e: Event) => {
-			props.channel.pendingMessage = (e.target as HTMLInputElement).value;
+			const text = (e.target as HTMLInputElement).value;
+			props.channel.pendingMessage = text;
 			props.channel.inputHistoryPosition = 0;
 			setInputSize();
+
+			// No need to send typing indicators for / commands
+			if (text.length > 0 && text[0] !== "/") {
+				sendTypingStatus("active");
+
+				if (typingPauseTimeout) {
+					clearTimeout(typingPauseTimeout);
+				}
+
+				typingPauseTimeout = setTimeout(() => {
+					typingPauseTimeout = null;
+					sendTypingStatus("paused");
+				}, TYPING_THROTTLE_MS);
+			} else if (text.length === 0) {
+				if (typingPauseTimeout) {
+					clearTimeout(typingPauseTimeout);
+					typingPauseTimeout = null;
+				}
+
+				sendTypingStatus("done");
+			}
 		};
 
 		const getInputPlaceholder = (channel: ClientChan) => {
@@ -179,6 +252,9 @@ export default defineComponent({
 				props.channel.inputHistory.pop();
 			}
 
+			const replyTo = props.channel.replyingTo?.msgid;
+			props.channel.replyingTo = null;
+
 			if (text[0] === "/") {
 				const args = text.substring(1).split(" ");
 				const cmd = args.shift()?.toLowerCase();
@@ -192,7 +268,15 @@ export default defineComponent({
 				}
 			}
 
-			socket.emit("input", {target, text});
+			socket.emit("input", {target, text, ...(replyTo && {replyTo})});
+
+			if (typingPauseTimeout) {
+				clearTimeout(typingPauseTimeout);
+				typingPauseTimeout = null;
+			}
+
+			sendTypingStatus("done");
+			lastTypingSent = 0;
 		};
 
 		const onUploadInputChange = () => {
@@ -209,8 +293,39 @@ export default defineComponent({
 			uploadInput.value?.click();
 		};
 
+		const cancelReply = () => {
+			props.channel.replyingTo = null;
+		};
+
+		const onReplyStart = (data: {msgid: string; nick: string; text: string}) => {
+			if (!data.msgid) {
+				return;
+			}
+
+			props.channel.replyingTo = {
+				msgid: data.msgid,
+				nick: data.nick || "Unknown",
+				text: data.text || "",
+			};
+
+			// Pre-fill with "nick: " so clients without +reply support
+			// can still see who the reply is directed at
+			if (!props.channel.pendingMessage && data.nick && input.value) {
+				props.channel.pendingMessage = data.nick + ": ";
+				input.value.value = props.channel.pendingMessage;
+				setInputSize();
+			}
+
+			input.value?.focus();
+		};
+
 		const blurInput = () => {
 			input.value?.blur();
+		};
+
+		const onEscape = () => {
+			cancelReply();
+			blurInput();
 		};
 
 		const onBlur = () => {
@@ -236,7 +351,8 @@ export default defineComponent({
 		);
 
 		onMounted(() => {
-			eventbus.on("escapekey", blurInput);
+			eventbus.on("escapekey", onEscape);
+			eventbus.on("reply:start", onReplyStart);
 
 			if (store.state.settings.autocomplete) {
 				if (!input.value) {
@@ -329,7 +445,8 @@ export default defineComponent({
 		});
 
 		onUnmounted(() => {
-			eventbus.off("escapekey", blurInput);
+			eventbus.off("escapekey", onEscape);
+			eventbus.off("reply:start", onReplyStart);
 
 			if (autocompletionRef.value) {
 				autocompletionRef.value.destroy();
@@ -353,6 +470,7 @@ export default defineComponent({
 			getInputPlaceholder,
 			onSubmit,
 			setPendingMessage,
+			cancelReply,
 		};
 	},
 });

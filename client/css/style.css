@@ -1,6 +1,8 @@
+/* prettier-ignore comment-empty-line-before */
 @import "../../node_modules/normalize.css/normalize.css";
 @import "fontawesome.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
+@import "settings.css";
 
 /* Allow tooltips via data-tooltip instead of aria-label to avoid
    duplicating accessible names on wrapper + child elements */
@@ -30,6 +32,9 @@
 
 	/* Background color of the main window */
 	--window-bg-color: #fff;
+
+	/* Background color of the message input form */
+	--form-bg-color: #fff;
 
 	/* Text color for <h2> and <h3> headings in windows */
 	--window-heading-color: #6c797a;
@@ -302,7 +307,6 @@ p {
 #footer .icon,
 #chat .count::before,
 #connect .extra-help,
-#settings .extra-help,
 #settings #play::before,
 #settings .settings-menu .icon::before,
 #form #upload::before,
@@ -329,6 +333,9 @@ p {
 #chat .msg[data-type="nick"] .from::before,
 #chat .msg[data-type="chghost"] .from::before,
 #chat .msg[data-type="action"] .from::before,
+#chat .msg[data-type="error"] .from::before,
+#chat .msg[data-type="warn"] .from::before,
+#chat .msg[data-type="note"] .from::before,
 #chat .msg[data-type="plugin"] .from::before,
 #chat .msg[data-type="raw"] .from::before,
 #chat .msg-statusmsg span::before,
@@ -350,7 +357,8 @@ p {
 .channel-list-item .parted-channel-icon::before,
 .jump-to-input::before,
 .password-container .reveal-password span,
-#sidebar .collapse-network-icon::before {
+#sidebar .collapse-network-icon::before,
+#chat .msg .msg-actions button::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
@@ -571,8 +579,7 @@ p {
 	line-height: 45px;
 }
 
-#connect .extra-help::before,
-#settings .extra-help::before {
+#connect .extra-help::before {
 	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
 }
 
@@ -842,6 +849,23 @@ background on hover (unless active) */
 	width: 14px;
 	margin-right: 12px;
 	line-height: 18px;
+}
+
+/* the status dot is overlaid on the channel speech bubble icon */
+.channel-list-item[data-type="query"] > .status-icon {
+	position: absolute;
+	left: 23px;
+	top: 12px;
+	width: auto;
+	height: auto;
+	margin-left: 0;
+	z-index: 1;
+}
+
+.channel-list-item[data-type="query"] > .status-icon span::after {
+	width: 6px;
+	height: 6px;
+	box-shadow: 0 0 0 1.5px var(--body-bg-color);
 }
 
 .channel-list-item .name {
@@ -1334,6 +1358,10 @@ textarea.input {
 	position: relative;
 }
 
+#chat .msg:has(.reply-context) {
+	align-items: flex-end;
+}
+
 #chat .unread-marker {
 	position: relative;
 	text-align: center;
@@ -1395,7 +1423,7 @@ textarea.input {
 
 #chat .time {
 	color: var(--body-color-muted);
-	padding-left: 10px;
+	padding-left: 24px;
 	width: 55px;
 	font-variant-numeric: tabular-nums;
 	box-sizing: content-box; /* highlights have a border-left */
@@ -1423,7 +1451,7 @@ textarea.input {
 	flex: 1 1 auto;
 	min-width: 0;
 	padding-left: 10px;
-	padding-right: 6px;
+	padding-right: 24px;
 	border-left: 1px solid #f6f6f6;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
 	text-align: left; /* so RTL text will still be aligned left, not right */
@@ -1591,9 +1619,31 @@ textarea.input {
 	content: "Wallops: ";
 }
 
+#chat .msg[data-type="error"] .from::before {
+	content: "\f06a"; /* https://fontawesome.com/icons/circle-exclamation?style=solid */
+}
+
 #chat .msg[data-type="error"],
 #chat .msg[data-type="error"] .from {
 	color: #e74c3c;
+}
+
+#chat .msg[data-type="warn"] .from::before {
+	content: "\f071"; /* https://fontawesome.com/icons/triangle-exclamation?style=solid */
+}
+
+#chat .msg[data-type="warn"],
+#chat .msg[data-type="warn"] .from {
+	color: #f39c12;
+}
+
+#chat .msg[data-type="note"] .from::before {
+	content: "\f05a"; /* https://fontawesome.com/icons/circle-info?style=solid */
+}
+
+#chat .msg[data-type="note"],
+#chat .msg[data-type="note"] .from {
+	color: #3498db;
 }
 
 #chat .chat-view[data-type="channel"] .msg.highlight {
@@ -1602,12 +1652,172 @@ textarea.input {
 }
 
 #chat .chat-view[data-type="channel"] .msg.highlight .time {
-	padding-left: 5px;
+	padding-left: 19px;
 	color: #696969;
 }
 
 #chat .chat-view[data-type="channel"] .msg.highlight .content {
 	border-left: 1px solid var(--highlight-bg-color);
+}
+
+/* Reply context — compact preview above message text, inside .content */
+#chat .msg .reply-context {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 0.8em;
+	line-height: 1.4;
+	color: var(--body-color-muted);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	min-width: 0;
+	padding: 1px 6px;
+	margin-bottom: 1px;
+	border-radius: 3px;
+	cursor: pointer;
+	width: fit-content;
+	max-width: 100%;
+}
+
+#chat .msg .reply-context-icon::before {
+	content: "\f3e5"; /* fa-reply icon */
+	font: normal normal normal 10px/1 FontAwesome;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: #b0b0b0;
+}
+
+#chat .msg .reply-context-icon {
+	flex-shrink: 0;
+}
+
+#chat .msg .reply-context:not(.disabled):hover {
+	background: rgb(0 0 0 / 4%);
+	color: var(--body-color);
+}
+
+#chat .msg .reply-context:not(.disabled):hover .reply-context-icon::before {
+	color: var(--body-color-muted);
+}
+
+#chat .msg .reply-context.disabled {
+	cursor: default;
+	opacity: 0.6;
+	overflow: visible;
+}
+
+#chat .msg .reply-context-nick {
+	font-weight: 700;
+	flex-shrink: 0;
+}
+
+#chat .msg .reply-context-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 0;
+}
+
+#chat .msg .reply-context-text::before {
+	content: "— ";
+}
+
+#chat .msg .reply-context-unknown {
+	font-style: italic;
+}
+
+/* Message actions toolbar — floating overlay, top-right of message */
+#chat .msg .msg-actions {
+	display: flex;
+	gap: 1px;
+	position: absolute;
+	top: -8px;
+	right: 6px;
+	background: var(--window-bg-color);
+	border: 1px solid #d0d0d0;
+	border-radius: 4px;
+	padding: 1px;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 1;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
+	transition: opacity 0.1s;
+}
+
+#chat .msg:hover .msg-actions,
+#chat .msg .msg-actions:focus-within {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+#chat .msg .msg-actions button {
+	background: none;
+	border: none;
+	border-radius: 3px;
+	color: var(--body-color-muted);
+	cursor: pointer;
+	font-size: 14px;
+	width: 26px;
+	height: 24px;
+	padding: 0;
+	line-height: 1;
+}
+
+#chat .msg .msg-actions button:hover,
+#chat .msg .msg-actions button:focus-visible {
+	background: rgb(0 0 0 / 6%);
+	color: var(--body-color);
+}
+
+#chat .msg .msg-actions button:focus-visible {
+	outline: 2px solid var(--link-color);
+	outline-offset: -1px;
+}
+
+#chat .msg .msg-action-reply::before {
+	content: "\f3e5"; /* fa-reply */
+}
+
+/* When a reply-context is present, anchor the toolbar to the bottom row
+   (the actual message) instead of the reply preview above it. */
+#chat .msg:has(.reply-context) .msg-actions {
+	top: auto;
+	bottom: 0;
+}
+
+/* Reply bar above message input */
+#form .reply-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 4px 10px;
+	background: #f0f0f0;
+	border-bottom: 1px solid #e7e7e7;
+	font-size: 0.85em;
+	color: var(--body-color-muted);
+	width: 100%;
+}
+
+#form .reply-bar-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#form .reply-bar-close {
+	background: none;
+	border: none;
+	color: var(--body-color-muted);
+	cursor: pointer;
+	font-size: 18px;
+	line-height: 1;
+	padding: 0 4px;
+	flex-shrink: 0;
+}
+
+#form .reply-bar-close:hover {
+	color: var(--body-color);
 }
 
 #chat .preview-size {
@@ -1778,11 +1988,20 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-overflow-scrolling: touch;
 }
 
+/* Status icon in user list */
 #chat .names .user {
-	display: block;
+	display: flex;
+	align-items: center;
 	line-height: 1.6;
 	padding: 0 16px;
 	white-space: nowrap;
+}
+
+#chat .names .status-icon {
+	width: auto;
+	height: auto;
+	margin-left: auto;
+	margin-right: 0;
 }
 
 #chat .user-mode {
@@ -1798,6 +2017,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding: 5px 16px;
 	position: sticky;
 	top: 0;
+	z-index: 1;
 }
 
 #chat .user-mode.owner::before {
@@ -1826,6 +2046,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #chat .user-mode-search::before {
 	content: "Search Results";
+}
+
+.user-bot-indicator {
+	color: var(--body-color-muted);
+	font-size: 0.85em;
+	margin-left: 2px;
 }
 
 #loading {
@@ -1942,79 +2168,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 100%;
 }
 
-#settings .settings-sync-panel {
-	padding: 10px;
-	margin-bottom: 16px;
-	border-radius: 2px;
-	background-color: #d9edf7;
-	color: #31708f;
-}
-
-#settings .settings-sync-panel p:last-child {
-	margin-bottom: 0;
-}
-
-#settings .settings-sync-panel .btn {
-	color: #007bff;
-	border-color: #007bff;
-	margin-bottom: 0;
-}
-
-#settings .settings-sync-panel .btn:hover,
-#settings .settings-sync-panel .btn:focus {
-	background-color: #007bff;
-	color: #fff;
-}
-
-#settings .settings-sync-panel .btn:active,
-#settings .settings-sync-panel .btn:focus {
-	box-shadow: 0 0 0 3px rgb(0 123 255 / 50%);
-}
-
-#settings .opt {
-	display: block;
-	padding: 5px 0 5px 1px;
-}
-
-#settings .opt input {
-	margin-right: 6px;
-}
-
-#connect .extra-help,
-#settings .extra-help {
+#connect .extra-help {
 	cursor: help;
-}
-
-#settings h2 .extra-help {
-	font-size: 0.8em;
-}
-
-#settings #play {
-	font-size: 14px;
-	transition: opacity 0.2s;
-	color: var(--window-heading-color);
-}
-
-#settings #play:hover {
-	opacity: 0.8;
-}
-
-#settings #change-password .error,
-#settings #change-password .success {
-	margin-bottom: 1em;
-}
-
-#settings #change-password .error {
-	color: #e74c3c;
-}
-
-#settings #change-password .success {
-	color: #2ecc40;
-}
-
-#settings .error {
-	color: #e74c3c;
-	margin-top: 0.2em;
 }
 
 .password-container {
@@ -2218,10 +2373,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-top: 1px solid #e7e7e7;
 	border-radius: 0;
 	margin: 0;
-	padding: 6px;
-	background: white;
+	padding: 6px 6px 2px;
+	background: var(--form-bg-color);
 	display: flex;
 	align-items: flex-end;
+	flex-wrap: wrap;
 	position: relative;
 }
 
@@ -2754,12 +2910,21 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .messages {
 		display: block;
-		padding: 5px 0;
+		padding: 5px 0 18px;
 	}
 
 	#chat .msg {
 		display: block;
 		padding: 2px 10px;
+	}
+
+	#form {
+		padding-left: 6px;
+	}
+
+	.typing-indicator {
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 
 	#chat .msg[data-type="condensed"] .msg {

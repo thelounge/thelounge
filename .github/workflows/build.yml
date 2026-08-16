@@ -40,3 +40,37 @@ jobs:
 
       - name: Test
         run: yarn test
+
+  package:
+    name: Packaged install smoke test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".node-version"
+
+      - name: Install
+        run: yarn --frozen-lockfile --non-interactive
+
+      - name: Build
+        run: yarn build
+        env:
+          NODE_ENV: production
+
+      - name: Pack the npm package
+        run: npm pack
+
+      # #5114: ensure the packed tarball contains every file needed at runtime.
+      - name: Smoke-test the packaged binary
+        run: |
+          mkdir -p /tmp/thelounge-pack
+          tar xzf thelounge-*.tgz -C /tmp/thelounge-pack
+          ln -s "$GITHUB_WORKSPACE/node_modules" /tmp/thelounge-pack/package/node_modules
+          version="$(node /tmp/thelounge-pack/package/index.js --version)"
+          echo "thelounge --version => $version"
+          echo "$version" | grep -Eq 'v?[0-9]+\.[0-9]+\.[0-9]+'
