@@ -177,16 +177,18 @@ export default <IrcEventHandler>function (irc, network) {
 			);
 		}
 
-		network.nickKeeper.onSocketClose((nick) => {
-			irc.options.nick = irc.user.nick = nick;
+		// Registering again starts from the nick we want, so restore it locally
+		const desiredNick = network.nickKeeper.desiredNick;
 
-			network.setNick(nick);
+		if (network.nick !== desiredNick) {
+			network.setCurrentNick(desiredNick);
+			irc.options.nick = irc.user.nick = desiredNick;
 
 			client.emit("nick", {
 				network: network.uuid,
-				nick: network.nick,
+				nick: desiredNick,
 			});
-		});
+		}
 
 		sendStatus();
 	});

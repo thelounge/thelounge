@@ -26,6 +26,6 @@ export default <IrcEventHandler>function (irc, network) {
 			chan.removeUser(user);
 		});
 
-		network.nickKeeper.onQuit(data.nick, (nick) => irc.changeNick(nick));
+		network.nickKeeper.nickReleased(data.nick);
 	});
 };

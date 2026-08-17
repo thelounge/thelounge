@@ -90,6 +90,7 @@ export type NetworkConfig = {
 };
 
 class Network {
+	// The nick we currently have; the one the user asked for is in nickKeeper
 	nick!: string;
 	name!: string;
 	host!: string;
@@ -184,7 +185,9 @@ class Network {
 			toBeMonitored: [],
 		});
 
-		this.nickKeeper = new NickKeeper(this.nick);
+		this.nickKeeper = new NickKeeper(this.nick, (nick) => this.irc?.changeNick(nick), {
+			enabled: !Config.values.public,
+		});
 
 		if (!this.uuid) {
 			this.uuid = crypto.randomUUID();
@@ -214,15 +217,18 @@ class Network {
 		// Remove new lines and limit length
 		const cleanString = (str: string) => str.replace(/[\x00\r\n]/g, "").substring(0, 300);
 
-		this.setNick(cleanNick(String(this.nick || Config.getDefaultNick())));
+		// Use the nick asked for, not a fallback we may be connected under
+		const nick = cleanNick(String(this.nickKeeper.desiredNick || Config.getDefaultNick()));
+
+		this.setNick(nick);
 
 		if (!this.username) {
 			// If username is empty, make one from the provided nick
-			this.username = this.nick.replace(/[^a-zA-Z0-9]/g, "");
+			this.username = nick.replace(/[^a-zA-Z0-9]/g, "");
 		}
 
 		this.username = cleanString(this.username) || "thelounge";
-		this.realname = cleanString(this.realname) || this.nick;
+		this.realname = cleanString(this.realname) || nick;
 		this.leaveMessage = cleanString(this.leaveMessage);
 		this.password = cleanString(this.password);
 		this.host = cleanString(this.host).toLowerCase();
@@ -407,11 +413,10 @@ class Network {
 
 	edit(this: NetworkWithIrcFramework, client: Client, args: any) {
 		const oldNetworkName = this.name;
-		const oldNick = this.nick;
+		const oldNick = this.nickKeeper.desiredNick;
 		const oldRealname = this.realname;
 
-		this.nickKeeper.cancelPendingNick();
-		this.nick = args.nick;
+		this.nickKeeper.wantNick(String(args.nick || ""));
 		this.host = String(args.host || "");
 		this.name = String(args.name || "") || this.host;
 		this.port = parseInt(args.port, 10);
@@ -453,17 +458,19 @@ class Network {
 		}
 
 		if (this.irc) {
-			if (this.nick !== oldNick) {
+			const newNick = this.nickKeeper.desiredNick;
+
+			if (newNick !== oldNick) {
 				if (this.irc.connected) {
 					// Send new nick straight away
-					this.irc.changeNick(this.nick);
+					this.irc.changeNick(newNick);
 				} else {
-					this.irc.user.nick = this.nick;
+					this.irc.user.nick = newNick;
 
 					// Update UI nick straight away if IRC is not connected
 					client.emit("nick", {
 						network: this.uuid,
-						nick: this.nick,
+						nick: newNick,
 					});
 				}
 			}
@@ -498,9 +505,26 @@ class Network {
 		return this.ignoreList.some((entry) => Helper.compareHostmask(entry, data));
 	}
 
+	// The nick the user asked for
 	setNick(this: Network, nick: string) {
+		this.nickKeeper.wantNick(nick);
+
+		// Reconnects register with this
+		if (this.irc?.options) {
+			this.irc.options.nick = nick;
+		}
+
+		// While connected the server confirms the change with a NICK
+		if (!this.irc?.connected) {
+			this.setCurrentNick(nick);
+		}
+	}
+
+	// The nick the server confirmed. Leaves the nick asked for alone, so a
+	// fallback or a forced rename does not overwrite it.
+	setCurrentNick(this: Network, nick: string) {
 		this.nick = nick;
-		this.nickKeeper.setDesiredNick(nick);
+		this.nickKeeper.nickConfirmed(nick);
 		this.highlightRegex = new RegExp(
 			// Do not match letters and numbers (unless IRC color)
 			"(?:^|[^\\p{Letter}\\p{Number}]|\x03[0-9]{1,2})" +
@@ -512,10 +536,6 @@ class Network {
 			// Case insensitive Unicode search
 			"iu"
 		);
-
-		if (this.irc?.options) {
-			this.irc.options.nick = nick;
-		}
 	}
 
 	getFilteredClone(lastActiveChannel?: number, lastMessage?: number): SharedNetwork {
@@ -624,6 +644,8 @@ class Network {
 
 		const data = _.pick(this, fieldsToReturn) as Network;
 
+		// The form edits the nick asked for, not a fallback
+		data.nick = this.nickKeeper.desiredNick;
 		data.hasSTSPolicy = !!STSPolicies.get(this.host);
 
 		return data;
@@ -656,6 +678,9 @@ class Network {
 			"proxyEnabled",
 			"proxyPassword",
 		]) as Network;
+
+		// Persist the nick asked for, so a fallback does not become permanent
+		network.nick = this.nickKeeper.desiredNick;
 
 		network.channels = this.channels
 			.filter(function (channel) {

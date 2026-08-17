@@ -139,6 +139,43 @@ describe("Network", function () {
 				ignoreList: [],
 			});
 		});
+
+		it("should persist the nick the user asked for, not the fallback we are on", function () {
+			const network = new Network({nick: "preferred"});
+
+			network.setCurrentNick("preferred1");
+
+			expect(network.export().nick).to.equal("preferred");
+		});
+	});
+
+	describe("#setCurrentNick(nick)", function () {
+		it("should not overwrite the nick the user asked for", function () {
+			const network = new Network({nick: "preferred"});
+
+			network.setCurrentNick("preferred1");
+
+			expect(network.nick).to.equal("preferred1");
+			expect(network.nickKeeper.desiredNick).to.equal("preferred");
+		});
+
+		it("should leave the nick we register with alone, so reconnects use ours", function () {
+			const network = new Network({nick: "preferred"});
+			network.irc = {options: {nick: "preferred"}} as any;
+
+			network.setCurrentNick("preferred1");
+
+			expect(network.irc!.options!.nick).to.equal("preferred");
+		});
+
+		it("should be what the client is told about", function () {
+			const network = new Network({nick: "preferred"});
+
+			network.setCurrentNick("preferred1");
+
+			expect(network.getFilteredClone().nick).to.equal("preferred1");
+			expect(network.exportForEdit().nick).to.equal("preferred");
+		});
 	});
 
 	describe("#validate()", function () {
@@ -234,6 +271,19 @@ describe("Network", function () {
 			expect(network2.validate({} as any)).to.be.true;
 			expect(network2.nick).to.equal("dummy");
 			expect(network2.realname).to.equal("notdummy");
+		});
+
+		it("should derive username and realname from the nick we asked for", function () {
+			const network = new Network({host: "localhost", nick: "dummy"});
+
+			// Connected under a fallback, which must not leak into the defaults
+			network.irc = {connected: true, options: {nick: "dummy"}} as any;
+			network.setCurrentNick("dummy1");
+
+			expect(network.validate({} as any)).to.be.true;
+			expect(network.username).to.equal("dummy");
+			expect(network.realname).to.equal("dummy");
+			expect(network.nick).to.equal("dummy1");
 		});
 
 		it("should apply STS policies iff they match", function () {

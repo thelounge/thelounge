@@ -1,84 +1,54 @@
-export type NickInUseContext = {
-	registered: boolean;
-	isPublic: boolean;
+export type NickKeeperOptions = {
+	// Public mode has no persisted identity, so there is no nick worth keeping
+	enabled: boolean;
 };
 
-export type RegisteredCallbacks = {
-	setPreferredNick(nick: string): void;
-	setCurrentNick(nick: string): void;
-};
-
+// Owns the nick the user asked for and the nick we ended up with. Consumers push
+// in what happened, the only thing coming back out is a nick change.
 export default class NickKeeper {
-	private desiredNick: string;
-	private currentNick: string;
-	private pendingNick: string | null = null;
+	private desired: string;
+	private current: string;
+	private readonly enabled: boolean;
 
-	constructor(nick: string) {
-		this.desiredNick = nick;
-		this.currentNick = nick;
-	}
-
-	setDesiredNick(nick: string) {
-		this.desiredNick = nick;
-		this.currentNick = nick;
-		this.cancelPendingNick();
-	}
-
-	cancelPendingNick() {
-		this.pendingNick = null;
-	}
-
-	onNickInUse(context: NickInUseContext) {
-		if (!context.registered && !context.isPublic) {
-			this.pendingNick = this.desiredNick;
-		}
-	}
-
-	onRegistered(registeredNick: string, callbacks: RegisteredCallbacks) {
-		this.currentNick = registeredNick;
-
-		if (registeredNick === this.desiredNick) {
-			this.cancelPendingNick();
-			callbacks.setPreferredNick(registeredNick);
-		} else {
-			callbacks.setCurrentNick(registeredNick);
-		}
-	}
-
-	onNickChanged(
-		oldNick: string,
-		newNick: string,
-		isSelf: boolean,
-		changeNick: (nick: string) => void
+	constructor(
+		nick: string,
+		private readonly requestNick: (nick: string) => void,
+		options: NickKeeperOptions
 	) {
-		if (isSelf) {
-			this.currentNick = newNick;
-			this.desiredNick = newNick;
-			this.cancelPendingNick();
-
-			return;
-		}
-
-		if (this.pendingNick === oldNick) {
-			this.cancelPendingNick();
-			changeNick(oldNick);
-		}
+		this.desired = nick;
+		this.current = nick;
+		this.enabled = options.enabled;
 	}
 
-	onQuit(quitNick: string, changeNick: (nick: string) => void) {
-		if (this.pendingNick === quitNick) {
-			this.cancelPendingNick();
-			changeNick(quitNick);
-		}
+	// Persisted, and shown in the network edit form
+	get desiredNick() {
+		return this.desired;
 	}
 
-	onSocketClose(restoreLocalNick: (nick: string) => void) {
-		if (this.pendingNick) {
-			const nick = this.pendingNick;
-			this.cancelPendingNick();
-			this.currentNick = nick;
-			this.desiredNick = nick;
-			restoreLocalNick(nick);
+	// Mirrored by Network#nick
+	get currentNick() {
+		return this.current;
+	}
+
+	// Set from the config, the edit form or /nick
+	wantNick(nick: string) {
+		this.desired = nick;
+	}
+
+	// The server confirmed we are known by this nick
+	nickConfirmed(nick: string) {
+		this.current = nick;
+	}
+
+	// The server refused the nick we asked for
+	nickRefused() {
+		this.desired = this.current;
+	}
+
+	// Somebody quit or renamed away from a nick
+	nickReleased(nick: string) {
+		if (this.enabled && nick === this.desired && this.current !== this.desired) {
+			this.requestNick(nick);
 		}
 	}
 }

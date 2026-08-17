@@ -42,7 +42,8 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		return;
 	}
 
-	network.nickKeeper.cancelPendingNick();
+	// Record what the user asked for before talking to the server
+	network.setNick(newNick);
 
 	// If connected to IRC, send to server and wait for ACK
 	// otherwise update the nick and UI straight away
@@ -53,10 +54,8 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			return;
 		}
 
-		network.irc.options.nick = network.irc.user.nick = newNick;
+		network.irc.user.nick = newNick;
 	}
-
-	network.setNick(newNick);
 
 	this.emit("nick", {
 		network: network.uuid,

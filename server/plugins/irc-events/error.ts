@@ -41,13 +41,13 @@ export default <IrcEventHandler>function (irc, network) {
 	irc.on("nick in use", function (data) {
 		let message = data.nick + ": " + (data.reason || "Nickname is already in use.");
 
-		if (irc.connection.registered === false && !Config.values.public) {
-			message += " An attempt to use it will be made when this nick quits.";
-
-			network.nickKeeper.onNickInUse({
-				registered: irc.connection.registered,
-				isPublic: Config.values.public,
-			});
+		if (irc.connection.registered === false) {
+			if (!Config.values.public) {
+				message += " An attempt to use it will be made when this nick quits.";
+			}
+		} else {
+			// Only collisions during registration are worth reclaiming
+			network.nickKeeper.nickRefused();
 		}
 
 		const lobby = network.getLobby();
