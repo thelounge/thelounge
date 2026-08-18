@@ -394,6 +394,8 @@ function getRequestHeaders(headers: Record<string, string>) {
 	return formattedHeaders;
 }
 
+// We know link prefetch can be used for SSRF, see https://github.com/thelounge/thelounge/issues/1990
+// This feature is disabled by default, do not report this as a security vulnerability.
 function fetch(uri: string, headers: Record<string, string>) {
 	// Stringify the object otherwise the objects won't compute to the same value
 	const cacheKey = JSON.stringify([uri, headers]);
