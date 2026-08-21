@@ -60,6 +60,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 		if (irc.connection.registered === false) {
 			const nickLen = parseInt(network.irc.network.options.NICKLEN, 10) || 16;
+
 			const random = (data.nick || irc.user.nick) + Math.floor(Math.random() * 10);
 
 			// Safeguard nick changes up to allowed length
@@ -68,6 +69,11 @@ export default <IrcEventHandler>function (irc, network) {
 				irc.changeNick(random);
 			}
 		}
+
+		client.emit("nick", {
+			network: network.uuid,
+			nick: irc.user.nick,
+		});
 	});
 
 	irc.on("nick invalid", function (data) {
