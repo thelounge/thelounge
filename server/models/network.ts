@@ -90,8 +90,6 @@ export type NetworkConfig = {
 };
 
 class Network {
-	// The nick we currently have; the one the user asked for is in nickKeeper
-	nick!: string;
 	name!: string;
 	host!: string;
 	port!: number;
@@ -122,7 +120,7 @@ class Network {
 
 	chanCache!: Chan[];
 	ignoreList!: IgnoreList;
-	nickKeeper!: NickKeeper;
+	nickKeeper: NickKeeper;
 
 	status!: NetworkStatus;
 
@@ -141,9 +139,15 @@ class Network {
 	hasSTSPolicy!: boolean;
 
 	constructor(attr?: Partial<Network>) {
+		// Owns the nick, so it has to exist before anything reads this.nick
+		this.nickKeeper = new NickKeeper(
+			String(attr?.nick || ""),
+			(nick) => this.irc?.changeNick(nick),
+			{enabled: !Config.values.public}
+		);
+
 		_.defaults(this, attr, {
 			name: "",
-			nick: "",
 			host: "",
 			port: 6667,
 			tls: false,
@@ -183,10 +187,6 @@ class Network {
 			ignoreList: [],
 			monitorList: [],
 			toBeMonitored: [],
-		});
-
-		this.nickKeeper = new NickKeeper(this.nick, (nick) => this.irc?.changeNick(nick), {
-			enabled: !Config.values.public,
 		});
 
 		if (!this.uuid) {
@@ -505,6 +505,11 @@ class Network {
 		return this.ignoreList.some((entry) => Helper.compareHostmask(entry, data));
 	}
 
+	// The nick the server has us on; the one asked for is nickKeeper.desiredNick
+	get nick() {
+		return this.nickKeeper.currentNick;
+	}
+
 	// The nick the user asked for
 	setNick(this: Network, nick: string) {
 		this.nickKeeper.wantNick(nick);
@@ -523,7 +528,6 @@ class Network {
 	// The nick the server confirmed. Leaves the nick asked for alone, so a
 	// fallback or a forced rename does not overwrite it.
 	setCurrentNick(this: Network, nick: string) {
-		this.nick = nick;
 		this.nickKeeper.nickConfirmed(nick);
 		this.highlightRegex = new RegExp(
 			// Do not match letters and numbers (unless IRC color)
@@ -618,7 +622,6 @@ class Network {
 		const fieldsToReturn = [
 			"uuid",
 			"name",
-			"nick",
 			"password",
 			"username",
 			"realname",
@@ -642,20 +645,18 @@ class Network {
 			fieldsToReturn.push("rejectUnauthorized");
 		}
 
-		const data = _.pick(this, fieldsToReturn) as Network;
-
-		// The form edits the nick asked for, not a fallback
-		data.nick = this.nickKeeper.desiredNick;
-		data.hasSTSPolicy = !!STSPolicies.get(this.host);
-
-		return data;
+		return {
+			..._.pick(this, fieldsToReturn),
+			// The form edits the nick asked for, not a fallback
+			nick: this.nickKeeper.desiredNick,
+			hasSTSPolicy: !!STSPolicies.get(this.host),
+		} as Network;
 	}
 
 	export() {
-		const network = _.pick(this, [
+		const picked = _.pick(this, [
 			"uuid",
 			"awayMessage",
-			"nick",
 			"name",
 			"host",
 			"port",
@@ -677,10 +678,13 @@ class Network {
 			"proxyUsername",
 			"proxyEnabled",
 			"proxyPassword",
-		]) as Network;
+		]);
 
-		// Persist the nick asked for, so a fallback does not become permanent
-		network.nick = this.nickKeeper.desiredNick;
+		const network = {
+			...picked,
+			// Persist the nick asked for, so a fallback does not become permanent
+			nick: this.nickKeeper.desiredNick,
+		} as Network;
 
 		network.channels = this.channels
 			.filter(function (channel) {
