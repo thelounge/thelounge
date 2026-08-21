@@ -40,11 +40,6 @@ export default class NickKeeper {
 		this.current = nick;
 	}
 
-	// The server refused the nick we asked for
-	nickRefused() {
-		this.desired = this.current;
-	}
-
 	// Somebody quit or renamed away from a nick
 	nickReleased(nick: string) {
 		if (this.enabled && nick === this.desired && this.current !== this.desired) {

@@ -45,6 +45,16 @@ describe("NickKeeper", function () {
 			expect(requested).to.deep.equal([]);
 		});
 
+		it("asks again if a previous attempt did not get us the nick", function () {
+			const {keeper, requested} = createKeeperOnFallback();
+
+			// Somebody beat us to it, so we are still on the fallback
+			keeper.nickReleased("preferred");
+			keeper.nickReleased("preferred");
+
+			expect(requested).to.deep.equal(["preferred", "preferred"]);
+		});
+
 		it("never asks in public mode", function () {
 			const {keeper, requested} = createKeeperOnFallback("preferred", false);
 
@@ -73,30 +83,6 @@ describe("NickKeeper", function () {
 			keeper.nickReleased("preferred");
 
 			expect(requested).to.deep.equal(["preferred"]);
-		});
-	});
-
-	describe("#nickRefused()", function () {
-		it("stops asking for a nick the server refused", function () {
-			const {keeper, requested} = createKeeperOnFallback();
-
-			keeper.wantNick("taken");
-			keeper.nickRefused();
-
-			expect(keeper.desiredNick).to.equal("fallback");
-
-			keeper.nickReleased("taken");
-
-			expect(requested).to.deep.equal([]);
-		});
-
-		it("leaves us wanting nothing more than the nick we have", function () {
-			const {keeper, requested} = createKeeperOnFallback();
-
-			keeper.nickRefused();
-			keeper.nickReleased("preferred");
-
-			expect(requested).to.deep.equal([]);
 		});
 	});
 
