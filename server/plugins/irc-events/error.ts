@@ -81,9 +81,6 @@ export default <IrcEventHandler>function (irc, network) {
 		lobby.pushMessage(client, msg, true);
 
 		if (irc.connection.registered === false) {
-			// An invalid nick is never released, so stop waiting for it
-			network.setNick(Config.getDefaultNick());
-
 			irc.changeNick(Config.getDefaultNick());
 		}
 
