@@ -89,6 +89,10 @@ export type NetworkConfig = {
 	ignoreList: any[];
 };
 
+// The nick is not a field on Network, but it still comes in and goes back out
+// eslint-disable-next-line no-use-before-define
+export type NetworkAttributes = Partial<Network> & {nick?: string};
+
 class Network {
 	name!: string;
 	host!: string;
@@ -138,15 +142,15 @@ class Network {
 	// TODO: this is only available on export
 	hasSTSPolicy!: boolean;
 
-	constructor(attr?: Partial<Network>) {
-		// Owns the nick, so it has to exist before anything reads this.nick
+	constructor(attr?: NetworkAttributes) {
+		// Owns the nick, so build it first and keep it out of the defaults below
 		this.nickKeeper = new NickKeeper(
 			String(attr?.nick || ""),
 			(nick) => this.irc?.changeNick(nick),
 			{enabled: !Config.values.public}
 		);
 
-		_.defaults(this, attr, {
+		_.defaults(this, _.omit(attr, "nick"), {
 			name: "",
 			host: "",
 			port: 6667,
@@ -339,7 +343,7 @@ class Network {
 		this.irc.options.host = this.host;
 		this.irc.options.port = this.port;
 		this.irc.options.password = this.password;
-		this.irc.options.nick = this.nick;
+		this.irc.options.nick = this.getNick();
 		this.irc.options.username = Config.values.useHexIp
 			? Helper.ip2hex(client.config.browser!.ip!)
 			: this.username;
@@ -506,7 +510,7 @@ class Network {
 	}
 
 	// The nick the server has us on; the one asked for is nickKeeper.desiredNick
-	get nick() {
+	getNick() {
 		return this.nickKeeper.currentNick;
 	}
 
@@ -546,7 +550,7 @@ class Network {
 		return {
 			uuid: this.uuid,
 			name: this.name,
-			nick: this.nick,
+			nick: this.getNick(),
 			serverOptions: this.serverOptions,
 			status: this.getNetworkStatus(),
 			channels: this.channels.map((channel) =>
@@ -650,7 +654,7 @@ class Network {
 			// The form edits the nick asked for, not a fallback
 			nick: this.nickKeeper.desiredNick,
 			hasSTSPolicy: !!STSPolicies.get(this.host),
-		} as Network;
+		} as NetworkAttributes & {uuid: string};
 	}
 
 	export() {
@@ -680,11 +684,11 @@ class Network {
 			"proxyPassword",
 		]);
 
-		const network = {
+		const network: NetworkAttributes = {
 			...picked,
 			// Persist the nick asked for, so a fallback does not become permanent
 			nick: this.nickKeeper.desiredNick,
-		} as Network;
+		};
 
 		network.channels = this.channels
 			.filter(function (channel) {

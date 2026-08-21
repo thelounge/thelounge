@@ -180,7 +180,7 @@ export default <IrcEventHandler>function (irc, network) {
 		// Registering again starts from the nick we want, so restore it locally
 		const desiredNick = network.nickKeeper.desiredNick;
 
-		if (network.nick !== desiredNick) {
+		if (network.getNick() !== desiredNick) {
 			network.setCurrentNick(desiredNick);
 			irc.options.nick = irc.user.nick = desiredNick;
 

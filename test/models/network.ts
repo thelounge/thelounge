@@ -155,7 +155,7 @@ describe("Network", function () {
 
 			network.setCurrentNick("preferred1");
 
-			expect(network.nick).to.equal("preferred1");
+			expect(network.getNick()).to.equal("preferred1");
 			expect(network.nickKeeper.desiredNick).to.equal("preferred");
 		});
 
@@ -187,7 +187,7 @@ describe("Network", function () {
 			});
 
 			expect(network.validate({} as any)).to.be.true;
-			expect(network.nick).to.equal("thelounge");
+			expect(network.getNick()).to.equal("thelounge");
 			expect(network.username).to.equal("thelounge");
 			expect(network.realname).to.equal("thelounge");
 			expect(network.port).to.equal(6667);
@@ -259,7 +259,7 @@ describe("Network", function () {
 			});
 
 			expect(network.validate({} as any)).to.be.true;
-			expect(network.nick).to.equal("dummy");
+			expect(network.getNick()).to.equal("dummy");
 			expect(network.realname).to.equal("dummy");
 
 			const network2 = new Network({
@@ -269,7 +269,7 @@ describe("Network", function () {
 			});
 
 			expect(network2.validate({} as any)).to.be.true;
-			expect(network2.nick).to.equal("dummy");
+			expect(network2.getNick()).to.equal("dummy");
 			expect(network2.realname).to.equal("notdummy");
 		});
 
@@ -283,7 +283,7 @@ describe("Network", function () {
 			expect(network.validate({} as any)).to.be.true;
 			expect(network.username).to.equal("dummy");
 			expect(network.realname).to.equal("dummy");
-			expect(network.nick).to.equal("dummy1");
+			expect(network.getNick()).to.equal("dummy1");
 		});
 
 		it("should apply STS policies iff they match", function () {
@@ -440,7 +440,7 @@ describe("Network", function () {
 			expect(network.name).to.equal("Lounge Test Network");
 			expect(network.channels[0].name).to.equal("Lounge Test Network");
 
-			expect(network.nick).to.equal("newNick");
+			expect(network.getNick()).to.equal("newNick");
 			expect(network.host).to.equal("new.tld");
 			expect(network.port).to.equal(1337);
 			expect(network.tls).to.be.false;

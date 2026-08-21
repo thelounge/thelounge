@@ -6,9 +6,11 @@ import {ChanType} from "../../../shared/types/chan";
 
 const commands = ["mode", "umode", "op", "deop", "hop", "dehop", "voice", "devoice"];
 
-const input: PluginInputHandler = function ({irc, nick}, chan, cmd, args) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
+	const irc = network.irc;
+
 	if (cmd === "umode") {
-		irc.raw("MODE", nick, ...args);
+		irc.raw("MODE", network.getNick(), ...args);
 
 		return;
 	} else if (cmd !== "mode") {
@@ -60,7 +62,9 @@ const input: PluginInputHandler = function ({irc, nick}, chan, cmd, args) {
 
 	if (args.length === 0 || args[0][0] === "+" || args[0][0] === "-") {
 		args.unshift(
-			chan.type === ChanType.CHANNEL || chan.type === ChanType.QUERY ? chan.name : nick
+			chan.type === ChanType.CHANNEL || chan.type === ChanType.QUERY
+				? chan.name
+				: network.getNick()
 		);
 	}
 
