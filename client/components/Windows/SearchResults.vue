@@ -63,7 +63,11 @@
 								v-for="(message, id) in messages"
 								:key="message.id"
 								class="result"
-								@click="jump(message, id)"
+								role="button"
+								tabindex="0"
+								@click="jump(message, $event)"
+								@keydown.enter.self="jump(message)"
+								@keydown.space.prevent.self="jump(message)"
 							>
 								<DateMarker
 									v-if="shouldDisplayDateMarker(message, id)"
@@ -90,6 +94,14 @@
 .channel-name {
 	font-weight: 700;
 }
+
+.chat-view[data-type="search-results"] .chat-content {
+	padding-top: 50px;
+}
+
+.chat-view[data-type="search-results"] .result {
+	cursor: pointer;
+}
 </style>
 
 <script lang="ts">
@@ -104,7 +116,7 @@ import {watch, computed, defineComponent, nextTick, ref, onMounted, onUnmounted}
 import type {ClientMessage} from "../../js/types";
 
 import {useStore} from "../../js/store";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
 import {switchToChannel} from "../../js/router";
 import {SearchQuery} from "../../../shared/types/storage";
 
@@ -119,11 +131,11 @@ export default defineComponent({
 	setup() {
 		const store = useStore();
 		const route = useRoute();
-		const router = useRouter();
 
 		const chat = ref<HTMLDivElement>();
 
 		const loadMoreButton = ref<HTMLButtonElement>();
+		const historyObserver = ref<IntersectionObserver | null>(null);
 
 		const offset = ref(0);
 		const moreResultsAvailable = ref(false);
@@ -210,7 +222,12 @@ export default defineComponent({
 		};
 
 		const onShowMoreClick = () => {
-			if (!chat.value || !network.value || !channel.value) {
+			if (
+				!chat.value ||
+				!network.value ||
+				!channel.value ||
+				store.state.messageSearchPendingQuery
+			) {
 				return;
 			}
 
@@ -229,6 +246,14 @@ export default defineComponent({
 			socket.emit("search", query);
 		};
 
+		const onLoadButtonObserved = (entries: IntersectionObserverEntry[]) => {
+			for (const entry of entries) {
+				if (entry.isIntersecting) {
+					onShowMoreClick();
+				}
+			}
+		};
+
 		const jumpToBottom = async () => {
 			await nextTick();
 
@@ -241,10 +266,20 @@ export default defineComponent({
 			el.scrollTop = el.scrollHeight;
 		};
 
-		const jump = (message: ClientMessage, id: number) => {
-			// TODO: Implement jumping to messages!
-			// This is difficult because it means client will need to handle a potentially nonlinear message set
-			// (loading IntersectionObserver both before AND after the messages)
+		const jump = (message: ClientMessage, event?: Event) => {
+			const interactive = (event?.target as Element | undefined)?.closest(
+				"a, button, [role='button']"
+			);
+
+			if (interactive && interactive !== event?.currentTarget) {
+				return;
+			}
+
+			if (!channel.value || !message.storageId) {
+				return;
+			}
+
+			switchToChannel(channel.value, {storageId: message.storageId});
 		};
 
 		watch(
@@ -263,10 +298,8 @@ export default defineComponent({
 			}
 		);
 
-		watch(messages, async () => {
-			moreResultsAvailable.value = !!(
-				messages.value.length && !(messages.value.length % 100)
-			);
+		watch(messages, async (currentMessages, previousMessages) => {
+			moreResultsAvailable.value = currentMessages.length - previousMessages.length === 100;
 
 			if (!offset.value) {
 				await jumpToBottom();
@@ -288,6 +321,13 @@ export default defineComponent({
 			setActiveChannel();
 			doSearch();
 
+			if (window.IntersectionObserver && chat.value && loadMoreButton.value) {
+				historyObserver.value = new window.IntersectionObserver(onLoadButtonObserved, {
+					root: chat.value,
+				});
+				historyObserver.value.observe(loadMoreButton.value);
+			}
+
 			eventbus.on("escapekey", closeSearch);
 			eventbus.on("re-search", doSearch);
 		});
@@ -295,6 +335,7 @@ export default defineComponent({
 		onUnmounted(() => {
 			eventbus.off("escapekey", closeSearch);
 			eventbus.off("re-search", doSearch);
+			historyObserver.value?.disconnect();
 			clearSearchState();
 		});
 

@@ -1646,17 +1646,20 @@ textarea.input {
 	color: #3498db;
 }
 
-#chat .chat-view[data-type="channel"] .msg.highlight {
+#chat .chat-view[data-type="channel"] .msg.highlight,
+#chat .msg.focused {
 	background-color: var(--highlight-bg-color);
 	border-left: 5px solid var(--highlight-border-color);
 }
 
-#chat .chat-view[data-type="channel"] .msg.highlight .time {
+#chat .chat-view[data-type="channel"] .msg.highlight .time,
+#chat .msg.focused .time {
 	padding-left: 19px;
 	color: #696969;
 }
 
-#chat .chat-view[data-type="channel"] .msg.highlight .content {
+#chat .chat-view[data-type="channel"] .msg.highlight .content,
+#chat .msg.focused .content {
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
@@ -2945,11 +2948,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		white-space: pre;
 	}
 
-	#chat .chat-view[data-type="channel"] .msg.highlight {
+	#chat .chat-view[data-type="channel"] .msg.highlight,
+	#chat .msg.focused {
 		padding-left: 5px;
 	}
 
-	#chat .chat-view[data-type="channel"] .msg.highlight .time {
+	#chat .chat-view[data-type="channel"] .msg.highlight .time,
+	#chat .msg.focused .time {
 		padding-left: 0;
 	}
 

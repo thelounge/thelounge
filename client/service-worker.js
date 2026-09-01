@@ -139,6 +139,7 @@ function showNotification(event, payload) {
 
 				return self.registration.showNotification(payload.title, {
 					tag: `chan-${payload.chanId}`,
+					data: {msgId: payload.msgId, storageId: payload.storageId},
 					badge: "img/icon-alerted-black-transparent-bg-72x72px.png",
 					icon: "img/icon-alerted-grey-bg-192x192px.png",
 					body: payload.body,
@@ -158,9 +159,23 @@ self.addEventListener("notificationclick", function (event) {
 				type: "window",
 			})
 			.then((clientList) => {
+				const data = event.notification.data || {};
+				const query = new URLSearchParams();
+
+				if (Number.isSafeInteger(data.msgId) && data.msgId > 0) {
+					query.set("focused", data.msgId);
+				}
+
+				if (Number.isSafeInteger(data.storageId) && data.storageId > 0) {
+					query.set("focusedStorageId", data.storageId);
+				}
+
 				if (clientList.length === 0) {
 					if (clients.openWindow) {
-						return clients.openWindow(`.#/${event.notification.tag}`);
+						const suffix = query.toString();
+						return clients.openWindow(
+							`.#/${event.notification.tag}${suffix ? `?${suffix}` : ""}`
+						);
 					}
 
 					return;
@@ -171,6 +186,8 @@ self.addEventListener("notificationclick", function (event) {
 				client.postMessage({
 					type: "open",
 					channel: event.notification.tag,
+					msgId: data.msgId,
+					storageId: data.storageId,
 				});
 
 				if ("focus" in client) {
