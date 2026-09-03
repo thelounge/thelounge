@@ -60,7 +60,7 @@ async function fetch() {
 
 function updateVersions(response: Response<string>) {
 	let i: number;
-	let release: {tag_name: string; body_html: any; prerelease: boolean; html_url: any};
+	let release: {tag_name: string; body_html: string; prerelease: boolean; html_url: string};
 	let prerelease = false;
 
 	const body = JSON.parse(response.body);
