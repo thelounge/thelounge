@@ -38,8 +38,6 @@ describe("Custom highlights", function () {
 			"testfoo bar",
 			"fooö",
 			"wtf@all",
-			"foo고",
-			"test고",
 			"space",
 			"sp:ace",
 		];
@@ -67,6 +65,9 @@ describe("Custom highlights", function () {
 			"test 고",
 			"고!",
 			"www.고.com",
+			"foo고",
+			"test고",
+			"오늘고맙다",
 			"hey @Foo",
 			"hey ~Foo",
 			"hey +Foo",
@@ -84,8 +85,12 @@ describe("Custom highlights", function () {
 		}
 	});
 
-	it("should trim custom highlights in the compiled regex", function () {
-		expect(client.highlightRegex).to.match(/\(\?:foo\|@all\|sp ace\|고\)/);
+	it("should trim highlights and split them by word-boundary support", function () {
+		// Tokens whose script uses word boundaries (Latin, etc.) are wrapped in
+		// delimiter groups; tokens whose script does not (e.g. Hangul) are matched
+		// as a plain substring in a separate alternative.
+		expect(client.highlightRegex!.source).to.include("(?:foo|@all|sp ace)");
+		expect(client.highlightRegex!.source).to.include("(?:고)");
 	});
 
 	it("should NOT compile a regex", function () {
@@ -145,6 +150,79 @@ describe("Custom highlights", function () {
 
 		for (const teststring of teststrings) {
 			expect(teststring).to.not.match(client.highlightExceptionRegex!);
+		}
+	});
+});
+
+describe("Custom highlights with scripts that have no word boundaries", function () {
+	const logInfoStub = sinon.stub(log, "info");
+
+	const client = new Client(
+		{
+			clients: [],
+			getDataToSave() {
+				return {
+					newUser: "",
+					newHash: "",
+				};
+			},
+		} as any,
+		"test",
+		{
+			clientSettings: {
+				highlights: "foo, 天気, 고",
+				highlightExceptions: "고",
+			},
+		} as any
+	);
+	client.connect();
+	logInfoStub.restore();
+
+	it("should match CJK/Hangul highlights anywhere, without word boundaries", function () {
+		const teststrings = [
+			"今日はいい天気ですね", // 天気 embedded, no spaces
+			"天気",
+			"오늘고맙다", // 고 embedded
+			"test고",
+			"foo고",
+		];
+
+		for (const teststring of teststrings) {
+			expect(teststring).to.match(client.highlightRegex!);
+		}
+	});
+
+	it("should still require word boundaries for Latin highlights", function () {
+		// "foo" must not match inside "football"/"foobar" just because CJK tokens
+		// are present in the same highlight list.
+		const teststrings = ["football", "foobar", "testfoo", "barfoo"];
+
+		for (const teststring of teststrings) {
+			expect(teststring).to.not.match(client.highlightRegex!);
+		}
+	});
+
+	it("should highlight Latin tokens that are properly delimited", function () {
+		const teststrings = ["foo", "hey foo!", "<foo>"];
+
+		for (const teststring of teststrings) {
+			expect(teststring).to.match(client.highlightRegex!);
+		}
+	});
+
+	it("should NOT highlight strings without any token", function () {
+		const teststrings = ["bar", "hello world", "test"];
+
+		for (const teststring of teststrings) {
+			expect(teststring).to.not.match(client.highlightRegex!);
+		}
+	});
+
+	it("should apply substring matching to highlight exceptions too", function () {
+		const teststrings = ["오늘고맙다", "test고", "고"];
+
+		for (const teststring of teststrings) {
+			expect(teststring).to.match(client.highlightExceptionRegex!);
 		}
 	});
 });
