@@ -933,7 +933,7 @@ function getClientConfiguration(): SharedConfiguration | LockedSharedConfigurati
 
 	// Only send defaults that are visible on the client
 	const defaults: LockedConfigNetDefaults = {
-		..._.omit(Config.values.defaults, ["host", "name", "port", "tls", "rejectUnauthorized"]),
+		..._.omit(Config.values.defaults, ["host", "port", "tls", "rejectUnauthorized"]),
 		...defaultsOverride,
 	};
 
