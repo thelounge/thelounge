@@ -10,9 +10,17 @@ import inputs from "../inputs";
 import fs from "fs";
 import Utils from "../../command-line/utils";
 import Client from "../../client";
+import {AuthHandler} from "../auth";
 
 type Package = {
 	onServerStart: (packageApis: any) => void;
+	auth?: [
+		{
+			moduleName: string;
+			auth: AuthHandler;
+			isEnabled: () => boolean;
+		}
+	];
 };
 
 const packageMap = new Map<string, Package>();
@@ -44,6 +52,7 @@ export default {
 	getPackage,
 	loadPackages,
 	outdated,
+	packageMap,
 };
 
 // TODO: verify binds worked. Used to be 'this' instead of 'packageApis'
