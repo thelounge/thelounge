@@ -12,7 +12,7 @@
 				<template v-else>
 					Connect
 					<template
-						v-if="config?.lockNetwork && store?.state.serverConfiguration?.public"
+						v-if="config?.lockNetwork"
 					>
 						to {{ defaults.name }}
 					</template>
