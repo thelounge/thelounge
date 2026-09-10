@@ -92,6 +92,11 @@ class Chan {
 			}
 		}
 
+		// Store the message first so notifications can include its storage ID
+		if (!Config.values.public) {
+			this.writeUserLog(client, msg);
+		}
+
 		client.emit("msg", {chan: chanId, msg, unread: this.unread, highlight: this.highlight});
 
 		// Never store messages in public mode as the session
@@ -104,8 +109,6 @@ class Chan {
 		if (msg.showInActive) {
 			delete msg.showInActive;
 		}
-
-		this.writeUserLog(client, msg);
 
 		if (Config.values.maxHistory >= 0 && this.messages.length > Config.values.maxHistory) {
 			const deleted = this.messages.splice(

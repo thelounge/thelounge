@@ -5,6 +5,9 @@ import Msg from "../../server/models/msg";
 import Network from "../../server/models/network";
 import Prefix from "../../server/models/prefix";
 import User from "../../server/models/user";
+import Config from "../../server/config";
+import {ChanType} from "../../shared/types/chan";
+
 describe("Chan", function () {
 	const network = {
 		network: {
@@ -24,6 +27,39 @@ describe("Chan", function () {
 
 	network.network.options.PREFIX.forEach((mode) => {
 		prefixLookup.modeToSymbol[mode.mode] = mode.symbol;
+	});
+
+	it("stores a message before emitting it", function () {
+		const chan = new Chan({id: 1, name: "#test", type: ChanType.CHANNEL});
+		const msg = new Msg();
+		let emittedStorageId: number | undefined;
+		const client = {
+			idMsg: 1,
+			attachedClients: [],
+			name: "test",
+			messageStorage: [
+				{
+					index(_network: unknown, _channel: unknown, message: Msg) {
+						message.storageId = 42;
+					},
+				},
+			],
+			find: () => ({network: {}, chan}),
+			emit(_event: string, data: {msg: Msg}) {
+				emittedStorageId = data.msg.storageId;
+			},
+		};
+
+		const publicMode = Config.values.public;
+		Config.values.public = false;
+
+		try {
+			chan.pushMessage(client as any, msg);
+		} finally {
+			Config.values.public = publicMode;
+		}
+
+		expect(emittedStorageId).to.equal(42);
 	});
 
 	describe("#findMessage(id)", function () {

@@ -95,7 +95,7 @@
 							{'scroll-down-shown': !channel.scrolledToBottom},
 						]"
 						aria-label="Jump to recent messages"
-						@click="messageList?.jumpToBottom()"
+						@click="messageList?.jumpToLatest()"
 					>
 						<div class="scroll-down-arrow" />
 					</button>
@@ -105,6 +105,7 @@
 						:network="network"
 						:channel="channel"
 						:focused="focused"
+						:focused-storage-id="focusedStorageId"
 					/>
 				</div>
 			</div>
@@ -156,6 +157,7 @@ export default defineComponent({
 		network: {type: Object as PropType<ClientNetwork>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: Number,
+		focusedStorageId: Number,
 	},
 	emits: ["channel-changed"],
 	setup(props, {emit}) {

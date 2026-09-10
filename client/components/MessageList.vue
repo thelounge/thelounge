@@ -49,10 +49,21 @@
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
 					:is-previous-source="isPreviousSource(message, id)"
-					:focused="message.id === focused"
+					:focused="isFocused(message)"
 					@toggle-link-preview="onLinkPreviewToggle"
 				/>
 			</template>
+		</div>
+		<div v-show="channel.newerMessagesAvailable" class="show-more">
+			<button
+				ref="loadNewerButton"
+				:disabled="channel.historyLoading || !store.state.isConnected"
+				class="btn"
+				@click="onShowNewerClick"
+			>
+				<span v-if="channel.historyLoading">Loading…</span>
+				<span v-else>Show newer messages</span>
+			</button>
 		</div>
 	</div>
 </template>
@@ -80,6 +91,7 @@ import {
 	watch,
 } from "vue";
 import {useStore} from "../js/store";
+import {useRouter} from "vue-router";
 import {ClientChan, ClientMessage, ClientNetwork, ClientLinkPreview} from "../js/types";
 
 type CondensedMessageContainer = {
@@ -103,14 +115,20 @@ export default defineComponent({
 		network: {type: Object as PropType<ClientNetwork>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: Number,
+		focusedStorageId: Number,
 	},
 	setup(props) {
 		const store = useStore();
+		const router = useRouter();
 
 		const chat = ref<HTMLDivElement | null>(null);
 		const loadMoreButton = ref<HTMLButtonElement | null>(null);
+		const loadNewerButton = ref<HTMLButtonElement | null>(null);
 		const historyObserver = ref<IntersectionObserver | null>(null);
 		const skipNextScrollEvent = ref(false);
+
+		let requestedFocus: number | undefined;
+		let handledFocus: number | undefined;
 
 		const isWaitingForNextTick = ref(false);
 
@@ -125,39 +143,110 @@ export default defineComponent({
 			}
 		};
 
-		const onShowMoreClick = () => {
-			if (!store.state.isConnected) {
+		const jumpToLatest = () => {
+			if (!props.channel.newerMessagesAvailable) {
+				jumpToBottom();
 				return;
 			}
 
-			let lastMessage = -1;
+			if (!store.state.isConnected || props.channel.historyLoading) {
+				return;
+			}
+
+			props.channel.historyLoading = true;
+			socket.emit("history:latest", {target: props.channel.id});
+			void router.replace({name: "RoutedChat", params: {id: props.channel.id}});
+		};
+
+		const onShowMoreClick = () => {
+			if (!store.state.isConnected || props.channel.historyLoading) {
+				return;
+			}
 
 			// Find the id of first message that isn't showInActive
 			// If showInActive is set, this message is actually in another channel
-			for (const message of props.channel.messages) {
-				if (!message.showInActive) {
-					lastMessage = message.id;
-					break;
-				}
-			}
+			const message = props.channel.messages.find((item) => !item.showInActive);
 
 			props.channel.historyLoading = true;
 
 			socket.emit("more", {
 				target: props.channel.id,
-				lastId: lastMessage,
+				lastId: message?.id ?? -1,
+				storageId: message?.storageId,
 				condensed: store.state.settings.statusMessages !== "shown",
 			});
 		};
 
-		const onLoadButtonObserved = (entries: IntersectionObserverEntry[]) => {
-			entries.forEach((entry) => {
-				if (!entry.isIntersecting) {
-					return;
-				}
+		const onShowNewerClick = () => {
+			const message = props.channel.messages.at(-1);
 
-				onShowMoreClick();
+			if (!store.state.isConnected || props.channel.historyLoading || !message) {
+				return;
+			}
+
+			props.channel.historyLoading = true;
+			socket.emit("history:newer", {
+				target: props.channel.id,
+				lastId: message.id,
+				storageId: message.storageId,
 			});
+		};
+
+		const onHistoryButtonObserved = (entries: IntersectionObserverEntry[]) => {
+			for (const entry of entries) {
+				if (entry.isIntersecting) {
+					entry.target === loadNewerButton.value ? onShowNewerClick() : onShowMoreClick();
+				}
+			}
+		};
+
+		const observeHistoryButtons = () => {
+			for (const button of [loadMoreButton.value, loadNewerButton.value]) {
+				if (button) {
+					historyObserver.value?.unobserve(button);
+					historyObserver.value?.observe(button);
+				}
+			}
+		};
+
+		const isMessageId = (value: unknown): value is number =>
+			typeof value === "number" && Number.isSafeInteger(value) && value > 0;
+		const getFocusedStorageId = () =>
+			isMessageId(props.focusedStorageId) ? props.focusedStorageId : undefined;
+
+		const isFocused = (message: ClientMessage) => {
+			const storageId = getFocusedStorageId();
+			return storageId === undefined
+				? message.id === props.focused
+				: message.storageId === storageId;
+		};
+
+		const focusMessage = async () => {
+			const storageId = getFocusedStorageId();
+			const focusId = storageId ?? props.focused;
+
+			if (!isMessageId(focusId) || handledFocus === focusId) {
+				return;
+			}
+
+			await nextTick();
+			const message = props.channel.messages.find((item) => isFocused(item));
+
+			if (message) {
+				document.getElementById(`msg-${message.id}`)?.scrollIntoView({block: "center"});
+				handledFocus = focusId;
+				return;
+			}
+
+			if (requestedFocus !== focusId) {
+				requestedFocus = focusId;
+				props.channel.historyLoading = true;
+				socket.emit("history:around", {
+					target: props.channel.id,
+					msgId: props.focused,
+					storageId,
+				});
+			}
 		};
 
 		nextTick(() => {
@@ -166,12 +255,16 @@ export default defineComponent({
 			}
 
 			if (window.IntersectionObserver) {
-				historyObserver.value = new window.IntersectionObserver(onLoadButtonObserved, {
+				historyObserver.value = new window.IntersectionObserver(onHistoryButtonObserved, {
 					root: chat.value,
 				});
 			}
 
-			jumpToBottom();
+			if (isMessageId(props.focused) || getFocusedStorageId() !== undefined) {
+				void focusMessage();
+			} else {
+				jumpToBottom();
+			}
 		}).catch((e) => {
 			// eslint-disable-next-line no-console
 			console.error("Error in new IntersectionObserver", e);
@@ -263,6 +356,14 @@ export default defineComponent({
 		};
 
 		const shouldDisplayUnreadMarker = (id: number) => {
+			if (
+				props.channel.newerMessagesAvailable ||
+				isMessageId(props.focused) ||
+				getFocusedStorageId() !== undefined
+			) {
+				return false;
+			}
+
 			if (!unreadMarkerShown && id > props.channel.firstUnread) {
 				unreadMarkerShown = true;
 				return true;
@@ -352,7 +453,9 @@ export default defineComponent({
 				return;
 			}
 
-			props.channel.scrolledToBottom = el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
+			props.channel.scrolledToBottom =
+				!props.channel.newerMessagesAvailable &&
+				el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
 		};
 
 		const handleResize = () => {
@@ -367,33 +470,30 @@ export default defineComponent({
 
 			eventbus.on("resize", handleResize);
 
-			void nextTick(() => {
-				if (historyObserver.value && loadMoreButton.value) {
-					historyObserver.value.observe(loadMoreButton.value);
-				}
-			});
+			void nextTick(observeHistoryButtons);
 		});
 
 		watch(
 			() => props.channel.id,
 			() => {
-				props.channel.scrolledToBottom = true;
+				props.channel.scrolledToBottom = !props.channel.newerMessagesAvailable;
 
 				// Re-add the intersection observer to trigger the check again on channel switch
 				// Otherwise if last channel had the button visible, switching to a new channel won't trigger the history
-				if (historyObserver.value && loadMoreButton.value) {
-					historyObserver.value.unobserve(loadMoreButton.value);
-					historyObserver.value.observe(loadMoreButton.value);
-				}
+				observeHistoryButtons();
 			}
 		);
 
-		watch(
-			() => props.channel.messages.length,
-			async () => {
-				await keepScrollPosition();
-			}
-		);
+		watch([() => props.channel.messages, () => props.channel.messages.length], async () => {
+			await keepScrollPosition();
+			await focusMessage();
+		});
+
+		watch([() => props.focused, () => props.focusedStorageId], () => {
+			requestedFocus = undefined;
+			handledFocus = undefined;
+			void focusMessage();
+		});
 
 		watch(
 			() => props.channel.pendingMessage,
@@ -422,15 +522,18 @@ export default defineComponent({
 			chat,
 			store,
 			onShowMoreClick,
+			onShowNewerClick,
 			loadMoreButton,
+			loadNewerButton,
 			onCopy,
 			condensedMessages,
 			shouldDisplayDateMarker,
 			shouldDisplayUnreadMarker,
 			keepScrollPosition,
 			isPreviousSource,
-			jumpToBottom,
+			jumpToLatest,
 			onLinkPreviewToggle,
+			isFocused,
 		};
 	},
 });

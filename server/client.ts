@@ -596,6 +596,26 @@ class Client {
 		);
 	}
 
+	private getStoredMessageWindow(
+		target: {network: Network; chan: Chan},
+		storageId: unknown,
+		before: number,
+		after: number
+	) {
+		if (!isMessageId(storageId) || !this.messageProvider?.isEnabled) {
+			return null;
+		}
+
+		return this.messageProvider.getMessagesAround(
+			target.network,
+			target.chan,
+			storageId,
+			before,
+			after,
+			() => this.idMsg++
+		);
+	}
+
 	more(data) {
 		const client = this;
 		const target = client.find(data.target);
@@ -644,11 +664,102 @@ class Client {
 			messages = chan.messages.slice(startIndex, index);
 		}
 
+		if (index <= 0 && isMessageId(data.storageId)) {
+			const result = client.getStoredMessageWindow(target, data.storageId, 100, 0);
+
+			return result
+				? {
+						chan: target.chan.id,
+						messages: result.messages.slice(0, -1),
+						moreHistoryAvailable: result.hasMoreBefore,
+				  }
+				: null;
+		}
+
 		return {
 			chan: chan.id,
 			messages: messages,
 			totalMessages: chan.messages.length,
 		};
+	}
+
+	historyAround(data) {
+		const target = this.find(data.target);
+
+		if (!target) {
+			return null;
+		}
+
+		const stored = this.getStoredMessageWindow(target, data.storageId, 50, 50);
+
+		if (stored) {
+			return {
+				chan: target.chan.id,
+				messages: stored.messages,
+				hasMoreBefore: stored.hasMoreBefore,
+				hasMoreAfter: stored.hasMoreAfter,
+			};
+		}
+
+		const index = isMessageId(data.msgId)
+			? target.chan.messages.findIndex((message) => message.id === data.msgId)
+			: -1;
+
+		if (index < 0) {
+			return {
+				chan: target.chan.id,
+				messages: [],
+				hasMoreBefore: false,
+				hasMoreAfter: false,
+			};
+		}
+
+		const start = Math.max(0, index - 50);
+		const end = Math.min(target.chan.messages.length, index + 51);
+
+		return {
+			chan: target.chan.id,
+			messages: target.chan.messages.slice(start, end),
+			hasMoreBefore: start > 0,
+			hasMoreAfter: end < target.chan.messages.length,
+		};
+	}
+
+	historyNewer(data) {
+		const target = this.find(data.target);
+
+		if (!target) {
+			return null;
+		}
+
+		const index = isMessageId(data.lastId)
+			? target.chan.messages.findIndex((message) => message.id === data.lastId)
+			: -1;
+
+		if (index >= 0) {
+			const end = Math.min(target.chan.messages.length, index + 101);
+
+			return {
+				chan: target.chan.id,
+				messages: target.chan.messages.slice(index + 1, end),
+				hasMoreAfter: end < target.chan.messages.length,
+			};
+		}
+
+		const stored = this.getStoredMessageWindow(target, data.storageId, 0, 100);
+
+		return stored
+			? {
+					chan: target.chan.id,
+					messages: stored.messages.slice(1),
+					hasMoreAfter: stored.hasMoreAfter,
+			  }
+			: null;
+	}
+
+	historyLatest(data) {
+		const result = this.more({target: data.target, lastId: -1, condensed: false});
+		return result?.totalMessages === undefined ? null : result;
 	}
 
 	clearHistory(data) {
@@ -905,6 +1016,10 @@ class Client {
 		5000,
 		{maxWait: 20000}
 	);
+}
+
+function isMessageId(value: unknown): value is number {
+	return typeof value === "number" && Number.isSafeInteger(value) && value > 0;
 }
 
 export default Client;

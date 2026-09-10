@@ -133,6 +133,59 @@ describe("SQLite unit tests", function () {
 		store.close();
 	});
 
+	it("loads a paginated message window around a search result", function () {
+		const network = {uuid: "window-test-network"} as any;
+		const channel = {name: "#channel"} as any;
+		const stored: Msg[] = [];
+
+		for (let i = 0; i < 205; i++) {
+			const message = new Msg({time: new Date(Math.floor(i / 3)), text: `msg ${i}`});
+			store.index(network, channel, message);
+			stored.push(message);
+		}
+
+		let id = 0;
+		const window = store.getMessagesAround(
+			network,
+			channel,
+			stored[102].storageId!,
+			50,
+			50,
+			() => id++
+		);
+
+		expect(window?.messages.map((message) => message.text)).to.deep.equal(
+			Array.from({length: 101}, (_, index) => `msg ${index + 52}`)
+		);
+		expect(window).to.include({hasMoreBefore: true, hasMoreAfter: true});
+
+		const before = store.getMessagesAround(
+			network,
+			channel,
+			window!.messages[0].storageId!,
+			100,
+			0,
+			() => id++
+		);
+		const after = store.getMessagesAround(
+			network,
+			channel,
+			window!.messages[100].storageId!,
+			0,
+			100,
+			() => id++
+		);
+
+		expect(before?.messages.slice(0, -1).map((message) => message.text)).to.deep.equal(
+			Array.from({length: 52}, (_, index) => `msg ${index}`)
+		);
+		expect(before?.hasMoreBefore).to.be.false;
+		expect(after?.messages.slice(1).map((message) => message.text)).to.deep.equal(
+			Array.from({length: 52}, (_, index) => `msg ${index + 153}`)
+		);
+		expect(after?.hasMoreAfter).to.be.false;
+	});
+
 	it("deletes messages when asked to", function () {
 		const baseDate = new Date();
 
@@ -362,6 +415,12 @@ describe("SQLite Message Storage", function () {
 				offset: 0,
 			});
 			expect(search.results).to.have.lengthOf(100);
+			expect(search.results.every((message) => Number.isSafeInteger(message.storageId))).to.be
+				.true;
+			expect(search.results[0]).to.include({
+				networkUuid: "retrieval-order-test-network",
+				channelName: "#channel",
+			});
 			const expectedMessages: string[] = [];
 
 			for (let i = 100; i < 200; ++i) {

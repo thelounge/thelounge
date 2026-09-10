@@ -57,6 +57,7 @@ export type LinkPreview = {
 export type SharedMsg = {
 	from?: UserInMessage;
 	id: number;
+	storageId?: number; // Unlike id, this remains the same when history is reloaded
 	msgid?: string;
 	previews?: LinkPreview[];
 	text?: string;
