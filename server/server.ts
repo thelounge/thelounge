@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import {Server as ioServer, Socket as ioSocket} from "socket.io";
 import dns from "dns";
-import colors from "chalk";
+import colors from "./colors";
 import net from "net";
 
 import log from "./log";

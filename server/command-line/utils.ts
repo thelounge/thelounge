@@ -1,6 +1,6 @@
 import _ from "lodash";
 import log from "../log";
-import colors from "chalk";
+import colors from "../colors";
 import fs from "fs";
 import Helper from "../helper";
 import Config from "../config";

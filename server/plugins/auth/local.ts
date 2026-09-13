@@ -1,4 +1,4 @@
-import colors from "chalk";
+import colors from "../../colors";
 import log from "../../log";
 import Helper from "../../helper";
 import type {AuthHandler} from "../auth";
