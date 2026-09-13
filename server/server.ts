@@ -112,7 +112,7 @@ export default async function (
 			return res.status(404).send("Not found");
 		}
 
-		return res.sendFile(theme.filename);
+		return res.sendFile(theme.filename, {dotfiles: "allow"});
 	});
 
 	app.get("/packages/:package/:filename", (req, res) => {
@@ -125,7 +125,9 @@ export default async function (
 		}
 
 		const packagePath = Config.getPackageModulePath(packageName);
-		return res.sendFile(path.join(packagePath, fileName));
+		return res.sendFile(path.join(packagePath, fileName), {
+			dotfiles: "allow",
+		});
 	});
 
 	if (Config.values.public && (Config.values.ldap || {}).enable) {

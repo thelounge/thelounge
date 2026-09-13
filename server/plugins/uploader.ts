@@ -126,7 +126,7 @@ class Uploader {
 		res.setHeader("Cache-Control", "max-age=86400");
 		res.contentType(detectedMimeType);
 
-		return res.sendFile(filePath);
+		return res.sendFile(filePath, {dotfiles: "allow"});
 	}
 
 	static routeUploadFile(this: void, req: Request, res: Response) {
