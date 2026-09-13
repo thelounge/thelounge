@@ -3330,9 +3330,9 @@ ipaddr.js@1.9.1:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-"irc-framework@github:kiwiirc/irc-framework#69d47d1":
+"irc-framework@github:kiwiirc/irc-framework#807fa50":
   version "4.14.0"
-  resolved "https://codeload.github.com/kiwiirc/irc-framework/tar.gz/69d47d1d8b2771a2312398366503fe0fae719f9e"
+  resolved "https://codeload.github.com/kiwiirc/irc-framework/tar.gz/807fa503ad66f8d6c47505f3a35ffa88e682eaab"
   dependencies:
     buffer "^6.0.3"
     core-js "^3.38.1"
