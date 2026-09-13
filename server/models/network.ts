@@ -12,6 +12,7 @@ import Client from "../client";
 import {MessageType} from "../../shared/types/msg";
 import {ChanType} from "../../shared/types/chan";
 import {SharedNetwork} from "../../shared/types/network";
+import NickKeeper from "./nickKeeper";
 
 type NetworkIrcOptions = {
 	host: string;
@@ -88,8 +89,11 @@ export type NetworkConfig = {
 	ignoreList: any[];
 };
 
+// The nick is not a field on Network, but it still comes in and goes back out
+// eslint-disable-next-line no-use-before-define
+export type NetworkAttributes = Partial<Network> & {nick?: string};
+
 class Network {
-	nick!: string;
 	name!: string;
 	host!: string;
 	port!: number;
@@ -120,7 +124,7 @@ class Network {
 
 	chanCache!: Chan[];
 	ignoreList!: IgnoreList;
-	keepNick!: string | null;
+	nickKeeper: NickKeeper;
 
 	status!: NetworkStatus;
 
@@ -138,10 +142,16 @@ class Network {
 	// TODO: this is only available on export
 	hasSTSPolicy!: boolean;
 
-	constructor(attr?: Partial<Network>) {
-		_.defaults(this, attr, {
+	constructor(attr?: NetworkAttributes) {
+		// Owns the nick, so build it first and keep it out of the defaults below
+		this.nickKeeper = new NickKeeper(
+			String(attr?.nick || ""),
+			(nick) => this.irc?.changeNick(nick),
+			{enabled: !Config.values.public}
+		);
+
+		_.defaults(this, _.omit(attr, "nick"), {
 			name: "",
-			nick: "",
 			host: "",
 			port: 6667,
 			tls: false,
@@ -179,7 +189,6 @@ class Network {
 
 			chanCache: [],
 			ignoreList: [],
-			keepNick: null,
 			monitorList: [],
 			toBeMonitored: [],
 		});
@@ -212,15 +221,18 @@ class Network {
 		// Remove new lines and limit length
 		const cleanString = (str: string) => str.replace(/[\x00\r\n]/g, "").substring(0, 300);
 
-		this.setNick(cleanNick(String(this.nick || Config.getDefaultNick())));
+		// Use the nick asked for, not a fallback we may be connected under
+		const nick = cleanNick(String(this.nickKeeper.desiredNick || Config.getDefaultNick()));
+
+		this.setNick(nick);
 
 		if (!this.username) {
 			// If username is empty, make one from the provided nick
-			this.username = this.nick.replace(/[^a-zA-Z0-9]/g, "");
+			this.username = nick.replace(/[^a-zA-Z0-9]/g, "");
 		}
 
 		this.username = cleanString(this.username) || "thelounge";
-		this.realname = cleanString(this.realname) || this.nick;
+		this.realname = cleanString(this.realname) || nick;
 		this.leaveMessage = cleanString(this.leaveMessage);
 		this.password = cleanString(this.password);
 		this.host = cleanString(this.host).toLowerCase();
@@ -331,7 +343,7 @@ class Network {
 		this.irc.options.host = this.host;
 		this.irc.options.port = this.port;
 		this.irc.options.password = this.password;
-		this.irc.options.nick = this.nick;
+		this.irc.options.nick = this.getNick();
 		this.irc.options.username = Config.values.useHexIp
 			? Helper.ip2hex(client.config.browser!.ip!)
 			: this.username;
@@ -405,11 +417,10 @@ class Network {
 
 	edit(this: NetworkWithIrcFramework, client: Client, args: any) {
 		const oldNetworkName = this.name;
-		const oldNick = this.nick;
+		const oldNick = this.nickKeeper.desiredNick;
 		const oldRealname = this.realname;
 
-		this.keepNick = null;
-		this.nick = args.nick;
+		this.nickKeeper.wantNick(String(args.nick || ""));
 		this.host = String(args.host || "");
 		this.name = String(args.name || "") || this.host;
 		this.port = parseInt(args.port, 10);
@@ -451,17 +462,19 @@ class Network {
 		}
 
 		if (this.irc) {
-			if (this.nick !== oldNick) {
+			const newNick = this.nickKeeper.desiredNick;
+
+			if (newNick !== oldNick) {
 				if (this.irc.connected) {
 					// Send new nick straight away
-					this.irc.changeNick(this.nick);
+					this.irc.changeNick(newNick);
 				} else {
-					this.irc.user.nick = this.nick;
+					this.irc.user.nick = newNick;
 
 					// Update UI nick straight away if IRC is not connected
 					client.emit("nick", {
 						network: this.uuid,
-						nick: this.nick,
+						nick: newNick,
 					});
 				}
 			}
@@ -496,8 +509,30 @@ class Network {
 		return this.ignoreList.some((entry) => Helper.compareHostmask(entry, data));
 	}
 
+	// The nick the server has us on; the one asked for is nickKeeper.desiredNick
+	getNick() {
+		return this.nickKeeper.currentNick;
+	}
+
+	// The nick the user asked for
 	setNick(this: Network, nick: string) {
-		this.nick = nick;
+		this.nickKeeper.wantNick(nick);
+
+		// Reconnects register with this
+		if (this.irc?.options) {
+			this.irc.options.nick = nick;
+		}
+
+		// While connected the server confirms the change with a NICK
+		if (!this.irc?.connected) {
+			this.setCurrentNick(nick);
+		}
+	}
+
+	// The nick the server confirmed. Leaves the nick asked for alone, so a
+	// fallback or a forced rename does not overwrite it.
+	setCurrentNick(this: Network, nick: string) {
+		this.nickKeeper.nickConfirmed(nick);
 		this.highlightRegex = new RegExp(
 			// Do not match letters and numbers (unless IRC color)
 			"(?:^|[^\\p{Letter}\\p{Number}]|\x03[0-9]{1,2})" +
@@ -509,21 +544,13 @@ class Network {
 			// Case insensitive Unicode search
 			"iu"
 		);
-
-		if (this.keepNick === nick) {
-			this.keepNick = null;
-		}
-
-		if (this.irc?.options) {
-			this.irc.options.nick = nick;
-		}
 	}
 
 	getFilteredClone(lastActiveChannel?: number, lastMessage?: number): SharedNetwork {
 		return {
 			uuid: this.uuid,
 			name: this.name,
-			nick: this.nick,
+			nick: this.getNick(),
 			serverOptions: this.serverOptions,
 			status: this.getNetworkStatus(),
 			channels: this.channels.map((channel) =>
@@ -599,7 +626,6 @@ class Network {
 		const fieldsToReturn = [
 			"uuid",
 			"name",
-			"nick",
 			"password",
 			"username",
 			"realname",
@@ -623,18 +649,18 @@ class Network {
 			fieldsToReturn.push("rejectUnauthorized");
 		}
 
-		const data = _.pick(this, fieldsToReturn) as Network;
-
-		data.hasSTSPolicy = !!STSPolicies.get(this.host);
-
-		return data;
+		return {
+			..._.pick(this, fieldsToReturn),
+			// The form edits the nick asked for, not a fallback
+			nick: this.nickKeeper.desiredNick,
+			hasSTSPolicy: !!STSPolicies.get(this.host),
+		} as NetworkAttributes & {uuid: string};
 	}
 
 	export() {
-		const network = _.pick(this, [
+		const picked = _.pick(this, [
 			"uuid",
 			"awayMessage",
-			"nick",
 			"name",
 			"host",
 			"port",
@@ -656,7 +682,13 @@ class Network {
 			"proxyUsername",
 			"proxyEnabled",
 			"proxyPassword",
-		]) as Network;
+		]);
+
+		const network: NetworkAttributes = {
+			...picked,
+			// Persist the nick asked for, so a fallback does not become permanent
+			nick: this.nickKeeper.desiredNick,
+		};
 
 		network.channels = this.channels
 			.filter(function (channel) {

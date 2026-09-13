@@ -6,7 +6,8 @@ export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("registered", function (data) {
-		network.setNick(data.nick);
+		// May be a fallback nick if ours was taken
+		network.setCurrentNick(data.nick);
 
 		const lobby = network.getLobby();
 		const msg = new Msg({

@@ -17,7 +17,7 @@ describe("Commands", function () {
 		const testableNetwork = {
 			firstCommand: null,
 			lastCommand: null,
-			nick: "xPaw",
+			getNick: () => "xPaw",
 			irc: {
 				network: {
 					supports(type: string) {
@@ -34,7 +34,7 @@ describe("Commands", function () {
 		} as {
 			firstCommand: string | null;
 			lastCommand: string | null;
-			nick: string;
+			getNick(): string;
 			irc: {
 				network: {
 					supports(type: string): string;

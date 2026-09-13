@@ -177,16 +177,16 @@ export default <IrcEventHandler>function (irc, network) {
 			);
 		}
 
-		if (network.keepNick) {
-			// We disconnected without getting our original nick back yet, just set it back locally
-			irc.options.nick = irc.user.nick = network.keepNick;
+		// Registering again starts from the nick we want, so restore it locally
+		const desiredNick = network.nickKeeper.desiredNick;
 
-			network.setNick(network.keepNick);
-			network.keepNick = null;
+		if (network.getNick() !== desiredNick) {
+			network.setCurrentNick(desiredNick);
+			irc.options.nick = irc.user.nick = desiredNick;
 
 			client.emit("nick", {
 				network: network.uuid,
-				nick: network.nick,
+				nick: desiredNick,
 			});
 		}
 

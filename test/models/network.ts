@@ -5,6 +5,7 @@ import {ChanType} from "../../shared/types/chan";
 import Msg from "../../server/models/msg";
 import User from "../../server/models/user";
 import Network from "../../server/models/network";
+import NickKeeper from "../../server/models/nickKeeper";
 import Config from "../../server/config";
 import STSPolicies from "../../server/plugins/sts";
 import ClientCertificate from "../../server/plugins/clientCertificate";
@@ -77,6 +78,12 @@ describe("Network", function () {
 			expect(network.channels[1].messages[1].text).to.equal("message in original instance");
 			expect(network.channels[1].messages[2].text).to.equal("message after network creation");
 		});
+
+		it("should initialize nick keeper", function () {
+			const network = new Network({nick: "preferred"});
+
+			expect(network.nickKeeper).to.be.instanceOf(NickKeeper);
+		});
 	});
 
 	describe("#export()", function () {
@@ -132,6 +139,43 @@ describe("Network", function () {
 				ignoreList: [],
 			});
 		});
+
+		it("should persist the nick the user asked for, not the fallback we are on", function () {
+			const network = new Network({nick: "preferred"});
+
+			network.setCurrentNick("preferred1");
+
+			expect(network.export().nick).to.equal("preferred");
+		});
+	});
+
+	describe("#setCurrentNick(nick)", function () {
+		it("should not overwrite the nick the user asked for", function () {
+			const network = new Network({nick: "preferred"});
+
+			network.setCurrentNick("preferred1");
+
+			expect(network.getNick()).to.equal("preferred1");
+			expect(network.nickKeeper.desiredNick).to.equal("preferred");
+		});
+
+		it("should leave the nick we register with alone, so reconnects use ours", function () {
+			const network = new Network({nick: "preferred"});
+			network.irc = {options: {nick: "preferred"}} as any;
+
+			network.setCurrentNick("preferred1");
+
+			expect(network.irc!.options!.nick).to.equal("preferred");
+		});
+
+		it("should be what the client is told about", function () {
+			const network = new Network({nick: "preferred"});
+
+			network.setCurrentNick("preferred1");
+
+			expect(network.getFilteredClone().nick).to.equal("preferred1");
+			expect(network.exportForEdit().nick).to.equal("preferred");
+		});
 	});
 
 	describe("#validate()", function () {
@@ -143,7 +187,7 @@ describe("Network", function () {
 			});
 
 			expect(network.validate({} as any)).to.be.true;
-			expect(network.nick).to.equal("thelounge");
+			expect(network.getNick()).to.equal("thelounge");
 			expect(network.username).to.equal("thelounge");
 			expect(network.realname).to.equal("thelounge");
 			expect(network.port).to.equal(6667);
@@ -215,7 +259,7 @@ describe("Network", function () {
 			});
 
 			expect(network.validate({} as any)).to.be.true;
-			expect(network.nick).to.equal("dummy");
+			expect(network.getNick()).to.equal("dummy");
 			expect(network.realname).to.equal("dummy");
 
 			const network2 = new Network({
@@ -225,8 +269,21 @@ describe("Network", function () {
 			});
 
 			expect(network2.validate({} as any)).to.be.true;
-			expect(network2.nick).to.equal("dummy");
+			expect(network2.getNick()).to.equal("dummy");
 			expect(network2.realname).to.equal("notdummy");
+		});
+
+		it("should derive username and realname from the nick we asked for", function () {
+			const network = new Network({host: "localhost", nick: "dummy"});
+
+			// Connected under a fallback, which must not leak into the defaults
+			network.irc = {connected: true, options: {nick: "dummy"}} as any;
+			network.setCurrentNick("dummy1");
+
+			expect(network.validate({} as any)).to.be.true;
+			expect(network.username).to.equal("dummy");
+			expect(network.realname).to.equal("dummy");
+			expect(network.getNick()).to.equal("dummy1");
 		});
 
 		it("should apply STS policies iff they match", function () {
@@ -383,7 +440,7 @@ describe("Network", function () {
 			expect(network.name).to.equal("Lounge Test Network");
 			expect(network.channels[0].name).to.equal("Lounge Test Network");
 
-			expect(network.nick).to.equal("newNick");
+			expect(network.getNick()).to.equal("newNick");
 			expect(network.host).to.equal("new.tld");
 			expect(network.port).to.equal(1337);
 			expect(network.tls).to.be.false;
