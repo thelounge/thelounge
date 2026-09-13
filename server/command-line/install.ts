@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import log from "../log";
-import colors from "chalk";
+import colors from "../colors";
 import semver from "semver";
 import Helper from "../helper";
 import Config from "../config";

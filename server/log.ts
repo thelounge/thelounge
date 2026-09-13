@@ -1,4 +1,4 @@
-import colors from "chalk";
+import colors from "./colors";
 import read from "read";
 
 function timestamp() {

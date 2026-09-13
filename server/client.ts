@@ -2,7 +2,7 @@ import _ from "lodash";
 import UAParser from "ua-parser-js";
 import escapeRegExp from "lodash/escapeRegExp";
 import crypto from "crypto";
-import colors from "chalk";
+import colors from "./colors";
 
 import log from "./log";
 import Chan, {ChanConfig} from "./models/chan";

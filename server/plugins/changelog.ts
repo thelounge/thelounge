@@ -1,5 +1,5 @@
 import got, {Response} from "got";
-import colors from "chalk";
+import colors from "../colors";
 import log from "../log";
 import pkg from "../../package.json";
 import ClientManager from "../clientManager";

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import log from "../log";
-import colors from "chalk";
+import colors from "../colors";
 import {Command} from "commander";
 import Config from "../config";
 import Utils from "./utils";

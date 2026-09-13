@@ -1,5 +1,5 @@
 import _ from "lodash";
-import colors from "chalk";
+import colors from "./colors";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
