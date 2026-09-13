@@ -9,7 +9,14 @@
 // ```
 
 const {readFileSync, writeFileSync} = require("fs");
-const colors = require("chalk");
+const {styleText} = require("util");
+
+const colors = Object.fromEntries(
+	["bold", "dim", "red", "green", "yellow", "blue"].map((c) => [
+		c,
+		(text) => styleText(c, String(text)),
+	])
+);
 const {join} = require("path");
 const {spawnSync} = require("child_process");
 

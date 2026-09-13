@@ -46,7 +46,14 @@ node scripts/changelog <version>
 "use strict";
 
 const _ = require("lodash");
-const colors = require("chalk");
+const {styleText} = require("util");
+
+const colors = Object.fromEntries(
+	["bold", "dim", "red", "green", "yellow", "blue", "gray"].map((c) => [
+		c,
+		(text) => styleText(c, String(text)),
+	])
+);
 const fs = require("fs");
 const path = require("path");
 const got = require("got");

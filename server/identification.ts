@@ -1,6 +1,6 @@
 import fs from "fs";
 import net, {Socket} from "net";
-import colors from "chalk";
+import colors from "./colors";
 import Helper from "./helper";
 import Config from "./config";
 import log from "./log";

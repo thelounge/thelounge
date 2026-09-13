@@ -1,5 +1,5 @@
 import log from "../log";
-import colors from "chalk";
+import colors from "../colors";
 import fs from "fs";
 import path from "path";
 import {Command} from "commander";

@@ -1,4 +1,4 @@
-import colors from "chalk";
+import colors from "../colors";
 import Client from "../client";
 import ClientManager from "../clientManager";
 import log from "../log";
