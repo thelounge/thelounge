@@ -11,7 +11,7 @@ export default async (app: express.Application) => {
 	log.debug("Starting server in development mode");
 
 	const vite = await createViteServer({
-		configFile: fromRoot("vite.config.ts"),
+		configFile: fromRoot("vite.config.mts"),
 		server: {middlewareMode: true},
 		appType: "custom",
 	});
