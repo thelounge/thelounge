@@ -11,11 +11,7 @@
 				</template>
 				<template v-else>
 					Connect
-					<template
-						v-if="config?.lockNetwork"
-					>
-						to {{ defaults.name }}
-					</template>
+					<template v-if="config?.lockNetwork"> to {{ defaults.name }} </template>
 				</template>
 			</h1>
 			<template v-if="!config?.lockNetwork">
