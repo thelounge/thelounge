@@ -100,7 +100,7 @@
     "@types/ws": "8.5.12",
     "@typescript-eslint/eslint-plugin": "7.8.0",
     "@typescript-eslint/parser": "7.8.0",
-    "@vitejs/plugin-vue": "6.0.5",
+    "@vitejs/plugin-vue": "6.0.8",
     "@vitest/coverage-istanbul": "5.0.0",
     "@vue/runtime-dom": "3.5.42",
     "@vue/test-utils": "2.4.6",
