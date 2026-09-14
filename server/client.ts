@@ -748,13 +748,11 @@ class Client {
 
 		const stored = this.getStoredMessageWindow(target, data.storageId, 0, 100);
 
-		return stored
-			? {
-					chan: target.chan.id,
-					messages: stored.messages.slice(1),
-					hasMoreAfter: stored.hasMoreAfter,
-			  }
-			: null;
+		return {
+			chan: target.chan.id,
+			messages: stored ? stored.messages.slice(1) : [],
+			hasMoreAfter: stored ? stored.hasMoreAfter : false,
+		};
 	}
 
 	historyLatest(data) {

@@ -7,7 +7,7 @@ import storage from "../plugins/storage";
 import Client from "../client";
 import Network from "./network";
 import Prefix from "./prefix";
-import {MessageType, SharedMsg} from "../../shared/types/msg";
+import {SharedMsg} from "../../shared/types/msg";
 import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan";
 import {SharedNetworkChan} from "../../shared/types/network";
 
@@ -251,17 +251,9 @@ class Chan {
 			return;
 		}
 
-		const targetChannel: Chan = this;
-
 		// Is this particular message or channel loggable
 		if (!msg.isLoggable() || !this.isLoggable()) {
-			// Because notices are nasty and can be shown in active channel on the client
-			// if there is no open query, we want to always log notices in the sender's name
-			if (msg.type === MessageType.NOTICE && msg.showInActive) {
-				targetChannel.name = msg.from.nick || ""; // TODO: check if || works
-			} else {
-				return;
-			}
+			return;
 		}
 
 		// Find the parent network where this channel is in
@@ -273,7 +265,7 @@ class Chan {
 
 		for (const messageStorage of client.messageStorage) {
 			try {
-				messageStorage.index(target.network, targetChannel, msg);
+				messageStorage.index(target.network, this, msg);
 			} catch (e: any) {
 				log.error(e);
 			}
