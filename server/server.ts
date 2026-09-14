@@ -112,7 +112,7 @@ export default async function (
 			return res.status(404).send("Not found");
 		}
 
-		return res.sendFile(theme.filename);
+		return res.sendFile(theme.filename, {dotfiles: "allow"});
 	});
 
 	app.get("/packages/:package/:filename", (req, res) => {
@@ -124,8 +124,17 @@ export default async function (
 			return res.status(404).send("Not found");
 		}
 
-		const packagePath = Config.getPackageModulePath(packageName);
-		return res.sendFile(path.join(packagePath, fileName));
+		const packagePath = path.resolve(Config.getPackageModulePath(packageName));
+		const resolvedFilePath = path.resolve(packagePath, fileName);
+		const packageRootWithSep = packagePath.endsWith(path.sep) ? packagePath : packagePath + path.sep;
+
+		if (resolvedFilePath !== packagePath && !resolvedFilePath.startsWith(packageRootWithSep)) {
+			return res.status(404).send("Not found");
+		}
+
+		return res.sendFile(resolvedFilePath, {
+			dotfiles: "allow",
+		});
 	});
 
 	if (Config.values.public && (Config.values.ldap || {}).enable) {

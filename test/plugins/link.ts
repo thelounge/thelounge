@@ -28,7 +28,9 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		return new Promise<void>((resolve) => {
 			app = util.createWebserver();
 			app.get("/real-test-image.png", function (req, res) {
-				res.sendFile(path.resolve("client/public/img/logo-grey-bg-120x120px.png"));
+				res.sendFile(path.resolve("client/public/img/logo-grey-bg-120x120px.png"), {
+					dotfiles: "allow",
+				});
 			});
 			connection = app.listen(0, "127.0.0.1", () => {
 				port = (connection.address() as any).port;

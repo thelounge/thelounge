@@ -85,8 +85,14 @@ class Uploader {
 		}
 
 		const folder = name.substring(0, 2);
-		const uploadPath = Config.getFileUploadPath();
-		const filePath = path.join(uploadPath, folder, name);
+		const uploadRoot = path.resolve(Config.getFileUploadPath());
+		const filePath = path.resolve(uploadRoot, folder, name);
+		const relativePath = path.relative(uploadRoot, filePath);
+
+		if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+			return res.status(404).send("Not found");
+		}
+
 		let detectedMimeType = await Uploader.getFileType(filePath);
 
 		// doesn't exist
@@ -126,7 +132,7 @@ class Uploader {
 		res.setHeader("Cache-Control", "max-age=86400");
 		res.contentType(detectedMimeType);
 
-		return res.sendFile(filePath);
+		return res.sendFile(filePath, {dotfiles: "allow"});
 	}
 
 	static routeUploadFile(this: void, req: Request, res: Response) {
