@@ -503,6 +503,36 @@ function initializeClient(
 		}
 	});
 
+	socket.on("history:around", (data) => {
+		if (_.isPlainObject(data)) {
+			const result = client.historyAround(data);
+
+			if (result) {
+				socket.emit("history:around", result);
+			}
+		}
+	});
+
+	socket.on("history:newer", (data) => {
+		if (_.isPlainObject(data)) {
+			const result = client.historyNewer(data);
+
+			if (result) {
+				socket.emit("history:newer", result);
+			}
+		}
+	});
+
+	socket.on("history:latest", (data) => {
+		if (_.isPlainObject(data)) {
+			const result = client.historyLatest(data);
+
+			if (result) {
+				socket.emit("history:latest", result);
+			}
+		}
+	});
+
 	socket.on("network:new", (data) => {
 		if (_.isPlainObject(data)) {
 			// prevent people from overriding webirc settings

@@ -130,6 +130,11 @@ function mergeChannelData(
 			currentChannel.messages = newChannel.messages;
 		}
 
+		// The server sent the live tail of the channel, so any history window
+		// the client was viewing before the reconnect is gone
+		currentChannel.newerMessagesAvailable = false;
+		currentChannel.historyLoading = false;
+
 		// TODO: this is copies more than what the compiler knows about
 		for (const key in newChannel) {
 			if (!Object.hasOwn(currentChannel, key)) {

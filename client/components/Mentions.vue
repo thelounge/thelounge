@@ -21,7 +21,14 @@
 				<p v-else>You have no recent mentions.</p>
 			</template>
 			<template v-for="message in resolvedMessages" v-else :key="message.msgId">
-				<div :class="['msg', message.type]">
+				<div
+					:class="['msg', message.type, {clickable: message.channel}]"
+					:role="message.channel ? 'button' : undefined"
+					:tabindex="message.channel ? 0 : undefined"
+					@click="jump(message, $event)"
+					@keydown.enter.self="jump(message)"
+					@keydown.space.prevent.self="jump(message)"
+				>
 					<div class="mentions-info">
 						<div>
 							<span class="from">
@@ -44,7 +51,7 @@
 								<button
 									class="msg-dismiss"
 									aria-label="Dismiss this mention"
-									@click="dismissMention(message)"
+									@click.stop="dismissMention(message)"
 								></button>
 							</span>
 						</div>
@@ -90,6 +97,10 @@
 .mentions-popup .msg {
 	margin-bottom: 15px;
 	user-select: text;
+}
+
+.mentions-popup .msg.clickable {
+	cursor: pointer;
 }
 
 .mentions-popup .msg:last-child {
@@ -154,6 +165,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {computed, watch, defineComponent, ref, onMounted, onUnmounted} from "vue";
 import {useStore} from "../js/store";
+import {switchToChannel} from "../js/router";
 import type {SharedMention} from "../../shared/types/mention";
 import type {NetChan} from "../js/types";
 
@@ -211,6 +223,22 @@ export default defineComponent({
 			socket.emit("mentions:dismiss_all");
 		};
 
+		const jump = (message: MentionWithContext, event?: Event) => {
+			const interactive = (event?.target as Element | undefined)?.closest(
+				"a, button, [role='button']"
+			);
+
+			if (!message.channel || (interactive && interactive !== event?.currentTarget)) {
+				return;
+			}
+
+			isOpen.value = false;
+			switchToChannel(message.channel.channel, {
+				id: message.msgId,
+				storageId: message.storageId,
+			});
+		};
+
 		const containerClick = (event: Event) => {
 			if (event.currentTarget === event.target) {
 				isOpen.value = false;
@@ -247,6 +275,7 @@ export default defineComponent({
 			messageTime,
 			dismissMention,
 			dismissAllMentions,
+			jump,
 			containerClick,
 		};
 	},

@@ -5,6 +5,10 @@ import Msg from "../../server/models/msg";
 import Network from "../../server/models/network";
 import Prefix from "../../server/models/prefix";
 import User from "../../server/models/user";
+import Config from "../../server/config";
+import {ChanType} from "../../shared/types/chan";
+import {MessageType} from "../../shared/types/msg";
+
 describe("Chan", function () {
 	const network = {
 		network: {
@@ -24,6 +28,75 @@ describe("Chan", function () {
 
 	network.network.options.PREFIX.forEach((mode) => {
 		prefixLookup.modeToSymbol[mode.mode] = mode.symbol;
+	});
+
+	it("stores a message before emitting it", function () {
+		const chan = new Chan({id: 1, name: "#test", type: ChanType.CHANNEL});
+		const msg = new Msg();
+		let emittedStorageId: number | undefined;
+		const client = {
+			idMsg: 1,
+			attachedClients: [],
+			name: "test",
+			messageStorage: [
+				{
+					index(_network: unknown, _channel: unknown, message: Msg) {
+						message.storageId = 42;
+					},
+				},
+			],
+			find: () => ({network: {}, chan}),
+			emit(_event: string, data: {msg: Msg}) {
+				emittedStorageId = data.msg.storageId;
+			},
+		};
+
+		const publicMode = Config.values.public;
+		Config.values.public = false;
+
+		try {
+			chan.pushMessage(client as any, msg);
+		} finally {
+			Config.values.public = publicMode;
+		}
+
+		expect(emittedStorageId).to.equal(42);
+	});
+
+	it("does not rename the lobby when logging a notice shown in the active channel", function () {
+		const chan = new Chan({id: 1, name: "libera", type: ChanType.LOBBY});
+		const msg = new Msg({
+			type: MessageType.NOTICE,
+			showInActive: true,
+			from: {nick: "alice"},
+		});
+		const indexed: string[] = [];
+		const client = {
+			idMsg: 1,
+			attachedClients: [],
+			name: "test",
+			messageStorage: [
+				{
+					index(_network: unknown, channel: Chan) {
+						indexed.push(channel.name);
+					},
+				},
+			],
+			find: () => ({network: {}, chan}),
+			emit() {},
+		};
+
+		const publicMode = Config.values.public;
+		Config.values.public = false;
+
+		try {
+			chan.pushMessage(client as any, msg);
+		} finally {
+			Config.values.public = publicMode;
+		}
+
+		expect(chan.name).to.equal("libera");
+		expect(indexed).to.be.empty;
 	});
 
 	describe("#findMessage(id)", function () {

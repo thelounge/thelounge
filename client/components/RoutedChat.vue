@@ -4,6 +4,7 @@
 		:network="activeChannel.network"
 		:channel="activeChannel.channel"
 		:focused="parseInt(String(route.query.focused), 10)"
+		:focused-storage-id="parseInt(String(route.query.focusedStorageId), 10)"
 		@channel-changed="channelChanged"
 	/>
 </template>
