@@ -512,4 +512,5 @@ module.exports = {
 		// server window, displayed on the client.
 		raw: false,
 	},
+	authModule: "local",
 };
