@@ -1,6 +1,5 @@
-import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import Config from "./config";
-import {DeletionRequest} from "./plugins/messageStorage/types";
+import {DeletionRequest, PrunableMessageStorage} from "./plugins/messageStorage/types";
 import log from "./log";
 import {MessageType} from "../shared/types/msg";
 
@@ -24,7 +23,7 @@ const status_types = [
 ];
 
 export class StorageCleaner {
-	db: SqliteMessageStorage;
+	db: PrunableMessageStorage;
 	olderThanDays: number;
 	messageTypes: MessageType[] | null;
 	limit: number;
@@ -32,7 +31,7 @@ export class StorageCleaner {
 	errCount: number;
 	isStopped: boolean;
 
-	constructor(db: SqliteMessageStorage) {
+	constructor(db: PrunableMessageStorage) {
 		this.errCount = 0;
 		this.isStopped = true;
 		this.db = db;

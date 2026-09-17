@@ -7,7 +7,7 @@ import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
 import Chan, {Channel} from "../../models/chan";
 import Helper from "../../helper";
-import type {SearchableMessageStorage, DeletionRequest} from "./types";
+import type {PrunableMessageStorage, DeletionRequest} from "./types";
 import Network from "../../models/network";
 import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
 
@@ -122,7 +122,7 @@ export const rollbacks: Rollback[] = [
 export const getMessagesQuery =
 	"SELECT msg, type, time, msgid FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC, id DESC LIMIT ?";
 
-class SqliteMessageStorage implements SearchableMessageStorage {
+class SqliteMessageStorage implements PrunableMessageStorage {
 	isEnabled: boolean;
 	database!: DatabaseSync;
 	userName: string;

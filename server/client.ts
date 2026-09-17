@@ -18,7 +18,7 @@ import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
-import {MessageStorage} from "./plugins/messageStorage/types";
+import {MessageStorage, PrunableMessageStorage} from "./plugins/messageStorage/types";
 import {StorageCleaner} from "./storageCleaner";
 import {SearchQuery, SearchResponse} from "../shared/types/storage";
 import {SharedChan, ChanType} from "../shared/types/chan";
@@ -104,7 +104,7 @@ class Client {
 	messageStorage!: MessageStorage[];
 	highlightRegex!: RegExp | null;
 	highlightExceptionRegex!: RegExp | null;
-	messageProvider?: SqliteMessageStorage;
+	messageProvider?: PrunableMessageStorage;
 
 	fileHash!: string;
 
