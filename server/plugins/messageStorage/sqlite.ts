@@ -14,10 +14,12 @@ import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
 type Migration = {version: number; stmts: string[]};
 type Rollback = {version: number; rollback_forbidden?: boolean; stmts: string[]};
 
-export const currentSchemaVersion = 1784073600000; // use `new Date().getTime()`
+export const currentSchemaVersion = 1789689600000; // use `new Date().getTime()`
 
 // Desired schema, adapt to the newest version and add migrations to the array below
 const schema = [
+	// lets deleteMessages hand freed pages back to the filesystem, applied by the VACUUM in run_migrations
+	"PRAGMA auto_vacuum = INCREMENTAL",
 	"CREATE TABLE options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
 	"CREATE TABLE messages (id INTEGER PRIMARY KEY AUTOINCREMENT, network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT, msgid TEXT)",
 	`CREATE TABLE migrations (
@@ -88,6 +90,11 @@ export const migrations: Migration[] = [
 			"CREATE INDEX msgid_idx ON messages (msgid)",
 		],
 	},
+	{
+		// only takes effect on existing databases through the VACUUM after the migrations
+		version: 1789689600000,
+		stmts: ["PRAGMA auto_vacuum = INCREMENTAL"],
+	},
 ];
 
 // down migrations need to restore the state of the prior version.
@@ -116,7 +123,16 @@ export const rollbacks: Rollback[] = [
 		version: 1784073600000,
 		stmts: ["DROP INDEX msgid_idx", "ALTER TABLE messages DROP COLUMN msgid"],
 	},
+	{
+		version: 1789689600000,
+		stmts: ["PRAGMA auto_vacuum = NONE"],
+	},
 ];
+
+// returns at most 1000 free pages (~4MiB with the default page size) to the filesystem.
+// a batch of the storage cleaner frees a few dozen pages, the cap bounds the time
+// spent after bigger deletes. It needs exec, stepping the statement once frees a single page
+const incrementalVacuumQuery = "PRAGMA incremental_vacuum(1000)";
 
 // exported for tests
 export const getMessagesQuery =
@@ -414,6 +430,9 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		this.database
 			.prepare("DELETE FROM messages WHERE network = ? AND channel = ?")
 			.run(network.uuid, channel.name.toLowerCase());
+
+		// deleting alone never shrinks the file
+		this.database.exec(incrementalVacuumQuery);
 	}
 
 	getMessages(network: Network, channel: Channel, nextID: () => number): Message[] {
@@ -515,7 +534,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		params.push(req.limit);
 		sql += ")";
 
-		return this.database.prepare(sql).run(...params).changes as number;
+		const deleted = this.database.prepare(sql).run(...params).changes as number;
+
+		// deleting alone never shrinks the file
+		this.database.exec(incrementalVacuumQuery);
+
+		return deleted;
 	}
 
 	canProvideMessages() {

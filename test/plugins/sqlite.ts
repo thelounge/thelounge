@@ -1,4 +1,5 @@
 import fs from "fs";
+import os from "os";
 import path from "path";
 import {expect} from "vitest";
 import util from "../util";
@@ -92,6 +93,12 @@ describe("SQLite migrations", function () {
 		db.exec("COMMIT TRANSACTION");
 	});
 
+	it("migrated database uses incremental auto_vacuum after the VACUUM", function () {
+		expect(db.prepare("PRAGMA auto_vacuum").get()).to.deep.equal({auto_vacuum: 0});
+		db.exec("VACUUM");
+		expect(db.prepare("PRAGMA auto_vacuum").get()).to.deep.equal({auto_vacuum: 2});
+	});
+
 	it("migrated database serves getMessages from the index", function () {
 		const plan = db
 			.prepare(`EXPLAIN QUERY PLAN ${getMessagesQuery}`)
@@ -118,6 +125,97 @@ describe("SQLite migrations", function () {
 		}
 
 		db.exec("COMMIT TRANSACTION");
+		db.exec("VACUUM");
+		expect(db.prepare("PRAGMA auto_vacuum").get()).to.deep.equal({auto_vacuum: 0});
+	});
+});
+
+describe("SQLite database files", function () {
+	let dir: string;
+
+	beforeAll(function () {
+		dir = fs.mkdtempSync(path.join(os.tmpdir(), "thelounge-sqlite-"));
+	});
+
+	afterAll(function () {
+		fs.rmSync(dir, {recursive: true, force: true});
+	});
+
+	it("shrinks when messages or channels get deleted", function () {
+		const dbPath = path.join(dir, "new.sqlite3");
+		const store = new MessageStorage("testUser");
+		store._enable(dbPath);
+
+		try {
+			const net = {uuid: "testnet"} as any;
+			const chan = {name: "#channel"} as any;
+			const pageCount = () =>
+				(store.database.prepare("PRAGMA page_count").get() as {page_count: number})
+					.page_count;
+			const freelistCount = () =>
+				(store.database.prepare("PRAGMA freelist_count").get() as {freelist_count: number})
+					.freelist_count;
+
+			// a single transaction, committing every message is slow on some filesystems
+			const fill = (time: Date) => {
+				store.database.exec("BEGIN TRANSACTION");
+
+				for (let i = 0; i < 200; ++i) {
+					store.index(net, chan, new Msg({time: time, text: "x".repeat(2000)}));
+				}
+
+				store.database.exec("COMMIT");
+			};
+
+			fill(dateAddDays(new Date(), -10));
+
+			const pagesBefore = pageCount();
+			const sizeBefore = fs.statSync(dbPath).size;
+
+			const deleted = store.deleteMessages({messageTypes: null, limit: -1, olderThanDays: 1});
+			expect(deleted).to.equal(200);
+
+			expect(freelistCount()).to.equal(0);
+			expect(pageCount()).to.be.lessThan(pagesBefore / 2);
+			expect(fs.statSync(dbPath).size).to.be.lessThan(sizeBefore / 2);
+
+			fill(new Date());
+
+			const pagesBeforeChannelDelete = pageCount();
+			store.deleteChannel(net, chan);
+
+			expect(freelistCount()).to.equal(0);
+			expect(pageCount()).to.be.lessThan(pagesBeforeChannelDelete / 2);
+		} finally {
+			store.close();
+		}
+	});
+
+	it("converts existing databases to incremental auto_vacuum", function () {
+		const dbPath = path.join(dir, "old.sqlite3");
+		const old = new DatabaseSync(dbPath);
+
+		for (const stmt of orig_schema) {
+			old.exec(stmt);
+		}
+
+		old.prepare("INSERT INTO options (name, value) VALUES ('schema_version', ?)").run(
+			v1_schema_version.toString()
+		);
+		expect(old.prepare("PRAGMA auto_vacuum").get()).to.deep.equal({auto_vacuum: 0});
+		old.close();
+
+		const store = new MessageStorage("testUser");
+		store._enable(dbPath);
+
+		try {
+			expect(store.current_version()).to.equal(currentSchemaVersion);
+			expect(store.database.prepare("PRAGMA auto_vacuum").get()).to.deep.equal({
+				auto_vacuum: 2,
+			});
+		} finally {
+			store.close();
+		}
 	});
 });
 
@@ -131,6 +229,12 @@ describe("SQLite unit tests", function () {
 
 	afterEach(function () {
 		store.close();
+	});
+
+	it("creates new databases with incremental auto_vacuum", function () {
+		expect(store.database.prepare("PRAGMA auto_vacuum").get()).to.deep.equal({
+			auto_vacuum: 2,
+		});
 	});
 
 	it("deletes messages when asked to", function () {
@@ -441,6 +545,10 @@ describe("SQLite Message Storage", function () {
 			const new_version = store.downgrade_to(rollback.version);
 			expect(new_version).to.equal(rollback.version);
 		}
+
+		expect(store.database.prepare("PRAGMA auto_vacuum").get()).to.deep.equal({
+			auto_vacuum: 0,
+		});
 	});
 
 	it("should close database", function () {
