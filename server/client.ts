@@ -24,6 +24,7 @@ import {SearchQuery, SearchResponse} from "../shared/types/storage";
 import {SharedChan, ChanType} from "../shared/types/chan";
 import {SharedNetwork} from "../shared/types/network";
 import {ServerToClientEvents} from "../shared/types/socket-events";
+import {IncomingMessage} from "http";
 
 const events = [
 	"away",
@@ -64,16 +65,18 @@ type ClientPushSubscription = {
 	};
 };
 
+type AttachedClient = {
+	lastUse: number;
+	ip: string;
+	agent: string;
+	pushSubscription?: ClientPushSubscription;
+};
+
 export type UserConfig = {
 	log: boolean;
 	password: string;
 	sessions: {
-		[token: string]: {
-			lastUse: number;
-			ip: string;
-			agent: string;
-			pushSubscription?: ClientPushSubscription;
-		};
+		[token: string]: AttachedClient;
 	};
 	clientSettings: {
 		[key: string]: any;
@@ -341,7 +344,13 @@ class Client {
 		});
 	}
 
-	connectToNetwork(args: Record<string, any>, isStartup = false) {
+	connectToNetwork(
+		args:
+			| Record<keyof NetworkConfig, NetworkConfig[keyof NetworkConfig]>
+			| NetworkConfig
+			| {host: string; port: number; tls: boolean},
+		isStartup = false
+	) {
 		const client = this;
 
 		// Get channel id for lobby before creating other channels for nicer ids
@@ -406,7 +415,7 @@ class Client {
 		return crypto.createHash("sha512").update(token).digest("hex");
 	}
 
-	updateSession(token: string, ip: string, request: any) {
+	updateSession(token: string, ip: string, request: IncomingMessage) {
 		const client = this;
 		const agent = UAParser(request.headers["user-agent"] || "");
 		let friendlyAgent = "";
@@ -450,7 +459,7 @@ class Client {
 		});
 	}
 
-	input(data) {
+	input(data: {target: number; text: string}) {
 		const client = this;
 		const text: string = data.text;
 
@@ -474,7 +483,7 @@ class Client {
 		});
 	}
 
-	inputLine(data) {
+	inputLine(data: {target: number; text: string}) {
 		const client = this;
 		const target = client.find(data.target);
 
@@ -596,7 +605,7 @@ class Client {
 		);
 	}
 
-	more(data) {
+	more(data: {target: number; lastId: number; condensed: boolean}) {
 		const client = this;
 		const target = client.find(data.target);
 
@@ -651,7 +660,7 @@ class Client {
 		};
 	}
 
-	clearHistory(data) {
+	clearHistory(data: {target: number}) {
 		const client = this;
 		const target = client.find(data.target);
 
@@ -856,8 +865,11 @@ class Client {
 		}
 	}
 
-	// TODO: type session to this.attachedClients
-	registerPushSubscription(session: any, subscription: PushSubscriptionJSON, noSave = false) {
+	registerPushSubscription(
+		session: AttachedClient,
+		subscription: PushSubscriptionJSON,
+		noSave = false
+	) {
 		if (
 			!_.isPlainObject(subscription) ||
 			typeof subscription.endpoint !== "string" ||
@@ -867,7 +879,7 @@ class Client {
 			typeof subscription.keys.p256dh !== "string" ||
 			typeof subscription.keys.auth !== "string"
 		) {
-			session.pushSubscription = null;
+			session.pushSubscription = undefined;
 			return;
 		}
 

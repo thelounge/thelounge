@@ -18,7 +18,7 @@ export default class PublicClient {
 	 * @param {String} command - IRC command to run, this is in the same format that a client would send to the server (eg: JOIN #test)
 	 * @param {String} targetId - The id of the channel to simulate the command coming from. Replies will go to this channel if appropriate
 	 */
-	runAsUser(command: string, targetId: string) {
+	runAsUser(command: string, targetId: number) {
 		this.client.inputLine({target: targetId, text: command});
 	}
 

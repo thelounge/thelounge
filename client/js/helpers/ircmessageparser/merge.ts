@@ -71,12 +71,13 @@ function merge(
 	const allParts: MergedParts = [...parts, ...filled].sort(sortParts); // Sort all parts identified based on their position in the original text
 
 	// Distribute the style fragments within the text parts
-	return allParts.map((part: any) => {
-		part.fragments = styleFragments
-			.filter((fragment) => anyIntersection(part, fragment))
-			.map((fragment) => assign(part, fragment));
-
-		return part as PartWithFragments;
+	return allParts.map((part: Part) => {
+		return {
+			...part,
+			fragments: styleFragments
+				.filter((fragment) => anyIntersection(part, fragment))
+				.map((fragment) => assign(part, fragment)),
+		};
 	});
 }
 

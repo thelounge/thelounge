@@ -57,7 +57,8 @@ linkify.add("web+", {
 // See https://github.com/thelounge/thelounge/issues/2525
 //
 // We take the validation logic from linkify and just add our own
-// normalizer.
+// normalizer. This is pretty gross, since it depends on the internal
+// data structure of LinkifyIt.
 linkify.add("//", {
 	validate: (linkify as any).__schemas__["//"].validate,
 	normalize(match) {
