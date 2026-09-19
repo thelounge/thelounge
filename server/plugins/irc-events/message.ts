@@ -256,6 +256,8 @@ export default <IrcEventHandler>function (irc, network) {
 				{
 					type: "notification",
 					chanId: chan.id,
+					msgId: msg.id,
+					storageId: msg.storageId,
 					timestamp: data.time || Date.now(),
 					title: title,
 					body: body,
@@ -269,6 +271,7 @@ export default <IrcEventHandler>function (irc, network) {
 			client.mentions.push({
 				chanId: chan.id,
 				msgId: msg.id,
+				storageId: msg.storageId,
 				type: msg.type,
 				time: msg.time,
 				text: msg.text,

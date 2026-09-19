@@ -10,5 +10,7 @@ socket.on("history:clear", function (data) {
 		netChan.channel.highlight = 0;
 		netChan.channel.firstUnread = 0;
 		netChan.channel.moreHistoryAvailable = false;
+		netChan.channel.newerMessagesAvailable = false;
+		netChan.channel.historyLoading = false;
 	}
 });
