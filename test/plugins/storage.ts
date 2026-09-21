@@ -40,10 +40,10 @@ describe("Image storage", function () {
 	beforeAll(function () {
 		app = util.createWebserver();
 		app.get("/real-test-image.png", function (_req: any, res: any) {
-			res.sendFile(testImagePath);
+			res.sendFile(testImagePath, {dotfiles: "allow"});
 		});
 		app.get("/logo.svg", function (_req: any, res: any) {
-			res.sendFile(testSvgPath);
+			res.sendFile(testSvgPath, {dotfiles: "allow"});
 		});
 
 		return new Promise<void>((resolve) => {
