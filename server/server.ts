@@ -118,6 +118,13 @@ export default async function (
 	app.get("/packages/:package/:filename", (req, res) => {
 		const packageName = req.params.package;
 		const fileName = req.params.filename;
+		const validPackageName = /^(?:@[a-z0-9._-]+\/)?[a-z0-9._-]+$/i.test(packageName);
+		const validFileName = /^[a-z0-9._-]+$/i.test(fileName);
+
+		if (!validPackageName || !validFileName) {
+			return res.status(404).send("Not found");
+		}
+
 		const packageFile = packages.getPackage(packageName);
 
 		if (!packageFile || !packages.getFiles().includes(`${packageName}/${fileName}`)) {
