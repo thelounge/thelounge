@@ -48,6 +48,7 @@ export type State = {
 	isAutoCompleting: boolean;
 	isConnected: boolean;
 	networks: ClientNetwork[];
+	selfRegister: boolean;
 	// TODO: type
 	mentions: ClientMention[];
 	hasServiceWorker: boolean;
@@ -91,6 +92,7 @@ const state = (): State => ({
 	isAutoCompleting: false,
 	isConnected: false,
 	networks: [],
+	selfRegister: false,
 	mentions: [],
 	hasServiceWorker: false,
 	pushNotificationState: "unsupported",
@@ -204,6 +206,7 @@ type Mutations = {
 	isAutoCompleting(state: State, isAutoCompleting: State["isAutoCompleting"]): void;
 	isConnected(state: State, payload: State["isConnected"]): void;
 	networks(state: State, networks: State["networks"]): void;
+	selfRegister(state: State, selfRegister: State["selfRegister"]): void;
 	mentions(state: State, mentions: State["mentions"]): void;
 
 	removeNetwork(state: State, networkUuid: string): void;
@@ -253,6 +256,9 @@ const mutations: Mutations = {
 	},
 	networks(state, networks) {
 		state.networks = networks;
+	},
+	selfRegister(state, selfRegister) {
+		state.selfRegister = selfRegister;
 	},
 	mentions(state, mentions) {
 		state.mentions = mentions;
