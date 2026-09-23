@@ -317,7 +317,7 @@ the server tab on new connection"
 					</div>
 				</template>
 			</template>
-			<template v-else>
+			<template v-if="!config?.lockNetwork || store.state.serverConfiguration?.public">
 				<h2 id="label-auth">Authentication</h2>
 				<div class="connect-row connect-auth" role="group" aria-labelledby="label-auth">
 					<label class="opt">
