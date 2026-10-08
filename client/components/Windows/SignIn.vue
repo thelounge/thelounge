@@ -46,16 +46,19 @@
 				</RevealPassword>
 			</div>
 
-			<div v-if="errorShown" class="error">Authentication failed.</div>
+			<div v-if="errorMessage" class="error">
+				{{ errorMessage === true ? "Authentication failed." : errorMessage }}
+			</div>
 
-			<button :disabled="inFlight" type="submit" class="btn">Sign in</button>
+			<button :disabled="!canSubmit" type="submit" class="btn">Sign in</button>
 		</form>
 	</div>
 </template>
 
 <script lang="ts">
 import storage from "../../js/localStorage";
-import socket from "../../js/socket";
+import socket, {tryAgainMessage} from "../../js/socket";
+import {store} from "../../js/store";
 import RevealPassword from "../RevealPassword.vue";
 import {defineComponent, onBeforeUnmount, onMounted, ref} from "vue";
 
@@ -65,15 +68,19 @@ export default defineComponent({
 		RevealPassword,
 	},
 	setup() {
-		const inFlight = ref(false);
-		const errorShown = ref(false);
+		// If authFailure reads "disconnected" initially, the user was likely blocked.
+		// ("Authentication failed." should never show on initial page load.)
+		const canSubmit = ref(store.state.authFailure !== "disconnected");
+		const errorMessage = ref<string | boolean>(
+			store.state.authFailure === "disconnected" ? tryAgainMessage : false
+		);
 
 		const username = ref(storage.get("user") || "");
 		const password = ref("");
 
 		const onAuthFailed = () => {
-			inFlight.value = false;
-			errorShown.value = true;
+			canSubmit.value = true;
+			errorMessage.value = true;
 		};
 
 		const onSubmit = (event: Event) => {
@@ -83,8 +90,8 @@ export default defineComponent({
 				return;
 			}
 
-			inFlight.value = true;
-			errorShown.value = false;
+			canSubmit.value = false;
+			errorMessage.value = false;
 
 			const values = {
 				user: username.value,
@@ -96,17 +103,35 @@ export default defineComponent({
 			socket.emit("auth:perform", values);
 		};
 
+		const unwatchAuthFailure = store.watch(
+			(state) => state.authFailure,
+			(authFailure, oldAuthFailure) => {
+				if (authFailure === "disconnected") {
+					// Occurs when long-poll or socket reconnect receives 403 after auth failure
+					// (i.e. block activated)
+					errorMessage.value = tryAgainMessage;
+					canSubmit.value = false;
+				} else if (authFailure === null && oldAuthFailure === "disconnected") {
+					// Occurs when socket connection is successfully established after page reload,
+					// after previously losing connection after auth failure (i.e. block removed)
+					errorMessage.value = false;
+					canSubmit.value = true;
+				}
+			}
+		);
+
 		onMounted(() => {
 			socket.on("auth:failed", onAuthFailed);
 		});
 
 		onBeforeUnmount(() => {
 			socket.off("auth:failed", onAuthFailed);
+			unwatchAuthFailure();
 		});
 
 		return {
-			inFlight,
-			errorShown,
+			canSubmit,
+			errorMessage,
 			username,
 			password,
 			onSubmit,
