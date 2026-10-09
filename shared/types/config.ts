@@ -36,7 +36,7 @@ export type ConfigNetDefaults = {
 };
 export type LockedConfigNetDefaults = Omit<
 	ConfigNetDefaults,
-	"host" | "name" | "port" | "tls" | "rejectUnauthorized"
+	"host" | "port" | "tls" | "rejectUnauthorized"
 >;
 
 export type LockedSharedConfiguration = SharedConfigurationBase & {

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import log from "../../log";
-import colors from "chalk";
+import colors from "../../colors";
 import path from "path";
 import semver from "semver";
 import Helper from "../../helper";

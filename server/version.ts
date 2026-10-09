@@ -37,6 +37,7 @@ export function getVersionNumber(): string {
 
 let _cacheBust: string;
 
+// Mirrors getVersionCacheBust() in vite.config.mts
 export function getVersionCacheBust(): string {
 	if (!_cacheBust) {
 		const hash = crypto.createHash("sha256").update(getVersion()).digest("hex");

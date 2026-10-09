@@ -63,7 +63,6 @@ export default defineComponent({
 
 		const hover = () => {
 			if (props.onHover) {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return props.onHover(props.user as UserInMessage);
 			}
 

@@ -7,7 +7,7 @@ export default defineConfig({
 	resolve: {
 		extensions: [".ts", ".js", ".vue"],
 		alias: {
-			debug: path.resolve(__dirname, "scripts/noop.js"),
+			debug: path.resolve(import.meta.dirname, "scripts/noop.js"),
 		},
 	},
 	define: {

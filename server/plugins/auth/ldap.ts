@@ -1,5 +1,5 @@
 import ldap, {SearchOptions} from "ldapjs";
-import colors from "chalk";
+import colors from "../../colors";
 
 import log from "../../log";
 import Config from "../../config";

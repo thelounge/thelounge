@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           # TODO: we should use node-version-file but the version of npm with node 22 has issues updating to the latest version
           # https://github.com/nodejs/node/issues/62425

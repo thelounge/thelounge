@@ -3,7 +3,7 @@ import path from "path";
 import fs, {Stats} from "fs";
 import os from "os";
 import _ from "lodash";
-import colors from "chalk";
+import colors from "./colors";
 import {SearchOptions} from "ldapjs";
 
 import log from "./log";
