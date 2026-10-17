@@ -83,7 +83,24 @@ interface ServerToClientEvents {
 	"users:online": EventHandler<{changedChannels: string[]; networkId: string}>;
 	"users:offline": EventHandler<{changedChannels: string[]; networkId: string}>;
 
-	more: EventHandler<{chan: number; messages: SharedMsg[]; totalMessages: number}>;
+	more: EventHandler<{
+		chan: number;
+		messages: SharedMsg[];
+		totalMessages?: number;
+		moreHistoryAvailable?: boolean;
+	}>;
+	"history:around": EventHandler<{
+		chan: number;
+		messages: SharedMsg[];
+		hasMoreBefore: boolean;
+		hasMoreAfter: boolean;
+	}>;
+	"history:newer": EventHandler<{
+		chan: number;
+		messages: SharedMsg[];
+		hasMoreAfter: boolean;
+	}>;
+	"history:latest": EventHandler<{chan: number; messages: SharedMsg[]; totalMessages: number}>;
 
 	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;
 	"msg:special": EventHandler<{chan: number; data?: Record<string, any>}>;
@@ -165,7 +182,15 @@ interface ClientToServerEvents {
 	"mentions:dismiss_all": NoPayloadEventHandler;
 	"mentions:get": NoPayloadEventHandler;
 
-	more: EventHandler<{target: number; lastId: number; condensed: boolean}>;
+	more: EventHandler<{
+		target: number;
+		lastId: number;
+		storageId?: number;
+		condensed: boolean;
+	}>;
+	"history:around": EventHandler<{target: number; msgId?: number; storageId?: number}>;
+	"history:newer": EventHandler<{target: number; lastId: number; storageId?: number}>;
+	"history:latest": EventHandler<{target: number}>;
 
 	"msg:preview:toggle": EventHandler<{
 		target: number;

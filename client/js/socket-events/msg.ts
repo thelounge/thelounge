@@ -67,7 +67,10 @@ socket.on("msg", function (data) {
 		}
 	}
 
-	channel.messages.push(data.msg);
+	// New messages will be loaded when catching up from older history
+	if (!channel.newerMessagesAvailable) {
+		channel.messages.push(data.msg);
+	}
 
 	if (data.msg.self) {
 		channel.firstUnread = data.msg.id;
@@ -164,6 +167,8 @@ function notifyMessage(
 								registration.active?.postMessage({
 									type: "notification",
 									chanId: targetId,
+									msgId: msg.id,
+									storageId: msg.storageId,
 									timestamp: timestamp,
 									title: title,
 									body: body,
@@ -187,7 +192,7 @@ function notifyMessage(
 							const channelTarget = store.getters.findChannel(targetId);
 
 							if (channelTarget) {
-								switchToChannel(channelTarget.channel);
+								switchToChannel(channelTarget.channel, msg);
 							}
 						});
 					}

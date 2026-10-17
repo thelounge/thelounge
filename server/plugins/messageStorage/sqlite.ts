@@ -120,7 +120,23 @@ export const rollbacks: Rollback[] = [
 
 // exported for tests
 export const getMessagesQuery =
-	"SELECT msg, type, time, msgid FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC, id DESC LIMIT ?";
+	"SELECT id, msg, type, time, msgid FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC, id DESC LIMIT ?";
+
+type StoredRow = {
+	id: number;
+	msg: string;
+	type: string;
+	time: number;
+	msgid: string | null;
+	network?: string;
+	channel?: string;
+};
+
+type MessageWindow = {
+	messages: Message[];
+	hasMoreBefore: boolean;
+	hasMoreAfter: boolean;
+};
 
 class SqliteMessageStorage implements SearchableMessageStorage {
 	isEnabled: boolean;
@@ -381,7 +397,9 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			// type, time, and msgid are stored in separate columns
 			if (
 				prop !== "id" &&
+				prop !== "storageId" &&
 				prop !== "previews" &&
+				prop !== "showInActive" &&
 				prop !== "type" &&
 				prop !== "time" &&
 				prop !== "msgid"
@@ -392,7 +410,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			return newMsg;
 		}, {});
 
-		this.database
+		const result = this.database
 			.prepare(
 				"INSERT INTO messages(network, channel, time, type, msg, msgid) VALUES(?, ?, ?, ?, ?, ?)"
 			)
@@ -404,6 +422,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 				JSON.stringify(clonedMsg),
 				msg.msgid ?? null
 			);
+
+		msg.storageId = Number(result.lastInsertRowid);
 	}
 
 	deleteChannel(network: Network, channel: Channel) {
@@ -426,27 +446,88 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		const rows = this.database
 			.prepare(getMessagesQuery)
-			.all(network.uuid, channel.name.toLowerCase(), limit) as {
-			msg: string;
-			type: string;
-			time: number;
-			msgid: string | null;
-		}[];
+			.all(network.uuid, channel.name.toLowerCase(), limit) as StoredRow[];
 
-		return rows.reverse().map((row): Message => {
-			const msg = JSON.parse(row.msg);
-			msg.time = row.time;
-			msg.type = row.type;
+		return rows.reverse().map((row) => parseStoredRow(row, nextID));
+	}
 
-			if (row.msgid) {
-				msg.msgid = row.msgid;
-			}
+	getMessagesAround(
+		network: Network,
+		channel: Channel,
+		storageId: number,
+		beforeCount: number,
+		afterCount: number,
+		nextID: () => number
+	): MessageWindow | null {
+		if (!this.isEnabled) {
+			return null;
+		}
 
-			const newMsg = new Msg(msg);
-			newMsg.id = nextID();
+		const target = this.getStoredMessage(network, channel, storageId);
 
-			return newMsg;
-		});
+		if (!target) {
+			return null;
+		}
+
+		// Load one extra message on each side to check if more history is available
+		const before = beforeCount
+			? this.getRowsBefore(network, channel, target, beforeCount + 1)
+			: [];
+		const after = afterCount ? this.getRowsAfter(network, channel, target, afterCount + 1) : [];
+
+		return {
+			messages: before
+				.slice(0, beforeCount)
+				.reverse()
+				.concat(target, after.slice(0, afterCount))
+				.map((row) => parseStoredRow(row, nextID)),
+			hasMoreBefore: before.length > beforeCount,
+			hasMoreAfter: after.length > afterCount,
+		};
+	}
+
+	private getStoredMessage(network: Network, channel: Channel, storageId: number) {
+		return this.database
+			.prepare(
+				"SELECT id, msg, type, time, msgid FROM messages WHERE id = ? AND network = ? AND channel = ?"
+			)
+			.get(storageId, network.uuid, channel.name.toLowerCase()) as StoredRow | undefined;
+	}
+
+	private getRowsBefore(network: Network, channel: Channel, target: StoredRow, limit: number) {
+		return this.database
+			.prepare(
+				`SELECT id, msg, type, time, msgid FROM messages
+				 WHERE network = ? AND channel = ?
+				 AND (time < ? OR (time = ? AND id < ?))
+				 ORDER BY time DESC, id DESC LIMIT ?`
+			)
+			.all(
+				network.uuid,
+				channel.name.toLowerCase(),
+				target.time,
+				target.time,
+				target.id,
+				limit
+			) as StoredRow[];
+	}
+
+	private getRowsAfter(network: Network, channel: Channel, target: StoredRow, limit: number) {
+		return this.database
+			.prepare(
+				`SELECT id, msg, type, time, msgid FROM messages
+				 WHERE network = ? AND channel = ?
+				 AND (time > ? OR (time = ? AND id > ?))
+				 ORDER BY time, id LIMIT ?`
+			)
+			.all(
+				network.uuid,
+				channel.name.toLowerCase(),
+				target.time,
+				target.time,
+				target.id,
+				limit
+			) as StoredRow[];
 	}
 
 	search(query: SearchQuery): SearchResponse {
@@ -461,7 +542,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
 
 		let select =
-			"SELECT msg, type, time, network, channel, msgid FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
+			"SELECT id, msg, type, time, network, channel, msgid FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
 		const params: (string | number)[] = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
@@ -480,18 +561,12 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		params.push(maxResults);
 		params.push(query.offset);
 
-		const rows = this.database.prepare(select).all(...params) as {
-			msg: string;
-			type: string;
-			time: number;
-			network: string;
-			channel: string;
-			msgid: string | null;
-		}[];
+		const rows = this.database.prepare(select).all(...params) as StoredRow[];
+		let id = query.offset;
 
 		return {
 			...query,
-			results: parseSearchRowsToMessages(query.offset, rows).reverse(),
+			results: rows.map((row) => parseStoredRow(row, () => id++)).reverse(),
 		};
 	}
 
@@ -523,37 +598,27 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 }
 
-// TODO: type any
-function parseSearchRowsToMessages(
-	id: number,
-	rows: {
-		msg: string;
-		type: string;
-		time: number;
-		network: string;
-		channel: string;
-		msgid: string | null;
-	}[]
-) {
-	const messages: Msg[] = [];
+function parseStoredRow(row: StoredRow, nextID: () => number): Message {
+	const msg = JSON.parse(row.msg);
+	msg.time = row.time;
+	msg.type = row.type;
+	msg.storageId = row.id;
 
-	for (const row of rows) {
-		const msg = JSON.parse(row.msg);
-		msg.time = row.time;
-		msg.type = row.type;
+	if (row.network !== undefined) {
 		msg.networkUuid = row.network;
-		msg.channelName = row.channel;
-		msg.id = id;
-
-		if (row.msgid) {
-			msg.msgid = row.msgid;
-		}
-
-		messages.push(new Msg(msg));
-		id += 1;
 	}
 
-	return messages;
+	if (row.channel !== undefined) {
+		msg.channelName = row.channel;
+	}
+
+	if (row.msgid) {
+		msg.msgid = row.msgid;
+	}
+
+	const newMsg = new Msg(msg);
+	newMsg.id = nextID();
+	return newMsg;
 }
 
 export function necessaryMigrations(since: number): Migration[] {
