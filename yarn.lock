@@ -457,12 +457,10 @@
   resolved "https://registry.yarnpkg.com/@exodus/bytes/-/bytes-1.15.0.tgz#54479e0f406cbad024d6fe1c3190ecca4468df3b"
   integrity sha512-UY0nlA+feH81UGSHv92sLEPLCeZFjXOuHhrIo0HQydScuQc8s0A7kL/UdgwgDq8g8ilksmuoF35YVTNphV2aBQ==
 
-"@fastify/busboy@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-1.0.0.tgz#f73182e61955ab91f8ec5a137fda2c9cee366dbd"
-  integrity sha512-tzTXX1TFEjWCseEsNdIlXXkD+48uJoN+zpqIojUX4pSoMscsbhO/UuVEB5SzJucexqDWOo2ma0ECwdD7hZdrzg==
-  dependencies:
-    text-decoding "^1.0.0"
+"@fastify/busboy@3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@fastify/busboy/-/busboy-3.2.2.tgz#c35ca0fac4b644f5f56a7e179360568a5d7c997e"
+  integrity sha512-yXSS27qPExaXeuLvMRMXOLtpipzfQYNjG3FkunDWKGfMYjKuhFXko9CVzqxm8jcF+lmtS9Fd89QNdh9XDjnbNg==
 
 "@fortawesome/fontawesome-free@5.15.4":
   version "5.15.4"
@@ -5777,11 +5775,6 @@ table@^6.8.0:
     slice-ansi "^4.0.0"
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
-
-text-decoding@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/text-decoding/-/text-decoding-1.0.0.tgz#38a5692d23b5c2b12942d6e245599cb58b1bc52f"
-  integrity sha512-/0TJD42KDnVwKmDK6jj3xP7E2MG7SHAOG4tyTgyUCRPdHwvkquYNLEQltmdMa3owq3TkddCVcTsoctJI8VQNKA==
 
 text-table@^0.2.0:
   version "0.2.0"
