@@ -8,7 +8,7 @@ import type {MessageType} from "../../../shared/types/msg";
 export type DeletionRequest = {
 	olderThanDays: number;
 	messageTypes: MessageType[] | null; // null means no restriction
-	limit: number; // -1 means unlimited
+	limit: number; // -1 means unlimited, providers may delete fewer
 };
 
 interface MessageStorage {
@@ -31,4 +31,10 @@ type SearchFunction = (query: SearchQuery) => SearchResponse;
 
 export interface SearchableMessageStorage extends MessageStorage {
 	search: SearchFunction;
+}
+
+// A storage whose messages can be deleted, e.g. to apply the storage policy
+export interface PrunableMessageStorage extends SearchableMessageStorage {
+	// returns the number of deleted messages
+	deleteMessages(req: DeletionRequest): number;
 }
