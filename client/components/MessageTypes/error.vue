@@ -36,6 +36,9 @@ export default defineComponent({
 				case "banned_from_channel":
 					return `Cannot join ${chan} - You have been banned from the channel.`;
 				case "cannot_send_to_channel":
+					if (props.message.reason) {
+						return `${chan}: ${props.message.reason}`;
+					}
 					return `Cannot send to channel ${chan}`;
 				case "channel_is_full":
 					return `Cannot join ${chan} - Channel is full.`;
