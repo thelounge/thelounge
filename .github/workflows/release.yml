@@ -24,7 +24,6 @@ jobs:
           # TODO: we should use node-version-file but the version of npm with node 22 has issues updating to the latest version
           # https://github.com/nodejs/node/issues/62425
           node-version: "24"
-          registry-url: "https://registry.npmjs.org/"
 
       - name: Install
         run: yarn --frozen-lockfile --non-interactive
