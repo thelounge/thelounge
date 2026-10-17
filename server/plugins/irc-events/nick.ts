@@ -11,7 +11,8 @@ export default <IrcEventHandler>function (irc, network) {
 		const self = data.nick === irc.user.nick;
 
 		if (self) {
-			network.setNick(data.new_nick);
+			// May be a forced rename, not a nick we asked for
+			network.setCurrentNick(data.new_nick);
 
 			const lobby = network.getLobby();
 			const msg = new Msg({
@@ -24,6 +25,9 @@ export default <IrcEventHandler>function (irc, network) {
 				network: network.uuid,
 				nick: data.new_nick,
 			});
+		} else {
+			// May be the nick we want
+			network.nickKeeper.nickReleased(data.nick);
 		}
 
 		network.channels.forEach((chan) => {
