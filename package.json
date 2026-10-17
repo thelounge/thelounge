@@ -54,7 +54,7 @@
     "./public/**"
   ],
   "dependencies": {
-    "@fastify/busboy": "1.0.0",
+    "@fastify/busboy": "3.2.2",
     "bcryptjs": "2.4.3",
     "cheerio": "1.0.0",
     "commander": "9.0.0",
