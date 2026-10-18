@@ -99,6 +99,10 @@ function updateVersions(response: Response<string>) {
 }
 
 function checkForUpdates(manager: ClientManager) {
+	if (Config.values.disableUpdateCheck) {
+		return;
+	}
+
 	fetch()
 		.then((versionData) => {
 			if (!module.exports.isUpdateAvailable) {

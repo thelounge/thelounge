@@ -43,6 +43,21 @@ module.exports = {
 	// pick its preferred one.
 	bind: undefined,
 
+	// ### `disableUpdateCheck`
+	//
+	// When set to `true`, The Lounge will not check GitHub for new releases
+	// automatically. Normally the server checks once on startup and then every
+	// 24 hours, which requires an outgoing request to GitHub. Disable it for
+	// offline, air-gapped or privacy-sensitive installations where The Lounge
+	// should not make unattended requests.
+	//
+	// This only stops the automatic background check: opening the changelog
+	// in the client still fetches the latest release information from GitHub
+	// on demand.
+	//
+	// This value is set to `false` by default.
+	disableUpdateCheck: false,
+
 	// ### `reverseProxy`
 	//
 	// When set to `true`, The Lounge is marked as served behind a reverse proxy
