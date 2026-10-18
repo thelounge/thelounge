@@ -88,6 +88,7 @@ export type ConfigType = {
 	host: string | undefined;
 	port: number;
 	bind: string | undefined;
+	disableUpdateCheck: boolean;
 	reverseProxy: boolean;
 	maxHistory: number;
 	https: Https;
