@@ -37,7 +37,6 @@ export type Defaults = Pick<
 	| "password"
 	| "tls"
 	| "rejectUnauthorized"
-	| "nick"
 	| "username"
 	| "realname"
 	| "leaveMessage"
@@ -45,6 +44,7 @@ export type Defaults = Pick<
 	| "saslAccount"
 	| "saslPassword"
 > & {
+	nick: string;
 	join: string;
 };
 
