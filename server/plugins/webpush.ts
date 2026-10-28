@@ -21,32 +21,32 @@ const importEsm = new Function("specifier", "return import(specifier)") as <T>(
 const pushTimeout = 10 * 1000;
 
 function isPrivateAddress(address: string): boolean {
-	let v4 = address.replace(/^::ffff:/i, "");
-	const mappedHex = /^([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i.exec(v4);
-
-	if (mappedHex) {
-		const hi = parseInt(mappedHex[1], 16);
-		const lo = parseInt(mappedHex[2], 16);
-		v4 = `${hi >> 8}.${hi & 255}.${lo >> 8}.${lo & 255}`;
-	}
-
-	if (net.isIPv4(v4)) {
-		const [a, b] = v4.split(".").map(Number);
+	if (net.isIPv4(address)) {
+		const [a, b] = address.split(".").map(Number);
 
 		return (
 			a === 0 ||
 			a === 10 ||
 			a === 127 ||
+			a >= 224 ||
 			(a === 100 && b >= 64 && b <= 127) ||
 			(a === 169 && b === 254) ||
 			(a === 172 && b >= 16 && b <= 31) ||
-			(a === 192 && b === 168)
+			(a === 192 && (b === 0 || b === 168)) ||
+			(a === 198 && (b === 18 || b === 19))
 		);
 	}
 
 	const v6 = address.toLowerCase();
 
-	return v6 === "::" || v6 === "::1" || /^f[cd]/.test(v6) || /^fe[89ab]/.test(v6);
+	return (
+		v6.startsWith("::") ||
+		v6.startsWith("64:ff9b:") ||
+		v6.startsWith("2002:") ||
+		/^f[cd]/.test(v6) ||
+		/^fe[89ab]/.test(v6) ||
+		v6.startsWith("ff")
+	);
 }
 
 export function isAllowedPushEndpoint(endpoint: string): boolean {
@@ -165,12 +165,29 @@ class WebPush {
 	async pushSingle(client: Client, subscription: PushSubscription, payload: any) {
 		try {
 			const webPush = await this.loadWebPush();
-			await webPush.sendNotification(subscription, JSON.stringify(payload), {
-				vapidDetails: this.vapidDetails,
+			const request = await webPush.generateRequestDetails(
+				subscription,
+				JSON.stringify(payload),
+				{vapidDetails: this.vapidDetails}
+			);
+			const response = await fetch(request.endpoint, {
+				method: request.method,
+				headers: request.headers,
+				body: request.body ? new Uint8Array(request.body) : null,
+				redirect: "manual",
 				signal: AbortSignal.timeout(pushTimeout),
 			});
+
+			if (!response.ok) {
+				throw Object.assign(
+					new Error(`Received unexpected response code ${response.status}`),
+					{
+						statusCode: response.status,
+					}
+				);
+			}
 		} catch (error: any) {
-			if (error.statusCode >= 400 && error.statusCode < 500) {
+			if (error.statusCode >= 300 && error.statusCode < 500) {
 				log.warn(
 					`WebPush subscription for ${client.name} returned an error (${String(
 						error.statusCode
