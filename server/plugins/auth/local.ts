@@ -3,11 +3,24 @@ import log from "../../log";
 import Helper from "../../helper";
 import type {AuthHandler} from "../auth";
 
+let unknownUserHash: string | undefined;
+
 const localAuth: AuthHandler = (_manager, client, user, password, callback) => {
-	// If no user is found, or if the client has not provided a password,
-	// fail the authentication straight away
-	if (!client || !password) {
+	// If the client has not provided a password, fail the authentication straight away
+	if (!password) {
 		return callback(false);
+	}
+
+	// If no user is found, still spend the time a real comparison would take,
+	// so the response time does not reveal which user names exist
+	if (!client) {
+		unknownUserHash ??= Helper.password.hash(String(password));
+
+		void Helper.password
+			.compare(password, unknownUserHash)
+			.catch(() => false)
+			.then(() => callback(false));
+		return;
 	}
 
 	// If this user has no password set, fail the authentication

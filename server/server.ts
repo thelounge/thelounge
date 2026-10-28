@@ -18,6 +18,15 @@ import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
+import {
+	addressKey,
+	beginAttempt,
+	clearFailures,
+	endAttempt,
+	failureDelay,
+	recordFailure,
+	retryAfter,
+} from "./plugins/auth/throttle";
 import {VALID_TYPING_STATUSES} from "../shared/types/typing";
 import {injectServerConfig} from "./plugins/html-config";
 
@@ -61,6 +70,7 @@ export type Server = ioServer<
 const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager: ClientManager | null = null;
+const authenticating = new WeakSet<Socket>();
 let isDev = false;
 
 export default async function (
@@ -1046,7 +1056,29 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
+	const ipKey = addressKey(getClientIp(socket));
+	const throttleKeys = [ipKey, `user:${data.user.toLowerCase()}`];
+
+	const failAfter = (delay: number) => {
+		authenticating.add(socket);
+		setTimeout(() => {
+			authenticating.delete(socket);
+			socket.emit("auth:failed");
+		}, delay);
+	};
+
+	let attemptInFlight = false;
+
+	const finishAttempt = () => {
+		if (attemptInFlight) {
+			attemptInFlight = false;
+			endAttempt([ipKey]);
+		}
+	};
+
 	const authCallback = (success: boolean) => {
+		finishAttempt();
+
 		// Authorization failed
 		if (!success) {
 			if (!client) {
@@ -1063,9 +1095,13 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 				);
 			}
 
-			socket.emit("auth:failed");
+			recordFailure(throttleKeys);
+			failAfter(failureDelay(throttleKeys));
 			return;
 		}
+
+		authenticating.delete(socket);
+		clearFailures(throttleKeys);
 
 		// If authorization succeeded but there is no loaded user,
 		// load it and find the user again (this happens with LDAP)
@@ -1100,10 +1136,35 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	Auth.initialize().then(() => {
-		// Perform password checking
-		Auth.auth(manager, client, data.user, data.password, authCallback);
-	});
+	if (authenticating.has(socket)) {
+		return;
+	}
+
+	const wait = retryAfter([ipKey]);
+
+	if (wait > 0) {
+		failAfter(wait);
+		return;
+	}
+
+	if (!beginAttempt([ipKey])) {
+		failAfter(failureDelay(throttleKeys));
+		return;
+	}
+
+	attemptInFlight = true;
+	authenticating.add(socket);
+	socket.once("disconnect", finishAttempt);
+
+	Auth.initialize()
+		.then(() => {
+			// Perform password checking
+			Auth.auth(manager, client, data.user, data.password, authCallback);
+		})
+		.catch((error: Error) => {
+			log.error(`Authentication plugin failed to initialize: ${error.message}`);
+			authCallback(false);
+		});
 }
 
 function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
