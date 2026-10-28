@@ -6,6 +6,7 @@ import {TextareaEditor} from "@textcomplete/textarea";
 
 import fuzzy from "fuzzy";
 
+import fuzzyFilter from "./helpers/fuzzyFilter";
 import emojiMap from "./helpers/simplemap.json";
 import {store} from "./store";
 import {ChanType} from "../../shared/types/chan";
@@ -270,11 +271,7 @@ function replaceNick(original: string, position = 1) {
 }
 
 function fuzzyGrep<T>(term: string, array: Array<T>) {
-	const results = fuzzy.filter(term, array, {
-		pre: "<b>",
-		post: "</b>",
-	});
-	return results.map((el) => [el.string, el.original]);
+	return fuzzyFilter(term, array).map((el) => [el.string, el.original]);
 }
 
 function rawNicks() {
