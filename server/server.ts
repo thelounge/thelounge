@@ -1067,8 +1067,17 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		}, delay);
 	};
 
+	let attemptInFlight = false;
+
+	const finishAttempt = () => {
+		if (attemptInFlight) {
+			attemptInFlight = false;
+			endAttempt([ipKey]);
+		}
+	};
+
 	const authCallback = (success: boolean) => {
-		endAttempt([ipKey]);
+		finishAttempt();
 
 		// Authorization failed
 		if (!success) {
@@ -1143,8 +1152,9 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
+	attemptInFlight = true;
 	authenticating.add(socket);
-	socket.once("disconnect", () => endAttempt([ipKey]));
+	socket.once("disconnect", finishAttempt);
 
 	Auth.initialize()
 		.then(() => {
