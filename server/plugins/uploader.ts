@@ -136,8 +136,11 @@ class Uploader {
 		let destDir: fs.PathLike;
 		let destPath: fs.PathLike | null;
 		let streamWriter: fs.WriteStream | null;
+		let finished = false;
 
 		const doneCallback = () => {
+			finished = true;
+
 			// detach the stream and drain any remaining data
 			if (busboyInstance) {
 				req.unpipe(busboyInstance);
@@ -154,17 +157,31 @@ class Uploader {
 			}
 		};
 
-		const abortWithError = (err: any) => {
-			doneCallback();
-
+		const removeOutputFile = () => {
 			// if we ended up erroring out, delete the output file from disk
 			if (destPath && fs.existsSync(destPath)) {
 				fs.unlinkSync(destPath);
 				destPath = null;
 			}
+		};
+
+		const abortWithError = (err: any) => {
+			doneCallback();
+			removeOutputFile();
 
 			return res.status(400).json({error: err.message});
 		};
+
+		// if the client goes away before busboy has finished, nothing else
+		// will close the output stream or remove the partial file
+		req.on("close", () => {
+			if (finished) {
+				return;
+			}
+
+			doneCallback();
+			removeOutputFile();
+		});
 
 		// if the authentication token is incorrect, bail out
 		if (uploadTokens.delete(req.params.token) !== true) {
