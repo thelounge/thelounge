@@ -16,6 +16,7 @@ import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
+import {isAllowedPushEndpoint} from "./plugins/webpush";
 import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage} from "./plugins/messageStorage/types";
@@ -861,7 +862,7 @@ class Client {
 		if (
 			!_.isPlainObject(subscription) ||
 			typeof subscription.endpoint !== "string" ||
-			!/^https?:\/\//.test(subscription.endpoint) ||
+			!isAllowedPushEndpoint(subscription.endpoint) ||
 			!_.isPlainObject(subscription.keys) ||
 			!subscription.keys || // TS compiler doesn't understand isPlainObject
 			typeof subscription.keys.p256dh !== "string" ||
@@ -889,6 +890,10 @@ class Client {
 	}
 
 	unregisterPushSubscription(token: string) {
+		if (!Object.prototype.hasOwnProperty.call(this.config.sessions, token)) {
+			return;
+		}
+
 		this.config.sessions[token].pushSubscription = undefined;
 		this.save();
 	}
