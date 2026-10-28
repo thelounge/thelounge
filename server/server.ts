@@ -334,19 +334,11 @@ function getClientLanguage(socket: Socket): string | undefined {
 }
 
 function getClientIp(socket: Socket): string {
-	let ip = socket.handshake.address || "127.0.0.1";
-
-	if (Config.values.reverseProxy) {
-		const forwarded = String(socket.handshake.headers["x-forwarded-for"])
-			.split(/\s*,\s*/)
-			.filter(Boolean);
-
-		if (forwarded.length && net.isIP(forwarded[0])) {
-			ip = forwarded[0];
-		}
-	}
-
-	return ip.replace(/^::ffff:/, "");
+	return Helper.clientIp(
+		socket.handshake.address,
+		socket.handshake.headers["x-forwarded-for"],
+		Config.values.reverseProxy
+	);
 }
 
 function getClientSecure(socket: Socket) {

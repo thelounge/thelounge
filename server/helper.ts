@@ -19,6 +19,7 @@ const Helper = {
 	getVersionNumber,
 	getGitCommit,
 	ip2hex,
+	clientIp,
 	parseHostmask,
 	compareHostmask,
 	compareWithWildcard,
@@ -32,6 +33,26 @@ const Helper = {
 };
 
 export default Helper;
+
+function clientIp(
+	address: string | undefined,
+	forwardedFor: string | string[] | undefined,
+	trustProxy: boolean
+): string {
+	let ip = address || "127.0.0.1";
+
+	if (trustProxy) {
+		const header = Array.isArray(forwardedFor) ? forwardedFor.join(",") : forwardedFor || "";
+		const forwarded = header.split(/\s*,\s*/).filter(Boolean);
+		const last = forwarded[forwarded.length - 1];
+
+		if (last && net.isIP(last)) {
+			ip = last;
+		}
+	}
+
+	return ip.replace(/^::ffff:/, "");
+}
 
 function ip2hex(address: string) {
 	// no ipv6 support
