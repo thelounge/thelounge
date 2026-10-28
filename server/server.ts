@@ -18,7 +18,7 @@ import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
-import {clearFailures, failureDelay, recordFailure} from "./plugins/auth/throttle";
+import {clearFailures, failureDelay, recordFailure, retryAfter} from "./plugins/auth/throttle";
 import {VALID_TYPING_STATUSES} from "../shared/types/typing";
 import {injectServerConfig} from "./plugins/html-config";
 
@@ -1050,9 +1050,15 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 
 	const throttleKeys = [`ip:${getClientIp(socket)}`, `user:${data.user.toLowerCase()}`];
 
-	const authCallback = (success: boolean) => {
-		authenticating.delete(socket);
+	const failAfter = (delay: number) => {
+		authenticating.add(socket);
+		setTimeout(() => {
+			authenticating.delete(socket);
+			socket.emit("auth:failed");
+		}, delay);
+	};
 
+	const authCallback = (success: boolean) => {
 		// Authorization failed
 		if (!success) {
 			if (!client) {
@@ -1070,10 +1076,11 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 			}
 
 			recordFailure(throttleKeys);
-			setTimeout(() => socket.emit("auth:failed"), failureDelay(throttleKeys));
+			failAfter(failureDelay(throttleKeys));
 			return;
 		}
 
+		authenticating.delete(socket);
 		clearFailures(throttleKeys);
 
 		// If authorization succeeded but there is no loaded user,
@@ -1110,6 +1117,13 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 	}
 
 	if (authenticating.has(socket)) {
+		return;
+	}
+
+	const wait = retryAfter(throttleKeys);
+
+	if (wait > 0) {
+		failAfter(wait);
 		return;
 	}
 

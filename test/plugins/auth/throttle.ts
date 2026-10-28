@@ -2,8 +2,11 @@ import {expect} from "vitest";
 import {
 	clearFailures,
 	failureDelay,
+	maxEntries,
 	recordFailure,
 	resetThrottle,
+	retryAfter,
+	throttleSize,
 } from "../../../server/plugins/auth/throttle";
 
 describe("auth throttle", function () {
@@ -53,5 +56,32 @@ describe("auth throttle", function () {
 		clearFailures(["ip:1", "user:a"]);
 
 		expect(failureDelay(["ip:1", "user:a"], now)).to.equal(0);
+	});
+
+	it("blocks new attempts until the delay has passed", function () {
+		recordFailure(["user:a"], now);
+		recordFailure(["user:a"], now + 100);
+
+		expect(retryAfter(["user:a"], now + 100)).to.equal(500);
+		expect(retryAfter(["user:a"], now + 400)).to.equal(200);
+		expect(retryAfter(["user:a"], now + 600)).to.equal(0);
+		expect(retryAfter(["user:b"], now + 100)).to.equal(0);
+	});
+
+	it("treats keys longer than the limit as the same key", function () {
+		const long = "user:" + "a".repeat(200);
+
+		recordFailure([long], now);
+
+		expect(failureDelay([long + "b"], now)).to.equal(250);
+	});
+
+	it("keeps the number of entries bounded", function () {
+		for (let i = 0; i < maxEntries + 100; i++) {
+			recordFailure([`ip:${i}`], now);
+		}
+
+		expect(throttleSize()).to.be.at.most(maxEntries);
+		expect(failureDelay([`ip:${maxEntries + 99}`], now)).to.equal(250);
 	});
 });
