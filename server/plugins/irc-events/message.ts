@@ -103,7 +103,11 @@ export default <IrcEventHandler>function (irc, network) {
 			if (data.channelContext && target === data.nick) {
 				const contextChan = network.getChannel(data.channelContext);
 
-				if (contextChan && contextChan.type === ChanType.CHANNEL) {
+				if (
+					contextChan &&
+					contextChan.type === ChanType.CHANNEL &&
+					contextChan.findUser(data.nick)
+				) {
 					chan = contextChan;
 				}
 			}
