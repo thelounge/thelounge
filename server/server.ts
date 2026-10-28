@@ -18,7 +18,15 @@ import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
-import {clearFailures, failureDelay, recordFailure, retryAfter} from "./plugins/auth/throttle";
+import {
+	addressKey,
+	beginAttempt,
+	clearFailures,
+	endAttempt,
+	failureDelay,
+	recordFailure,
+	retryAfter,
+} from "./plugins/auth/throttle";
 import {VALID_TYPING_STATUSES} from "../shared/types/typing";
 import {injectServerConfig} from "./plugins/html-config";
 
@@ -1048,7 +1056,8 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	const throttleKeys = [`ip:${getClientIp(socket)}`, `user:${data.user.toLowerCase()}`];
+	const ipKey = addressKey(getClientIp(socket));
+	const throttleKeys = [ipKey, `user:${data.user.toLowerCase()}`];
 
 	const failAfter = (delay: number) => {
 		authenticating.add(socket);
@@ -1059,6 +1068,8 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 	};
 
 	const authCallback = (success: boolean) => {
+		endAttempt(throttleKeys);
+
 		// Authorization failed
 		if (!success) {
 			if (!client) {
@@ -1120,10 +1131,15 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	const wait = retryAfter(throttleKeys);
+	const wait = retryAfter([ipKey]);
 
 	if (wait > 0) {
 		failAfter(wait);
+		return;
+	}
+
+	if (!beginAttempt(throttleKeys)) {
+		failAfter(failureDelay(throttleKeys));
 		return;
 	}
 

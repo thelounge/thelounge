@@ -1,6 +1,9 @@
 import {expect} from "vitest";
 import {
+	addressKey,
+	beginAttempt,
 	clearFailures,
+	endAttempt,
 	failureDelay,
 	maxEntries,
 	recordFailure,
@@ -76,12 +79,37 @@ describe("auth throttle", function () {
 		expect(failureDelay([long + "b"], now)).to.equal(250);
 	});
 
-	it("keeps the number of entries bounded", function () {
+	it("keeps the number of entries bounded and evicts the least throttled first", function () {
+		recordFailure(["user:target"], now);
+		recordFailure(["user:target"], now);
+
 		for (let i = 0; i < maxEntries + 100; i++) {
 			recordFailure([`ip:${i}`], now);
 		}
 
 		expect(throttleSize()).to.be.at.most(maxEntries);
+		expect(failureDelay(["user:target"], now)).to.equal(500);
 		expect(failureDelay([`ip:${maxEntries + 99}`], now)).to.equal(250);
+	});
+
+	it("allows only one attempt at a time per key", function () {
+		expect(beginAttempt(["ip:1", "user:a"])).to.be.true;
+		expect(beginAttempt(["ip:2", "user:a"])).to.be.false;
+		expect(beginAttempt(["ip:1", "user:b"])).to.be.false;
+		expect(beginAttempt(["ip:2", "user:b"])).to.be.true;
+
+		endAttempt(["ip:1", "user:a"]);
+
+		expect(beginAttempt(["ip:2", "user:a"])).to.be.false;
+		expect(beginAttempt(["ip:1", "user:a"])).to.be.true;
+	});
+
+	it("keys ipv6 addresses by their /64", function () {
+		expect(addressKey("198.51.100.7")).to.equal("ip:198.51.100.7");
+		expect(addressKey("2001:db8:1:2:3:4:5:6")).to.equal("ip:2001:db8:1:2::/64");
+		expect(addressKey("2001:db8:1:2::6")).to.equal("ip:2001:db8:1:2::/64");
+		expect(addressKey("2001:db8::6")).to.equal("ip:2001:db8:0:0::/64");
+		expect(addressKey("::1")).to.equal("ip:0:0:0:0::/64");
+		expect(addressKey("2001:db8:1:2:ffff::")).to.equal("ip:2001:db8:1:2::/64");
 	});
 });
