@@ -2,7 +2,7 @@ import net from "net";
 
 const failureWindow = 15 * 60 * 1000;
 const baseDelay = 250;
-const maxDelay = 30 * 1000;
+const maxDelay = {ip: 30 * 1000, user: 2 * 1000};
 const maxKeyLength = 128;
 
 export const maxEntries = 10000;
@@ -12,19 +12,25 @@ type Entry = {
 	last: number;
 };
 
-const entries = new Map<string, Entry>();
+type Bucket = keyof typeof maxDelay;
+
+const buckets: Record<Bucket, Map<string, Entry>> = {ip: new Map(), user: new Map()};
 const pending = new Set<string>();
 
 function normalise(key: string) {
 	return key.slice(0, maxKeyLength);
 }
 
-function delayFor(failures: number) {
-	return Math.min(maxDelay, baseDelay * 2 ** (failures - 1));
+function bucketOf(key: string): Bucket {
+	return key.startsWith("user:") ? "user" : "ip";
+}
+
+function delayFor(key: string, failures: number) {
+	return Math.min(maxDelay[bucketOf(key)], baseDelay * 2 ** (failures - 1));
 }
 
 function liveEntry(key: string, now: number) {
-	const entry = entries.get(normalise(key));
+	const entry = buckets[bucketOf(key)].get(normalise(key));
 
 	if (!entry || now - entry.last > failureWindow) {
 		return undefined;
@@ -33,7 +39,7 @@ function liveEntry(key: string, now: number) {
 	return entry;
 }
 
-function prune(now: number) {
+function prune(entries: Map<string, Entry>, now: number) {
 	for (const [key, entry] of entries) {
 		if (now - entry.last > failureWindow) {
 			entries.delete(key);
@@ -41,21 +47,17 @@ function prune(now: number) {
 	}
 
 	while (entries.size >= maxEntries) {
-		let fewest = Infinity;
-
-		for (const entry of entries.values()) {
-			fewest = Math.min(fewest, entry.failures);
-		}
+		let oldest: string | undefined;
+		let oldestTime = Infinity;
 
 		for (const [key, entry] of entries) {
-			if (entries.size < maxEntries) {
-				break;
-			}
-
-			if (entry.failures === fewest) {
-				entries.delete(key);
+			if (entry.last < oldestTime) {
+				oldest = key;
+				oldestTime = entry.last;
 			}
 		}
+
+		entries.delete(oldest!);
 	}
 }
 
@@ -80,7 +82,7 @@ export function failureDelay(keys: string[], now = Date.now()): number {
 		const entry = liveEntry(key, now);
 
 		if (entry) {
-			delay = Math.max(delay, delayFor(entry.failures));
+			delay = Math.max(delay, delayFor(key, entry.failures));
 		}
 	}
 
@@ -94,7 +96,7 @@ export function retryAfter(keys: string[], now = Date.now()): number {
 		const entry = liveEntry(key, now);
 
 		if (entry) {
-			wait = Math.max(wait, entry.last + delayFor(entry.failures) - now);
+			wait = Math.max(wait, entry.last + delayFor(key, entry.failures) - now);
 		}
 	}
 
@@ -120,33 +122,36 @@ export function endAttempt(keys: string[]) {
 }
 
 export function recordFailure(keys: string[], now = Date.now()) {
-	if (entries.size >= maxEntries) {
-		prune(now);
-	}
-
 	for (const key of keys) {
+		const entries = buckets[bucketOf(key)];
 		const entry = liveEntry(key, now);
 
 		if (entry) {
 			entry.failures++;
 			entry.last = now;
-		} else {
-			entries.set(normalise(key), {failures: 1, last: now});
+			continue;
 		}
+
+		if (entries.size >= maxEntries) {
+			prune(entries, now);
+		}
+
+		entries.set(normalise(key), {failures: 1, last: now});
 	}
 }
 
 export function clearFailures(keys: string[]) {
 	for (const key of keys) {
-		entries.delete(normalise(key));
+		buckets[bucketOf(key)].delete(normalise(key));
 	}
 }
 
 export function throttleSize() {
-	return entries.size;
+	return buckets.ip.size + buckets.user.size;
 }
 
 export function resetThrottle() {
-	entries.clear();
+	buckets.ip.clear();
+	buckets.user.clear();
 	pending.clear();
 }

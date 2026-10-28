@@ -24,8 +24,18 @@ describe("auth throttle", function () {
 	});
 
 	it("doubles the delay with each failure up to a cap", function () {
-		const keys = ["user:a"];
+		const keys = ["ip:1"];
 		const expected = [250, 500, 1000, 2000, 4000, 8000, 16000, 30000, 30000];
+
+		for (const delay of expected) {
+			recordFailure(keys, now);
+			expect(failureDelay(keys, now)).to.equal(delay);
+		}
+	});
+
+	it("caps the delay for a user name much lower than for an address", function () {
+		const keys = ["user:a"];
+		const expected = [250, 500, 1000, 2000, 2000, 2000];
 
 		for (const delay of expected) {
 			recordFailure(keys, now);
@@ -62,13 +72,13 @@ describe("auth throttle", function () {
 	});
 
 	it("blocks new attempts until the delay has passed", function () {
-		recordFailure(["user:a"], now);
-		recordFailure(["user:a"], now + 100);
+		recordFailure(["ip:1"], now);
+		recordFailure(["ip:1"], now + 100);
 
-		expect(retryAfter(["user:a"], now + 100)).to.equal(500);
-		expect(retryAfter(["user:a"], now + 400)).to.equal(200);
-		expect(retryAfter(["user:a"], now + 600)).to.equal(0);
-		expect(retryAfter(["user:b"], now + 100)).to.equal(0);
+		expect(retryAfter(["ip:1"], now + 100)).to.equal(500);
+		expect(retryAfter(["ip:1"], now + 400)).to.equal(200);
+		expect(retryAfter(["ip:1"], now + 600)).to.equal(0);
+		expect(retryAfter(["ip:2"], now + 100)).to.equal(0);
 	});
 
 	it("treats keys longer than the limit as the same key", function () {
@@ -79,17 +89,20 @@ describe("auth throttle", function () {
 		expect(failureDelay([long + "b"], now)).to.equal(250);
 	});
 
-	it("keeps the number of entries bounded and evicts the least throttled first", function () {
+	it("keeps each bucket bounded and evicts the oldest entry first", function () {
 		recordFailure(["user:target"], now);
 		recordFailure(["user:target"], now);
+		recordFailure(["ip:old"], now - 1000);
+		recordFailure(["ip:recent"], now);
 
 		for (let i = 0; i < maxEntries + 100; i++) {
-			recordFailure([`ip:${i}`], now);
+			recordFailure([`ip:${i}`], now + i);
 		}
 
-		expect(throttleSize()).to.be.at.most(maxEntries);
+		expect(throttleSize()).to.be.at.most(maxEntries + 1);
 		expect(failureDelay(["user:target"], now)).to.equal(500);
-		expect(failureDelay([`ip:${maxEntries + 99}`], now)).to.equal(250);
+		expect(failureDelay(["ip:old"], now)).to.equal(0);
+		expect(failureDelay([`ip:${maxEntries + 99}`], now + maxEntries + 99)).to.equal(250);
 	});
 
 	it("allows only one attempt at a time per key", function () {

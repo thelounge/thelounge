@@ -1068,7 +1068,7 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 	};
 
 	const authCallback = (success: boolean) => {
-		endAttempt(throttleKeys);
+		endAttempt([ipKey]);
 
 		// Authorization failed
 		if (!success) {
@@ -1138,17 +1138,23 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
-	if (!beginAttempt(throttleKeys)) {
+	if (!beginAttempt([ipKey])) {
 		failAfter(failureDelay(throttleKeys));
 		return;
 	}
 
 	authenticating.add(socket);
+	socket.once("disconnect", () => endAttempt([ipKey]));
 
-	Auth.initialize().then(() => {
-		// Perform password checking
-		Auth.auth(manager, client, data.user, data.password, authCallback);
-	});
+	Auth.initialize()
+		.then(() => {
+			// Perform password checking
+			Auth.auth(manager, client, data.user, data.password, authCallback);
+		})
+		.catch((error: Error) => {
+			log.error(`Authentication plugin failed to initialize: ${error.message}`);
+			authCallback(false);
+		});
 }
 
 function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
