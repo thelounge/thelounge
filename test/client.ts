@@ -1,4 +1,7 @@
+import fs from "fs";
+import path from "path";
 import {expect} from "vitest";
+import Config from "../server/config";
 import {NetworkConfig} from "../server/models/network";
 import {ChanConfig} from "../server/models/chan";
 import {ChanType} from "../shared/types/chan";
@@ -107,5 +110,77 @@ describe("Client", function () {
 		expect(network.channels[1].type).to.equal(ChanType.QUERY);
 		expect(network.channels[2].name).to.equal("&foobar");
 		expect(network.channels[2].type).to.equal(ChanType.CHANNEL);
+	});
+
+	describe("sessions", function () {
+		const session = {lastUse: 0, ip: "127.0.0.1", agent: "test"};
+
+		function fakeSocket() {
+			const events: string[] = [];
+
+			return {
+				events,
+				emit: (event: string) => events.push(event),
+				disconnect: () => events.push("disconnect"),
+			};
+		}
+
+		function setup(name = "test") {
+			const manager = new ClientManager();
+			const client = new Client(manager, name, {
+				log: false,
+				password: "old-hash",
+				sessions: {keep: {...session}, drop: {...session}},
+				clientSettings: {},
+				networks: [],
+			} as any);
+			const sockets = {keepSocket: fakeSocket(), dropSocket: fakeSocket()};
+
+			client.attachedClients = {
+				keepSocket: {token: "keep", openChannel: 0},
+				dropSocket: {token: "drop", openChannel: 0},
+			};
+			manager.sockets = {
+				of: () => ({sockets: new Map(Object.entries(sockets))}),
+			} as any;
+			manager.clients.push(client);
+
+			return {manager, client, sockets};
+		}
+
+		it("signs out attached clients whose session was removed", function () {
+			const {client, sockets} = setup();
+
+			client.replaceSessions({keep: {...session}});
+
+			expect(Object.keys(client.config.sessions)).to.deep.equal(["keep"]);
+			expect(sockets.keepSocket.events).to.be.empty;
+			expect(sockets.dropSocket.events).to.deep.equal(["sign-out", "disconnect"]);
+		});
+
+		it("drops every session when the password is reset on disk", function () {
+			const name = "reset-test-user";
+			const {manager, client, sockets} = setup(name);
+			const usersPath = Config.getUsersPath();
+			const userPath = Config.getUserConfigPath(name);
+
+			fs.mkdirSync(usersPath, {recursive: true});
+			fs.writeFileSync(
+				userPath,
+				JSON.stringify({...client.config, password: "new-hash", sessions: {}})
+			);
+
+			try {
+				manager.loadUser(name);
+			} finally {
+				fs.rmSync(userPath);
+			}
+
+			expect(client.config.password).to.equal("new-hash");
+			expect(client.config.sessions).to.deep.equal({});
+			expect(sockets.keepSocket.events).to.deep.equal(["sign-out", "disconnect"]);
+			expect(sockets.dropSocket.events).to.deep.equal(["sign-out", "disconnect"]);
+			expect(path.basename(userPath)).to.equal(`${name}.json`);
+		});
 	});
 });

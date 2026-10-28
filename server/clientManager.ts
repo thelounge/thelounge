@@ -165,6 +165,7 @@ class ClientManager {
 				 * @see https://github.com/thelounge/thelounge/issues/598
 				 */
 				client.config.password = userConfig.password;
+				client.replaceSessions(userConfig.sessions || {});
 				log.info(`Password for user ${colors.bold(name)} was reset.`);
 			}
 		} else {
