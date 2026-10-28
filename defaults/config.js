@@ -46,7 +46,9 @@ module.exports = {
 	// ### `reverseProxy`
 	//
 	// When set to `true`, The Lounge is marked as served behind a reverse proxy
-	// and will honor the `X-Forwarded-For` header.
+	// and will honor the `X-Forwarded-For` header. The last address in that
+	// header is used, i.e. the one added by the proxy directly in front of
+	// The Lounge.
 	//
 	// This value is set to `false` by default.
 	reverseProxy: false,
