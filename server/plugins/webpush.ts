@@ -1,6 +1,7 @@
 import _ from "lodash";
 import log from "../log";
 import fs from "fs";
+import net from "net";
 import path from "path";
 import Config from "../config";
 import Client from "../client";
@@ -16,6 +17,63 @@ const importEsm = new Function("specifier", "return import(specifier)") as <T>(
 	specifier: string
 ) => Promise<T>;
 /* eslint-enable @typescript-eslint/no-implied-eval, no-use-before-define */
+
+const pushTimeout = 10 * 1000;
+
+function isPrivateAddress(address: string): boolean {
+	if (net.isIPv4(address)) {
+		const [a, b] = address.split(".").map(Number);
+
+		return (
+			a === 0 ||
+			a === 10 ||
+			a === 127 ||
+			a >= 224 ||
+			(a === 100 && b >= 64 && b <= 127) ||
+			(a === 169 && b === 254) ||
+			(a === 172 && b >= 16 && b <= 31) ||
+			(a === 192 && (b === 0 || b === 168)) ||
+			(a === 198 && (b === 18 || b === 19))
+		);
+	}
+
+	const v6 = address.toLowerCase();
+
+	return (
+		v6.startsWith("::") ||
+		v6.startsWith("64:ff9b:") ||
+		v6.startsWith("2002:") ||
+		/^f[cd]/.test(v6) ||
+		/^fe[89ab]/.test(v6) ||
+		v6.startsWith("ff")
+	);
+}
+
+export function isAllowedPushEndpoint(endpoint: string): boolean {
+	let url: URL;
+
+	try {
+		url = new URL(endpoint);
+	} catch {
+		return false;
+	}
+
+	if (url.protocol !== "https:") {
+		return false;
+	}
+
+	const host = url.hostname.replace(/^\[|\]$/g, "").toLowerCase();
+
+	if (host === "localhost" || host.endsWith(".localhost")) {
+		return false;
+	}
+
+	if (net.isIP(host)) {
+		return !isPrivateAddress(host);
+	}
+
+	return true;
+}
 
 class WebPush {
 	vapidKeys?: {
@@ -107,11 +165,29 @@ class WebPush {
 	async pushSingle(client: Client, subscription: PushSubscription, payload: any) {
 		try {
 			const webPush = await this.loadWebPush();
-			await webPush.sendNotification(subscription, JSON.stringify(payload), {
-				vapidDetails: this.vapidDetails,
+			const request = await webPush.generateRequestDetails(
+				subscription,
+				JSON.stringify(payload),
+				{vapidDetails: this.vapidDetails}
+			);
+			const response = await fetch(request.endpoint, {
+				method: request.method,
+				headers: request.headers,
+				body: request.body ? new Uint8Array(request.body) : null,
+				redirect: "manual",
+				signal: AbortSignal.timeout(pushTimeout),
 			});
+
+			if (!response.ok) {
+				throw Object.assign(
+					new Error(`Received unexpected response code ${response.status}`),
+					{
+						statusCode: response.status,
+					}
+				);
+			}
 		} catch (error: any) {
-			if (error.statusCode >= 400 && error.statusCode < 500) {
+			if (error.statusCode >= 300 && error.statusCode < 500) {
 				log.warn(
 					`WebPush subscription for ${client.name} returned an error (${String(
 						error.statusCode

@@ -108,4 +108,55 @@ describe("Client", function () {
 		expect(network.channels[2].name).to.equal("&foobar");
 		expect(network.channels[2].type).to.equal(ChanType.CHANNEL);
 	});
+
+	describe("push subscriptions", function () {
+		const keys = {p256dh: "p256dh", auth: "auth"};
+
+		function createClient() {
+			return new Client(new ClientManager(), "test", {
+				log: false,
+				password: "foo",
+				sessions: {token: {pushSubscription: undefined}},
+				clientSettings: {},
+				networks: [],
+			} as any);
+		}
+
+		it("stores a subscription with a public https endpoint", function () {
+			const client = createClient();
+			const session: any = {};
+			const subscription = {endpoint: "https://push.example.com/abc", keys};
+
+			expect(client.registerPushSubscription(session, subscription, true)).to.deep.equal(
+				subscription
+			);
+			expect(session.pushSubscription).to.deep.equal(subscription);
+		});
+
+		it("rejects endpoints that are not public https", function () {
+			const client = createClient();
+
+			for (const endpoint of [
+				"http://push.example.com/abc",
+				"https://localhost/abc",
+				"https://127.0.0.1/abc",
+				"https://[::1]/abc",
+			]) {
+				const session: any = {
+					pushSubscription: {endpoint: "https://old.example.com", keys},
+				};
+
+				expect(client.registerPushSubscription(session, {endpoint, keys}, true), endpoint)
+					.to.be.undefined;
+				expect(session.pushSubscription, endpoint).to.be.null;
+			}
+		});
+
+		it("ignores unregister for an unknown session token", function () {
+			const client = createClient();
+
+			expect(() => client.unregisterPushSubscription("nope")).to.not.throw();
+			expect(() => client.unregisterPushSubscription(undefined as any)).to.not.throw();
+		});
+	});
 });
