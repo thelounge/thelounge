@@ -18,6 +18,7 @@ import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
+import {clearFailures, failureDelay, recordFailure} from "./plugins/auth/throttle";
 import {VALID_TYPING_STATUSES} from "../shared/types/typing";
 import {injectServerConfig} from "./plugins/html-config";
 
@@ -61,6 +62,7 @@ export type Server = ioServer<
 const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager: ClientManager | null = null;
+const authenticating = new WeakSet<Socket>();
 let isDev = false;
 
 export default async function (
@@ -1046,7 +1048,11 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		return;
 	}
 
+	const throttleKeys = [`ip:${getClientIp(socket)}`, `user:${data.user.toLowerCase()}`];
+
 	const authCallback = (success: boolean) => {
+		authenticating.delete(socket);
+
 		// Authorization failed
 		if (!success) {
 			if (!client) {
@@ -1063,9 +1069,12 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 				);
 			}
 
-			socket.emit("auth:failed");
+			recordFailure(throttleKeys);
+			setTimeout(() => socket.emit("auth:failed"), failureDelay(throttleKeys));
 			return;
 		}
+
+		clearFailures(throttleKeys);
 
 		// If authorization succeeded but there is no loaded user,
 		// load it and find the user again (this happens with LDAP)
@@ -1099,6 +1108,12 @@ function performAuthentication(this: Socket, data: AuthPerformData) {
 		authCallback(false);
 		return;
 	}
+
+	if (authenticating.has(socket)) {
+		return;
+	}
+
+	authenticating.add(socket);
 
 	Auth.initialize().then(() => {
 		// Perform password checking
