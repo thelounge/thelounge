@@ -470,25 +470,25 @@ describe("IRC formatted message parser", () => {
 			expected: "\u{2695}", // this does not match because emoji-regex expects \uFE0F as per the emoji specification
 		},
 		{
-			// FIXME: These multiple `span`s should be optimized into a single one. See https://github.com/thelounge/thelounge/issues/1783
+			// Emoji combined with a style are merged into a single span. See https://github.com/thelounge/thelounge/issues/1783
 			name: "wrapped in style",
 			input: "Super \x034💚 green!",
 			expected:
-				'Super <span role="img" aria-label="Emoji: green heart" title="Emoji: green heart" class="emoji"><span class="irc-fg4">💚</span></span><span class="irc-fg4"> green!</span>',
+				'Super <span role="img" aria-label="Emoji: green heart" title="Emoji: green heart" class="emoji irc-fg4">💚</span><span class="irc-fg4"> green!</span>',
 		},
 		{
+			// Emoji inside a URL's visible text is wrapped, but the href is left untouched. See https://github.com/thelounge/thelounge/issues/1784
 			name: "wrapped in URLs",
 			input: "https://i.❤️.thelounge.chat",
-			// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/thelounge/issues/1784
 			expected:
-				'<a href="https://i.❤️.thelounge.chat" dir="auto" target="_blank" rel="noopener">https://i.❤️.thelounge.chat</a>',
+				'<a href="https://i.❤️.thelounge.chat" dir="auto" target="_blank" rel="noopener">https://i.<span role="img" aria-label="Emoji: red heart" title="Emoji: red heart" class="emoji">❤️</span>.thelounge.chat</a>',
 		},
 		{
+			// Emoji inside a channel name is wrapped too. See https://github.com/thelounge/thelounge/issues/1784
 			name: "wrapped in channels",
 			input: "#i❤️thelounge",
-			// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/thelounge/issues/1784
 			expected:
-				'<span dir="auto" role="button" tabindex="0" class="inline-channel">#i❤️thelounge</span>',
+				'<span dir="auto" role="button" tabindex="0" class="inline-channel">#i<span role="img" aria-label="Emoji: red heart" title="Emoji: red heart" class="emoji">❤️</span>thelounge</span>',
 		},
 	].forEach(({name, input, expected}) => {
 		it(`should find emoji: ${name}`, () => {
