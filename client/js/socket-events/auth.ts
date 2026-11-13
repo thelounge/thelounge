@@ -12,11 +12,16 @@ declare global {
 }
 
 socket.on("auth:success", function () {
+	if (store.state.authFailure) {
+		store.commit("authFailure", null);
+	}
+
 	store.commit("currentUserVisibleError", "Loading messages…");
 	updateLoadingMessage();
 });
 
 socket.on("auth:failed", async function () {
+	store.commit("authFailure", "failed");
 	storage.remove("token");
 
 	if (store.state.appLoaded) {
