@@ -9,6 +9,7 @@ import contentDisposition from "content-disposition";
 import type {Socket} from "socket.io";
 import {Request, Response} from "express";
 import NodeBuffer, {Buffer} from "buffer";
+import {Express} from "express-serve-static-core";
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -69,8 +70,9 @@ class Uploader {
 		return setTimeout(() => uploadTokens.delete(token), 60 * 1000);
 	}
 
-	// TODO: type
-	static router(this: void, express: any) {
+	static router(this: void, express: Express) {
+		// TODO: figure out if this is actually an issue
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		express.get("/uploads/:name/:slug*?", Uploader.routeGetFile);
 		express.post("/uploads/new/:token", Uploader.routeUploadFile);
 	}

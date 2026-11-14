@@ -40,7 +40,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	}
 
 	const host = args[0];
-	this.connectToNetwork({host, port, tls});
+	this.connectToNetwork({host, port: Number(port), tls});
 
 	return true;
 };
