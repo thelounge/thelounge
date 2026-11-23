@@ -135,6 +135,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	_enable(connection_string: string) {
 		this.database = new DatabaseSync(connection_string);
 
+		// In WAL mode a reader (say, a backup) doesn't block our writes.
+		// The mode persists in the file. It can't change inside a transaction,
+		// so set it before the migrations run.
+		this.database.exec("PRAGMA journal_mode=WAL");
+
 		try {
 			this.run_migrations();
 		} catch (e) {
