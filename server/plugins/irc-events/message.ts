@@ -7,6 +7,7 @@ import User from "../../models/user";
 import {MessageType} from "../../../shared/types/msg";
 import {ChanType} from "../../../shared/types/chan";
 import {MessageEventArgs} from "irc-framework";
+import Config from "../../config";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\p{Letter}\p{Number}_[\]\\`^{|}-]+)/gu;
 
@@ -29,6 +30,15 @@ type HandleInput = {
 	replyTo?: string;
 	multiline?: boolean;
 };
+
+// Messages from services in the serviceMessages config don't open query windows.
+// Some networks address services as "NickServ@services.example".
+function isServiceNick(name: string) {
+	const {enable, nicks} = Config.values.serviceMessages;
+	const nick = name.split("@")[0].toLowerCase();
+
+	return enable && nicks.some((service) => service.toLowerCase() === nick);
+}
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
 	return {
@@ -113,8 +123,17 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 
 			if (typeof chan === "undefined") {
-				// Send notices that are not targeted at us into the server window
-				if (data.type === MessageType.NOTICE) {
+				const isService = isServiceNick(target);
+
+				// Our own message to a service, echoed back by the server, is neither
+				// shown nor stored: it may be an IDENTIFY with a password
+				if (self && isService && data.type !== MessageType.NOTICE) {
+					return;
+				}
+
+				// Send notices that are not targeted at us, and messages from services,
+				// into the server window
+				if (data.type === MessageType.NOTICE || isService) {
 					showInActive = true;
 					chan = network.getLobby();
 				} else {

@@ -218,6 +218,27 @@ module.exports = {
 	// default.
 	leaveMessage: "The Lounge - https://thelounge.chat",
 
+	// ### `serviceMessages`
+	//
+	// Private messages from IRC network services, such as NickServ, open a query
+	// window like messages from anyone else. With this option, private messages
+	// from the listed services go to the server window instead, like notices.
+	// Your own messages to them, echoed back by servers that support
+	// `echo-message` (such as an `IDENTIFY` with your password), are neither
+	// shown nor stored. A query window that is already open keeps working.
+	//
+	// The available keys for the `serviceMessages` object are:
+	//
+	// - `enable`: When set to `true`, messages from the listed services go to
+	//   the server window. This value is set to `false` by default.
+	// - `nicks`: Nicks of the services, compared case-insensitively. Add the
+	//   nick of any other service or bot that answers in private messages, for
+	//   example `"Q"`.
+	serviceMessages: {
+		enable: false,
+		nicks: ["NickServ", "ChanServ", "MemoServ", "OperServ", "HostServ", "BotServ", "SaslServ"],
+	},
+
 	// ## Default network
 
 	// ### `defaults`
