@@ -254,6 +254,13 @@ describe("SQLite Message Storage", function () {
 		expect(store.isEnabled).to.be.true;
 	});
 
+	it("should use WAL journal mode", function () {
+		const row = store.database.prepare("PRAGMA journal_mode").get() as {
+			journal_mode: string;
+		};
+		expect(row.journal_mode).to.equal("wal");
+	});
+
 	it("should resolve an empty array when disabled", function () {
 		store.isEnabled = false;
 		const messages = store.getMessages(null as any, null as any, null as any);
