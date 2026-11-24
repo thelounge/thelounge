@@ -77,6 +77,11 @@ type Debug = {
 	raw: boolean;
 };
 
+type ServiceMessages = {
+	enable: boolean;
+	nicks: string[];
+};
+
 type StoragePolicy = {
 	enabled: boolean;
 	maxAgeDays: number;
@@ -101,6 +106,7 @@ export type ConfigType = {
 	fileUpload: FileUpload;
 	transports: string[];
 	leaveMessage: string;
+	serviceMessages: ServiceMessages;
 	defaults: Defaults;
 	lockNetwork: boolean;
 	messageStorage: string[];
