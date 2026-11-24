@@ -224,7 +224,8 @@ export default <IrcEventHandler>function (irc, network) {
 
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
 		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
-			let title = chan.name;
+			// With several networks, the channel name alone is ambiguous
+			let title = client.networks.length > 1 ? `[${network.name}] ${chan.name}` : chan.name;
 			// Notifications are single line, so preview the first line that has text
 			let body = cleanMessage.includes("\n")
 				? cleanMessage.split("\n").find((line) => line.trim().length > 0) ?? cleanMessage
