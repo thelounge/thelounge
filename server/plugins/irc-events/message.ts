@@ -30,6 +30,19 @@ type HandleInput = {
 	multiline?: boolean;
 };
 
+// Only the newest messages are searched: replays repeat recent history
+function hasRecentMsgid(chan: Chan, msgid: string) {
+	const oldest = Math.max(0, chan.messages.length - 200);
+
+	for (let i = chan.messages.length - 1; i >= oldest; i--) {
+		if (chan.messages[i].msgid === msgid) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
 	return {
 		...data,
@@ -147,6 +160,12 @@ export default <IrcEventHandler>function (irc, network) {
 		// https://ircv3.net/specs/extensions/bot-mode
 		if (data.tags && "bot" in data.tags) {
 			from.isBot = true;
+		}
+
+		// A message the window already holds, replayed by the server (such as a
+		// chathistory batch) or a bouncer, is not shown or notified again
+		if (data.msgid && hasRecentMsgid(chan, data.msgid)) {
+			return;
 		}
 
 		// msg is constructed down here because `from` is being copied in the constructor
