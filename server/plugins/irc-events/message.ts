@@ -217,6 +217,12 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 		}
 
+		// Messages from services never highlight, such as NickServ's
+		// "You are now logged in as <nick>"
+		if (msg.highlight && isServiceNick(data.nick)) {
+			msg.highlight = false;
+		}
+
 		// if highlight exceptions match, do not highlight at all
 		if (msg.highlight && client.highlightExceptionRegex) {
 			msg.highlight = !client.highlightExceptionRegex.test(cleanMessage);

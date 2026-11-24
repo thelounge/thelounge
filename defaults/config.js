@@ -226,6 +226,8 @@ module.exports = {
 	// Your own messages to them, echoed back by servers that support
 	// `echo-message` (such as an `IDENTIFY` with your password), are neither
 	// shown nor stored. A query window that is already open keeps working.
+	// Messages from the listed services never count as highlights, so a reply
+	// that contains your nick doesn't notify you.
 	//
 	// The available keys for the `serviceMessages` object are:
 	//

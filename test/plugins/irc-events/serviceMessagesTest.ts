@@ -57,7 +57,11 @@ function setup() {
 	const queries = () =>
 		network.channels.filter((c) => c.type === ChanType.QUERY).map((c) => c.name);
 
-	return {network, shown, stored, privmsg, queries};
+	const notice = (nick: string, target: string, message: string) => {
+		irc.emit("notice", {nick, ident: "u", hostname: "h", target, message});
+	};
+
+	return {network, shown, stored, privmsg, notice, queries};
 }
 
 describe("serviceMessages", function () {
@@ -125,6 +129,26 @@ describe("serviceMessages", function () {
 
 		expect(queries()).to.deep.equal(["alice"]);
 		expect(stored.map((m) => m.text)).to.deep.equal(["hi", "hello"]);
+	});
+
+	it("never highlights messages from services", function () {
+		const {network, shown, privmsg, notice} = setup();
+		network.setNick("me");
+		const query = new Chan({name: "ChanServ", type: ChanType.QUERY});
+		query.id = 100;
+		network.addChannel(query);
+
+		privmsg("NickServ", "me", "You are now logged in as me.");
+		notice("NickServ", "me", "Password accepted, me.");
+		privmsg("ChanServ", "me", "me: you are now an operator");
+		privmsg("alice", "me", "hi me");
+
+		expect(shown.map((m) => Boolean(m.msg.highlight))).to.deep.equal([
+			false,
+			false,
+			false,
+			true,
+		]);
 	});
 
 	it("keeps using a query window that is already open", function () {
