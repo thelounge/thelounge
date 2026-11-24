@@ -155,6 +155,13 @@ function notifyMessage(
 					body = cleanIrcMessage(msg.text ? msg.text : "");
 				}
 
+				// With several networks, the channel name alone is ambiguous
+				const target = store.getters.findChannel(targetId);
+
+				if (target && store.state.networks.length > 1) {
+					title = `[${target.network.name}] ${title}`;
+				}
+
 				const timestamp = Date.parse(String(msg.time));
 
 				try {
