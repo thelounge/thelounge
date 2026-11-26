@@ -26,3 +26,4 @@ import "./mentions";
 import "./search";
 import "./mute_changed";
 import "./typing";
+import "./draft";

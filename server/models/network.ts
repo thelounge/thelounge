@@ -665,6 +665,10 @@ class Network {
 			.map(function (chan) {
 				const keys = ["name", "muted"];
 
+				if (chan.draft) {
+					keys.push("draft");
+				}
+
 				if (chan.type === ChanType.CHANNEL) {
 					keys.push("key");
 				} else if (chan.type === ChanType.QUERY) {
@@ -675,7 +679,10 @@ class Network {
 				// Override the type because we're omitting ID
 			}) as Channel[];
 
-		return network;
+		// The lobby is not part of the channel list, so its draft is kept apart
+		const lobbyDraft = this.channels.find((chan) => chan.type === ChanType.LOBBY)?.draft;
+
+		return lobbyDraft ? {...network, lobbyDraft} : network;
 	}
 
 	getChannel(name: string) {

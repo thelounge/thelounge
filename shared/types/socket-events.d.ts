@@ -1,4 +1,5 @@
 import type {TypingStatus} from "./typing";
+import type {Draft} from "../draft";
 import {SharedMention} from "./mention";
 import {ChanState, SharedChan} from "./chan";
 import {SharedNetwork, SharedServerOptions} from "./network";
@@ -36,6 +37,8 @@ interface ServerToClientEvents {
 	"change-password": EventHandler<{success: boolean; error?: any}>;
 
 	commands: EventHandler<string[]>;
+
+	draft: EventHandler<{target: number; draft: Draft}>;
 
 	configuration: EventHandler<SharedConfiguration | LockedSharedConfiguration>;
 
@@ -146,6 +149,8 @@ interface ClientToServerEvents {
 	"upload:ping": (token: string) => void;
 
 	"mute:change": EventHandler<{target: number; setMutedTo: boolean}>;
+
+	"draft:set": EventHandler<{target: number; draft: Draft}>;
 
 	"push:register": EventHandler<PushSubscriptionJSON>;
 	"push:unregister": NoPayloadEventHandler;

@@ -1,5 +1,6 @@
 import socket from "../socket";
 import {store} from "../store";
+import {removeDraft} from "../drafts";
 import {switchToChannel} from "../router";
 
 socket.on("part", async function (data) {
@@ -13,6 +14,8 @@ socket.on("part", async function (data) {
 	if (!channel) {
 		return;
 	}
+
+	removeDraft(channel.network, channel.channel);
 
 	channel.network.channels.splice(
 		channel.network.channels.findIndex((c) => c.id === data.chan),

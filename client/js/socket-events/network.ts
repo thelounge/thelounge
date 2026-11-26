@@ -2,6 +2,7 @@ import socket from "../socket";
 import {store} from "../store";
 import {switchToChannel} from "../router";
 import {toClientChan} from "../chan";
+import {restoreDraft} from "../drafts";
 import {ClientNetwork} from "../types";
 import {ChanState} from "../../../shared/types/chan";
 
@@ -14,6 +15,10 @@ socket.on("network", function (data) {
 	};
 
 	store.commit("networks", [...store.state.networks, network]);
+
+	// Read the channels back from the store, so that changes to them are reactive
+	const added = store.getters.findNetwork(network.uuid)!;
+	data.network.channels.forEach((chan, i) => restoreDraft(added, added.channels[i], chan.draft));
 
 	// Open last channel specified in `join`
 	switchToChannel(network.channels[network.channels.length - 1]);

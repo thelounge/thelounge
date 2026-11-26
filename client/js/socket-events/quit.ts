@@ -1,12 +1,16 @@
 import socket from "../socket";
 import {switchToChannel, navigate} from "../router";
 import {store} from "../store";
+import {removeDraft} from "../drafts";
 
 socket.on("quit", async function (data) {
 	// If we're in a channel, and it's on the network that is being removed,
 	// then open another channel window
 	const isCurrentNetworkBeingRemoved =
 		store.state.activeChannel && store.state.activeChannel.network.uuid === data.network;
+
+	const network = store.getters.findNetwork(data.network);
+	network?.channels.forEach((channel) => removeDraft(network, channel));
 
 	store.commit("removeNetwork", data.network);
 

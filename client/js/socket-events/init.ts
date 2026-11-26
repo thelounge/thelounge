@@ -1,6 +1,7 @@
 import socket from "../socket";
 import storage from "../localStorage";
 import {toClientChan} from "../chan";
+import {restoreDraft} from "../drafts";
 import {router, switchToChannel, navigate} from "../router";
 import {store} from "../store";
 import parseIrcUri from "../helpers/parseIrcUri";
@@ -15,6 +16,8 @@ socket.on("init", async function (data) {
 	if (data.token) {
 		storage.set("token", data.token);
 	}
+
+	restoreDrafts(data.networks);
 
 	if (!store.state.appLoaded) {
 		store.commit("appLoaded");
@@ -55,6 +58,18 @@ socket.on("init", async function (data) {
 		}
 	}
 });
+
+function restoreDrafts(networks: SharedNetwork[]) {
+	for (const sharedNet of networks) {
+		for (const sharedChan of sharedNet.channels) {
+			const netChan = store.getters.findChannel(sharedChan.id);
+
+			if (netChan) {
+				restoreDraft(netChan.network, netChan.channel, sharedChan.draft);
+			}
+		}
+	}
+}
 
 function mergeNetworkData(newNetworks: SharedNetwork[]): ClientNetwork[] {
 	const stored = storage.get("thelounge.networks.collapsed");
