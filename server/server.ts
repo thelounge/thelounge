@@ -278,7 +278,11 @@ export default async function (
 
 			// Close all client and IRC connections
 			if (manager) {
-				manager.clients.forEach((client) => client.quit());
+				manager.clients.forEach((client) => {
+					// Saving is delayed, do not lose recent changes such as drafts
+					client.save.flush();
+					client.quit();
+				});
 			}
 
 			if (Config.values.prefetchStorage) {
@@ -791,6 +795,12 @@ function initializeClient(
 
 			const clientSettings = client.config.clientSettings;
 			socket.emit("setting:all", clientSettings);
+		});
+
+		socket.on("draft:set", (data) => {
+			if (_.isPlainObject(data)) {
+				client.setDraft(socket.id, data);
+			}
 		});
 
 		socket.on("search", (query) => {

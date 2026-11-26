@@ -1,3 +1,4 @@
+import {Draft} from "../draft";
 import {SharedChan} from "./chan";
 
 export type SharedPrefixObject = {
@@ -7,6 +8,7 @@ export type SharedPrefixObject = {
 
 export type SharedNetworkChan = SharedChan & {
 	totalMessages: number;
+	draft?: Draft;
 };
 
 export type SharedPrefix = {

@@ -7,11 +7,13 @@ import {extractInputHistory} from "./helpers/inputHistory";
 export function toClientChan(shared: SharedNetworkChan): ClientChan {
 	const history: string[] = [""].concat(extractInputHistory(shared.messages, 99));
 	// filter the unused vars
-	const {messages, totalMessages: _, ...props} = shared;
+	const {messages, totalMessages: _, draft: __, ...props} = shared;
 	const channel: ClientChan = {
 		...props,
 		editTopic: false,
 		pendingMessage: "",
+		draftVersion: [],
+		draftEditedAt: 0,
 		inputHistoryPosition: 0,
 		historyLoading: false,
 		scrolledToBottom: true,

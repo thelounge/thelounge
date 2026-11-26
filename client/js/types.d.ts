@@ -6,6 +6,7 @@ import {SharedUser} from "../../shared/types/user";
 import {SharedMention} from "../../shared/types/mention";
 import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
 import {LinkPreview, SharedMsg} from "../../shared/types/msg";
+import type {DraftVersion} from "../../shared/draft";
 
 interface LoungeWindow extends Window {
 	g_TheLoungeRemoveLoading?: () => void;
@@ -24,6 +25,8 @@ type ClientChan = Omit<SharedChan, "messages"> & {
 
 	// these are added in store/initChannel
 	pendingMessage: string;
+	draftVersion: DraftVersion;
+	draftEditedAt: number;
 	inputHistoryPosition: number;
 	inputHistory: string[];
 	historyLoading: boolean;

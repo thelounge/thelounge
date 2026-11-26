@@ -10,12 +10,14 @@ import Prefix from "./prefix";
 import {MessageType, SharedMsg} from "../../shared/types/msg";
 import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan";
 import {SharedNetworkChan} from "../../shared/types/network";
+import {Draft} from "../../shared/draft";
 
 export type ChanConfig = {
 	name: string;
 	key?: string;
 	muted?: boolean;
 	type?: string;
+	draft?: Draft;
 };
 
 class Chan {
@@ -32,6 +34,7 @@ class Chan {
 	muted!: boolean;
 	type!: ChanType;
 	state!: ChanState;
+	draft?: Draft;
 
 	isOnline?: boolean | null;
 	userAway!: string | null;
@@ -220,6 +223,7 @@ class Chan {
 			unread: this.unread,
 			highlight: this.highlight,
 			muted: this.muted,
+			...(this.draft && {draft: this.draft}),
 			type: this.type,
 			state: this.state,
 

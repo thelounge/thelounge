@@ -74,6 +74,7 @@ import {commands} from "../js/commands/index";
 import socket from "../js/socket";
 import upload from "../js/upload";
 import eventbus from "../js/eventbus";
+import {draftEdited, flushDrafts} from "../js/drafts";
 import {watch, defineComponent, nextTick, onMounted, PropType, ref, onUnmounted} from "vue";
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
@@ -180,6 +181,7 @@ export default defineComponent({
 			const text = (e.target as HTMLInputElement).value;
 			props.channel.pendingMessage = text;
 			props.channel.inputHistoryPosition = 0;
+			draftEdited(props.network, props.channel);
 			setInputSize();
 
 			// No need to send typing indicators for / commands
@@ -239,6 +241,7 @@ export default defineComponent({
 
 			props.channel.inputHistoryPosition = 0;
 			props.channel.pendingMessage = "";
+			draftEdited(props.network, props.channel);
 			input.value.value = "";
 			setInputSize();
 
@@ -312,6 +315,7 @@ export default defineComponent({
 			// can still see who the reply is directed at
 			if (!props.channel.pendingMessage && data.nick && input.value) {
 				props.channel.pendingMessage = data.nick + ": ";
+				draftEdited(props.network, props.channel);
 				input.value.value = props.channel.pendingMessage;
 				setInputSize();
 			}
@@ -332,6 +336,8 @@ export default defineComponent({
 			if (autocompletionRef.value) {
 				autocompletionRef.value.hide();
 			}
+
+			flushDrafts();
 		};
 
 		watch(
@@ -433,6 +439,7 @@ export default defineComponent({
 				}
 
 				channel.pendingMessage = channel.inputHistory[channel.inputHistoryPosition];
+				draftEdited(props.network, channel);
 				input.value.value = channel.pendingMessage;
 				setInputSize();
 

@@ -24,6 +24,7 @@ import {SearchQuery, SearchResponse} from "../shared/types/storage";
 import {SharedChan, ChanType} from "../shared/types/chan";
 import {SharedNetwork} from "../shared/types/network";
 import {ServerToClientEvents} from "../shared/types/socket-events";
+import {draftIncludes, isValidDraft} from "../shared/draft";
 
 const events = [
 	"away",
@@ -280,6 +281,7 @@ class Client {
 						key: chan.key || "",
 						type: type,
 						muted: chan.muted,
+						draft: isValidDraft(chan.draft) ? chan.draft : undefined,
 					})
 				);
 			});
@@ -311,7 +313,7 @@ class Client {
 		}
 
 		// TODO; better typing for args
-		return new Network({
+		const network = new Network({
 			uuid: args.uuid,
 			name: String(
 				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
@@ -339,6 +341,12 @@ class Client {
 			proxyUsername: String(args.proxyUsername || ""),
 			proxyPassword: String(args.proxyPassword || ""),
 		});
+
+		if (isValidDraft(args.lobbyDraft)) {
+			network.getLobby().draft = args.lobbyDraft;
+		}
+
+		return network;
 	}
 
 	connectToNetwork(args: Record<string, any>, isStartup = false) {
@@ -724,6 +732,38 @@ class Client {
 		this.lastActiveChannel = targetNetChan.chan.id;
 
 		this.emit("open", targetNetChan.chan.id);
+	}
+
+	setDraft(socketId: string, data: {target: number; draft: unknown}) {
+		const target = this.find(data.target);
+		const {draft} = data;
+
+		if (!target || target.chan.type === ChanType.SPECIAL || !isValidDraft(draft)) {
+			return;
+		}
+
+		const {chan} = target;
+
+		if (chan.draft && draftIncludes(chan.draft.version, draft.version)) {
+			// The sender is behind, tell it what it missed
+			if (!draftIncludes(draft.version, chan.draft.version)) {
+				this.manager.sockets
+					.in(socketId)
+					.emit("draft", {target: chan.id, draft: chan.draft});
+			}
+
+			return;
+		}
+
+		// Of drafts typed independently, the one received last is kept here, while
+		// each client holds on to its own
+		chan.draft = {text: draft.text, version: draft.version};
+		this.save();
+
+		this.manager.sockets
+			.in(this.id)
+			.except(socketId)
+			.emit("draft", {target: chan.id, draft: chan.draft});
 	}
 
 	sortChannels(netid: SharedNetwork["uuid"], order: SharedChan["id"][]) {
